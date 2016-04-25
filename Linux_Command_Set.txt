@@ -3854,7 +3854,7 @@ git config --list
 git config user.name
     git config --global user.name "Your Name"
     git config --global user.email you@example.com
-```````````
+````````初次使用git要设置```
  git config --list
  git config --global user.name "wujunrong"
  git config --global user.email "wujunrong@xinxindai.com"
