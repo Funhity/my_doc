@@ -1,0 +1,132 @@
+http://www.cloudera.com/content/www/en-us/documentation/enterprise/latest/topics/install_upgrade_to_cdh55_parcels.html
+http://www.cloudera.com/content/www/en-us/documentation/enterprise/latest/topics/cm_ag_upgrade_cm5.html
+
+salt '*' state.single pkg.installed name='vim'
+`````````nginx`````````
+find ./  -mmin -360  -name  '*ng*' -exec grep check  {} \; |wc -l
+
+find /opt/saltstack  -type d -path '*/\.*' -prune -o -not -name '.*' -type f | xargs file | awk -F: '$2 ~ /text/ { print $1 }' |xargs -I {} grep webapp {}
+`````````````````
+salt '*' service.restart   salt-minion
+Redis Desktop Manager
+
+sudo salt -N 'test_v6tomcat' cmd.shell  "sed -i.bak "s/SELINUX=enforcing/SELINUX=permissive/"   /etc/selinux/config"
+nohup virt-viewer --connect qemu:///system windows8-in-office --full-screen >/dev/null 2>&1 &
+salt 'stage_v6_tradew01' cmd.run 'ls -l  /opt/webserver/v6_tomcat/webapps/xxdai_tradews/WEB-INF/classes/'
+
+/etc/logrotate.hourly.conf
+ssh root@cloudera-agent1  yum -y install  yum update python  -y
+salt   'test_v6_tomcat_front01'     file.manage_file /etc/sysconfig/logrotate_tomcat    '' '{}' salt://svn/wujunrong/logrotate_tomcat.logclient   '{hash_type: 'md5', 'hsum': <md5sum>}' root root '644' base 'minion'
+salt   'test_tomcat_fk001'          file.manage_file /etc/rsyslog.conf    '' '{}' salt://svn/wujunrong/rsyslog.conf.client-fk_test   '{hash_type: 'md5', 'hsum': <md5sum>}' root root '644' base 'minion'
+salt     'v6_mobile0?'      file.manage_file /etc/selinux/config    '' '{}' salt://wujunrong/selinux-config   '{hash_type: 'md5', 'hsum': <md5sum>}' root root '644' base 'minion'
+
+salt  'stage_v6_nginx0?'     file.manage_file /usr/local/nginx/sbin/nginx_log_cut.sh   '' '{}' salt://wujunrong/config_files/nginx_log_cut.sh   '{hash_type: 'md5', 'hsum': <md5sum>}' root root '744' base 'minion'
+salt  'stage_v6_nginx0?'     file.manage_file /etc/rsyslog.conf                        '' '{}' salt://svn/wujunrong/rsyslog.conf.client-nginx   '{hash_type: 'md5', 'hsum': <md5sum>}' root root '644' base 'minion'
+
+sudo cp   nginx_log_cut.sh  /opt/saltstack/salt/wujunrong/config_files/nginx_log_cut.s
+
+tar -zcvf /tmp/webservice-trade.tar.gz   ./{*webservice*11-11*,*webser*.out,*tra*11-11*,*tra*.out}
+scp root@192.168.110.105:/home/yxlog/real_time_log/v6_front0*11-11*.log  .
+scp root@192.168.110.105:/home/yxlog/real_time_log/{*tra*11-11-1*,*tra*.out}     .
+
+ docker build --rm -t local/centos7-systemd-httpd  .
+ docker run --privileged -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro -p 80:80 local/centos7-systemd-httpd   /bin/bash
+
+rsync -avzh frank@172.16.30.44:/home/frank/packages   /var/www/html
+
+
+docker commit --change "CMD ["/usr/sbin/init"]" -m "Added packages to centos7" -a "wujunrong"   0cfbc636ba81   local/centos7:yum-repository
+docker run --privileged -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro -p 80:80 local/c7-systemd-httpd:add-packages
+
+``````````````````
+virsh list --all
+virsh dumpxml centos64-template > salt-master.xml
+vi salt-master.xml 
+virsh undefine centos64-template
+virsh define salt-master.xml
+
+virt-cat -d cloudera-manager /etc/redhat-release
+virt-cat -d salt-master  /etc/redhat-release
+virt-customize --help
+virt-customize -d salt-master --hostname salt-master
+virsh domiflist cloudera-manager
+wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+virt-copy-in -d  cloudera-manager  /root/Templates/epel-release-latest-6.noarch.rpm /etc/yum.repos.d/
+virt-customize -d cloudera-manager --run-command 'rpm -ivh /etc/yum.repos.d/epel-release-latest-6.noarch.rpm'
+virt-customize -d cloudera-manager --run-command 'yum -y upgrade ca-certificates --disablerepo=epel'
+virt-customize -d cloudera-manager --run-command 'yum -y update python'
+virt-customize -d cloudera-manager  --install salt-minion
+````````````````````````
+virt-install  -n cloudera-manager  -r 2048  --vcpus=2  --os-variant=rhel6.4  --accelerate  -w bridge:br0    --disk path=/home/frank/kvm/images/centos-minimal.qcow2  -l /home/frank/Downloads/CentOS-6.4-x86_64-bin-DVD1.iso  --network bridge=br1  --nographics  --extra-args "console=ttyS0,115200"   --os-type=linux   
+virt-edit -d cloudera-manager /etc/sysconfig/network -e  's/HOSTNAME=.*/HOSTNAME=cloudera-manager/g'
+ 
+sed 's/HOSTNAME=.*/HOSTNAME=cloudera/g' /etc/sysconfig/network
+salt  'cloudera-agent?'  cmd.run ' sed -i.bak 's/SELINUX=enforcing/SELINUX=permissive/g'  /etc/selinux/config'
+virsh net-update default add    ip-dhcp-host "<host mac='52:54:00:8c:18:eb' name='cloudera-manager' ip='192.168.122.2' />"  --live --config
+virsh net-update default modify ip-dhcp-host "<host mac='52:54:00:8c:18:eb' name='cloudera-manager' ip='192.168.122.2' />"  --live --config
+virt-install -n centos64-wu -r 2048  --disk=path=/media/frank/MyData/kvm/images/centos-template.qcow2,device=disk   -l http://mirrors.163.com/centos/6.7/os/x86_64/  --network bridge=br0  --network=default  --nographics  --extra-args "console=ttyS0,115200"   --os-type=linux    --os-variant=rhel6 
+
+virt-install  -n cloudera-manager  -r 2048  --vcpus=2  --os-variant=rhel6.4  --accelerate  -w bridge:br0   -w bridge:br1   --disk path=/home/frank/kvm/images/cloudera-manager.qcow2  -l /home/frank/Downloads/CentOS-6.4-x86_64-bin-DVD1.iso    --nographics     --os-type=linux  --initrd-inject=/home/frank/Templates/anaconda-ks.cfg  -x "ks=file:/anaconda-ks.cfg console=ttyS0,115200"
+sudo virt-install  -n cloudera-agent1  -r 2048  --vcpus=2  --os-variant=rhel6.4  --accelerate  -w bridge:br0   -w bridge:br1   --disk path=/home/frank/kvm/images/cloudera-agent1.qcow2  -l /home/frank/Downloads/CentOS-6.4-x86_64-bin-DVD1.iso    --nographics     --os-type=linux  --initrd-inject=/home/frank/Templates/anaconda-ks.cfg  -x "ks=file:/anaconda-ks.cfg console=ttyS0,115200"
+```````````````````````````````````````````
+salt '*' cmd.run 'yum -y install openssh-clients'
+salt 'cloudera-agent?' cmd.run 'wget https://archive.cloudera.com/cm5/redhat/6/x86_64/cm/cloudera-manager.repo'   cwd=/etc/yum.repos.d/ 
+ansible cloudera-manager -m shell -a "cd /etc/yum.repos.d/ && wget https://archive.cloudera.com/cm5/redhat/6/x86_64/cm/cloudera-manager.repo"
+mysql            :   sudo yum -y install mysql-server
+metastorehost    :   sudo yum -y install mysql-connector-java
+cloudera-manager :   rpm -q  cloudera-manager-daemons
+                     sudo yum -y install oracle-j2sdk1.7
+                     sudo yum -y install cloudera-manager-daemons cloudera-manager-server
+                     sudo yum -y install cloudera-manager-server-db-2
+					 sudo service cloudera-scm-server-db start
+					 sudo service cloudera-scm-server start
+
+Cloudera Manager Agent：
+ sudo yum install cloudera-manager-agent cloudera-manager-daemons
+ sudo service cloudera-scm-agent start					 
+					 
+``````
+On every Cloudera Manager Agent host:/etc/cloudera-scm-agent/config.ini
+Property	Description
+server_host	Name of the host where Cloudera Manager Server is running.
+server_port	Port on the host where Cloudera Manager Server is running.
+``````
+salt  'cloudera-agent?'  cmd.run ' sed -i.bak 's/SELINUX=enforcing/SELINUX=permissive/g'  /etc/selinux/config'
+```````````````````
+mount /dev/mapper/VolGroup-lv_root /sysroot/
+mount /dev/sda1 /sysroot/boot
+mount --bind /dev /sysroot/dev
+mount --bind /dev/pts /sysroot/dev/pts
+mount --bind /proc /sysroot/proc
+mount --bind /sys /sysroot/sys
+``````````````
+curl -H 'Cookie: GLOBALS[_DCACHE][smilies][searcharry]=/.*/eui;CLOBALS[_DCACHE][smilies][replacearray]=print(233334-1)' -v http://bbs.xinxindai.com/viewthread.php?tid=32
+ salt  -b 5 -C 'stage_v6_batch0? or stage_v6_front0? or stage_v6_mobile0? or 
+stage_v6_tradew0? or stage_v6_webapp0? or stage_v6_webservice0? or test_v6_tomcat_admin0? or 
+test_v6_tomcat_batch0? or test_v6_tomcat_front0? or test_v6_tomcat_mobile0? or test_v6_tomcat_tradew0? or 
+test_v6_tomcat_webservice0? or test_v6_webapp_front01'         cmd.script salt://wujunrong/install_files/run_before_starting_rsyslog.sh    reset_system_locale=False cwd=/tmp
+  
+=========salt section===========
+CentOS 7:/etc/yum.repos.d/saltstack.repo:
+####################
+# Enable SaltStack's package repository
+[saltstack-repo]
+name=SaltStack repo for RHEL/CentOS 7
+baseurl=https://repo.saltstack.com/yum/rhel7
+enabled=1
+gpgcheck=1
+gpgkey=https://repo.saltstack.com/yum/rhel7/SALTSTACK-GPG-KEY.pub
+
+CentOS 6:/etc/yum.repos.d/saltstack.repo:
+####################
+# Enable SaltStack's package repository
+[saltstack-repo]
+name=SaltStack repo for RHEL/CentOS 6
+baseurl=https://repo.saltstack.com/yum/rhel6
+enabled=1
+gpgcheck=1
+gpgkey=https://repo.saltstack.com/yum/rhel6/SALTSTACK-GPG-KEY.pub
+
+
+ansible stage_redis  -a "/usr/local/redis/redis-server  --version"
+ ansible cloudera_redis -m shell -a "echo nameserver 192.168.38.118>>/etc/resolv.conf"

@@ -1,0 +1,4458 @@
+===kernel version section ====
+uname -r
+2.6.32-431.11.2.el6.x86_64
+2 – Kernel Version
+6 – Major Revision
+32 – Minor Revision
+431.11.2.el6 – Fix/Revision Detail
+============
+firfox on debian :
+deb http://packages.linuxmint.com debian import
+
+centos version
+cat /etc/*release*
+/etc/rc.d/init.d
+
+
+/etc/rc.local or /etc/rc.d/rc.local are no longer executed by default due to systemd-changes
+
+/etc/init.d/ 
+chkconfig --add glassfish4
+chkconfig --list glassfish4
+
+````hostname section`````
+centos7:   /etc/hostname
+           /etc/hosts
+centos6:   /etc/sysconfig/network
+Debian:    /etc/hostname
+=====================  DNS section ====================
+/etc/sysconfig/network
+cat /etc/resolv.conf 
+host -v -t a cyberciti.biz
+host -v -t a i.hexindia.net
+
+`````````
+nslookup
+nslookup xinxindai.com
+nslookup <ip>
+ipconfig /registerdns
+ipconfig /flushdns
+````````````
+dig command :yum -y install bind-utils 
+dig +noall +answer xinxindai.com any
+dig @<resolve-ip> www.google.com
+
+ping -a w.x.y.z
+sudo discoveryutil mdnsflushcache
+
+================ network section =========================
+ubuntu: /etc/network/interfaces
+
+
+``````
+centos7:
+systemctl restart network
+/etc/sysconfig/network-scripts/ifcfg-eth0
+
+DEVICE=eth0
+HWADDR=52:54:00:3B:AC:C3
+TYPE=Ethernet
+UUID=48f965ce-54b4-4155-ba5e-fefad5a703b5
+ONBOOT=yes
+NM_CONTROLLED=yes
+BOOTPROTO=static
+IPADDR=192.168.38.146
+MASK=255.255.255.0
+GATEWAY=192.168.38.251
+#DNS1=202.96.209.133
+DNS1=192.168.38.118
+
+PEERDNS=<answer>, where <answer> is one of the following:
+yes — This interface will modify your system's /etc/resolv.conf file entries to use the DNS servers provided by the remote system when a connection is established.
+no — The /etc/resolv.conf file will not be changed.
+```````````
+#To restart network service
+  ifdown eth0
+  ifup   eth0
+
+
+/etc/init.d/network restart
+   sed -i.bak  's/HOSTNAME=.*/HOSTNAME=cloudera-manager/g' /etc/sysconfig/network
+   
+   arping -c 1 -I br0 192.168.38.150
+
+  网络：
+  
+  nc -v -z salt.master.ip  4505
+  nc -v -z 192.168.56.101  4506
+  nmap -sS -q -p 4505-4506 salt.master.ip.addr
+  nmap  192.168.56.1
+  nmap -sP 192.168.56.0/24
+  ansible host* -m shell -a  "virsh list --all| grep -E 'running'  | awk '{print \$2}'   |xargs  -I '{}' sudo virsh domiflist  '{}' " | grep -B 50  "52:54:00:80:c4:07"
+
+  ===============  xwindows section  ===============================
+yum groupinstall -y 'Desktop'
+yum groupinstall -y 'X Window System'
+yum groupinstall -y  fonts
+
+==========================================
+
+debian:
+# /etc/init.d/networking stop
+# /etc/init.d/networking start
+# /etc/init.d/networking restart
+ps --pid 1 -f
+//You can change the runlevel from the console to, e.g., 4 by the following.
+sudo telinit 4
+
+
+# vi /etc/network/interfaces
+# vi /etc/resolv.conf
+post-up ifconfig eth0 down
+rm -f /etc/udev/rules.d/70-persistent-net.rules
+
+``````````zcat section gzip section zip section``````````````````
+  gzip, gunzip, zcat,zless 
+  gunzip -S .zip mysqlsampledatabase1.zip
+  zcat v6_mobile01_20151103.tar.gz| less
+  zcat v6_mobile01_20151201.tar.gz| grep -aHn 15120115162100176722
+````````````````````
+  
+  apt-get install lrzsz
+  yum install lrzsz
+  ZMODEM sz,rz
+  
+  tail -f /var/log/foo | grep --line-buffered
+  tail -f /var/log/foo | stdbuf -o0 grep
+  tail -f /var/log/foo | sed -u
+  tail -f /var/log/foo | stdbuf -o0 sed
+  tail -f /var/log/foo | mawk -Winteractive
+  `````````find section``````````
+  find /  -type d -name 'httpdocs'
+                  -iname pattern       #Like  -name, but the match is case insensitive.
+  搜索包含classes/com/的目录
+  find /opt/webserver/ -type d  -print0 |  grep -EzZ  'classes/com$';echo
+  find /opt/webserver/ -type d  -print0 |  grep -EzZ  'classes/com$' |sed 's/WEB-INF\/classes\/com//g';echo
+  sudo salt -N 'test_v6tomcat' cmd.run "find /opt/webserver/ -type d  -print0 |  grep -Ez 'classes/com$' |sed 's/WEB-INF\/classes\/com//g'"
+  
+  
+  find . -type f -newerct "2016-04-14  15:00:00"  -regextype posix-extended  -regex ".*(tra|webservice).*"
+  find ./ -type f -mmin -200 | xargs ls -ltr 
+     -mtime +60 means you are looking for a file modified 60 days ago.
+     -mtime -60 means less than 60 days.
+     -mtime  60 If you skip + or – it means exactly 60 days.
+  
+  find . -maxdepth 1 -type d -exec ls -ld "{}" \;
+  find /dir -type f -executable  -name 'abc'
+  find . -type f -exec grep -Iq . {} \; -and -exec grep -Hn oa_ip {} \;
+  ````backup section
+  备份/opt/saltstack/salt/ci/files目录下的所有文件，剔除隐藏文件、隐藏目录、可执行文件：
+  find /opt/saltstack  -type d -path '*/\.*' -prune -o -not -name '.*' -type f | xargs file | awk -F: '$2 ~ /text/ { print $1 }' |   cut -d "/" -f 4- | rsync --files-from=- -av     /opt/saltstack/       /home/wujunrong/backup/xxd/saltstack/  --dry-run
+  find /opt/           -type d  \( -path /opt/test -o -path  /opt/ci/packages -o -path /opt/ci/rsync  -o -path /opt/ci/workspace -o -path '*/\.*'  \) -prune -o -not -name '.*' -type f  -print | xargs file | awk -F: '$2 ~ /text/ { print $1 }' |   cut -d "/" -f 3- | rsync --files-from=- -av     /opt/                 /home/wujunrong/backup/xxd/            --dry-run   --exclude test  --exclude ci/packages --exclude ci/rsync   --exclude ci/workspace
+  `````user section```````````````
+  useradd rakhi
+  passwd  rakhi
+  useradd -e 2008-12-31 jerry
+  useradd -e 2009-12-31 -f 30 jerry
+  usermod -g primarygroupname username
+  
+  sudo chown -R username:group directory  #目录
+  sudo chown username:group directory     #目录下的文件
+
+   id tom
+   You need to kill all process owned by tom user and forcefully logged him out of the system:
+   # pkill -u tom pid
+   # pkill -9 -u tom
+   usermod -l jerry      tom       把用户名由tom改成jerry
+   usermod -l login-name old-name
+   
+   Task: User home directory from /home/tom/ to /home/jerry
+   The syntax is:
+   # usermod -d /home/jerry -m jerry
+   # id jerry
+   # ls -ld /home/jerry
+   
+   Task: Change user tom UID from 5001 to 10000
+   # id tom
+   # usermod -u 10000 tom
+   # id tom
+=====================  NetworkManager section ====================================
+
+nmcli dev status
+
+As of Debian 6.0 "Squeeze", NetworkManager does not manage any interface defined in /etc/network/interfaces by default.
+To disable Network Manager on Debian:
+$ sudo /etc/init.d/network-manager stop
+$ sudo update-rc.d network-manager remove
+To disable Network Manager on Ubuntu or Linux Mint:
+$ sudo stop network-manager
+$ echo "manual" | sudo tee /etc/init/network-manager.override
+After disabling Network Manager on Debian or Ubuntu, use /etc/network/interfaces to configure network interfaces.
+
+
+To disable Network Manager on Fedora:
+$ sudo systemctl stop NetworkManager.service
+$ sudo systemctl disable NetworkManager.service
+
+
+To disable Network Manager on CentOS:
+$ sudo service NetworkManager stop
+$ sudo chkconfig NetworkManager off
+
+# chkconfig NetworkManager off
+# chkconfig network on
+# service NetworkManager stop
+# service network start
+systemctl stop  NetworkManager.service 
+
+nmtui
+ debian:
+ sudo vi /etc/network/interfaces
+ /etc/init.d/networking restart
+ 
+ `````iptables section```````
+  sudo iptables  -n -L -v
+  sudo iptables -t nat -n -L -v
+  service iptables save
+  cat  /etc/sysconfig/iptables
+  sudo yum remove  iptables-services
+  lsmod|grep 'ipt'  #For most of the iptables related modules 
+  
+ ````````````````ufw section  firewall section``````````````````````````````
+ sudo ufw disable     #firewall
+ sudo ufw enable
+ sudo ufw reload
+ sudo ufw default allow outgoing
+ sudo ufw default deny incoming
+ sudo ufw allow from 172.16.0.0/24
+ sudo ufw allow SSH
+ sudo ufw show raw
+ 
+ sudo ufw logging on
+ sudo ufw logging off
+ 
+ ```````````````````````````````
+ yum install firewalld firewall-config
+ 
+ 
+ centos7:disable firewall
+ systemctl status firewalld
+ systemctl disable firewalld
+ systemctl stop firewalld
+  
+
+ firewall-cmd --state
+ firewall-cmd --get-default-zone
+ firewall-cmd --get-active-zones
+ firewall-cmd --list-all
+ firewall-cmd --get-zones
+ firewall-cmd --zone=home --list-all
+ firewall-cmd --list-all-zones | less
+ ````````````````````
+ sudo firewall-cmd --zone=trusted --change-interface=eth0
+      firewall-cmd             --get-zone-of-interface=eth0
+ sudo firewall-cmd --zone=trusted --remove-interface=eth1
+ 
+ firewall-cmd --zone=external --remove-masquerade
+ firewall-cmd --zone=external --add-masquerade
+ sudo firewall-cmd --set-default-zone=trusted
+ `````````````````````````````````
+  firewall-cmd --state
+ ``````add service````
+ firewall-cmd --get-services
+ /usr/lib/firewalld/services
+ sudo firewall-cmd --zone=public --add-service=http
+ firewall-cmd --zone=public --list-services
+ sudo firewall-cmd --zone=public --permanent --list-services
+ sudo firewall-cmd --zone=public --add-service=https
+ sudo firewall-cmd --zone=public --permanent --add-service=https
+ sudo firewall-cmd --zone=public --add-port=5000/tcp
+ sudo firewall-cmd --zone=public --add-port=4990-4999/udp
+ sudo firewall-cmd --zone=public --permanent --add-port=5000/tcp
+sudo firewall-cmd --zone=public --permanent --add-port=4990-4999/udp
+sudo firewall-cmd --zone=public --permanent --list-ports
+
+firewall-cmd --zone=external --list-all
+
+
+
+ `````Defining a firewall Service`````
+
+ sudo cp /usr/lib/firewalld/services/service.xml /etc/firewalld/services/example.xml
+ sudo nano /etc/firewalld/services/example.xml
+ <?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>Example Service</short>
+  <description>This is just an example service.  It probably shouldn't be used on a real system.</description>
+  <port protocol="tcp" port="7777"/>
+  <port protocol="udp" port="8888"/>
+</service>
+sudo firewall-cmd --reload
+firewall-cmd --get-services
+ ======================  cloudera section =======================
+Impala-Hive 
+
+http://Server host:7180
+repo http://archive.cloudera.com/cm5/redhat/6/x86_64/cm/cloudera-manager.repo
+
+Cloudera Manager Server 
+
+( Service Monitor, Activity Monitor, Event Server, Alert Publisher, or Reports Manage )
+ tail -f /var/log/cloudera-scm-server/cloudera-scm-server.log
+ 
+ sudo yum install oracle-j2sdk1.7
+ sudo yum install cloudera-manager-daemons cloudera-manager-server
+ sudo yum install cloudera-manager-server-db-2
+ 
+ chkconfig iptables off
+ service   iptables stop
+ centos7:  systemctl status firewalld
+
+ sudo service cloudera-scm-server-db start
+ sudo service cloudera-scm-server start
+  tail -f /var/log/cloudera-scm-server/cloudera-scm-server.log
+ ``````````````````````````````````````````
+ Cloudera Manager Agent   
+ sudo yum -y install cloudera-manager-agent cloudera-manager-daemons
+ sudo service cloudera-scm-agent start
+ 
+`````````````````````````````````````
+ /etc/default/bigtop-utils:
+ export JAVA_HOME=/usr/java/default
+ ln -s    /usr/java/jdk1.7.0_67-cloudera  /usr/java/default  
+ 
+ ``````````````hive section````````````````````
+sudo service postgresql initdb
+ sudo cat /var/lib/pgsql/data/postgresql.conf  | grep -e listen -e standard_conforming_strings
+listen_addresses = '*'
+standard_conforming_strings = off
+ 
+
+=====================  docker section  =========================================
+docker hub accout :weakfrankwu  wuj*rong**
+
+```````````````````
+sudo tee /etc/yum.repos.d/docker.repo <<-'EOF'
+[dockerrepo]
+name=Docker Repository
+baseurl=https://yum.dockerproject.org/repo/main/centos/$releasever/
+enabled=1
+gpgcheck=1
+gpgkey=https://yum.dockerproject.org/gpg
+EOF
+
+
+sudo yum -y install docker-engine
+systemctl start docker.service
+docker pull centos:7
+docker pull centos:6
+`````````````
+
+docker info
+docker search centos
+``````dockerfile section```````````
+sudo docker build -t ouruser/sinatra:v2 .
+docker commit c3f279d17e0a  SvenDowideit/testimage:version3
+docker commit --change='CMD ["apachectl", "-DFOREGROUND"]'                               -c "EXPOSE 80"    c3f279d17e0a       SvenDowideit/testimage:version4
+docker commit --change='CMD ["/root/start.sh"]'   --change='ENTRYPOINT ["/tini", "--"]'  -c "EXPOSE 8080"  pensive_austin    xxd-tomcat:final
+``````docker image section```````
+docker images
+docker rmi training/sinatra
+
+
+
+sudo docker run -i -t ubuntu /bin/bash
+     docker run -it  --name java-test2  centos:6.6 bash
+     docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro -p 80:80 local/centos7:yum-repository
+#To start a container in detached mode, you use -d=true or just -d option
+     docker run -d -p 80:80 my_image service nginx start
+	 docker run -a stdin -a stdout -i -t ubuntu /bin/bash
+     docker exec -it "desperate_saha"   bash
+     docker exec      silly_aryabhata   ps -ef
+``````docker container section``````````
+sudo docker ps
+sudo docker ps -a
+sudo docker stop  nostalgic_morse
+sudo docker start reverent_hopper
+     docker UNPAUSE  java-test2
+	 
+docker port sharp_tesla
+docker attach 0cfbc636ba81
+
+more /var/log/docker 
+To detach the tty without exiting the shell, use the escape sequence Ctrl+p + Ctrl+q.
+```````````
+sudo docker save -o /home/matrix/matrix-data.tar matrix-data
+sudo docker load -i <path to copied image file>
+
+
+````````````````
+docker stop $(docker ps -a -q)
+docker rm   $(docker ps -a -q)
+docker ps -a | grep -v 'adoring_dubinsky\|NAMES'| awk '{print $1}'|xargs docker rm
+ 
+ docker rm  -f  $(docker ps -a -q)
+ docker rm `docker stop  $(docker ps -q -a)`
+`````docker tini section`````
+ 
+ # Add Tini
+ # wget https://github.com/krallin/tini/releases/download/v0.9.0/tini
+   ENV TINI_VERSION v0.9.0
+   ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+   RUN chmod +x /tini
+   ENTRYPOINT ["/tini", "--"]
+
+ docker commit --change='CMD ["/root/start.sh"]'   --change='ENTRYPOINT ["/tini", "--"]'  -c "EXPOSE 81" java-test2    xxd-tomcat:test
+cat /root/start.sh
+    #!/bin/bash
+    /root/apache-tomcat-6.0.45/bin/startup.sh&&bash
+======================  yum section and apt-get section dpkg section========================================
+yum install yum-plugin-fastestmirror
+vi /etc/yum/pluginconf.d/fastestmirror.conf 
+rm -fr /var/cache/yum/timedhosts.txt
+rm -f /var/cache/yum/x86_64/6/timedhosts.txt
+
+
+yum install yum-plugin-priorities
+priority=2
+
+`````````list the contents of a package using YUM````````
+yum install yum-utils -y
+repoquery --list packagename  ,  repoquery --list  zabbix-server-mysql
+yum repolist
+yum --disablerepo="*" --enablerepo="google" list available
+yum list installed| grep audit 
+
+查询命令在哪个rpm包中
+rpm -q --whatprovides /opt/dell/srvadmin/bin/omreport
+srvadmin-omacore-8.2.0-1739.8348.el6.x86_64
+``````````````private repo`````````````
+
+Yum Cache: /var/cache/yum/$basearch/$releasever/
+[main] section of /etc/yum.conf   中设置keepcache = 1
+yum makecache
+find  /var/cache/yum/$basearch/$releasever/  -type f -name "*.rpm" -exec sh -c 'mv  {} /var/www/html/' \;
+find  /var/cache/yum/$basearch/$releasever/ -atime -1  -type f -name "*.rpm" -exec sh -c 'ansible test-xxd -m copy -a "src={} dest=/var/www/html/packages/"' \; 
+find  /var/cache/yum/$basearch/$releasever/ -amin -60  -type f -name "*.rpm"
+
+1、vi /etc/yum.conf   中设置keepcache = 1
+2、yum makecache
+3、find  /var/cache/yum/$basearch/$releasever/ -amin -60  -type f -name "*.rpm"
+
+
+yum -y install httpd
+yum -y install createrepo
+createrepo   /var/www/html/cm5
+``````````
+# cat wujunrong.repo.bak 
+[wujunrongrepo]
+name=wujunrong  Repository
+baseurl=http://192.168.31.155/packages/
+enabled=1
+gpgcheck=0
+priority=2
+
+··························································
+Use yum to install a local packvi age, automatically checking/satisfying dependencies
+yum --nogpgcheck localinstall packagename.arch.rpm  
+yum localinstall /home/frank/Downloads/VirtualBox-5.0-5.0.6_103037_el7-1.x86_64.rpm 
+yum repolist
+yum --disablerepo="*" --enablerepo="wujunrongrepo" list available
+yum --disablerepo="*" --enablerepo="wujunrongrepo" install oracle-j2sdk1.7
+yum list installed| grep audit  #Temporary Disabling Bash History
+yum shell
+
+````````` rpm section````````
+rpm -qa | grep salt
+rpm -qa | grep forge
+rpm -e rpmforge-release-0.5.3-1.el7.rf.x86_64  #erase package
+rpm -q bind
+
+Install a package : rpm  -ivh packagename 
+upgrade a package : rpm  -Uvh packagename 
+
+
+````````````````````
+
+aptitude full-upgrade
+apt-cache search
+aptitude remove miredo
+aptitude search jabber (or apt-cache search jabber) //  to show installed packages
+aptitude search '~i tomcat'
+apt-cache show atop
+
+
+/etc/apt/sources.list
+http://debgen.simplylinux.ch/
+sudo aptitude install debian-keyring debian-archive-keyring
+apt-key update
+apt-get install -f
+
+apt-get  install apt-file
+apt-file update
+dpkg --listfiles openjdk-6-jre
+dpkg -S /path/to/some/file      #to find out which package a file belongs to.
+sudo dpkg -i DEB_PACKAGE
+
+
+======================= ip_forward  ======================================
+
+debian:
+vi /etc/sysctl.conf
+Add (or modify) this line in the file:
+
+net.ipv4.ip_forward = 1
+Finally load the new settings:    sysctl -p /etc/sysctl.conf
+
+
+
+
+ip route add default via 11.9.0.100    
+ip route add default dev eth1          
+ip route del default 
+route del default gw gateway_IP                  
+route add default dev ${TUNNEL}        
+ip route delete 192.168.1.0/24 dev eth0
+
+ip route add {NETWORK/MASK} via {GATEWAYIP}
+ip route add {NETWORK/MASK} dev {DEVICE}
+ip route add default {NETWORK/MASK} dev {DEVICE}
+ip route add default {NETWORK/MASK} via {GATEWAYIP}
+route add -host ${SERVER} dev ${PRIMARY}
+
+ifdown enp0s8
+ip addr flush dev eth0
+ip link set dev enp0s9  up
+ip addr show virbr0
+
+post-up ip route add default dev eth1  metric 2
+pre-down route del default
+======================= copy scp section ssh section======================================
+sshpass -p 'password' scp user1@xxx.xxx.x.5:sys_config /var/www/dev/
+scp on esxi :
+scp -r -C -o CompressionLevel=6   ./Linux-Test/    root@192.168.0.6:/vmfs/volumes/datastore1/Linux-Test
+scp -r root@192.168.38.10:/tmp/wujunrong2     .
+ssh ops@magpie.example.com sudo puppet agent --test
+
+yum -y install openssh-clients
+`````````````````````````````````````
+debian:
+#Note: We recommend not to leave the passphrase empty. An attacker who gets hold of your private key can otherwise connect to the hosts where you deposited you public key since the passphrase is empty. Choose a long and complex passphrase.
+ssh-keygen -t rsa
+ssh-copy-id -i ~/.ssh/id_rsa.pub $remote_user@$remote_host
+
+To enable SSH login for a root user on Debian Linux system you need to first configure SSH server. Open /etc/ssh/sshd_config and change the following line:
+FROM:
+PermitRootLogin without-password
+TO:
+PermitRootLogin yes
+
+invoke-rc.d ssh restart
+`````````````````````````````````````
+
+======================= mysql section======================================
+centos7: rpm -ivh http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
+centos6: rpm -ivh http://dev.mysql.com/get/mysql57-community-release-el6-7.noarch.rpm
+
+yum repolist enabled | grep "mysql.*-community.*"
+sudo yum -y install mysql-community-server
+sudo service mysqld start
+
+
+SHOW VARIABLES LIKE "%version%";
+mysqladmin --version
+mysqladmin -u root -p shutdown
+mysql -uroot  -p < mysqlsampledatabase1
+  
+
+```````````````
+setting /etc/my.conf using validate-password = off
+
+sudo grep 'temporary password' /var/log/mysqld.log
+mysql -uroot -p 
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'E431e4311!';
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '<E431e4311!>' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '<E431e4311!>' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+
+SELECT host FROM mysql.user WHERE User = 'root';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
+
+````````````````````
+ SHOW COLUMNS FROM City;
+ SHOW DATABASES;
+``````````````````````````````
+
+
+
+======================= proxy  ========================
+http-replicator:
+caching http proxy - easier method with modified Dockerfile:
+> cd ~/your-project
+> git clone https://github.com/gertjanvanzwieten/replicator.git
+> mkdir cache
+> replicator/http-replicator -r ./cache -p 8080 --daemon ./cache/replicator.log  --static 
+
+add to your Dockerfile (before first RUN line):
+
+ENV http_proxy http://172.17.42.1:8080/
+You should optionally clear the cache from time to time.
+
+export http_proxy='http://hiss11210042:Hiss123@170.95.94.38:8080/'
+
+
+======================= squid  proxy section ========================
+/etc/init.d/squid3  restart
+dns_nameservers 8.8.8.8 8.8.4.4 192.168.39.21 192.168.39.22
+http_access allow  all
+
+
+aptitude install squid3 squid3-common
+======================= ftp section ========================
+sftp username@hostname:remoteFileName localFileName
+sftp kyle@kylesserver:/tmp/myLogFile.log /tmp/fileNameToUseLocally.log
+======================= vpn section========================
+
+ip r add default dev ppp0
+ip r del default
+````````````````
+centos:
+yum install pptp
+pppd call vpn
+pkill pppd
+
+debian:
+sudo apt-get install pptp-linux network-manager-pptp
+pon vpn
+poff or killall pppd
+tail -f /var/log/messages
+
+ubuntu:
+sudo tail -f /var/log/syslog
+
+`````setup firewalld for pptp``````````````  
+       firewall-cmd --zone=external  --change-interface=ppp0
+       firewall-cmd --zone=external  --add-masquerade
+       firewall-cmd --zone=external  --list-all
+       firewall-cmd --zone=trusted   --change-interface=eth0
+       firewall-cmd --zone=trusted   --change-interface=eth1
+       firewall-cmd --zone=trusted   --list-all
+	   firewall-cmd --zone=trusted --add-service=https
+	   firewall-cmd --zone=trusted --add-service=http
+	   sudo firewall-cmd --zone=external --add-port=1723/tcp
+  sudo firewall-cmd --reload
+
+```````````````````````````
+ tcpdump -i eth1  -s 0 tcp port 1723 or proto 47
+ # tcpdump -i eth0 -w my.tcpdump -s 0 tcp port 1723 or proto 47
+ #add -w file to tell it to save the packets to the file file,
+ #add -s 0 to capture all of each packet,
+ #and add tcp port 1723 or proto 47 to keep only the PPTP packets, if the client is performing other network traffic at the time.
+ 
+````````````````````````
+cat  /etc/ppp/ip-up.local 
+#!/bin/bash
+NET="0.0.0.0/0" # set me
+IFACE="ppp0" # set me
+#IFACE=$1
+route add -net ${NET} dev ${IFACE}
+``````````````````````pptp section``````````````````````````````````
+cat /etc/ppp/peers/qian_chen
+pty "pptp vpn.xxsl.org --nolaunchpppd  --loglevel 0"
+name wjr
+remotename PPTP
+require-mppe-128
+usepeerdns
+file /etc/ppp/options.pptp
+ipparam vpn
+
+`````````````````````````````````````````````````````````
+cat /etc/ppp/chap-secrets 
+# Secrets for authentication using CHAP
+# client	server	secret			IP addresses
+wjr * wjr1977 *
+wjr@ramnode.com * jY89634_HIB * 
+
+
+===virtualbox section=========
+"%programfiles%\Oracle\VirtualBox\VBoxHeadless" --startvm "Debian"
+"%programfiles%\Oracle\VirtualBox\VBoxHeadless" --startvm "CentOS7 副本2"
+
+
+"%programfiles%\Oracle\VirtualBox\VBoxManage" clonehd "source.vmdk" "cloned.vdi" --format vdi
+"%programfiles%\Oracle\VirtualBox\VBoxManage" modifyhd "cloned.vdi" --resize 51200
+"%programfiles%\Oracle\VirtualBox\VBoxManage" clonehd "cloned.vdi" "resized.vmdk" --format vmdk
+
+"%programfiles%\Oracle\VirtualBox\VBoxManage"  startvm "Debian"
+'C:\Program Files\Oracle\VirtualBox\VBoxManage.exe' internalcommands sethduuid .\MyVM.vdi 
+vboxmanage internalcommands sethduuid  '/media/frank/3172e678-9cfa-4781-9900-0d7e90dcda8b/virtualbox/Frank_Win10_Cracked/Frank_Windows10 Clone-disk1.vdi' 
+
+
+"%programfiles%\Oracle\VirtualBox\VBoxHeadless" --startvm "Debian"
+"%programfiles%\Oracle\VirtualBox\VBoxHeadless" --startvm "CentOS7 副本2"
+
+xrandr -s 1024x768
+X11Forwarding yes must specified in /etc/ssh/sshd_config
+ nslookup redhat.com
+ 
+ 
+  which google-chrome
+======================= init section  systemctl section========================  
+  
+        chkconfig --list
+  /sbin/chkconfig --level 345 redis-server on
+  service salt-master status
+  
+  sudo apt-get install sysv-rc-conf
+  update-rc.d <service> defaults
+  update-rc.d <service> start 20 3 4 5
+  update-rc.d -f <service>  remove
+  /etc/init.d/myscript start
+  /etc/init.d/ssh restart
+   
+  sytemd:
+  /run/systemd/system
+  /lib/systemd/system 
+  /etc/systemd/system/      //directory is reserved for unit files created or customized by the system administrator.
+  /etc/systemd/system/multi-user.target.wants
+  /etc/systemd/system/graphical.target.wants
+   
+   sshd.service.d/custom.conf
+   sshd.service.wants/
+   sshd.service.requires/
+  
+  insserv --showall
+ 
+  systemctl get-default
+  systemctl set-default multi-user.target
+ 
+  systemctl list-unit-files
+  systemctl list-unit-files --type=mount
+  systemctl list-units      -t     service --all
+  systemctl list-units      --type target
+  systemctl list-units      --type target  --all
+  systemctl list-units      --type service
+  systemctl isolate         multi-user.target //Changing the Current Target
+  systemctl isolate         graphical.target
+  systemctl rescue
+  systemctl emergency
+  systemctl -H root@server-01.example.com status httpd.service
+
+  systemctl start getty@tty7.service
+  
+  //Notify systemd that a new name.service file exists by executing the following command as root
+  systemctl daemon-reload                 //修改unit配置文件后执行
+  systemctl reload        httpd           //Reload service (reloads config file):
+  systemctl start         squid3.service 
+  systemctl disable       squid3.service
+  systemctl enable        squid3.service  //会自动执行systemctl daemon-reload 
+  systemctl enable        sshd-second.service
+  systemctl is-enabled    gdm.service
+  systemctl is-active     gdm.service
+  systemctl status        crond.service    #Cron Service
+  systemctl kill          httpd
+  
+  systemctl --all  | grep salt
+  systemctl --failed
+  
+  systemd-analyze blame
+  systemd-analyze critical-chain
+  systemctl list-dependencies sshd.service
+  systemctl show sshd.serviceq
+  sudo systemctl edit --full nginx.service
+  
+  runlevel
+  /etc/init.d
+  /etc/rc5.d
+  view /etc/inittab
+  
+halt	              systemctl halt	              #Halts the system.
+poweroff	          systemctl poweroff	          #Powers off the system.
+reboot            	systemctl reboot	            #Restarts the system.
+pm-suspend        	systemctl suspend	            #Suspends the system.
+pm-hibernate      	systemctl hibernate	          #Hibernates the system.
+pm-suspend-hybrid  	systemctl hybrid-sleep	      #Hibernates and suspends the system.
+
+enabled  - a service (unit) is configured to start when the system boots
+disabled - a service (unit) is configured to not start when the system boots
+active   - a service (unit) is currently running.
+inactive - a service (unit) is currently disabled, but may get started, i.e. become active, if something attempts to make use of the service.
+
+
+
+```````personal service``````
+/etc/systemd/system/multi-user.target.wants/wujunrong.service
+/etc/systemd/system/wujunrong.service  
+
+cat /etc/systemd/system/wujunrong.service
+[Unit]
+Description=/etc/rc.local  Compatibility
+ConditionFileIsExecutable=/root/boot.sh
+
+[Service]
+Type=oneshot
+ExecStart=/root/boot.sh
+TimeoutSec=0
+StandardOutput=tty
+RemainAfterExit=yes
+SysVStartPriority=99
+
+[Install]
+WantedBy=multi-user.target
+  
+======================= salt section  ========================  
+When executing a command or script, the state (i.e., changed or not) of the command is unknown to Salt's state system. 
+Therefore, by default, the cmd state assumes that any command execution results in a changed state.
+This means that if a cmd state is watched by another state then the state 
+that's watching will always be executed due to the changed state in the cmd state.  
+  
+the require statement under service was changed to watch, 
+and is now watching 3 states instead of just one. 
+The watch statement does the same thing as require, making sure that the other states run before running the state with a watch, 
+but it adds an extra component. The watch statement will run the state's watcher function for any changes to the watched states. 
+So if the package was updated, the config file changed, or the user uid modified, then the service state's watcher will be run. 
+The service state's watcher just restarts the service, so in this case,
+a change in the config file will also trigger a restart of the respective service.
+
+  Normally the salt-call command checks into the master to retrieve file server and pillar data, 
+  The collection of state files make up the State Tree.
+  The first line, called the ID declaration, is an arbitrary identifier. In this case it defines the name of the package to be installed.
+  The second line, called the State declaration, defines which of the Salt States we are using. In this example, we are using the pkg state to ensure that a given package is installed.
+  The third line, called the Function declaration, defines which function in the pkg state module to call.
+Jinja -> YAML -> Highstate -> low state -> execution
+
+非root用户运行：http://docs.saltstack.com/en/latest/ref/configuration/nonroot.html
+``````````````````````install ````````````````````````
+  
+  yum install salt-ssh
+  yum install salt-master
+  
+CentOS 7:/etc/yum.repos.d/saltstack.repo:
+####################
+# Enable SaltStack's package repository
+[saltstack-repo]
+name=SaltStack repo for RHEL/CentOS 7
+baseurl=https://repo.saltstack.com/yum/rhel7
+enabled=1
+gpgcheck=1
+gpgkey=https://repo.saltstack.com/yum/rhel7/SALTSTACK-GPG-KEY.pub
+
+CentOS 6:/etc/yum.repos.d/saltstack.repo:
+sudo yum install https://repo.saltstack.com/yum/redhat/salt-repo-2015.8-2.el6.noarch.rpm
+  
+  ``````install minion````
+  yum update python  -y
+  yum install salt-minion
+  `````````
+  salt --versions-report
+  
+  minion配置: /etc/salt/minion
+  #master: salt
+  /etc/salt/master
+  /etc/salt/minion
+  /etc/salt/roster
+  
+  /var/cache/salt/master/jobs
+  minion backup: /var/cache/salt/minion/file_backup/etc
+
+  /var/cache/salt/master/minions/minion-id/files
+  /var/cache/salt/master/minions/kbclient3.example.com/files/root/test_hour.sh
+
+  /var/log/salt/master
+  /var/log/salt/minion
+ 
+  log_level: warning
+  log_level_logfile: warning
+  
+  root_dir:
+  file_roots:
+  pillar_roots:
+  
+  /srv/pillar/top.sls
+  /srv/salt/top.sls
+  /srv/salt/orchestration/webserver.sls
+  pillar_safe_render_error: True
+  
+  
+`````````````
+  nodegroups:
+  group1: 'L@foo.domain.com,bar.domain.com,baz.domain.com or bl*.domain.com'
+  group2: 'G@os:Debian and foo.domain.com'
+  group3: 'G@os:Debian and N@group1'
+  group4:
+    - 'G@foo:bar'
+    - 'or'
+    - 'G@foo:baz'
+  
+  
+  ``````clear not wanted and invalid minion id```
+  on master: rm -fr /etc/salt/pki/master/minions_denied/vm-template
+  on minion: ansible minions  -m shell -a  '>/etc/salt/minion_id' #清空id文件
+  #When the minion is started, it will generate an id value, unless it has been generated on a previous run and cached in the configuration directory, which is /etc/salt by default
+``````````````````````````````````````
+  systemctl start  salt-master
+  chkconfig salt-master on
+  pkill salt-master
+  salt-master -d   #background
+   
+  salt-master --log-level=debug
+  salt-master -l debug
+  salt-minion -l debug
+  salt-minion -l debug &          # On the minion
+  salt '*' state.highstate -t 60  # On the master 
+  salt '*' state.single pkg.installed name='vim'
+  salt '*' state.low '{name: vim, state: pkg, fun: installed}'
+  ``````````````````````````````````````````
+  file_roots:
+    base:
+      - /srv/salt/prod
+      - /srv/formulas/apache-formula
+    qa:
+      - /srv/salt/qa
+      - /srv/salt/prod
+    dev:
+      - /srv/salt/dev
+      - /srv/salt/qa
+      - /srv/salt/prod
+  `````````````````````````````````````````` 
+   pillar_roots:
+    base:
+      - /srv/pillar
+
+  `````````````````````````````````````````` 
+  /srv/pillar/top.sls
+  base:
+    '*':
+      - packages
+```````````	  
+/srv/pillar/apache.sls:
+
+apache:
+  lookup:
+    name: httpd
+    config:
+      tmpl: /etc/httpd/httpd.conf
+
+
+	  
+````````	
+/srv/pillar/top.sls  
+'node_type:web':
+  - match: grain
+  - webserver
+
+'node_type:postgres':
+  - match: grain
+  - database
+
+'node_type:redis':
+  - match: grain
+  - redis
+
+'node_type:lb':
+  - match: grain
+  - lb
+  
+  
+  ``````````````````````````````````````````  
+  /srv/salt/top.sls
+  base:
+    'web*prod*':
+      - webserver.foobarcom
+  qa:
+    'web*qa*':
+      - webserver.foobarcom
+  dev:
+    'web*dev*':
+      - webserver.foobarcom
+
+  ```````````````salt roster````````salt ssh``````salt grains section`````````````
+
+  yum -y install salt-ssh
+
+  打开文件：/etc/salt/roster
+  文件包含如下内容：
+  
+  test_fk:
+   host: 192.168.38.155
+   user: root
+   passwd: testing
+   
+  
+   cloudera-agent3:
+   host: 192.168.56.171
+   user: root
+   passwd: E431e431
+   grains:
+    wu:
+      - webserver
+    location: '2.14'
+
+  
+  `````````````````salt file````````````````````````` 
+  salt-key -L
+  salt-key -A  #接收所有的key
+  salt-key -a keyname
+  
+  
+  salt    'debian'        cp.get_dir   salt://test                 /tmp
+  salt    '*'             cp.get_file "salt://{{grains.os}}/vimrc" /etc/vimrc template=jinja
+  salt    '*'             cp.get_file  salt://vimrc /etc/vimrc gzip=5
+  salt    '*'             cp.get_file  salt://vimrc /etc/vim/vimrc makedirs=True
+  salt    '*'                      file.manage_file /tmp/wu.txt          '' '{}' salt://wu.sh   '{hash_type: 'md5', 'hsum': <md5sum>}' root root '755' base 'minion'
+  salt     'test_tomcat_fk001'     file.manage_file /etc/rsyslog.conf    '' '{}' salt://svn/wujunrong/rsyslog.conf.client-fk_test   '{hash_type: 'md5', 'hsum': <md5sum>}' root root '644' base 'minion'
+  
+  salt    'cloudera-agent3'        archive.unzip                      /tmp/v6_webservice.war  /tmp/root/
+  salt    '*'                      archive.unzip    template=jinja    /tmp/zipfile.zip        /tmp/{{grains.id}}/ excludes=file_1,file_2
+  salt    'cloudera-agent3'        archive.unzip    template=jinja    /tmp/v6_webservice.war  "/tmp/root/{{ salt['pillar.get']('apache') }}"
+  salt    'cloudera-agent3'        archive.unzip    template=jinja    /tmp/v6_webservice.war  /tmp/root/{{grains.deployment}}
+  salt    'cloudera-agent3'        archive.unzip    template=jinja    {{grains.xxd_package}}   {{grains.xxd}}
+  
+  salt    '*'                      archive.tar -cjvf /tmp/salt.tar.bz2 {{grains.saltpath}} template=jinja
+  salt    '*'                      archive.zip template=jinja /tmp/zipfile.zip /tmp/sourcefile1,/tmp/{{grains.id}}.txt
+  salt    '*'                      archive.zip /tmp/baz.zip baz.txt cwd=/foo/bar
+  
+  
+			
+  /opt/code/flask:
+     file.recurse:
+       - source: salt://code/flask
+       - include_empty: True
+	
+  sudo salt 'test_v6_tomcat_front01'  state.single   file.recurse name='/tmp/wujunrong'   source='salt://wujunrong'
+       salt 'stage_v6_front0?'  state.single      file.managed  name='/opt/webserver/v6_tomcat/webapps/ROOT/redenvelops/Red-envelopes-down.jsp'   source='salt://wujunrong/20160310XA-emergency/Red-envelopes-down.jsp'  backup='minion'
+       salt 'stage_v6_front01'  file.list_backups      /opt/webserver/v6_tomcat/webapps/ROOT/redenvelops/Red-envelopes-down.jsp
+       salt 'stage_v6_front01'  file.restore_backups   1
+	   salt 'stage_v6_front01'  file.delete_backups    3
+  ``````````````````````````````````
+  salt 'source-minion'          cp.push /absolute/path/file                   # Push the file to the master
+  salt 'kbclient3.example.com'  cp.push /root/test_hour.sh
+  salt 'destination-minion'     cp.list_master_dirs                           # Return a list of all directories on the master
+  salt '*'                      cp.push_dir /etc/modprobe.d/ glob='*.conf'
+  
+  #/etc/salt/master 
+  set file_recv to True 
+  ``````````````salt network`````````````
+  
+  salt-run mine.get '*'       network.interfaces
+  salt    'stage_v6_front01'  network.ip_addrs
+  salt    '*'                 network.interfaces
+  salt    '*'              test.ping 
+  salt    '*'              test.ping --return syslog 
+  salt    -S 192.168.40.20 test.ping
+  salt    -S 10.0.0.0/24   test.ping
+  salt    'test_v6_tomcat_webservice02' cmd.run    'chkconfig --list'
+  salt    '*'                           cmd.script salt://scripts/runme.sh 'arg1 arg2 "arg 3"'
+  salt    '*'                           cmd.script salt://scripts/runme.sh stdin='one\ntwo\nthree\nfour\nfive\n'
+  salt    '*'                           cmd.script salt://scripts/windows_task.ps1 args=' -Input c:\tmp\infile.txt' shell='powershell'
+  salt    '*'                           cmd.script salt://wu.sh    cwd=/tmp user=tomcat  
+  salt  -b 5 -C 'stage_v6_batch0? or stage_v6_front0?'   cmd.script salt://wujunrong/install_files/run_before_starting_rsyslog.sh    reset_system_locale=False cwd=/tmp
+  
+  ```````````````````salt svn``````````````````````````````````
+  svn路径 http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/fk_test.sh
+  /etc/salt/master
+  
+  
+  fileserver_backend:
+    - roots
+    - svn
+  svnfs_remotes:
+    - http://192.168.38.230/YXITD/saltstack
+
+  svnfs_mountpoint: salt://svn
+  
+  #Environments map differently based on the fileserver backend. For instance, the mappings are explicitly defined in roots backend, while in the VCS backends (git, hg, svn) the environments are created from branches/tags/bookmarks/etc. For the minion backend, the files are all in a single environment, which is specified by the minionfs_env option.
+  #See the documentation for each backend for a more detailed explanation of how environments are mapped.
+  #When using the svn fileserver backend at least one subversion remote needs to be defined. The user running the salt master will need read access to the repo.
+  #The repos will be searched in order to find the file requested by a client and the first repo to have the file will return it. The trunk, branches, and tags become environments, with the trunk being the base environment.
+  
+  salt    'stage_v6_webapp01'           cmd.script salt://svn/wujunrong/run_before_starting_rsyslog.sh   reset_system_locale=False
+  `````````````````````````````salt cmd```````````````````````````````
+  salt    '*'                           cmd.shell "ls -l | awk '/foo/{print \$2}'"
+  salt    '*'                           cmd.run   "ls -l | awk '/foo/{print \$2}'"
+  salt    '*'                           cmd.run   "Get-ChildItem C:\ " shell='powershell'  //Specify an alternate shell with the shell parameter
+  salt    '*'                           cmd.run   template=jinja "ls -l /tmp/{{grains.id}} | awk '/foo/{print \$2}'"  //The template arg can be set to 'jinja' 
+  salt    '*'                           cmd.run   "grep f" stdin='one\ntwo\nthree\nfour\nfive\n
+  salt    'debian'                      cmd.run   "touch /home/frank/wujunrong"   cwd=/home/frank   runas=frank
+  salt    '*'                           cmd.shell cmd='sed -e s/=/:/g'
+  
+  salt-ssh -i    cloudera-agent3   state.single cmd.run  name='hostname'  template=jinja
+  salt-ssh -i    cloudera-agent3   state.single cmd.run   template=jinja   name="unzip -o /root/v6_webservice.war  -d  /tmp/root{{grains.location}}"
+  
+  salt    '*'        saltutil.refresh_pillar //To ensure that the minions have the new pillar data, issue a command to them asking that they fetch their pillars from the master:  
+  salt    '*'        pillar.items
+  
+  salt    'test_v6_tomcat_webservice02' cron.list_tab root
+  salt    '*'                           cron.raw_cron root
+  salt    '*'                           cron.set_special root @hourly 'echo foobar'
+  
+ 
+  salt   '*'                              state.sls tomcat.manager
+  salt   'test_v6_webapp_front01'         state.apply   wujunrong.start_logcenter
+  salt   '*'         state.show_sls apache   //TESTING FORMULAS
+  salt   '*'         state.highstate
+  
+  salt   -L 'web1,web2,web3'                 test.ping
+  salt   '*'     -b 10                       test.ping
+  salt   -G     'os:RedHat' --batch-size 25% apache.signal restart
+  
+  salt   '*'         svn.checkout /path/to/repo     svn://remote/repo username=wujunrong password=test
+  salt   '*'         svn.export   /path/to/repo     svn://remote/repo username=wujunrong password=test
+  salt   'debian'    cmd.shell   'cd /tmp/&&svn export "http://192.168.38.230/YXITD/10-运维部/吴军荣/test2"'  reset_system_locale=false
+  salt   '*'         file.append /etc/motd \
+                         "With all thine offerings thou shalt offer salt." \
+                         "Salt is what makes things taste bad when it isn't in them."
+  
+  salt-call         //The salt-call command is used to run module functions locally on a minion instead of executing them from the master.
+  salt-run          //Salt runners are simple modules used to execute convenience functions on the master
+  
+  salt-cp   'debian'              Dockerfile.V1   /tmp/
+  ``````````salt ssh````````````
+  salt-ssh  -i test_fk test.ping
+  salt-ssh  -i test_fk cp.get_file  salt://YX.war   /tmp/
+  salt-ssh  -i test_fk   -r   'cd /root/ && chkconfig --list'
+  salt-ssh  -i log-server cron.set_special root @hourly 'logrotate -vf /etc/logrotate.d/test_webservice'
+  
+  salt-ssh  -i    'cloudera-agent3'        archive.unzip    template=jinja    /tmp/v6_webservice.war  /tmp/root/{{grains.id}}
+  
+  ``````````salt pillar````
+  salt    -I         'somekey:specialvalue' test.ping  //Pillar data can be used when targeting minions.
+  salt    --pillar   'webserver_role:dev' state.sls webserver.foobarcom
+  salt    --pillar   'webserver_role:qa'  state.sls webserver.foobarcom
+  salt    --pillar   'webserver_role:dev' state.highstate
+  
+  salt-run  pillar.show_pillar 'www.example.com'
+  salt-run  pillar.show_pillar 'test_v6_redis02'
+  salt-run  pillar.show_pillar 'saltenv=dev'
+  salt-run  pillar.show_top    'test_v6_redis02'
+  salt-call pillar.get         bind
+  
+  salt '*' state.highstate pillar='{"cheese": "spam"}'
+  salt '*' saltutil.refresh_pillar
+  ``````````salt grains````````
+  salt '*' cmd.run template=jinja "ls -l /tmp/{{grains.id}} | awk '/foo/{print \$2}'"
+  salt '*'  
+  salt '*'               grains.items
+  salt 'cloudera-agent2' grains.item roles
+  salt-ssh -i  'cloudera-agent3' grains.get  shell
+  
+  salt -G 'os:CentOS' test.ping
+  salt -G 'cpuarch:x86_64' grains.item num_cpus
+  salt -G 'ec2_tags:environment:*production*'
+  
+  salt '*' saltutil.sync_grains
+  salt '*' saltutil.sync_all
+  
+  salt  -C  'cloudera-agent3 and G@server_type:tomcat'    cmd.shell "salt-call --local  grains.get server_type"
+  salt  'cloudera-agent3'   cmd.shell "  salt-call --local  grains.has_value xxd_package|grep True && hostname || echo Not found "
+
+`````/etc/salt/minion```````````````````````````````````````````````
+     file_roots:
+     base:
+       - /srv/salt
+
+     fileserver_backend:
+       - roots
+       - svn
+     
+     svnfs_remotes:
+       - http://192.168.38.230/YXITD/saltstack
+     
+     svnfs_mountpoint: salt://svn
+     svnfs_trunk: trunk
+     svnfs_branches: branches
+     svnfs_tags: tags
+     svnfs_root: ''
+     svnfs_env_whitelist: []
+     svnfs_env_blacklist: []
+     
+  salt-call --local           cmd.script salt://svn/wujunrong/fk_test.sh     cwd=/tmp
+`````````````````````````````````````````````````````````````````````````````````````````````````
+  salt-run  survey.diff survey_sort=up 'stage_v6_admin0?' cp.get_file_str file:///etc/sysconfig/network-scripts/ifcfg-eth0
+  salt-run  survey.diff survey_sort=up '*'                cmd.run 'cat /etc/hosts'
+  salt-run  survey.hash                'stage_v6_admin0?' test.ping
+  salt-run  survey.hash                "stage_v6_admin0?" file.get_hash /etc/salt/minion survey_sort=up //find an "outlier" minion config file
+
+  ```````````````````````````````
+  /etc/ssh/sshd_config:
+  file.managed:
+    - source: salt://ssh/sshd_config
+    - backup: minion
+    
+   
+  salt foo.bar.com file.list_backups   /tmp/foo.txt
+  salt foo.bar.com file.restore_backup /tmp/foo.txt 1
+  salt foo.bar.com file.list_backups   /tmp/foo.txt
+  salt foo.bar.com file.delete_backup  /tmp/foo.txt 0
+  ``````````````salt jobs``````````````````````
+  
+  salt-run jobs.list_jobs
+  salt-run jobs.active
+  salt-run jobs.lookup_jid 20150709225941807683
+  salt    '*'                      saltutil.runner jobs.list_jobs
+  salt    '*'                      state.running 
+  salt    'test_v6_tomcat_admin*'  saltutil.kill_job 20150709225941807683
+  
+  
+
+·····················salt diff····························
+  diff <(salt 'stage_v6_nginx01' cmd.run "cat /root/install.sh")   <(salt 'stage_v6_nginx02' cmd.run "cat /root/install.sh")
+  diff ./application.properties    <( salt 'stage_v6_batch01' cmd.run "cat /opt/webserver/v6_tomcat/webapps/xxdai_batch/WEB-INF/classes/application.properties"|sed '1d'| cut -d " " -f   5- )
+·····························································
+
+  删除前2列
+  cut -d " " -f 3- input_filename > output_filename
+  Explanation:
+  
+  cut: invoke the cut command
+  -d " ": use a single space as the delimiter (cut uses TAB by default)
+  -f: specify fields to keep
+  3-: all the fields starting with field 3
+  input_filename: use this file as the input
+  > output_filename: write the output to this file.
+  Alternatively, you can do it with awk:
+  
+  awk '{$1=""; $2=""; sub("  ", " "); print}' input_filename > output_filename
+  Explanation:
+  
+  awk: invoke the awk command
+  $1=""; $2="";: set field 1 and 2 to the empty string
+  sub(...);: clean up the output fields because fields 1 & 2 will still be delimited by " "
+  print: print the modified line
+  input_filename > output_filename: same as above.
+    
+  `````````````orchestrate`````````````````````````
+  # /srv/salt/orch/cleanfoo.sls
+  cmd.run:
+  salt.function:
+    - tgt: '*'
+    - arg:
+      - rm -rf /tmp/foo
+  
+  salt-run state.orchestrate orch.cleanfoo
+  
+  
+  # /srv/salt/orch/webserver.sls
+  install_nginx:
+   salt.state:
+    - tgt: 'web*'
+    - sls:
+      - nginx
+  
+  salt-run state.orchestrate orch.webserver
+  
+  
+  # /srv/salt/orch/web_setup.sls
+  webserver_setup:
+   salt.state:
+     - tgt: 'web*'
+     - highstate: True
+     
+  salt-run state.orchestrate orch.web_setup
+  
+  
+  webservers:
+   salt.state:
+    - tgt: 'web*'
+    - sls:
+      - apache
+      - django
+      - core
+    - saltenv: prod     #saltenv : None  Specify a file_roots environment.If none is found, base will be used
+``````````salt grains``````  
+vi /ETC/SALT/GRAINS
+roles:
+  - webserver
+  - memcache
+deployment: datacenter4
+cabinet: 13
+cab_u: 14-15
+```````salt pillar```````
+foo:
+  bar:
+    baz: qux
+Extracting it from the raw pillar in an sls formula or file template is done this way:
+{{ pillar['foo']['bar']['baz'] }}	
+{{ salt['pillar.get']('foo:bar:baz', 'qux') }}
+
+
+
+'node_type:web':
+  - match: grain
+  - webserver
+
+'node_type:postgres':
+  - match: grain
+  - database
+
+'node_type:redis':
+  - match: grain
+  - redis
+
+'node_type:lb':
+  - match: grain
+  - lb
+  
+{% set the_node_type = salt['grains.get']('node_type', '') %}
+
+{% if the_node_type %}
+  'node_type:{{ the_node_type }}':
+    - match: grain
+    - {{ the_node_type }}
+{% endif %}
+````````````````` salt mail ```````````````````
+
+smtp.from: wujunrong@xinxindai.com
+smtp.to: wujunrong@xinxindai.com
+smtp.host: smtp.exmail.qq.com
+smtp.port: 465
+smtp.username: wujunrong@xinxindai.com
+smtp.password: E431e431
+smtp.tls: true
+smtp.subject: salttest
+#smtp.gpgowner (optional)
+#smtp.fields (optional)
+
+salt '*' test.ping --return smtp
+`````````````````salt crontab ```````````````````
+schedule:
+    ----------
+    schedule-test:
+        ----------
+        args:
+            - /root/wu.sh>wu.log
+        function:
+            cmd.run
+        kwargs:
+            ----------
+            shell:
+                /bin/bash
+            stateful:
+                False
+        when:
+            - Monday 5:00pm
+            - Tuesday 3:00pm
+            - Wednesday 5:00pm
+            - Thursday 3:00pm
+            - Friday 3:33pm
+
+======================= svn section========================  
+#a new caret (^) notation, Note that this URL syntax works only when your current working directory is a 
+working copy—the command-line client knows the repository's root URL by looking at the working copy's metadata
+
+client and server
+client:  yum -y install subversion
+server:  yum -y install mod_dav_svn
+
+/etc/httpd/conf/httpd.conf
+
+
+
+``````````````````````````````````````````````````
+/etc/subversion
+```````````````````````
+  svn info
+  svn status
+  svn status --no-ignore
+  svn status --show-updates  #The -u (or --show-updates) option to svn status causes svn to contact the repository and show stuff that's changed in the repository - is that enough for you ? Depending on what you need, you might want the -q or --verbose flag too
+```````````````````````````  
+  svn log -v
+  svn log -v integer.c
+  svn log --verbose -r 42 #List files committed for a revision
+  svn log http://192.168.38.230/YXITD/10-运维部/吴军荣/test2/工作信息.TXT@454  -v
+  svn log -r{2011-08-01}:HEAD|awk '$14 ~/line/ {print $3}'|sort|uniq -c   #List svn commits by user for a date range
+  svn log --search james --search-and "Sep 2012"
+  
+  svn copy ^/calc/trunk/real.c@807 ./real.c
+  svn commit -m "Resurrected real.c from revision 807, /calc/trunk/real.c."
+  
+  svn log  -r 9238
+  svn log  --verbose --quiet -r 958 ^/
+  svn diff -c 9238
+  svn log -r {2006-11-20}:{2006-11-29}
+  svn log -v --xml | grep 'action="[A|D]"'   #get a list of added or deleted files from Subversion
+  
+  svn add fk_stage.sh
+  svn cat http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/rsyslog.conf
+  
+svn copy   http://svn.example.com/repos/calc/trunk \
+           http://svn.example.com/repos/calc/branches/my-calc-branch \
+           -m "Creating a private branch of /calc/trunk."
+svn delete http://svn.example.com/repos/calc/branches/my-calc-branch \
+           -m "Removing obsolete branch of calc project."
+svn copy   http://svn.example.com/repos/calc/branches/my-calc-branch@374 \
+           http://svn.example.com/repos/calc/branches/my-calc-branch \
+           -m "Restore my-calc-branch."
+
+
+svn merge ^/calc/trunk  
+svn revert . -R 
+svn revert . --recursive
+svn revert   sandwich.txt
+svn up
+svn mv old_file_name new_file_name
+svn propget svn:mergeinfo --recursive
+svn propget svn:mergeinfo .
+svn mergeinfo ^/calc/trunk
+svn mergeinfo ^/calc/trunk --show-revs eligible
+svn mergeinfo ^/trunk/src/main.c ^/branches/proj-X/src/main.c
+svn merge     ^/calc/trunk --dry-run
+
+svn merge ^/trunk/doc/INSTALL doc/INSTALL -c 958
+svn merge ^/subversion/trunk . -c 958
+svn merge -c 355 ^/calc/trunk
+svn update
+svn merge --reintegrate ^/calc/branches/my-calc-branch
+
+svn delete ^/calc/branches/my-calc-branch \
+    -m "Remove my-calc-branch, reintegrated with trunk in r391."
+svn delete  pillar/ reactor/ salt/
+
+svn copy http://svn.example.com/repos/calc/trunk \
+         http://svn.example.com/repos/calc/branches/my-calc-branch -m "Recreate my-calc-branch from trunk@HEAD."
+         
+svn list --recursive ^/branches/proj-X
+
+svn diff -c 355 ^/calc/trunk
+svn diff -r 23233:23226 http://192.168.38.230/YXCOD/01DEV/v6_branches/dev_v6.3.10.1_20151214
+svn diff -r 8979:11390  http://svn.collab.net/repos/svn/trunk/fSupplierModel.php
+svn diff -r PREV:HEAD
+svn diff -r 8979:11390
+
+
+svn copy ^/calc/trunk/real.c@807 ./real.c
+svn log -v -r 390 -g
+svn blame button.c -g
+svn switch ^/calc/branches/my-calc-branch
+svn mkdir
+svn copy my-working-copy \
+    http://svn.example.com/repos/calc/tags/mytag \
+    -m "Tag my existing working copy state."
+    
+svn  import -m "风控脚本" ./fk.sh  http://192.168.38.230/YXITD/10-运维部/吴军荣/fk.sh
+
+url="http://192.168.38.230/YXPRJ/05DEPLOYMENT/fk/Test Release/2015-7-1/YX.war"
+svn export "$url"
+svn export "http://wujunrong@192.168.38.230/YXITD/saltstack/trunk/wujunrong/ansible.hosts" --username wujunrong
+svn export         "http://192.168.38.230/YXPRJ/05DEPLOYMENT/fk/Test Release/2015-10-8/YX.war"      /home/wujunrong/work/YX.war
+svn export -r 16873 http://core.svn.wordpress.org/branches/2.8/wp-admin/css
+ 
+svn changelist          math-fixes button.c
+svn changelist --remove button.c
+svn diff       --changelist math-fixes
+svn commit -m "Fix a UI bug found while working on math logic." \
+           --changelist ui-fix
+
+svn_load_dirs.pl -t libcomplex-1.1 \
+                 http://svn.example.com/repos/vendor/libcomplex \
+                 current \
+                 /path/to/libcomplex-1.1
+                 
+svn move -q my-project renamed-project
+svn move foo.c bar.c
+svn move baz.c bat.c qux.c src   #Move several files in your working copy into a subdirectory:
+svn move -m "Move a file" http://svn.red-bean.com/repos/foo.c \
+                          http://svn.red-bean.com/repos/bar.c
+                          
+svn list http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/ --username wujunrong | grep grains| xargs -I {} svn export http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/{}
+`````````````````commit and checkout  only one file ```````````````````````````````````````````````````````                 
+$ svn co --depth=empty http://192.168.38.230/YXITD/10-运维部/吴军荣/backup  
+  cd backup && svn up install_site_local.sh            
+$ cd mydirectory            #Enter the empty working copy just checked out
+$ svn update fileToChange   #Adds file you want to change to your working dir
+$ edit fileToChange.xml
+$ svn commit -m "Modified 'fileToChange.xml' with latest version"
+
+
+svn merge -r COMMITTED:PREV .     #undo a commit
+svn merge -c -1708 path/to/file   #undo a commit
+svn merge -r UPREV:LOWREV .       #undo range
+svn merge -c -REV .               #undo single revision
+
+svn propset svn:executable on <list of files>
+svn propset svn:executable on deploy.sh
+svn propdel svn:executable <list of files>
+
+
+`````svn hook`````````````
+
+svnsync initialize http://svn.example.com/svn-mirror \
+                     http://svn.collab.net/repos/svn \
+                     --username syncuser --password syncpass
+
+svnadmin hotcopy /path/to/repos /path/to/repos-backup
+svnadmin hotcopy --clean-logs /path/to/bdb-repos /path/to/bdb-repos-backup
+````````````````````  PATCHFILE  `````````````````````````
+#bar.c changed to baz.c
+#Because a move in Subversion is implemented as a copy operation followed by a delete operation
+
+1、列出自己做了哪些修改：svn diff code/bar.c > PATCHFILE
+2、把文件中的code/bar.c改成code/baz.c
+3、把自己变化更新到新文件baz.c中去：svn patch PATCHFILE
+svn delete --force code/bar.c
+svn resolve --accept=working code/bar.c
+```````````````````````````````````
+
+============netstat section===========
+
+netstat --listen
+netstat  -nr
+netstat -antup 
+netstat -anp |grep 2181   #查看谁 连到 2181
+netstat -anp --inet       #查看谁 连到 谁
+ss -napt | grep 3260 
+=======================  cygwin section  ========================     
+  windows:  netstat -an
+  配置ssh:  ssh-host-config
+            net start sshd
+			用 cyg_server 用户 或 当前使用用户名登入ssh
+install svn: package subversion
+
+===============================================  
+    
+which searches your $PATH for the binary name you give. No need for an index.
+$ which touch
+/usr/bin/touch
+
+unzip -oq conf_file.zip -d /opt/webserver/v6_tomcat/webapps/xxdai_batch/WEB-INF/classes
+zip -r wu.zip   /tmp/wujunrong/test_v6_webservice
+=======================  vi section     ========================  
+:set hlsearch
+:nohlsearch
+The * key will highlight all occurrences of the word that is under the cursor.
+
+:set number
+:set nonumber
+
+
+G      go the end of the file
+gg     gets the cursor to the first character of the file
+ggVGy  copy all file
+
+
+
+dw Delete word from cursor on
+db Delete word backward
+dd Delete line
+d$ Delete to end of line
+d^ (d caret, not CTRL d) Delete to beginning of line
+
+`````````````````````
+column mode: CTRL-V
+Ctrl + V to go into column mode.
+Select the columns and rows where you want to enter your text.
+Shift + i to go into insert mode in column mode.
+Type in the text you want to enter. Dont be discouraged by the fact that only the first row is changed.
+Esc to apply your change (or alternately Ctrl+c)
+``````````````````````
+
+vim scp://root@cloudera-agent1///etc/yum.repos.d/my-cloudera-manager.repo
+
+Searching and Replacing
+:%s/HOME=\/var\/lib\/zabbix/HOME=\/etc\/zabbix/g
+=======================  sudo section   ========================   
+命令：visudo //press escape, then type ZZ
+Cmnd_Alias SALTCMD = /usr/bin/salt, /usr/bin/salt-key, /usr/bin/salt-run, /usr/bin/salt-ssh, /usr/bin/salt-cp
+wujunrong ALL = NOPASSWD: SALTCMD
+
+或: wujunrong ALL=(ALL) NOPASSWD:ALL
+=======================suid section,sgid section  ======================
+sgid:  chmod g+s ./test_list_date.sh
+suid:  chmod u+s ./test_list_date.sh
+chmod g-s ./test_list_date.sh 
+chmod u-s ./test_list_date.sh
+find / -perm -4000 -print > ~/SUIDS
+find / -perm -2000 -print > ~/SGIDS
+
+chmod -R u-s /usr/lib/amanda/
+chmod -R g-s /var/mailman/
+chmod u-s /sbin/{pwdb_chkpwd,unix_chkpwd,cardctl}
+
+chmod -R 755 /home/frank
+======================   tee      =========================
+
+wget -O - http://example.com/dvd.iso  | tee >(sha1sum > dvd.sha1) > dvd.iso
+wget -O - http://example.com/dvd.iso  | tee dvd.iso | sha1sum > dvd.sha1
+wget -O - http://example.com/dvd.iso  | tee >(sha1sum > dvd.sha1)   >(md5sum > dvd.md5)   > dvd.iso
+
+pgrep -a fk.sh| tee ./fk.log| wc -l
+crontab -l | tee crontab-backup.txt | sed 's/old/new/' | crontab –
+exec &> >(tee "$log_file")
+# $log_file will contain the output of the script and any subprocesses, and the output will also be printed to the screen.
+#  >(...) starts the process ... and returns a file representing its standard input. exec &> ... redirects both standard output and standard error into ... for the remainder of the script (use just exec > ... for stdout only). tee -a appends its standard input to the file, and also prints it to the screen.
+
+======================  nginx section   =========================
+To set up the yum repository for RHEL/CentOS, create the file named /etc/yum.repos.d/nginx.repo with the following contents:
+
+[nginx]
+name=nginx repo
+baseurl=http://nginx.org/packages/OS/OSRELEASE/$basearch/
+gpgcheck=0
+enabled=1
+Replace “OS” with “rhel” or “centos”, depending on the distribution used, and “OSRELEASE” with “5”, “6”, or “7”, for 5.x, 6.x, or 7.x versions, respectively.
+
+````````````````
+cat /etc/yum.repos.d/nginx.repo
+[nginx]
+name=nginx repo
+baseurl=http://nginx.org/packages/centos/6/$basearch/
+gpgcheck=0
+enabled=1
+
+vi /etc/nginx/nginx.conf
+````````````
+
+#Where level is one of the following values: debug, info, notice, warn, error, and crit
+error_log /file/path level  
+level:debug, info, notice, warn, error, and crit 
+````````
+rewrite_log off;
+#If set to on, Nginx will issue log messages for every operation performed by the rewrite engine at the notice error level
+```
+/usr/local/nginx/conf/nginx.conf
+/usr/local/nginx/logs/access.log
+/usr/local/nginx/logs/error.log
+
+start nginx:nginx 
+nginx -s signal
+         stop   — fast shutdown
+         quit   — graceful shutdown
+         reload — reloading the configuration file
+         reopen — reopening the log files
+kill -s QUIT 1628         
+nginx -s reload
+ps -ax | grep nginx
+nginx -t -c /usr/local/nginx/conf/nginx.conf  //This will test the configuration including all the files separated out into include files,for syntax errors.
+
+````````nginx doc`````````
+=     The location URI must match the specified pattern exactly. The pattern here
+      is limited to a simple literal string; you cannot use a regular expression.
+      server {
+           server_name website.com;
+           location = /abcd {
+              […]
+           }
+      }
+      The configuration in the location block:
+      Applies to http://website.com/abcd (exact match)
+      Applies to http://website.com/ABCD (case-sensitive if your
+      operating system uses case-sensitive filenames)
+      Applies to http://website.com/abcd?param1&param2
+      (regardless of query string arguments)
+      Does not apply to http://website.com/abcd/ (trailing slash)
+      Does not apply to http://website.com/abcde (extra
+      characters after the specified pattern)
+
+(None) The location URI must begin with the specified pattern. You may not use
+       regular expressions.
+       server {
+             server_name website.com;
+             location /abcd {
+             […]
+             }
+       }
+       The configuration in the location block:
+       Applies to http://website.com/abcd (exact match)
+       Applies to http://website.com/ABCD (case-sensitive if your
+       operating system uses case-sensitive filenames)
+       Applies to http://website.com/abcd?param1&param2
+       (regardless of query string arguments)
+       Applies to http://website.com/abcd/ (trailing slash)
+       Applies to http://website.com/abcde (extra characters after
+       the specified pattern)
+
+^~     Nginx stops searching for other patterns
+       Similar to the no symbol behavior, the location URI must begin with the specified pattern. The difference is that if the pattern is matched, 
+       Nginx stops searching for other patterns (read the section below).
+	   
+~      case-sensitive
+       The requested URI must be a case-sensitive match to the specified
+       regular expression.
+       server {
+               server_name website.com;
+               location ~ ^/abcd$ {
+               […]
+               }
+       }
+       The ^/abcd$ regular expression used in this example specifies that the
+           pattern must begin (^) with /, be followed by abc, and finish ($) with d.
+       Consequently, the configuration in the location block:
+       Applies to        http://website.com/abcd (exact match)
+       Does not apply to http://website.com/ABCD (case-sensitive)
+       Applies to        http://website.com/abcd?param1&param2         (regardless of query string arguments)
+       Does not apply to http://website.com/abcd/ (trailing slash)
+       due to the specified regular expression
+       Does not apply to http://website.com/abcde (extra
+       characters) due to the specified regular expression
+       Note: With operating systems such as Microsoft Windows, ~ and ~* are
+       both case-insensitive, as the OS is case-insensitive itself.   
+
+
+~*   case-insensitive
+     The requested URI must be a case-insensitive match to the speci ed regular expression.
+                server {
+                    server_name website.com;
+                    location ~* ^/abcd$ {
+                    [...]
+                    }
+     }
+     The regular expression used in the example is similar to the previous one. Consequently, the con guration in the location block:
+     Applies to http://website.com/abcd (exact match)
+     Applies to http://website.com/ABCD (case-insensitive)
+     Applies to http://website.com/abcd?param1&param2 (regardless of query string arguments)
+     Does not apply to http://website.com/abcd/ (trailing slash) due to the speci ed regular expression
+     Does not apply to http://website.com/abcde (extra characters) due to the speci ed regular expression
+
+@    Defines a named location block. These blocks cannot be accessed by the client but only by internal requests generated by other directives 
+     such as try_files or error_page.
+	 
+Nginx will search for matching patterns in a specific order:
+1.  = modifier
+   location blocks with the = modifier: If the specified string exactly matches
+   the requested URI, Nginx retains the location block
+2. no modifier : exactly matches
+   location blocks with no modifier: If the specified string exactly matches the
+   requested URI, Nginx retains the location block
+3. ^~
+   location blocks with the ^~ modifier: If the specified string matches the
+   beginning of the requested URI, Nginx retains the location block
+4. ~ or ~*
+   location blocks with ~ or ~* modifier: If the regular expression matches the
+   requested URI, Nginx retains the location block
+5. no modifier : matches the  beginning of
+   location blocks with no modifier: If the specified string matches the
+   beginning of the requested URI, Nginx retains the location block
+   In that extent, the ^~ modifier begins to make sense, and we can envision cases where it becomes useful.
+`````````````````````
+
+
+
+==========logrotate section`````````````
+copytruncate instruct logrotate to creates the copy of the original file
+ (i.e rotate the original log file) and truncates the original file to zero byte size.
+  This helps the respective service that belongs to that log file can write to the proper file.
+
+
+
+
+``````````````````````
+/etc/logrotate.conf  #Log Rotation
+/etc/logrotate.d/    #You may define configuration options for a specific log file and place it under the global options
+/etc/cron.hourly
+/etc/cron.daily
+/usr/sbin/logrotate -v  /etc/logrotate.hourly.conf  >/dev/null 2>&1
+``````A common issue is when you first setup a daily logrotate.d entry, it will not rotate the first day````````````````````
+cat /var/lib/logrotate.status
+1.Edit /var/lib/logrotate/status and add the line manually:
+  "/var/log/my_special.log"  2013-4-8
+2.setting it to today's or a prior date. Next run should cause it to run.
+`````````````````
+
+
+http://xmodulo.com/logrotate-manage-log-files-linux.html
+
+
+logrotate -vf /etc/logrotate.conf 
+cp -pv /etc/rsyslog.conf /etc/rsyslog.conf.orig
+``````````````````````````````````````````````````````````````
+size 100k
+size 100M
+size 100G
+
+cat /etc/logrotate.d/test_webservice
+/var/log/xinxindai/*catalina.out {
+        rotate 3 
+        dateext
+        dateformat -%Y-%m-%d-%s
+        extension .out 
+        nocompress
+        missingok
+        copytruncate
+        size 10k
+        sharedscripts
+        postrotate
+               find /var/log/xinxindai  -type f -exec sh -c 'second=$(echo {}|  sed  -r   -n  "s/.*-([0-9]+)\.out/\1/p") && \
+                             [ ! -z "$second" ] && my_second=$(date  -d @$second +"%H_%M_%S")  && \
+                             new_file_name=$(echo {}|sed  -r  "s/([0-9]+)\.out/$my_second.out/g") && \
+                             mv {}   $new_file_name '  \;
+               find /var/log/xinxindai  -mtime  1 -regex  '.*[0-9][0-9]\.out'   -print -exec /bin/rm -fr {} \; 
+        endscript
+
+}
+
+````````````````````````````````````````````````````````````````````
+
+
+=====================   rsyslog section   =========================
+/etc/rsyslog.conf
+systemctl start rsyslog
+``````facility``````
+if $syslogfacility-text == 'local0' and $msg startswith 'DEVNAME' and not ($msg contains 'error1' or $msg contains 'error0') then /var/log/somelog
+if $syslogfacility-text == 'local6' and $msg contains 'ERROR'  then   @192.168.31.155:514
+`````````````````````
+#FACILITY specifies the subsystem that produces a specific syslog message
+$DefaultRuleset <name>
+$RulesetCreateMainQueue
+
+````````````````````````````````````````````````````````````````````
+rsyslogd -dn   # run rsyslogd in debugging mode
+rsyslogd -N 1  # To check  syntax used in the etc/rsyslog.conf file;validate
+
+export RSYSLOG_DEBUGLOG="path"
+export RSYSLOG_DEBUG="Debug"
+
+$template HourlyMailLog,"/var/log/logdir/%$YEAR%/%$MONTH%/%$DAY%/%HOSTNAME%_mail.%$HOUR%"
+# Log all the mail messages in one place.
+mail.*                                                  -?HourlyMailLog
+#mail.*                                                  -/var/log/maillog
+
+if $syslogtag contains 'my.logtrust.tag' and $syslogfacility-text == 'local7' then @@LOGTRUST-RELAY:PORT;myFileMonitorTemplate
+:syslogtag, contains, "my.logtrust.tag" ~ 
+
+````````````````````````````````````````````````````````````````````
+$outchannel log_rotation, /var/log/test_log.log, 104857600, /home/joe/log_rotation_script
+*.* :omfile:$log_rotation
+
+$template DynamicFile,"/var/log/test_logs/%timegenerated%-test.log"
+*.* ?DynamicFile
+
+if $syslogtag contains_i 'real' then @@192.168.31.160:5144;auditFormat
+````````````````````````````````````````````````````````````````````
+ruleset(name="remote-10514") {
+    action(type="omfile" file="/var/log/remote-10514")
+}
+
+ruleset(name="remote-10515") {
+    cron.* action(type="omfile" file="/var/log/remote-10515-cron")
+    mail.* action(type="omfile" file="/var/log/remote-10515-mail")
+}
+
+input(type="imtcp" port="10514" ruleset="remote-10514");
+input(type="imtcp" port="10515" ruleset="remote-10515");
+
+``````````````````````````````````````````````````````````````````````
+ruleset(name="rulesetname") {
+    action(type="omfile" file="/path/to/file")
+    action(type="..." ...)
+    /* and so on... */
+}
+
+``````````````````````````````````````````````````````````````````````
+# ... module loading ...
+# process remote messages
+
+ruleset(name="remote10514"){
+    action(type="omfile" file="/var/log/remote10514")
+}
+
+ruleset(name="remote10515"){
+    action(type="omfile" file="/var/log/remote10515")
+}
+
+ruleset(name="remote10516"){
+    if prifilt("mail.*") then {
+        /var/log/mail10516
+        stop
+        # note that the stop-command will prevent this message from
+        # being written to the remote10516 file - as usual...
+    }
+    /var/log/remote10516
+}
+
+
+# and now define listeners bound to the relevant ruleset
+input(type="imptcp" port="10514" ruleset="remote10514")
+input(type="imptcp" port="10515" ruleset="remote10515")
+input(type="imptcp" port="10516" ruleset="remote10516")
+
+
+``````````````````````````````````````````````````````````````````````
+# ... module loading ...
+# process remote messages
+if $fromhost-ip == '192.168.152.137' then {
+        action(type="omfile" file="/var/log/remotefile02")
+        stop
+    }
+
+# Note that “stop” is the discard action!.
+# only messages not from 192.0.21 make it past this point
+
+# The authpriv file has restricted access.
+authpriv.*                            /var/log/secure
+# Log all the mail messages in one place.
+mail.*                                /var/log/maillog
+# Log cron stuff
+cron.*                                /var/log/cron
+# Everybody gets emergency messages
+*.emerg              
+
+
+``````````````````````````````````````````````````````````````````````
+
+$ModLoad imtcp
+# at first, this is a copy of the unmodified rsyslog.conf
+#define rulesets first
+$RuleSet remote10514
+$RulesetCreateMainQueue on # create ruleset-specific queue
+*.*     /var/log/remote10514
+
+$RuleSet remote10515
+$RulesetCreateMainQueue on # create ruleset-specific queue
+*.*     /var/log/remote10515
+
+$RuleSet remote10516
+$RulesetCreateMainQueue on # create ruleset-specific queue
+mail.*        /var/log/mail10516
+&       ~
+# note that the discard-action will prevent this messag from
+# being written to the remote10516 file - as usual...
+*.*     /var/log/remote10516
+
+# and now define listeners bound to the relevant ruleset
+$InputTCPServerBindRuleset remote10514
+$InputTCPServerRun 10514
+
+$InputTCPServerBindRuleset remote10515
+$InputTCPServerRun 10515
+
+$InputTCPServerBindRuleset remote10516
+$InputTCPServerRun 10516
+
+``````````````````````````````````````````````````````````````````````
+
+ruleset(name="rulesetname") { 
+      rule 
+      rule2
+      call rulesetname2
+      … 
+}
+``````````````````````````````````````````````````````````````````````
+#load needed modules
+module(load="imuxsock") # provides support for local system logging
+module(load="imklog") # provides kernel logging support
+module(load="mmjsonparse") #for parsing CEE-enhanced syslog messages
+
+#try to parse structured logs
+*.* :mmjsonparse:
+
+#define a template to print field "foo"
+template(name="justFoo" type="list") {
+  property(name="$!foo")
+  constant(value="\n") #we'll separate logs with a newline
+}
+
+#and now let's write the contents of field "foo" in a file
+*.* action(type="omfile"
+           template="justFoo"
+           file="/var/log/foo")
+``````````````````````````````````````````````````````````````````````
+# File 1
+$InputFileName path_to_file
+$InputFileTag tag:
+$InputFileStateFile state_file_name
+$InputFileSeverity severity
+$InputFileFacility facility
+$InputRunFileMonitor
+
+# File 2
+$InputFileName path_to_file2
+...
+
+
+$ModLoad imfile
+
+$InputFileName /var/log/httpd/error_log
+$InputFileTag apache-error:
+$InputFileStateFile state-apache-error
+$InputRunFileMonitor
+
+
+``````````````````````````````````````````````````````````````````````
+$ModLoad imfile # needs to be done just once
+# File 1
+$InputFileName /path/to/file1
+$InputFileTag tag1:
+$InputFileStateFile stat-file1
+
+$InputFileSeverity error
+$InputFileFacility local7
+$InputRunFileMonitor
+
+# File 2
+$InputFileName /path/to/file2
+$InputFileTag tag2:
+
+$InputFileStateFile stat-file2
+$InputRunFileMonitor
+# ... and so on ...
+# check for new lines every 10 seconds 
+$InputFilePollingInterval 10
+``````````````````````````````````````````````````````````````````````
+module(load="imfile" PollingInterval="10")
+# needs to be done just once. PollingInterval is a module directive and is only set once when loading the module
+# File 1
+input(type="imfile" File="/path/to/file1" 
+Tag="tag1" 
+StateFile="/var/spool/rsyslog/statefile1" 
+Severity="error" 
+Facility="local7")
+# File 2
+input(type="imfile" File="/path/to/file2" 
+Tag="tag2" 
+StateFile="/var/spool/rsyslog/statefile2")
+# ... and so on ...
+#
+
+
+``````````````````````````````````````````````````````````````````````
+$template myFileMonitorTemplate,"<%PRI%>%timegenerated% %HOSTNAME% %syslogtag% %msg%"
+ 
+# File access
+$InputFileName /path/to/file.log
+$InputFileTag my.logtrust.tag:
+$InputFileStateFile stat-file1-myFileMonitor
+$InputFileSeverity info
+$InputFileFacility local7
+$InputFilePollInterval 1
+$InputFilePersistStateInterval 1
+$InputRunFileMonitor
+ 
+if $syslogtag contains 'my.logtrust.tag' and $syslogfacility-text == 'local7' then @@LOGTRUST-RELAY:PORT;myFileMonitorTemplate
+:syslogtag, contains, "my.logtrust.tag" ~
+```````````````````````````````````````````````````````````````````````````````````
+
+Module (path="builtin:omusrmsg")
+*.=crit action(type="omusrmsg" 
+Users="ExampleUser"
+Users="root"
+)
+
+
+
+
+$ModLoad omusrmsg
+*.=crit :omusrmsg:exampleuser
+& root
+
+
+````````````````````````rsyslog client``````````````````````````````````````````````
+
+#wujunrong
+# auditd audit.log
+module(load="imfile" PollingInterval="10") #needs to be done just once
+
+# File 1
+input(type="imfile"
+      File="/var/log/audit/audit.log"
+      Tag="debian_audit"
+      StateFile="/var/spool/rsyslog/statefile1"
+      Severity="info"
+      Facility="local7")
+$template HostAudit, "/var/log/rsyslog/%HOSTNAME%/audit_log"
+$template auditFormat, "%msg%\n"
+local7.*                                ?HostAudit;auditFormat
+                                     &  @@192.168.56.101:10516
+
+
+`````````````````````````rsyslog server`````````````````````````````````````````````
+
+
+#wujunrong
+module(load="imtcp")
+input(type="imtcp" port="10516" ruleset="remote-10516")
+$template TmplAuth, "/var/log/remote/auth/%HOSTNAME%/%PROGRAMNAME:::secpath-replace%.log"
+$template TmplMsg, "/var/log/remote/msg/%HOSTNAME%/%PROGRAMNAME:::secpath-replace%.log"
+$template auditFormat, "%msg%\n"
+ruleset(name="remote-10516"){
+    action(type="omfile" DynaFile="TmplMsg" template="auditFormat")
+}
+
+```````````````
+$template TmplAuth, "/var/log/xinxindai/%source%-%PROGRAMNAME:::secpath-replace%"
+$template DFile,"/opt/logs/%syslogtag%/%HOSTNAME%-%$year%%$month%%$day%_%$hour%.log"
+$template auditFormat, "%msg%\n"
+
+ruleset(name="remote"){
+        if $fromhost-ip == '192.168.34.10' then {
+                action(type="omfile" DynaFile="TmplAuth" template="auditFormat")
+                stop
+        }
+        action(type="omfile" DynaFile="DFile" template="auditFormat" dirCreateMode="0755" FileCreateMode="0644")
+
+=====================  journal section   =============================== 
+/etc/systemd/journald.conf
+
+journalctl
+journalctl -n Number
+journalctl -f
+journalctl -f fieldname=value ...
+journalctl _UID=70 _SYSTEMD_UNIT=avahi-daemon.service _SYSTEMD_UNIT=crond.service
+journalctl _PID=8088
+journalctl /usr/bin/bash
+
+
+journalctl -p err                                                 #view only entries with error or higher priority,
+journalctl -b                                                     #view log entries only from the current boot,
+journalctl -p warning --since="2013-3-16 23:59:59"
+journalctl            --since=value               --until=value
+journalctl            --since 09:00               --until "1 hour ago"
+
+journalctl -u nginx.service --since today
+journalctl -u nginx.service -u php-fpm.service --since today
+
+journalctl -o json
+journalctl -o verbose
+journalctl -o export    
+
+usermod -a -G adm username
+
+journalctl --disk-usage
+
+``````````````````````````````````````````````````````````````````````
+id -u www-data
+journalctl _UID=33 --since today
+
+``````````````````````````````````````````````````````````````````````
+#To enable persistent storage for Journal:
+mkdir -p /var/log/journal
+systemctl restart systemd-journald
+
+``````````````````````````````````````````````````````````````````````
+
+     timedatectl list-timezones
+     timedatectl status
+sudo timedatectl set-timezone Asia/Shanghai
+journalctl --utc
+
+
+=====================  Audit section  =============================== 
+apt-get install auditd audispd-plugins
+
+/etc/audit/auditd.conf 
+/etc/audit/audit.rules
+/etc/audit/rules.d/audit.rules
+/var/log/audit/audit.log 
+
+
+``````````````````````````````````````````````````````````````````````
+auditctl -a action,filter -S system_call -F field=value -k key_name
+启动监控文件文件      ：auditctl -w /usr/local/nginx/html/static/image/data/avatar/no_pic.gif  -p wa -k gif_moniter_huangchao
+    监控命令执行        sudo auditctl -a exit,always -F arch=b64 -F path=/usr/sbin/service   -S execve  -k wujunrong
+删除事件发生后查看日志：ausearch -i -k  gif_moniter_huangchao  
+列出当前生效的审计规则：auditctl -l
+删除所有审计规则      ：auditctl -D
+       
+         r — read access to a file or a directory.
+         w — write access to a file or a directory.
+         x — execute access to a file or a directory.
+         a — change in the file's or directory's attribute.
+
+                        auditctl -l
+                        auditctl -s  
+
+``````````````````````````````````````````````````````````````````````
+-a exit,always -F arch=b64 -S execve
+-a exit,always -F arch=b32 -S execve
+to /etc/audit/audit.rules every executed commands will be logged
+
+auditctl  -a exit,always -F arch=b64 -S execve -k wujunrong
+auditctl  -a exit,always -F arch=b32 -S execve -k wujunrong
+
+``````````````````````````````````````````````````````````````````````
+
+ausearch -k passwd-ra 
+ausearch --interpret --exit -13
+ausearch -i --uid UID
+ausearch --comm  rm -i
+ausearch --start yesterday --end now -m SYSCALL -sv no -i  -sc execve
+ausearch -ts 3/12/07 -k password-file -x rm
+ausearch -f /etc/passwd -i | less
+ausearch --start yesterday --end now  -i -if ./audit_log 
+
+
+
+aureport --start this-month
+aureport --start this-week --login --failed -i
+aureport --start this-week --file --failed -i
+
+
+
+man 8 auditd
+
+````````````````````````````````````````````````````````
+#Configuring PAM for Auditing 在文件中增加如下配置项
+session   required pam_tty_audit.so disable=* enable=root
+
+debian:     /etc/pam.d/sshd
+redhat:
+            /etc/pam.d/system-auth
+            /etc/pam.d/password-auth
+
+
+``````````````````````````````````````````````````
+
+aureport -au -i
+aureport -x  -i
+aureport --tty  -i -if  /var/log/remote/msg/debian/debian_audit.log 
+ausearch -i --start yesterday    -if /var/log/remote/msg/debian/debian_audit.log 
+==========================================================
+
+lsof -i -a -p 234 #List all network files in use by a specific process
+lsof -i -a -c ssh
+
+lsof -i :2181
+``````````````````````````````
+#To list opne files for firefox process, enter
+ls -l /proc/7857/fd  
+pfile 3533
+lsof -p
+lsof  /home/frank/kvm/images/my-wd-disk
+`````````````````````````````````
+
+fuser -v test.txt 
+
+
+===================== java section jdk section =====================================
+
+ 
+```````rpm section````````
+rpm -ivh jdk-8uversion-linux-x64.rpm  #Install the package.
+rpm -Uvh jdk-8uversion-linux-x64.rpm  #To upgrade a package
+rpm -e <package name>  #remove package
+rpm -q --whatprovides java            #check which specific RPM package provides the java files
+rpm -qf `which scp`
+rpm -q jdk  #remove jdk
+``````````tar section```````
+tar   zxvf jdk-8uversion-linux-x64.tar.gz
+
+zip  abc.zip *
+
+``````````tomcat section``````
+The CATALINA_HOME environment variable should be set to the location of the
+root directory of the "binary" distribution of Tomcat.
+The CATALINA_BASE environment variable specifies location of the root
+directory of the "active configuration" of Tomcat. It is optional. It
+defaults to be equal to CATALINA_HOME.
+Using JAVA_HOME provides access to certain additional startup options that
+are not allowed when JRE_HOME is used.
+If both JRE_HOME and JAVA_HOME are specified, JRE_HOME is use
+
+
+
+安装java  :   执行/tmp/jdk-6u45-linux-x64-rpm.bin  
+              java -version
+安装tomcat:   tar zxvf /root/apache-tomcat-6.0.45.tar.gz
+
+cat /etc/profile.d/java.sh 
+   export JAVA_HOME=/usr/java/default
+   export CATALINA_HOME=/root/apache-tomcat-6.0.45
+   export PATH=/root/apache-maven-3.2.5/bin:$PATH
+
+
+
+cat setenv.sh 
+    #JAVA_HOME=/usr/java/latest
+    CATALINA_PID="$CATALINA_BASE/tomcat.pid"
+    CATALINA_OPTS="-server -Xms1024m -Xmx5120m -XX:PermSize=128m -XX:MaxPermSize=2048m -XX:NewSize=192m -XX:MaxNewSize=2048m -Dfile.encoding=UTF-8 -Dcom.sun.management.jmxremote  -Dcom.sun.management.jmxremote.port=1234  -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
+
+./apache-tomcat-6.0.45/bin/catalina.sh   stop 5  -force
+====================maven section======mvn section================================
+wget       https://archive.apache.org/dist/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.zip
+unzip      apache-maven-3.3.3-bin.zip
+
+export PATH=/opt/apache-maven-3.3.3/bin:$PATH
+export JAVA_HOME=jdk-install-dir
+export PATH=$JAVA_HOME/bin:$PATH
+``````````````````````````````````````
+/usr/local/maven/conf/settings.xml
+
+mvn -v
+Apache Maven 3.2.3 (33f8c3e1027c3ddde99d3cdebad2656a31e8fdf4; 2014-08-12T04:58:10+08:00)
+Maven home: /usr/local/maven
+Java version: 1.6.0_45, vendor: Sun Microsystems Inc.
+Java home: /usr/java/jdk1.6.0_45/jre
+Default locale: en_US, platform encoding: UTF-8
+OS name: "linux", version: "2.6.32-358.el6.x86_64", arch: "amd64", family: "unix"
+
+
+``````````````````````````````````````
+
+mvn package  #Making a JAR file
+
+打包到/root目录下： 
+        过滤掉v6_batch/trunk/pom.xml和 ./v6_batch/trunk/batch-schedule 下的pom.xml文件
+
+方法一：全部打包
+        find  ./  -type d  -path ./v6_batch/trunk/batch-schedule -prune -o  -name pom.xml   -print | grep -v "v6_batch/trunk/pom.xml" |  xargs -I {}  sh -c 'path_dir=`dirname {}`&& cd $path_dir && mvn clean package && cp  ./target/*.war   /root/' ;
+方法二：一旦有错就停止
+        echo -e  \#\!/bin/bash \\nset -e >/root/wu.sh  &&  find  ./  -type d  -path ./v6_batch/trunk/batch-core  -prune -o  -name pom.xml   -print | grep -v "v6_batch/trunk/pom.xml" |  xargs -I {}  sh -c 'path_dir=`dirname {}` && head_path_dir=`pwd` &&  echo cd $head_path_dir  \;  cd $path_dir \;  mvn clean package \; cp  ./target/*.war   /root/   >>/root/wu.sh ' && chmod +x /root/wu.sh  && /root/wu.sh
+方法三：打包并把错误输出到文件
+         >/home/wujunrong/tmp/error.txt; find  ./  -type d  -path ./v6_batch/trunk/batch-schedule -prune -o  -name pom.xml   -print | grep -v "v6_batch/trunk/pom.xml" |  xargs -I {}  sh -c 'path_dir=`dirname {}`&& cd $path_dir && { mvn clean package ; echo $? >./return_val.txt ; }  | tee ./output.txt  ;return_val=`cat ./return_val.txt` ;  if [ "$return_val" -ne 0 ];then ( cat ./output.txt  >>/home/wujunrong/tmp/error.txt)  ;else  cp  ./target/*.war   /home/wujunrong/tmp/;fi  '					
+部署             ： 
+find /root/xxd      -name *.war   -exec sh -c 'folder_name=`echo {}| cut -d "/" -f  3`; unzip -o {} -d /root/apache-tomcat-6.0.45/webapps/"$folder_name"'   \;
+
+mvn test
+mvn test-compile
+mvn test
+
+===============vnc section=========
+realvnc: press function key F8 and click "Options" Click "Load / Save" Click "Save As" 
+
+/sbin/runuser -l frank -c "/usr/bin/x0vncserver -display :0  -PasswordFile=/home/frank/.vnc/passwd"
+/usr/bin/x0vncserver -display :0  -PasswordFile=/home/frank/.vnc/passwd
+yum  -y   install tigervnc
+yum  -y   install tigervnc-server
+cp /lib/systemd/system/vncserver@.service /etc/systemd/system/vncserver@:1.service
+
+vi /etc/systemd/system/vncserver@:1.service
+   #ExecStart=/sbin/runuser -l <USER> -c "/usr/bin/vncserver %i"
+    #PIDFile=/home/<USER>/.vnc/%H%i.pid
+
+su frank
+vncserver  #setpassword
+
+systemctl daemon-reload
+systemctl enable vncserver@:1.service
+reboot
+systemctl start vncserver@:1.service
+
+``````
+su  frank
+export DISPLAY=:0
+firefox
+
+============================  virsh section   kvm section==============================
+HOST:
+sudo wget http://www.kraxel.org/repos/firmware.repo -O /etc/yum.repos.d/firmware.repo
+yum groupinstall "Virtualization Tools"
+yum -y groupinstall "Development Tools" # gcc section
+yum install qemu libvirt-client virt-manager  virt-viewer guestfish libguestfs-tools virt-top
+yum -y install virt-install
+yum -y install libvirt
+yum install spice-server spice-client spice-protocol
+
+````````virsh status section`````````
+virsh version
+virsh nodememstats
+virsh nodecpustats              #The above numbers are in nanoseconds of time available for user/system/idle etc.
+virsh nodecpustats –cpu     1
+virsh nodecpustats –percent
+virsh dominfo       BaseMachine
+virsh vcpucount     centos-64
+virsh dommemstat    centos-64
+virsh domiflist     centos-64
+
+``````virsh power section```
+Guest:
+yum -y install acpid  
+chkconfig acpid on
+service acpid start
+
+systemctl enable acpid.service
+systemctl start  acpid.service
+
+```````````
+vi /etc/libvirt/qemu.conf 
+uncomment user="root" and group="root"
+
+`````````````
+virsh vcpupin [domain-id, domain-name or domain-uuid] [vcpu] , [cpulist]
+virsh setvcpus [domain-name, domain-id or domain-uuid] [count]
+virsh setmem [domain-id or domain-name]  [count]
+
+virt-rescue --suggest -d cloudera-manager
+virt-rescue  -d cloudera-manager
+``````````
+virsh -c esx://root@192.168.129.1?no_verify=1 list --all
+sudo virsh list --all| grep shut                    | awk '{print $2}' |xargs  -I '{}' sudo virsh dominfo    '{}'
+sudo virsh list --all| grep -E 'cloudera.*running'  | awk '{print $2}' |xargs  -I '{}' sudo virsh shutdown   '{}'
+````````````````virsh image section```
+
+qemu-img create -f qcow2 /var/lib/libvirt/images/guest.qcow2 8192M
+qemu-img create -f qcow2 -o backing_file=original snapshot.qcow
+truncate --size=8192M /var/lib/libvirt/images/guest.img
+virt-install -r 1024 --accelerate -n Fedora14 \
+             -f      /path/to/guest.img \
+             --cdrom Fedora-14-x86_64-Live.iso
+
+qemu-img info /export/vmimgs/f15guest.qcow2	
+guestfish --rw -a disk.img -i edit /boot/grub/grub.conf		 
+````````````````````````````````````````````` 
+ virt-cat -d cloudera-manager /etc/redhat-release
+ windows: virt-edit -d mywindomain 'c:\autoexec.bat'
+
+ virsh     edit centos64
+ centos6.4: virt-edit -d cloudera-manager /etc/sysconfig/network -e  's/HOSTNAME=.*/HOSTNAME=cloudera-manager/g'
+ virt-cat  -d centos64 /etc/fstab
+ 
+`````virsh disk seciton````````````````
+sudo virt-df -h  --csv
+resize image
+1:virt-filesystems -a /home/frank/kvm/images/windows8-office.img  -l -h
+2:virt-filesystems --long -h --all -a /home/frank/kvm/images/windows8-office.img
+3:truncate -r windows8-office.img windows8-in-office.img
+4:truncate -s +15G windows8-in-office.img
+5:查看image中的文件系统，确定要升级那个分区
+     virt-filesystems --long --parts --blkdevs -h -a  /home/frank/kvm/images/my-wd-disk/windows8-for-office.img
+  或 virt-filesystems --long -h --all -a              /home/frank/kvm/images/windows8-office.img
+6:virt-resize --expand /dev/sda2 windows8-office.img    windows8-in-office.img
+7:on windows: use DISKPART's "extend filesystem" to correct disk size 
+  DISKPART
+  list volume
+  select volume [x]
+  extend filesystem
+
+#获取image文件地址，其中xpath命令用来解析xml
+ sudo virsh dumpxml cloudera-manager | xpath /domain/devices/disk/source  
+#查看image文件中的文件系统
+ virt-filesystems --long --parts --blkdevs -h -a  /home/frank/kvm/images/my-wd-disk/cloudera-manager.qcow2
+#查看安装的程序及OS版本
+ sudo virt-inspector -a  ./test-centos7.qcow2
+#格式转换
+ qemu-img convert test-centos7.qcow2   my-wd-disk/test-centos7.img
+```````snapshot section`````````
+virsh snapshot-list    cloudera-manager
+virsh snapshot-revert  domain snapshotname
+sudo virsh snapshot-delete    cloudera-agent1   1447985981
+virsh snapshot-edit    cloudera-manager  operating-stsytem-installed
+virsh snapshot-dumpxml cloudera-manager  operating-stsytem-installed
+
+
+virsh snapshot-create    cloudera-manager
+virsh snapshot-create    h-hadoop-data03  --atomic snapshot.xml
+virsh snapshot-create    cloudera-agent2  ./snapshot-description.xml
+<domainsnapshot>
+ <name>agent:salt minion and power package</name>
+ <description>salt-master and ssh installed </description>
+</domainsnapshot>
+
+
+
+virsh save f15vm3 foof15vm3
+qemu-img snapshot -c
+``````````````````````````````````````
+
+spice://192.168.31.7:5939
+vncviewer snoopy:2
+virsh vncdisplay  windows8-office 
+sudo virsh domdisplay cloudera-demo
+```````````
+export DISPLAY=:0.0
+XAUTHORITY=~/.Xauthority
+
+nohup virt-viewer --connect qemu:///system windows8-in-office --full-screen >/dev/null 2>&1 &
+      virt-viewer --connect qemu:///system windows8-in-office --full-screen
+``````````
+virsh vncdisplay domainName
+remote-viewer spice://myhost:3001
+Retrieved from "http://wiki.libvirt.org/page/After_import_a_guest_from_an_existing_disk_image_using_virt-install%2C_the_guest_starting_stalls_with_%22No_boot_device%22"
+
+
+virt-filesystems --long -h --all -a ./centos-minimal.qcow2
+virt-customize  --hostname dnsmasq     -a ./centos64-template.qcow2
+virt-customize  --hostname salt-master -d salt-master 
+virt-customize   -d salt-master --install wget
+virt-copy-in   -d salt-master  /root/Templates/epel-release-latest-6.noarch.rpm /etc/yum.repos.d/
+virt-copy-out  -d cloudera-manager /root/anaconda-ks.cfg   .
+virt-customize -d salt-master --run-command 'rpm -ivh /etc/yum.repos.d/epel-release-latest-6.noarch.rpm'
+virt-ls -d cloudera-manager  /etc/yum.repos.d/
+virt-customize -d cloudera-manager --run-command 'yum -y upgrade ca-certificates --disablerepo=epel'
+
+virsh autostart  centos7 
+virsh autostart --disable centos7 
+
+
+virsh suspend mirror
+virsh resume  mirror
+
+
+virt-clone  --connect qemu:///system --original  centos64-minimal --name centos64-minimal2 --file /home/frank/kvm/images/centos-minimal2.qcow2	 
+
+
+`````````virsh network````
+```ubuntu:
+Create the file /etc/libvirt/hooks/qemu  #In NAT network,used to Forwarding Incoming Connections
+virsh net-update  default add ip-dhcp-host "<host mac='52:54:00:ab:d3:72' name='windows7-for-office' ip='192.168.122.227'/>"  --live --config		   
+/etc/network/interfaces
+# interfaces(5) file used by ifup(8) and ifdown(8)
+auto lo
+iface lo inet loopback
+
+auto enp3s0f0
+iface enp3s0f0  inet manual
+
+
+auto br0
+iface br0 inet static
+     address 192.168.2.100
+     network 192.168.2.0
+     netmask 255.255.255.0
+     broadcast 192.168.2.255
+     gateway 192.168.2.1
+     bridge_ports enp3s0f0
+     bridge_stp on
+     bridge_fd 0
+     bridge_maxwait 0
+	 
+auto br0 
+  iface br0 inet dhcp 
+  bridge_ports eth0 
+  bridge_stp off 
+  bridge_fd 0 
+  bridge_maxwait 0	 
+
+
+```centos:
+# cat > ifcfg-eth0 <<EOF
+DEVICE=eth0
+HWADDR=00:16:76:D6:C9:45
+ONBOOT=yes
+BRIDGE=br0
+NM_CONTROLLED=no
+EOF
+
+
+# cat > ifcfg-br0 <<EOF
+DEVICE=br0
+TYPE=Bridge
+BOOTPROTO=dhcp
+ONBOOT=yes
+DELAY=0
+NM_CONTROLLED=no
+EOF
+
+virsh domifaddr salt #Get a list of interfaces of a running domain along with their IP and MAC addresses
+
+virsh domiflist centos64-minimal
+virsh attach-interface --domain vm1 --type network \
+        --source openstackvms --model virtio \
+        --mac 52:54:00:4b:73:5f --config --live
+arp -a | grep d9
+     virsh attach-interface  guest                       --type bridge  --source virbr0 --mac 00:16:3e:1b:f7:47 --live		
+sudo virsh attach-interface --domain windows8-in-office  --type bridge  --source br1    --model  rtl8139  --config --live
+sudo virsh attach-interface --domain salt-master         --type bridge  --source br1    --model   virtio  --config --live
+
+virsh iface-list  --all #Returns the list of active host interfaces
+virsh iface-dumpxml  br0
+virsh dumpxml $VM | grep "mac address" 
+
+virsh attach-interface --domain centos64-template  --type bridge --source  br1  --model virtio --config --live	
+virsh detach-interface --domain vm1                     --type network  --mac 52:53:00:4b:75:6f --config	
+virsh detach-interface --domain windows7                --type bridge   --mac 52:53:00:4b:75:6f  --config	
+
+virbr0:/etc/libvirt/hooks/qemu
+
+````````````` run as non-root```````````````````````
+/etc/libvirt/qemu.conf  #user=$USERNAME and group=$GROUPNAME
+ /var/run/libvirt/qemu/
+ /var/lib/libvirt/qemu/
+ /var/cache/libvirt/qemu/  
+ #The simplest option is the latter one, of just enabling the 'execute/search' bit. For any directory to be used for storing disk images, this can be achieved by running the following command on the directory itself, and any parent directories 
+ #It is important for administrators to note that this implies the QEMU process will only be able to access files owned by root, and not files owned by any other user. 
+ chmod o+x /path/to/directory 
+
+
+``````virsh kernel`````
+#To output kernel information from a fully virtualized Linux guest into the domain, modify the /boot/grub/grub.conf file. Append the following to the kernel line: console=tty0 console=ttyS0,115200.
+linux  : virt-edit -d mydomain /boot/grub/grub.conf
+title Red Hat Enterprise Linux Server (2.6.32-36.x86-64)
+	root (hd0,0)
+	kernel /vmlinuz-2.6.32-36.x86-64 ro root=/dev/volgroup00/logvol00 \ 
+	console=tty0 console=ttyS0,115200
+	initrd /initrd-2.6.32-36.x86-64.img
+
+     virsh console centos64
+sudo virsh console  --force  test-centos7 
+guestfish --rw -a disk.img -i edit /boot/grub/grub.conf
+```````````````pool section``````````
+virsh pool-list --all
+virsh pool-define-as   guest_images_dir  dir  - - - - "/guest_images"
+virsh pool-define-as   my-big-hard-drive dir  - - - -  /run/media/frank/MyData/kvm/image
+virsh pool-build       guest_images_dir
+virsh pool-start       guest_images_dir
+virsh pool-autostart   guest_images_dir
+virsh pool-info        guest_images_dir
+
+virsh pool-undefine    my-big-hard-drive
+virsh pool-dumpxml     guest_images_dir
+virsh pool-destroy     guest_images_dir
+virsh pool-delete      guest_images_dir
+
+```````````````````````
+virsh vol-list            my-big-hard-drive
+virsh vol-list            guest_images       --details
+virsh vol-create-as       guest_images_disk   volume1  8G
+virsh vol-clone     --pool guest_images_disk   volume3  clone1		 
+virsh vol-delete    --pool vg0                 _domain-id_.img
+virsh vol-delete    --pool images              /home/frank/kvm/images/centos-minimal2.qcow2
+virsh vol-delete    --pool guest_images        /home/frank/kvm/images/centos-minimal
+virsh vol-download     --pool  my-big-hard-drive --vol windows8.img  --file /home/frank/kvm/images/windows8-office.img
+
+
+``````os-variant section` virsh os```
+osinfo-query os
+virt-install --os-variant=list
+
+``````create new image`````````virsh-install section``
+
+
+
+
+virt-builder -l
+virt-builder fedora-20  --size 20G --format qcow2 --hostname virt.example.com  --root-password file:/tmp/rootpw  --install "inkscape,@Xfce Desktop"  -o  mydisk.img
+                                                                               --root-password password:123456
+
+
+centos6: virt-install -n centos64-template --vcpus=2   -r 2048 --disk=path=/home/frank/kvm/images/centos64-template.qcow2  --location  http://vault.centos.org/6.4/  --nographics        --os-type=linux    --os-variant=rhel6 --network bridge=br0  -x "console=ttyS0,115200 hostname=wujunrong device=eth0 ip=10.10.21.76 netmasway=10.10.21.100"
+         virt-install -n centos64-template --vcpus=2   -r 2048 --disk=path=/home/frank/kvm/images/centos64-template.qcow2  --location http://vault.centos.org/6.4/os/x86_64              --nographics     --os-type=linux    --os-variant=rhel6 --network bridge=br0  -x "console=ttyS0,115200 hostname=wujunrong device=eth0 ip=dhcp"
+         virt-install -n centos64-template --vcpus=2   -r 2048 --disk=path=/home/frank/kvm/images/centos64-template.qcow2  --location  http://centos.ustc.edu.cn/centos/6.7/os/x86_64    --nographics     --os-type=linux    --os-variant=rhel6 --network bridge=br0  -x "console=ttyS0,115200 hostname=wujunrong device=eth0 ip=dhcp"
+centos6: virt-install -n centos6-wu -r 1024 --disk=path=/tmp/centos64-network-install.img  -l http://vault.centos.org/6.4/os/x86_64/  --network bridge=br1  --nographics  --extra-args "console=ttyS0,115200"   --os-type=linux    --os-variant=rhel6
+
+                    virt-install  -n cloudera-manager  -r 2048  --vcpus=2  --os-variant=rhel6.4  --accelerate  -w bridge:br0   -w bridge:br1   --disk path=/home/frank/kvm/images/centos-minimal.qcow2  -l /home/frank/Downloads/CentOS-6.4-x86_64-bin-DVD1.iso   --nographics     --os-type=linux  --initrd-inject=/root/Templates/anaconda-ks.cfg  -x "ks=file:/anaconda-ks.cfg console=ttyS0"
+                    virt-install  -n cloudera-manager  -r 2048  --vcpus=2  --os-variant=rhel6.4  --accelerate  -w bridge:br0   -w bridge:br1   --disk path=/home/frank/kvm/images/centos-minimal.qcow2  -l /home/frank/Downloads/CentOS-6.4-x86_64-bin-DVD1.iso   --nographics     --os-type=linux  --initrd-inject=/root/Templates/anaconda-ks.cfg  -x "ks=file:/anaconda-ks.cfg console=ttyS0,115200 hostname=wujunrong device=eth0 ip=dhcp"
+   on centos6:      virt-install  -n cloudera-redis02   -r 2048  --vcpus=2  --os-variant=rhel6  --accelerate  -w bridge:br0   --disk path=/opt/vm/cloudera-redis02.qcow2,size=100,format=qcow2   -l http://172.16.30.44/mnt/  --nographics     --os-type=linux  --initrd-inject=/home/salt/mnt/anaconda-ks.cfg  -x "ks=file:/anaconda-ks.cfg console=ttyS0"
+
+centos7: virt-install -n rhel6anaconda-guest -r 1024 --disk=path=/home/frank/kvm/images/guest.qcow2  --location /home/frank/Downloads/CentOS-7-x86_64-Minimal-1503-01.iso   --nographics --extra-args "console=ttyS0,115200"
+         virt-install -n office-salt -r 1024 --disk=path=./office-salt.qcow2  --location /home/frank/Downloads/CentOS-7-x86_64-Minimal-1503-01.iso   --nographics  -w bridge:br0  --extra-args "console=ttyS0,115200   device=eth0 ip=dhcp"
+    sudo virt-install  -n test-centos7 -r 2048 --disk=path=./test-centos7.qcow2  --location /home/frank/Downloads/CentOS-7-x86_64-Minimal-1503-01.iso   --nographics  -w bridge:br0 -w bridge:br1 --initrd-inject=/home/frank/Templates/anaconda-ks.cfg.centos7 --extra-args "ks=file:/anaconda-ks.cfg.centos7  console=ttyS0,115200"
+    sudo virt-install  -n test-centos7 -r 2048 --disk path=/home/frank/mnt/kvm/images/test-centos7.qcow2  --location  http://mirrors.aliyun.com/centos/7.2.1511/os/x86_64/   --nographics  -w bridge:br0 -w bridge:br1 --initrd-inject=/root/anaconda-ks.cfg.centos7 --extra-args "ks=file:/anaconda-ks.cfg.centos7  console=ttyS0,115200"
+
+	
+virt-install  -n centos  -r 2048  --vcpus=2  --os-variant=rhel5.4  --accelerate -v -w bridge:br0  -w bridge:br1 \
+                              --disk path=/emc/kvm/centos.img,size=100 \
+                              -l http://mirrors.nixcraft.in/centos/5.5/os/x86_64/ \
+                              -nographics \
+                              -x "ks=http://10.10.21.3/static/ks.cfg ksdevice=eth0 ip=10.10.21.76 netmask=255.255.255.240 dns=10.10.21.1 gateway=10.10.21.100"		 
+		 
+``````use exeisting image``````````
+          virt-install --connect qemu:///system --ram 1024 -n rhel_64 -r 2048 --os-type=linux --os-variant=rhel5  --disk path=/root/RHEL-Server-5.8-64-virtio.qcow2,device=disk,bus=virtio,format=qcow2 --vcpus=2 --vnc --noautoconsole --import
+          virt-install --name NewVM --ram 512 --vcpus 1 --disk path=/var/lib/libvirt/images/centos.img --import --noautoconsole --force
+          virt-install --name windows8-office --ram 2048 --vcpus 2 --disk path=/home/frank/kvm/images/windows8-office.img,device=disk  --os-type=windows --os-variant=win8.1 -w bridge=br0  --noautoconsole   --import
+centos6:  virt-install  --ram 5120 -n test_centos7_wu  --os-type=linux --os-variant=rhel7  --disk path=/opt/vm/test-centos7.img,device=disk --vcpus=2 --vnc  --import   -w bridge=br0
+
+yum install -y libguestfs-tools
+         virt-sysprep      -a /home/frank/kvm/images/cloudera-agent4.qcow2  --hostname cloudera-agent4  --operations  net-hwaddr,firewall-rules,dhcp-client-state,udev-persistent-net  --root-password password:w123456
+         virt-sysprep      -a /opt/vm/cloudera-redis01.qcow2                --root-password password:111     --hostname cloudera-redis01
+centos6 :virt-sysprep      -a  ./test-centos7.img  --hostname test-centos7-wu  --enable   net-hwaddr,firewall-rules,dhcp-client-state,udev-persistent-net  --root-password password:E431e431
+
+virt-customize    -d cloudera-agent3                               --hostname cloudera-agent3	
+virt-customize    -a /home/frank/kvm/images/cloudera-agent4.qcow2  --root-password password:w123456
+
+virt-install      --name cloudera-agent4  --ram 2048 --vcpus 2 --disk path=/home/frank/kvm/images/cloudera-agent4.qcow2  --import --noautoconsole --force -w bridge:br0  -w bridge:br1
+
+`````````````
+
+virsh    -c qemu+ssh://root@192.168.38.200/system list
+virsh    list     --all
+virsh    dominfo   myRHELVM1
+virsh    start     Guest
+virsh    reboot    Guest
+virsh    shutdown  Guest
+
+
+virsh destroy     _domain-id_
+virsh undefine    _domain-id_
+`````````````
+1. virsh dumpxml name_of_vm > name_of_vm.xml
+2. Undefine the old vm to prevent an error because of an duplicate UUID.
+   virsh undefine name-of-vm  
+3. Edit the xml file then import it.
+   virsh define name_of_vm.xml
+`````````
+brctl show
+brctl stp br0 yes
+
+virsh net-dumpxml  default
+virsh net-list     --all	
+virsh net-update   default add ip-dhcp-host \
+          "<host mac='52:54:00:00:00:01' \
+           name='bob' ip='192.168.122.45' />" \
+           --live --config
+
+autrace /usr/bin/virsh migrate  centos64-minimal  qemu+ssh://root@192.168.31.200/system   --verbose
+
+`````````````````````````````````````````
+#full bridging, where the guest is connected directly to the LAN
+# cat > ifcfg-eth0 <<EOF
+DEVICE=eth0
+HWADDR=00:16:76:D6:C9:45
+ONBOOT=yes
+BRIDGE=br0
+NM_CONTROLLED=no
+EOF
+
+# cat > ifcfg-br0 <<EOF
+DEVICE=br0
+TYPE=Bridge
+BOOTPROTO=dhcp
+ONBOOT=yes
+DELAY=0
+NM_CONTROLLED=no
+#STP=on
+EOF
+
+An extra directive, DELAY=0, 
+is added to prevent the bridge from waiting while it monitors traffic, learns where hosts are located, 
+and builds a table of MAC addresses on which to base its filtering decisions. 
+The default delay of 15 seconds is not needed if no routing loops are possible.
+
+`````````````````````````````````````````	
+# cat >> /etc/sysctl.conf <<EOF
+ net.bridge.bridge-nf-call-ip6tables = 0
+ net.bridge.bridge-nf-call-iptables = 0
+ net.bridge.bridge-nf-call-arptables = 0
+ EOF
+ # sysctl -p /etc/sysctl.conf	
+
+``````````````````````````````````````
+# echo "-I FORWARD -m physdev --physdev-is-bridged -j ACCEPT" > /etc/sysconfig/iptables-forward-bridged
+# lokkit --custom-rules=ipv4:filter:/etc/sysconfig/iptables-forward-bridged
+# service libvirtd reload
+
+`````````````````````````````````````````````````
+virsh edit <VM name> 
+<interface type='bridge'>
+    <source bridge='br0'/>
+    <mac address='00:16:3e:1a:b3:4a'/>
+    <model type='virtio'/>   # try this if you experience problems with VLANs
+ </interface>
+ 
+``````````````kickstart section``````````````
+ network --device eth0 --bootproto static --ip 194.117.142.153 --netmask 255.255.255.0 --gateway 194.117.142.2 --nameserver 194.117.142.83 --hostname kickclient
+======ineted section============
+/etc/services
+/etc/xinetd.d/ 
+===============security section==============
+chattr  +i /etc/services 
+ 
+============================  SELinux section ==============================
+#Without SELinux enabled, only traditional discretionary access control (DAC) methods such as file permissions or access control lists (ACLs) are used to control the file access of users
+#httpd is running in the unconfined unconfined_t domain, and falls back to using DAC rules
+#SELinux users are authorized for roles, and roles are authorized for domains
+#An SELinux policy rule states that the passwd_t domain has entrypoint permission to the passwd_exec_t type.
+#Processes running in the passwd_t domain can only read and write to authorized types, such as files labeled with the etc_t or shadow_t types. This prevents the passwd application from being tricked into reading or writing arbitrary files
+#Remember that the type defines a domain for processes, and a type for files.
+#RBAC(Role-Based Access Control )is used for processes, not files. 
+#The httpd_sys_content_t type allows the httpd process to access this file.
+#Note that in Red Hat Enterprise Linux, the httpd process runs in the confined httpd_t domain by default. T
+#When you log in, the pam_selinux PAM module automatically maps the Linux user to an SELinux user
+#Confined and unconfined Linux users are subject to executable and writeable memory checks, and are also restricted by MCS or MLS.
+#Linux users in the sysadm_t, staff_t, user_t, and xguest_t domains can log in via the X Window System and a terminal.
+
+#The role is an attribute of RBAC. SELinux users are authorized for roles, and roles are authorized for domains
+#role和process都有domain,role   和selinux user 属性关联（The role serves as an intermediary between domains and SELinux users）,
+                         process和selinux type 属性关联,通过domain这个中介连接起来
+#If an unconfined Linux user executes an application that SELinux policy defines as one that can transition from the unconfined_t domain to its own confined domain, the unconfined Linux user is still subject to the restrictions of that confined domain.
+#By default, Linux users in the staff_t and user_t domains can execute applications in their home directories and /tmp/
+
+#by default, SELinux targeted policy is used
+#so what's the domain doing for processes? It gives the process a context to run within. It's like a bubble around the process that confines it. It tells the process what it can do and what it can't do.This confinement makes sure each process domain can act on only certain types of files and nothing more.
+
+
+All files and processes are labeled with a type: 
+types define a domain for processes and a type for files. 
+SELinux policy rules define how types access each other, 
+whether it be a domain accessing a type, or a domain accessing another domain. 
+````````````````````````````````````````````
+sesearch
+allow <domain> <type>:<class> { <permissions> };
+
+ <type>:<class> 表示what resource  a process  of certain domain is trying to access  
+Class defines what the resource actually represents (file, directory, symbolic link, device, ports, cursor etc.)
+```````````````````````````````````````````````
+
+
+/etc/selinux/config #The SELINUXTYPE option sets the SELinux policy to use. Targeted policy is the default policy. 
+cat /etc/selinux/config
+/etc/selinux/targeted/setrans.conf
+
+关闭selinux： cat /etc/sysconfig/selinux  (SELINUX=disabled)
+centos7: sed -i.bak "s/SELINUX=enforcing/SELINUX=permissive/"   /etc/sysconfig/selinux
+centos6: sed -i.bak "s/SELINUX=enforcing/SELINUX=permissive/"   /etc/selinux/config
+
+sestatus       #Verify SELinux Status
+getenforce     #confirm that the getenforce command returns Disabled:
+setenforce 0   #Enable permissive mode
+semanage login   -l  #yum install policycoreutils-python,view a list of mappings between SELinux and Linux user accounts (you need to have the policycoreutils-python package installed)
+semanage boolean -l | grep rsync   #rsync是服务名
+seinfo           -r  #To list all available roles,yum install setools-console , 
+
+setsebool    httpd_can_network_connect_db on
+setsebool    httpd_can_network_connect_db off
+getsebool    httpd_can_network_connect_db
+setsebool -P httpd_can_network_connect_db on  #To make changes persistent across reboots
+setsebool -P httpd_can_network_connect_db off
+  
+
+ps axZ | grep httpd
+ps -eZ | grep passwd 
+ps auxf
+
+
+id -Z
+
+ls -dZ directory_name
+ls -dZ /web
+ls -lZ /web 
+ls -Z                           /usr/sbin/httpd
+chcon      -t unconfined_exec_t /usr/sbin/httpd
+restorecon -v                   /usr/sbin/httpd
+
+chcon -R -t httpd_sys_content_t /web/    #command to change the type of the /web/ directory (and its contents) to httpd_sys_content_t:
+
+semanage fcontext -a -t samba_share_t /etc/file1
+restorecon        -v                  /etc/file1
+semanage fcontext -a -t httpd_sys_content_t "/web(/.*)?"  # /web/ directory and the files in it
+restorecon -R -v                      /web
+semanage port     -a -t http_port_t -p tcp 9876
+
+restorecon:
+#the restorecon command reads the files 
+#in the /etc/selinux/targeted/contexts/files/ directory, 
+#to see which SELinux context files should have.
+
+sealert -a /var/log/audit/audit.log > /path/to/mylogfile.txt 
+chcon -Rv --type=httpd_sys_content_t /html                 #The chcon command relabels files; however, such label changes do not survive when the file system is relabeled
+semanage fcontext -a -t httpd_sys_content_t "/html(/.*)?"  #permanent changes that survive a file system relabe
+
+
+matchpathcon    -V   /opt/webserver/v6_tomcat/logs/* #checks the context of a file path and compares it to the default label for that path. 
+restorecon   -R -v   /opt/webserver/v6_tomcat/logs/  #To restore the context for all files under a directory, use the -R option:
+
+
+semanage permissive -a httpd_t
+semodule -l | grep permissive
+semanage permissive -d httpd_t
+``````````````````````Creating Custom SELinux Policy Modules with audit2allow````````````````````````````````````````````````````````
+step 1:
+发生权限问题不记audit日志,需关闭不记录audit日志的规则开关Possible Causes of Silent Denials
+sesearch --dontaudit  | grep "dontaudit syslog*"   
+sesearch --dontaudit -s smbd_t | grep squid
+semodule -DB  #To temporarily disable dontaudit rules
+semodule -B   #To rebuild policy and enable dontaudit rules
+setp 2:
+从audit日志中提取错误，生成selinux策略
+grep syslogd_t /var/log/audit/audit.log| audit2allow -m  rsysloglocal > wu.log
+grep syslogd_t /var/log/audit/audit.log| audit2allow -M  rsysloglocal
+semodule -i rsysloglocal.pp
+===================   crontab section   ================================
+The forward slash (/) can be used to specify step values. 
+The value of an integer will be skipped within a range following the range with /integer. 
+For example, the minute value defined as 0-59/2 denotes every other minute in the minute field. 
+Step values can also be used with an asterisk. For instance, if the month value is defined as */3, 
+the task will run every third month.
+`````````````````````````````````````
+/var/spool/cron/  #The user-defined crontabs are stored 
+/etc/crontab
+/etc/cron.d/ 
+/etc/cron.hourly/
+/etc/cron.daily/
+/etc/cron.weekly/
+/etc/cron.monthly/
+/etc/cron.daily/jobs.deny 
+minute   hour   day   month   dayofweek   command
+`````````````````````````````````````
+centos6:  yum install cronie
+service crond status
+
+crontab -e
+crontab -l
+
+/etc/cron.allow
+/etc/cron.deny
+/etc/cron.hourly/
+/etc/anacrontab
+
+/etc/security/access.conf
+
+-:ALL EXCEPT root :cron 
+
+============================   puppet   =================================
+/var/log/messages
+============================   ansible section =================================
+
+````````epel section````
+  wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+  wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+  
+  sudo yum -y install ansible
+  yum -y install openssh-clients #ssh seciton
+  yum -y install libselinux-python
+```````````````````````````
+yum -y install sshpass
+/etc/ansible/ansible.cfg
+[defaults]
+host_key_checking=false
+`````handbook```````
+      wget  -O /root/epel-release-latest-6.noarch.rpm  https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm	 
+      rpm -ivh /root/epel-release-latest-6.noarch.rpm 
+       
+       yum install sshpass
+       yum -y install ansible
+       yum -y install openssh-clients
+       yum -y install libselinux-python
+
+     修改配置文件，把
+       /etc/ansible/ansible.cfg  
+      [defaults]
+      host_key_checking=false
+```````````````````````````````````````````````````````
+/etc/ansible/hosts:
+
+[webservers]
+www[01:50].example.com
+10.0.0.1 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=myrootpassword
+[databases]
+db-[a:f].example.com
+
+[stage_v6_tradew]
+stage_v6_tradew01 ansible_ssh_host=192.168.31.54  ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=test
+jumper            ansible_ssh_host=192.168.1.50   ansible_ssh_port=5555   
+
+[targets]
+localhost              ansible_connection=local
+other1.example.com     ansible_connection=ssh        ansible_ssh_user=mpdehaan
+other2.example.com     ansible_connection=ssh        ansible_ssh_user=mdehaan
+
+密码带#号的前面用\转义字符
+When you put a password with special characters inside host inventory file it breaks everything after it and even if you put the password parameter at the end the login result in a authentication failure.
+\# works. Ansible 1.9.1 though. 
+ct-stage-tomcat-partener02   ansible_ssh_host=192.168.31.91  ansible_connection=ssh ansible_ssh_user=yxaccount ansible_ssh_pass=YXxxd7361^@\#
+
+````````````````````ssh section```````````````````````````````````
+
+ssh-keygen -t rsa  
+ssh-copy-id -i ~/.ssh/id_rsa.pub $remote_user@$remote_host
+ssh-agent bash
+ssh-add ~/.ssh/id_rsa
+#the private key is used for the opposite operation, in these examples to decrypt ciphertext or to create a digital signature. 
+ssh root@10.0.1.120 -p 2222
+``````````````````````
+ansible cloudera-agent1  -m shell -a "ip a" --ask-pass
+ansible all              -m ping
+ansible stage_v6_tradew            -a "ip a"
+ansible raleigh          -m shell  -a 'echo $TERM'
+ansible fix-env          -m script -a "/root/test/fix_env_start.sh"
+
+yum -y install libselinux-python
+ansible test_tomcat_admin -m yum    -a "name=libselinux-python"
+ansible stage_v6_tradew   -m fetch  -a "src=/etc/rsyslog.conf dest=/tmp/{{ inventory_hostname  }}.out  flat=yes"
+ansible test                      -m copy   -a "src=/etc/rsyslog.conf dest=/tmp/"
+ansible stage_tomcat_tradew       -m copy  -a "src=/srv/salt/grains.stage_tomcat_tradew           dest=/etc/salt/grains  "
+
+
+ansible webservers       -m yum   -a "name=acme-1.5 state=present"  #Ensure a package is installed to a specific version
+ansible webservers       -m yum   -a "name=acme     state=latest"   #Ensure a package is at the latest version
+ansible webservers       -m yum   -a "name=acme     state=absent"   #Ensure a package is not installed
+ansible test             -m yum   -a "name=svn      state=latest"
+
+ansible webservers       -m git        -a "repo=git://foo.example.org/repo.git dest=/srv/myapp version=HEAD"
+ansible webservers       -m subversion -a "repo=svn+ssh://an.example.org/path/to/repo dest=/src/export export=True"
+=========================   ps command  ====================================
+
+From the man page, there are a few thread options:
+
+THREAD DISPLAY
+-H Show threads as if they were processes
+-L Show threads, possibly with LWP and NLWP columns
+-T Show threads, possibly with SPID column
+-m Show threads after processes
+
+===============================================================
+
+
+
+============= 翻墙 ================
+
+lantern :sudo apt-get install libappindicator3-1
+ranbiao/ranbiao
+xxdai123
+===============  rsync section ==========================
+yum -y install rsync
+/etc/rsyncd.conf
+/var/log/rsync.log
+/var/run/rsyncd.lock
+
+rsync -avz rpmpkgs/ root@192.168.0.101:/home/
+rsync  -avzh  /opt/webserver/v6_tomcat/webapps/v6_admin/image/   root@192.168.31.29:/opt/webserver/v6_tomcat/webapps/xxdai_sys_admin/image/ --dry-run
+               拷贝源头                                          拷贝目标
+
+#Copy/Sync a Remote Directory to a Local Machine:a directory /home/tarunika/rpmpkgs which is on a remote server is being copied in your local computer in /tmp/myrpms
+rsync -avzh root@192.168.0.100:/home/tarunika/rpmpkgs /tmp/myrpms
+rsync -avzh /var/www/html/cdh5/  root@192.168.38.119:/tmp/wujunrong
+
+/var/www/html/cdh5/ ,/tmp/wujunrong 必需存在，rsync只同步这两个目录中的内容
+如果参数最后不带反斜杠“/”，rsync会把cm5目录移动到wujunrong目录下，例如：
+rsync -avzh  /var/www/html/cm5   root@192.168.38.119:/var/www/html/centos6-cm5.5.0
+
+
+使rsync服务使用selinux保护机制 配置方法：
+semanage fcontext -a -t initrc_exec_t "/etc/rc.d/init.d/rsyncd"
+grep rsync /etc/selinux/targeted/contexts/files/file_contexts.local
+restorecon -R -v /etc/rc.d/init.d/rsyncd
+ls -lZ /etc/rc.d/init.d/rsyncd
+semanage port -a -t rsync_port_t -p tcp 10000
+==============command section================================================
+C-w Kill from the cursor to the previous whitespace. This is different than M- because the word boundaries differ.
+C-b Move back one character.
+C-f Move forward one character.
+Ctrl-A to get to the beginning 
+Ctrl-A to get to the beginning 
+
+````````````
+M-b and M-f for moving backwards and forwards to the current word,
+xshell meta key
+File -> Properties -> Terminal -> Keyboard
+把 "Use Alt as Meta key" 这个选项勾上
+ 
+``````````````````````````````
+参数"-"代表 standard input
+echo $?  ##see exit status of cal command type following command:
+>/dev/null 2>&1
+```````网安````````````````````
+cat *.csv    | grep -v '^$'  | awk  -F,   -f ./china_network.awk  | grep 关键词名称 | grep -v 动词 |awk '{ $1=""; $2=""; print $0 }'| tr -d '\n'| sed -e 's/\s\+/\n/g'| grep -v '^$' | awk '{ print "关键词," $0}' | grep -v 关键词名称| grep -v 专属词语   > bbs_key_word_filter.txt
+
+
+# cat china_network.awk
+ 
+{
+     if (max_nf < NF)
+          max_nf = NF
+     max_nr = NR
+     for (x = 1; x <= NF; x++)
+          vector[x, NR] = $x
+}
+
+END {
+     for (x = 1; x <= max_nf; x++) {
+#          for (y = max_nr; y >= 1; --y)
+           for (y =1; y <= max_nr; y++)
+               printf("%s ", vector[x, y])
+          printf("\n")
+     }
+}
+
+````````
+#Check out the fildescriptor #1 (stdout) in /proc/$PID/fd/. The kernel represents this file as symbolic link to a file the descriptor is redirected to.
+$ readlink -f /proc/20361/fd/1
+/tmp/file
+`````````windows7```````````````````
+yum search ntfs
+grub2-mkconfig -o /boot/grub2/grub.cfg
+````````````````````````````
+basename /usr/bin/perlscript    ##This will remove the prefix, /usr/bin/, and prints only the string 'perlscript'
+filename=`basename $0` && echo $filename
+jps -l -v                #java section
+unset HISTFILE
+tar xjvf strongswan-5.2.1.tar.bz2
+zipinfo conf_file.zip
+file -bi [filename]  #utf-8
+sort <file> | uniq -c            #计算重复次数
+sort <file> | uniq --count
+pwdx <PID>  #Find out current working directory of a running process?
+``````memory section```
+free -h
+vmstat -s -S M         # memory section
+ps aux --sort -rss     # Sorting down processes by memory usage
+```````````````
+info coreutils 'cat invocation'
+mesg(1) permission set to yes
+system monitor: sudo iostat -x 10
+```````disk section``````````
+sudo fdisk -l
+sudo yum install gparted
+parted -s /dev/sdb print #disk section
+sudo mount /dev/sdb1   /home/frank/kvm/images/my-wd-disk/
+```````````````
+help export 
+help ls
+help pwd
+ntpdate 192.168.38.190
+df -hT  #disk section
+autoreconf -i /root/strongswan
+curl -o  /home/frank/kvm/images/windows8-office.img   FILE:///run/media/frank/MyData/windows8.img
+runuser -l tomcat  -c "/opt/webserver/v6_tomcat/bin/startup.sh"
+ip route  add 192.168.38.0/255.255.255.0  via 172.16.15.253  dev eth1
+````````````````
+git clone --branch 5.2.1  https://git.strongswan.org/strongswan.git
+sudo yum groupinstall  "Development Tools"
+sudo apt-get install build-essential
+``````grep section````````````````
+  grep -inr "ramesh" *     #exclude case from a grep to make it not case sensitive – simply add -i
+  grep -e listen -e standard_conforming_strings
+
+  #For BSD or GNU grep you can use -B num to set how many lines before the match and -A num for the number of lines after the match.
+  grep -B 3 -A 2 foo README.txt
+  
+  #If you want the same number of lines before and after you can use -C num. #This will show 3 lines before and 3 lines after.
+  grep -C 3 foo README.txt
+  
+  grep -v 'adoring_dubinsky\|NAMES'
+  
+  grep -r --exclude-dir={packages,rsync,workspace} xinxindai  *
+``````````````````````````````
+
+
+profile: Add this bash function to your ~/.bashrc and `source ~/.bashrc`
+while pgrep vpnserver > /dev/null; do sleep 1; done
+process_number=$[$line_number-1]
+ln -s  ~/backup/fk_stage.sh  fk_stage.sh
+       存在的                新建的
+```````````diff section`````````````````
+cmp -l file1.bin file2.bin   #二进制文件对比
+diff -Naur               stage_v6_webservice/  temp_v6_webservice/
+diff -r --exclude=".svn" dev_v6.4.4_20160308/  ../wujunrong/dev_v6.4.4_20160308/
+```````````du section````````````````````
+du -ah /root
+du -ak /root
+du --max-depth  1 -h
+```````````ls section``````````````````````````
+ls -ltr
+stat ./v6_tomcat_webservice01-catalina.out 
+````````
+The cp command -p option is equivalent to --preserve=mode,ownership,timestamps
+cp -p tre.sh /tmp/tre.sh.5
+``````````tree section``````````````````
+只显示目录
+tree -d
+tree -d -L 4  #目录深度
+
+pstree
+
+``````````````date section `````````````````````````````
+date +%Y%m%d -s "20150721"
+date +%T     -s "11:04:13"
+i=1440137634;date -u -d @${i} +"%T"  #把秒转换成小时分钟
+
+
+find .  -type f -exec sh -c 'second=$(echo {}|  sed  -r   -n  "s/.*-([0-9]+)\.out/\1/p") && \
+                             [ ! -z "$second" ] && my_second=$(date -u -d @$second +"%H_%M_%S")  && \
+                             new_file_name=$(echo {}|sed  -r  "s/([0-9]+)\.out/$my_second.out/g") && \
+                             mv {}   $new_file_name '  \;
+```````````````````````````取日志 log section``````
+salt 'v6_webservice02' cmd.run "ls -lh /opt/webserver/v6_tomcat/logs/catalina.out.20150905"
+                                grep -E "^\[v6_webservice\]\[INFO\]2015-09-05\s12:00"   /opt/webserver/v6_tomcat/logs/catalina.out.20150905
+salt 'v6_webservice02' cmd.run 'grep -E "^\[v6_webservice\]\[INFO\]2015-09-05\s12:00"   /opt/webserver/v6_tomcat/logs/catalina.out.20150905'
+
+                                sed -n  '/^\[v6_webservice\]\[INFO\]2015-09-06\s02:56/,/^\[v6_webservice\]\[INFO\]2015-09-06\s10:56/p'   /opt/webserver/v6_tomcat/logs/catalina.out.20150905 >   /opt/webserver/v6_tomcat/logs/webservice02.catalina.out.20150905
+salt 'v6_webservice02' cmd.run "sed -n  '/^\[v6_webservice\]\[INFO\]2015-09-06\s07:00/,/^\[v6_webservice\]\[INFO\]2015-09-06\s12:00/p'   /opt/webserver/v6_tomcat/logs/catalina.out.20150905 >   /opt/webserver/v6_tomcat/logs/webservice02.catalina.out.20150905"
+
+                                gzip -c ./webservice01.catalina.out.20150905> ./webservice01.catalina.out.20150905.gz
+salt 'v6_webservice02' cmd.run "gzip -c /opt/webserver/v6_tomcat/logs/webservice02.catalina.out.20150905>  /opt/webserver/v6_tomcat/logs/webservice02.catalina.out.20150905.gz"
+
+salt 'v6_webservice03' cmd.run "ls -lh  /opt/webserver/v6_tomcat/logs/webservice03.catalina.out.20150905.gz"
+
+tar -O -xzvf ./v6_webservice01_20150905.tar.gz |  grep -E "^\[v6_webservice\]\[INFO\]2015-09-05\s07:00"
+tar    -zcvf /tmp/webservice-trade.tar.gz   ./{*webservice*11-11*,*webser*.out,*tra*11-11*,*tra*.out}
+tar    -zcvf /tmp/trade-12-7.tar.gz         `find ./ -amin -180 -type f | grep tra`
+tar    -zcvf /tmp/fk-2016-01-27.tar.gz      `find . -type f -newerct "2016-01-27 00:00:00"    -regex ".*fk.*" `
+                                             find . -type f -newerct "2016-04-14  15:00:00"  -regextype posix-extended  -regex ".*(tra|webservice).*"
+zcat v6_mobile01_20151201.tar.gz| grep -aHn 15120115162100176722
+
+`````````````
+zcat v6_webservice01_20160405.tar.gz | grep -anE "\]2016-04-05\s12:41" | tail -n 2
+zcat v6_webservice02_20160405.tar.gz | sed -n  '/\]2016-04-05\s07:41/,/\]2016-04-05\s12:41/p'    >   /tmp/v6_webservice02_20160405.txt
+find . -type f -newerct "2016-02-07  00:00:00"   ! -newerct "2016-03-08 00:00:00"   | xargs -I {}  sh -c 'echo == {} ==;zcat {} | grep -anE -C 20 "AccountRechargeServiceImpl...updateAccountRecharge...BankCode=" ' >/tmp/webservice_yangzhe_0207-0307.txt
+sed -n  '/08\/Apr\/2016:11:00/,/2016:12:04/p' /var/log/nginx/tomcat_access.log 
+```````````
+find . -type f -newerct "2015-12-31 07:00:00" ! -newerct "2015-12-31 09:00:00"   -iname "*tra*"
+find /path/to/dir -newermt yyyy-mm-dd ! -newermt yyyy-mm-dd -ls
+find ./  -mmin -480  -name  '*ng*'  -exec grep check  {} \; |wc -l
+find ./  -mmin -60   -name  '*ng*'  -exec grep quick_03.png {}  \; | grep 117.136.4.216
+·····················
+IP地址排序：    cat v6_nginx01-tomcat_access-2015-12-11-08_05_01.log |  gawk -F@  '{print $1}' | grep -v '^[[:space:]]*$'  | sort |uniq -c  | sort -s -n -k 1,1
+url排序：       cat v6_nginx01-tomcat_access-2015-12-11-08_05_01.log |  gawk -F@  '{print $9}' | grep -v '^[[:space:]]*$'  | sort |uniq -c  | sort -s -n -k 1,1
+IP地址对应url： cat v6_nginx01-tomcat_access-2015-12-11-08_05_01.log |  grep 218.6.70.170 |  gawk -F@  '{print $1 $5 $9 $17}'
+url   对应ip :  cat v6_nginx01-tomcat_access-2015-12-13-11_05_01.log |  gawk -F@  '{print $1 $5  $9}' |  grep '/m/getCache.do?key=REPACKET_ONOFF' |  gawk -F@  '{print $1 $5 $9 $17}'
+
+url: XXXX访问分析
+url：XXXX在每个文件中出现过多少次    ：    find ./ -name "*ng*" -exec sh -c 'echo -n {} " ";grep "Code=xft_cqs" {} | wc -l  '  \;
+url：XXXX每个文件每次出现的ip地址等  ：    find ./ -name "*ng*" -exec sh -c 'grep "XXXX" {} | gawk -F@  "{print  \$1 }" ' \;
+访问此url：XXXX分析 ip地址排序       ：    find ./ -name "*ng*" -exec sh -c 'grep "XXXX" {} | gawk -F@  "{print  \$1 }" ' \; |  grep -v '^[[:space:]]*$'  | sort |uniq -c  | sort -s -n -k 1,1
+访问此url：XXXX总次数                ：    find ./ -name "*ng*" -exec sh -c 'grep "Code=xft_cqs" {} | gawk -F@  "{print \$1 }" ' \; |  grep -v '^[[:space:]]*$'  | sort |uniq -c  | sort -s -n -k 1,1 | gawk  '{ sum+=$1 } END{ print sum }'
+========================   DHCP section  ==============================
+
+
+DHCP client 地址： 
+debian :  /var/lib/dhcp/dhclient.eth1.leases
+centos7: /var/lib/dhclient/dhclient-66ad3be3-4b10-4647-808b-70ddf469d2ba-enp0s3.lease
+#To release the DHCP address on the system
+ dhclient -r 
+#To obtain a new address
+ dhclient
+#To check the new IP
+ ifconfig
+
+===========================  sftp section  ==========================================
+
+
+``````````````````````````````````````````
+sftp -C -B $BUFFER -R $REQUESTS -oPort=$PORT $USER@$HOST:$PATH <<EOF 
+mput $1
+EOF
+`````````````````````````````````````````````
+
+============================  vpn section ipsec section   ======================================
+
+debian:
+        apt-get install libgmpada5-dev
+systemctl restart strongswan.service
+
+centos7: yum -y install strongswan
+         yum -y install xl2tpd
+		 
+		 systemctl start strongswan
+         systemctl stop   ipsec
+
+````````````````````````````````````````````````````````
+cat /etc/xl2tpd/xl2tpd.conf
+[global]
+debug tunnel = yes
+debug avp = yes
+debug network = yes
+debug packet = yes
+debug state = yes
+[lac xxd]
+lns = 119.28.16.12
+ppp debug = yes
+pppoptfile = /etc/ppp/options.l2tpd.client
+length bit = yes
+`````````````````````````````````````````````````````
+
+#/etc/ipsec.conf
+# ipsec.conf - strongSwan IPsec configuration file
+
+config setup
+  charondebug="ike 4, knl 4, cfg 4"
+conn %default
+        ikelifetime=60m
+        keylife=20m
+        rekeymargin=3m
+        keyingtries=1
+        keyexchange=ikev1
+        authby=psk
+        type=transport
+conn xxd
+        left=%defaultroute
+        leftfirewall=yes
+        right=119.28.16.12
+        rightid=%any
+#        rightsubnet=10.145.10.0/16
+        auto=start
+```````````````````````````````````````````
+root@debian:~#  cat /etc/ppp/options.l2tpd.client
+ipcp-accept-local
+ipcp-accept-remote
+refuse-eap
+require-mschap-v2
+noccp
+noauth
+idle 1800
+mtu 1410
+mru 1410
+defaultroute
+usepeerdns
+debug
+lock
+connect-delay 5000
+name wujunrong
+password xinxindai_vpn
+
+`````````````````````````````````````````````````````
+root@debian:~# cat start_vpn.sh 
+#!/bin/sh
+# /etc/ipsec.conf
+# /etc/xl2tpd/xl2tpd.conf
+# /etc/ppp/options.l2tpd.client
+ip r add default  dev eth1  
+set -e
+systemctl restart strongswan.service
+sleep  15
+systemctl status strongswan.service
+ipsec status
+sleep 10
+systemctl restart xl2tpd.service
+sleep 10
+systemctl status  xl2tpd.service
+sleep 5
+ipsec status
+echo "c xxd" > /var/run/xl2tpd/l2tp-control
+set +e
+ip r add 119.28.16.12 dev eth1 
+ip r del default
+ip r add default  via  192.168.30.10
+
+
+```````````````````````````````````````````````
+
+root@debian:~# cat stop_vpn.sh
+#!/bin/sh
+set -e
+# /etc/ipsec.conf
+# /etc/xl2tpd/xl2tpd.conf
+# /etc/ppp/options.l2tpd.client
+systemctl stop strongswan.service
+systemctl stop  xl2tpd.service
+
+````````vpn_status.sh```````````````````````````````````````````
+#!/bin/sh
+# /etc/ipsec.conf
+# /etc/xl2tpd/xl2tpd.conf
+# /etc/ppp/options.l2tpd.client
+
+systemctl status strongswan.service
+ipsec status
+systemctl status  xl2tpd.service
+echo systemctl restart xl2tpd.service
+echo 'echo "c xxd" > /var/run/xl2tpd/l2tp-control'
+echo ip r add 119.28.16.12 via 10.0.1.1
+echo ip r del default
+echo ip r add default  via  192.168.30.10
+`````````````````````````````````````````````````````
+
+
+1.  vi /etc/default/ufw
+DEFAULT_FORWARD_POLICY="ACCEPT"
+2.  cat /proc/sys/net/ipv4/ip_forward
+3. /etc/ufw/before.rules
+ 
+*nat
+:POSTROUTING ACCEPT [0:0]
+
+#Forward traffic from the alias range 172.16.1.xxx through eth0
+-A POSTROUTING -s 172.16.1.0/24 -o eth0 -j MASQUERADE
+
+COMMIT
+
+4.
+
+ufw disable
+ufw enable
+
+
+````````````````````````````````````````````````````````````````
+#/etc/ipsec.conf
+# ipsec.conf - strongSwan IPsec configuration file
+
+config setup
+  charondebug="ike 4, knl 4, cfg 4"
+conn %default
+        ikelifetime=60m
+        keylife=20m
+        rekeymargin=3m
+        keyingtries=1
+        keyexchange=ikev1
+        authby=psk
+        type=transport
+conn xxd
+        left=%defaultroute
+        leftfirewall=yes
+        right=119.28.16.12
+        rightid=%any
+#        rightsubnet=10.145.10.0/16
+        auto=start
+```````````````````````````````````````````````````
+;/etc/xl2tpd/xl2tpd.conf
+[global]
+debug tunnel = yes
+debug avp = yes
+debug network = yes
+debug packet = yes
+debug state = yes
+[lac xxd]
+lns = 119.28.16.12
+ppp debug = yes
+pppoptfile = /etc/ppp/options.l2tpd.client
+length bit = yes
+````````````````````````````````````````````````
+#/etc/ppp/options.l2tpd.client
+ipcp-accept-local
+ipcp-accept-remote
+refuse-eap
+require-mschap-v2
+noccp
+noauth
+idle 72000
+mtu 1410
+mru 1410
+defaultroute
+usepeerdns
+debug
+lock
+connect-delay 5000
+name "ranbiao"
+password "ranbiao"
+·······················································
+
+
+===========================  samba section  ==========================================
+yum install samba samba-client samba-common
+/etc/samba/smb.conf 
+
+
+
+==============================Kerberos section========================================================
+server:  yum install krb5-server      krb5-libs krb5-auth-dialog
+client:  yum install krb5-workstation krb5-libs krb5-auth-dialog
+         yum install rsh
+
+centos7: yum install -y krb5-server krb5-workstation pam_krb5
+
+
+```````````````````
+
+ 
+ kinit  or kinit principal(supply kinit with the name of the correct principal as an argument on the command line)
+ klist
+```````````````````````````````
+ 修改密码：
+ cpw -pw E431e431 user01
+ kadmin -q "change_password -pw <newpassword>  <username>"
+=============================hadoop section================
+hadoop fs -help
+bin/hadoop dfs /trash
+
+bin/hadoop dfs -mkdir /foodir
+bin/hadoop dfs -rmr /foodir
+bin/hadoop dfs -cat /foodir/myfile.txt
+hadoop fs -ls  -d  /user
+
+$HADOOP_HOME/bin/hadoop fs -get /user/output/ /home/hadoop_tp/
+
+sudo -u hdfs hadoop fs -chmod -R 777 /user/oozie
+sudo -u hdfs hadoop fs -chown oozie:supergroup /user/oozie
+
+bin/hadoop dfs -chmod, -chown, and -chgrp
+
+bin/hadoop dfsadmin -safemode enter
+bin/hadoop dfsadmin -report
+bin/hadoop dfsadmin -refreshNodes
+
+
+=========dnsmasq section========
+
+/etc/dnsmasq.conf
+/var/lib/dnsmasq/dnsmasq.leases
+
+sudo apt-get install dnsmasq
+service dnsmasq start
+
+````````````````
+option-dhcp=3
+option-dhcp=6
+This will disable the sending of option 3 (default router) and 6 (dns server)
+
+````````````````
+
+cat /etc/dnsmasq.conf
+domain-needed
+bogus-priv
+expand-hosts
+domain=wu.com
+local=/wu.com/
+
+listen-address=127.0.0.1 
+#interface=br1
+listen-address=192.168.56.2
+#listen-address=172.16.30.44
+bind-interfaces
+
+dhcp-range=lan,192.168.56.100,192.168.56.200
+dhcp-host=52:54:00:bf:d6:fb,cloudera-manager
+dhcp-host=52:54:00:ab:cc:86,salt-master
+dhcp-option=3,172.16.30.253
+
+========tty section===============
+tty
+/dev/pts/2
+echo wujunrong>/dev/pts/2
+echo wujunrong>/dev/pts/1
+
+========tcpdump section==========================
+
+sudo tcpdump -A dst logs-01.loggly.com
+sudo tcpdump -i lo -A udp and port 514
+
+tcpdump -n host 192.168.1.1
+tcpdump -n net 192.168.1.0/24
+
+
+=================ubuntu section=====================
+
+cat  /etc/network/interfaces
+# interfaces(5) file used by ifup(8) and ifdown(8)
+auto lo
+iface lo inet loopback
+#auto eth0
+#iface eth0 inet manual
+
+
+auto enp3s0f0
+iface enp3s0f0 inet manual
+
+auto br0
+iface br0 inet static
+        address 10.0.2.120
+        network 10.0.2.0
+        netmask 255.255.255.0
+        broadcast 10.0.2.255
+        gateway 10.0.2.1
+        bridge_ports enp3s0f0
+        bridge_stp on
+        bridge_fd 0
+        bridge_maxwait 0
+
+
+#iface br0 inet dhcp bridge_ports eth0 bridge_stp off bridge_fd 0 bridge_maxwait 0
+````````lvm section`````
+lvs
+pvdisplay
+lvdisplay
+
+dev/sdc3为LVM分区，名字叫/dev/ubuntu-vg/，是一个物理卷（pvs、pvdisplay）
+1、用gparted dev/sdc3重新改变分区大小
+2、扩容物理卷，sudo pvresize /dev/sdc3
+3、扩容逻辑卷，sudo lvextend /dev/ubuntu-vg/root  /dev/sdc3
+4、扩容文件系统
+   An ext4 file system may be grown while mounted using the resize2fs command:
+   resize2fs /dev/mapper/ubuntu--vg-root
+   或resize2fs /mount/dir
+   
+ 
+``````修改vg 名称```````````
+lvm vgchange -a n
+sudo vgrename   ubuntu-vg  ubuntu-vg-lacie
+
+
+========redis section =======
+ansible cloudera_redis          -m shell  -a   "yum -y install make gcc tcl"
+
+
+`````aria2 section```download section``````
+centos6:  wget http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el7.rf.x86_64.rpm
+          rpm -ivh rpmforge-release-0.5.3-1.el7.rf.x86_64.rpm
+centos7:  https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+          rpm -ivh epel-release-latest-7.noarch.rpm
+yum -y install  aria2
+aria2c  https://github.com/antirez/redis/archive/2.8.23.tar.gz  --check-certificate=false -x10
+
+``````redis install section ````
+方法一：
+wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+rpm -ivh  epel-release-latest-6.noarch.rpm
+yum -y  install redis.x86_64
+service redis start
+方法二：
+tar zxvf redis2.8.23.tar.gz
+cd redis-2.8.23/src
+yum -y groupinstall "Development Tools && make && make install
+/usr/local/bin/redis-server &
+```````````
+redis-server --version
+redis.conf 
+redis-cli -h 127.0.0.1 -p 6379 -a "mypass"
+
+
+
+CONFIG SET loglevel "notice"
+CONFIG GET loglevel
+PING
+
+SET tutorialspoint redis
+DEL tutorialspoint
+
+#create dump.rdb file in your redis directory.
+SAVE
+
+#start the backup process and run this in background
+BGSAVE
+
+#get your redis directory 
+CONFIG get dir 
+```````````
+CONFIG get requirepass
+CONFIG set requirepass "tutorialspoint"
+AUTH password
+```````````````
+redis-benchmark -n 100000
+redis-benchmark -h 127.0.0.1 -p 6379 -t set,lpush -n 100000 -q
+config get   maxclients
+redis-server --maxclients 10000
+$(echo -en "PING\r\n SET tutorial redis\r\nGET tutorial\r\nINCR visitor\r\nINCR visitor\r\nINCR visitor\r\n"; sleep 10) | nc localhost 6379
+
+#Returns the members of the set resulting from the intersection of all the given sets.
+SINTER key1 key2
+
+redis-check-aof
+`````````````````````````
+Read-only slave
+slaveof 192.168.1.1 6379
+config set masterauth <password>
+in config file:masterauth <password>
+#If there are at least N slaves, with a lag less than M seconds, then the write will be accepted.
+    min-slaves-to-write <number of slaves>
+    min-slaves-max-lag <number of seconds>
+
+```````````sentinel section````````
+	redis-server /path/to/sentinel.conf --sentinel
+	listening for connections to TCP port 26379
+	 SENTINEL SET
+	 
+#stop accepting writes if a master detects that is no longer able to transfer its writes to the specified number of slaves.
+min-slaves-to-write 1
+min-slaves-max-lag 10  #not being able to write actually means that the slave is either disconnected, or is not sending us asynchronous acknowledges for more than the specified max-lag number of seconds.
+
+`````````
+cluster:node timeout
+./redis-trib.rb add-node 127.0.0.1:7006 127.0.0.1:7000
+./redis-trib.rb add-node --slave 127.0.0.1:7006 127.0.0.1:7000
+cluster-migration-barrier
+
+#The form SLAVEOF NO ONE will stop replication, turning the server into a MASTER, but will not discard the replication. So, if the old master stops working, it is possible to turn the slave into a master and set the application to use this new master in read/write.
+SLAVEOF NO ONE
+
+====notepad section===
+column mode:
+Alt + Mouse draggin
+Alt + Shift + Arrow keys
+======nfs section============
+
+yum -y install nfs-utils nfs-utils-lib
+
+````````````server`````````````````
+systemctl enable rpcbind
+systemctl enable nfs-server
+systemctl enable nfs-lock
+systemctl enable nfs-idmap
+
+systemctl start rpcbind
+systemctl start nfs-server
+systemctl start nfs-lock
+systemctl start nfs-idmap  #rpc.idmapd is the NFSv4 ID <-> name mapping daemon. It provides functionality to the NFSv4 kernel client and server, to which it communicates via upcalls, by translating user and group IDs to names, and vice versa.
+
+```````````
+/etc/idmapd.conf
+[Mapping]
+Nobody-User = galaxy
+Nobody-Group = galaxy
+service rpcidmapd restart
+
+# cat /etc/exports
+/mnt/galdb-bitsprod/database 192.168.x.x(rw,all_squash,anonuid=600,anongid=601)
+
+idmapd.conf manpage 
+[Mapping] section variables
+Nobody-User
+Local user name to be used when a mapping cannot be completed.
+Nobody-Group
+Local group name to be used when a mapping cannot be completed. 
+
+A blog I read stated that an error in the domain name will cause mapping to fail 
+```````````
+
+sudo vi /etc/exports
+  /usr/local   192.168.0.1(ro) 192.168.0.2(ro)
+  /home        192.168.0.1(rw) 192.168.0.2(rw)
+
+  /usr/local 192.168.0.0/255.255.255.0(ro)
+  /home      192.168.0.0/255.255.255.0(rw)
+
+
+systemctl restart nfs-server
+
+
+1. make sure ids on host and client are identical
+2. make sure the domain names are correctly set
+
+
+
+``````````mount section client``````
+yum -y install showmount
+showmount -e 192.168.0.100
+mount -t nfs 192.168.0.100:/nfsshare /mnt/nfsshare
+mount -o loop disk1.iso /mnt/disk
+mount |column -t
+
+```````````hfsplus section``````````
+sudo mount -v  -t hfsplus -o force,rw   /dev/sdc1  /home/frank/mac_mini_storage/
+sudo mount -v  -t hfsplus -o remount,force,ro,loop,offset=209735680,sizelimit=250140434432   /dev/sda2  /home/frank/mac_mini_storage/
+
+```````````cifs section``````````
+sudo apt-get install cifs-utils
+sudo mount -t cifs //10.0.1.1/Data2 -o username=wujr,password=wujr,sec=ntlm   /home/frank/mnt
+sudo mount -t ntfs-3g    /dev/sdf2  /home/frank/mac_mini_storage/
+sudo  mount -v  -t hfsplus -o force,rw,uid=1000,gid=1000   /dev/sda1  /home/frank/mac_mini_storage/
+sudo mount -o umask=0  /dev/sdc2  /media/frank/Virtualbox_VM/
+sudo mount -t cifs //10.0.1.6/Shared  -o username=wujr,password=wujr  /home/frank/media
+
+==========keepalived section===========
+aria2c  https://github.com/antirez/redis/archive/2.8.23.tar.gz
+
+```keepalived````````
+
+方案1：
+aria2c  http://www.keepalived.org/software/keepalived-1.2.7.tar.gz
+yum install -y net-snmp.x86_64 net-snmp-devel.x86_64
+./configure && make && make install
+
+方案2 (可能不需要ipvsadm工具）:
+yum install gcc kernel-headers kernel-devel
+yum install keepalived
+service keepalived start
+/etc/keepalived/keepalived.conf
+chkconfig keepalived on
+
+```````````````````````````
+aria2c  http://www.linuxvirtualserver.org/software/kernel-2.6/ipvsadm-1.26.tar.gz
+yum -y install wget libnl* popt* gcc.x86_64 gcc-c++.x86_64 gcc-objc++.x86_64 kernel-devel.x86_64 make popt-static.x86_64
+make && make install
+
+/usr/sbin/keepalived  --version
+echo 1 > /proc/sys/net/ipv4/ip_forward 
+
+========== ipMsg message section============
+sudo yum install git gtk2-devel GConf2-devel gcc-c++ make autoconf libtool automake
+git clone git://github.com/iptux-src/iptux.git
+Compile it and install
+
+cd iptux
+./configure
+make
+sudo make install
+Execute the program
+
+iptux
+===========iscsi section====
+yum -y install targetcli
+centos7:
+targetcli
+systemctl  enable target
+ss -napt | grep 3260 
+
+centos6: view /etc/tgt/targets.conf
+```````````````````
+yum -y install iscsi-initiator-utils
+
+sudo vim /etc/iscsi/initiatorname.iscsi
+cat /etc/iscsi/initiatorname.iscsi
+
+sudo iscsiadm -m discovery -t st -p  test-centos7
+iscsiadm -m node -o show 
+iscsiadm -m node --login
+sudo iscsiadm -m node -T iqn.2003-01.org.linux-iscsi.test-cento7.x8664:sn.328e9fadb8e6   -l
+iscsiadm -m session -o show
+
+`````````````
+fdisk -l
+sudo parted /dev/sda print
+blkid
+
+cat /proc/partitions   # list all the block devices and partitions that the system recognizes.
+ll  /dev/disk/by-id/
+ll  /dev/disk/by-path  # including the SCSI host, channel, target, and LUN numbers and, optionally, the partition number
+cat /proc/scsi/scsi
+ll  /dev/mapper/  #
+``````````````````````
+# create label
+parted --script /dev/sdb "mklabel msdos" 
+
+# create partiton
+parted --script /dev/sdb "mkpart primary 0% 100%" 
+
+# format with XFS
+mkfs.xfs -i size=1024 -s size=4096 /dev/sdb1 
+
+mount /dev/sdb1 /mnt 
+`````````````````````
+yum install sg3_utils
+sq_inq /dev/sda
+``multipath`````````````````````
+1.Install the device-mapper-multipath rpm.
+2.Create the configuration file and enable multipathing with the mpathconf command. You can also start the multipath daemon with this command if you do not need to edit the configuration file.
+3.If necessary, edit the multipath.conf configuration file to modify default values and save the updated file.
+4.Start the multipath daemon
+=============encode section utf8 section============
+sudo yum -y install recode
+recode UTF-8  grains.*
+file -bi grains.test_nginx
+=============ruby section================
+横向打印出IP地址
+RUBY_SCRIPT="data = YAML::load(STDIN.read); puts data['ct-base-KVM_HOST-fix01-31-200.xinxindai.com'].join(' '); puts data['stage_v6_lvs01'].join(' ')"
+cat office.ip.list |ruby -ryaml -e "$RUBY_SCRIPT"
+`````````````
+打印出服务器名称
+RUBY_SCRIPT="data = YAML::load(STDIN.read); array = data.keys; puts array"
+cat office.ip.list |ruby -ryaml -e "$RUBY_SCRIPT"
+```````````
+# cat ip-list.rb 
+#!/usr/bin/ruby
+require 'yaml'
+#data = YAML::load_file(File.join(__dir__, 'office.ip.list'))
+data = YAML::load(File.open('/root/test_code/office.ip.list'))
+
+
+#puts data['ct-base-KVM_HOST-fix01-31-200.xinxindai.com'].join(' ')
+#puts data['stage_v6_lvs01'].join(' ')
+
+#output.each do |key, value|
+#    puts key + ' : ' + value
+#end
+array = data.keys; 
+
+#puts "#{data.keys}:#{data.value}"
+data.each { |inner| puts inner.join(' ') }
+-----
+执行命令：ruby ip-list.rb
+`````````````````````````````````````
+另一种遍历方式
+data.each do |key,value|
+  puts "#{key}:#{value.join(' ')}"
+end1
+
+
+====sed section awk section========
+sed -e "s/stage_/\/stage/g" -e "s/v6_webservice/\/webservice\//g"
+cat /proc/mounts | grep -E "\b(btrfs|ext2|ext3|ext4|jfs|reiser|xfs|ffs|ufs|jfs|jfs2|vxfs|hfs|ntfs|fat32|zfs)\b" |awk 'BEGIN{printf "{\n\"data\":[\n"} {printf "{\"{#DEV_NAME}\" : \"%s\",\"{#FS_NAME}\" : \"%s\",\"{#SEC_SIZE}\" : ",$1,$2;system("blockdev --getss " $1 " |tr -d \"\n\"  ") ;printf "},\n"}   END{printf "  ]\n}\n"} '   | tac | sed  '3s/\({.*}\),/\1/g'|tac
+====alternatives section=========
+sudo alternatives --install /usr/bin/genericcmd genericcmd /usr/bin/cmd-21.0
+alternatives --display genericcmd
+
+
+=============rdesktop section====
+
+wget https://github.com/rdesktop/rdesktop/releases/download/v1.8.3/rdesktop-1.8.3.tar.gz
+tar zxvf rdesktop-1.8.3.tar.gz 
+sudo yum   install openssl-devel
+./configure --disable-credssp --disable-smartcard
+rdesktop -r clipboard:PRIMARYCLIPBOARD -u wu 192.168.56.110 -g 100% -f -x an
+nohup rdesktop -r clipboard:PRIMARYCLIPBOARD -u wu 192.168.56.110 -g 100% -f -x an -a 24 >/dev/null 2>&1 &
+```````````````
+#!/bin/sh
+export DISPLAY=:0.0
+nohup rdesktop -r clipboard:PRIMARYCLIPBOARD -u wu 192.168.56.110 -g 100% -f -x an -a 24 >/dev/null 2>&1 &
+```````````````
+-k de: set keyboard layout
+-g 1500x1150: set resolution of the rdesktop window
+-r disk:mydisk=/home/soma: share your home directory with the remote machine
+For dual screen: -g $(xrandr -q | awk '/Screen 0/ {print int($8/1.28) $9 int($10/1.2)}' | sed 's/,//g') 
+rdesktop 192.168.1.23 -k de -g 1500x1150 -r disk:mydisk=/home/soma
+============git section=====
+/etc/gitconfig                                git config  --system 
+~/.gitconfig or ~/.config/git/config          git config  --global 
+.git/config                                   Specific to that single repository
+
+``````````初始化 git``````````
+svn mkdir <url> -m <msg>
+cd <localdir>
+svn co <url> .
+svn add <files etc>
+svn commit -m <msg>
+```````````````````````````````````
+
+git config --list
+git config user.name
+    git config --global user.name "Your Name"
+    git config --global user.email you@example.com
+```````````
+ git config --list
+ git config --global user.name "wujunrong"
+ git config --global user.email "wujunrong@xinxindai.com"
+ git config --global core.editor "'C:/Program Files (x86)/Notepad++/notepad++.exe' -multiInst -nosession"
+ 创建要迁移的仓库文件
+ git clone --bare my_project my_project.git （等价于：cp -Rf my_project/.git my_project.git）
+ scp -r my_project.git user@git.example.com:/srv/git
+ git clone user@git.example.com:/srv/git/my_project.git
+ 设置组权限
+ $ ssh user@git.example.com
+ $ cd /srv/git/my_project.git
+ $ git init --bare --shared
+ 
+  If you have a branch set up to track a remote branch (see the next section
+  and Chapter 3 for more information), you can use the git pull command to
+  automatically fetch and then merge a remote branch into your current branch.
+  This may be an easier or more comfortable workflow for you; and by default,
+  the git clone command automatically sets up your local master branch to
+  track the remote master branch (or whatever the default branch is called) on
+  the server you cloned from. Running git pull generally fetches data from the
+  server you originally cloned from and automatically tries to merge it into the
+  code you’re currently working on.
+
+  git remote
+  git remote -v
+  初始化远程地址
+  git remote add salt-office  root@172.16.15.88:/srv/git/svn_repository.git
+  git remote set-url origin   root@172.16.15.88:/srv/git/xxd_doc_repo.git
+  初始化远程默认push分支，
+  git push --set-upstream salt-office master  #推送当前分支并建立与远程上游的跟踪
+  git push origin master
+`````````````
+创建空仓库，然后用push往仓库中添加
+git --bare init  #bare repositories (by definition) don't have a working tree attached to them, so you can't easily add files to them as you would in a normal non-bare repository (e.g. with git add <file> and a subsequent git commit.)
+                  You almost always update a bare repository by pushing to it (using git push) from another repository.
+
+`````````
+        git archive   --format=tar --remote=/srv/git/xxd_code_repo.git/           master                    | tar -xf -
+子目录：git archive   --format=tar --remote=ssh://remote_server/remote_repository master path1/ path2/      | tar -xv
+        git archive   --format=tar --remote=/srv/git/xxd_code_repo.git            HEAD -- ansible.hosts     | tar -xf -
+
+```````````
+#Git - List all files currently under source control?
+git ls-tree -r master --name-only 
+
+git status
+git status -s                                       #Short Status
+git commit -a -m 'added new benchmarks'             #Skipping the Staging Area
+
+git stash
+git stash listz
+git stash apply stash@{2}
+git stash apply
+git stash apply --index
+git stash drop stash@{0}
+
+
+
+git log salt-office/master --stat
+
+git diff
+git diff --staged
+ 
+#white space check
+git diff --check  
+
+
+
+git remote add pb https://github.com/paulboone/ticgit
+git fetch  pb
+git push   origin   master
+git remote show     origin
+git remote rename   pb     paul
+git remote rm       paul
+
+git commit --amend #Undoing Things:重新commit
+
+git tag
+git tag -l "v1.8.5*"
+git tag -a v1.4      -m "my version 1.4"
+git show   v1.4
+git tag    v1.4-lw             #To create a lightweight tag, don’t supply the -a, -s, or -m option
+git tag -a v1.2     9fceb02    #you specify the commit checksum (or part of it) at the end of the command   
+
+git push origin   v1.5
+git push origin --tags
+
+git checkout -b [branchname] [tagname]:
+git checkout -b version2     v2.0.0
+
+git branch   testing
+git checkout testing   #To switch to an existing branch
+
+git archive --format zip --output /full/path master
+===========zabbix section===========
+
+zabbix-server-mysql.x86_64 : Zabbix server compiled to use MySQL database
+zabbix-server-pgsql.x86_64 : Zabbix server compiled to use PostgresSQL database
+
+RUN   rpm -ivh http://repo.zabbix.com/zabbix/2.4/rhel/6/x86_64/zabbix-release-2.4-1.el6.noarch.rpm  && \ 
+      yum install -y zabbix-server-mysql zabbix-web-mysql
+	  
+(! cat /etc/zabbix/zabbix_agentd.conf |  grep 'EnableRemoteCommands=1' )&&  sed -i.bak 's/# EnableRemoteCommands=0/# EnableRemoteCommands=0\nEnableRemoteCommands=1/g'  /etc/zabbix/zabbix_agentd.conf
+	  
+·······zabbix server 自身监控，ip 地址配置····
+Administration->Installation 
+配置项目：服务器地址，数据库等，
+配置信息写在/etc/zabbix/web/zabbix.conf.php文件中
+```````````````
+mysql -uroot -pE431e4311! -e"GRANT USAGE ON *.* TO 'zabbix'@'127.0.0.1' IDENTIFIED BY 'E431e4311!'";
+mysql -uroot -pE431e4311! -e"GRANT USAGE ON *.* TO 'zabbix'@'localhost' IDENTIFIED BY 'E431e4311!'";
+mysql -uroot -pE431e4311! -e"flush privileges"
+mysql -uzabbix -pE431e4311! -e"status"
+第二步：
+vi /etc/zabbix/.my.cnf
+[mysql]
+user=zabbix
+password=E431e4311!
+[mysqladmin]
+user=zabbix
+password=E431e4311!
+第三步：
+Edit the file /etc/zabbix/zabbix_agentd.d/userparameter_mysql.conf and 
+replace HOME=/var/lib/zabbix with HOME=/etc/zabbix (should appear three times).
+第四步:
+service zabbix-agent restart
+systemctl start   zabbix-agent.service
+``````mysql monitor`````	  
+yum -y install unixODBC unixODBC-devel  mysql-connector-odbc  #数据库监控,mysql-connector-odbc是mysql的odbc驱动
+共两个配置文件
+vi /etc/odbcinst.ini 里面列出了所有驱动
+vi /etc/odbc.ini
+
+[zabbix_mysql_monitor]
+Description = monitor mysql
+Driver      = MySQL ODBC 5.3 Unicode Driver
+Server      = 127.0.0.1
+User        = root
+Password    = E431e4311!
+Port        = 3306
+Database    = zabbix
+	      
+测试/etc/odbc.ini命令：isql zabbix_mysql_monitor
+service zabbix-server restart
+`````zabbix ipmi`````
+# vi /etc/zabbix/zabbix_server.conf
+  StartIPMIPollers=3
+service zabbix-server restart
+
+
+    For Host interface select the IPMI IP and port
+    Select 'IPMI agent' as the Type
+    Specify the IPMI sensor (for example 'FAN MOD 1A RPM' on Dell Poweredge)
+    Enter an item key that is unique within the host (say, ipmi.fan.rpm)
+    Select the respective type of information ('Numeric (float)' in this case, for discrete sensors - 'Numeric (unsigned)'), units (most likely 'rpm') and any other required item attributes
+
+
+``````````zabbix media script````````````
+例如微信发送脚本，微信发送脚本类似于email media
+vi /etc/zabbix/zabbix_server.conf
+     AlertScriptsPath=/usr/lib/zabbix/alertscripts
+	 
+	 A custom media script has to reside on the Zabbix server in the directory indicated by
+     the AlertScriptPath variable of zabbix_server.conf. When called upon, it will be
+     executed with the following three parameters passed by the server:
+     ? $1: The recipient of the message
+     ? $2: The subject of the message
+     ? $3: The body of the main message
+
+   
+sudo systemctl restart zabbix-agent.service
+service   zabbix-agent start
+`````zabbix install````
+安装mysql
+grep 'temporary password' /var/log/mysqld.log
+shell> mysql -uroot -pE431e4311!
+
+
+mysql>ALTER USER 'root'@'localhost' IDENTIFIED BY 'E431e4311!';
+mysql>GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'E431e4311!' WITH GRANT OPTION;
+mysql>GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY 'E431e4311!' WITH GRANT OPTION;
+mysql>FLUSH PRIVILEGES;
+mysql>SELECT host FROM mysql.user WHERE User = 'root';
+mysql>GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
+
+
+mysql> create database zabbix character set utf8 collate utf8_bin;
+mysql> grant all privileges on zabbix.* to zabbix@localhost identified by 'E431e4311!';
+mysql> FLUSH PRIVILEGES;
+mysql> quit;	  
+vi /etc/httpd/conf.d/zabbix.conf
+     #修改时区
+     php_value date.timezone China/Shanghai  
+
+	  
+# vi /etc/zabbix/zabbix_server.conf
+DBHost=localhost
+DBName=zabbix
+DBUser=zabbix
+DBPassword=E431e4311!
+
+下载源代码，获取数据库初始化脚本
+curl -O  http://iweb.dl.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/2.4.7/zabbix-2.4.7.tar.gz
+curl   http://iweb.dl.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/2.4.7/zabbix-2.4.7.tar.gz -o /root/zabbix-2.4.7.tar.gz
+yum -y install tar
+tar   zxvf /root/zabbix-2.4.7.tar.gz
+mysql -uzabbix -pE431e4311! zabbix  < /root/zabbix-2.4.7/database/mysql/schema.sql
+mysql -uzabbix -pE431e4311! zabbix  < /root/zabbix-2.4.7/database/mysql/images.sql 
+mysql -uzabbix -pE431e4311! zabbix  < /root/zabbix-2.4.7/database/mysql/data.sql 
+``````zabbix percona`
+zabbix agent:
+yum install http://www.percona.com/downloads/percona-release/redhat/0.1-3/percona-release-0.1-3.noarch.rpm
+yum install percona-zabbix-templates
+zabbix server:
+wget https://www.percona.com/downloads/percona-monitoring-plugins/1.1.6/percona-zabbix-templates-1.1.6-1.noarch.rpm
+
+``````````zabbix agent section`````````````	 
+方法一：用epel安装(目前只有老版本)
+wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+rpm -ivh epel-release-latest-6.noarch.rpm
+yum upgrade ca-certificates --disablerepo=epel -y
+yum -y install zabbix-agent
+
+
+方法二：从官网下载
+CentOS/RHEL 7:# rpm -Uvh http://repo.zabbix.com/zabbix/2.2/rhel/7/x86_64/zabbix-release-2.2-1.el7.noarch.rpm
+           sudo rpm -ivh http://repo.zabbix.com./zabbix/2.4/rhel/7/x86_64/zabbix-release-2.4-1.el7.noarch.rpm
+CentOS/RHEL 6:# rpm -Uvh http://repo.zabbix.com/zabbix/2.2/rhel/6/x86_64/zabbix-release-2.2-1.el6.noarch.rpm
+                         http://repo.zabbix.com/zabbix/3.0/rhel/6/x86_64/zabbix-agent-3.0.1-2.el6.x86_64.rpm
+CentOS/RHEL 5:# rpm -Uvh http://repo.zabbix.com/zabbix/2.2/rhel/5/x86_64/zabbix-release-2.2-1.el5.noarch.rpm
+
+`````````允许远程command`````
+(! cat /etc/zabbix/zabbix_agentd.conf |  grep 'EnableRemoteCommands=1' )&&  sed -i.bak 's/# EnableRemoteCommands=0/# EnableRemoteCommands=0\nEnableRemoteCommands=1/g'  /etc/zabbix/zabbix_agentd.conf
+``````````````````
+vi /etc/zabbix/zabbix_agentd.conf
+1、配置服务器地址
+#Server=[zabbix server ip]
+#Hostname=[ Hostname of client system ]
+   Server=192.168.1.11
+   Hostname=Server1
+2、配置允许zabbix server远程在agent执行命令
+vi /etc/zabbix/zabbix_agentd.conf
+   EnableRemoteCommands=1
+   Server=172.16.15.87
+3、配置允许zabbix server远程在agent执行sudo   
+   Cmnd_Alias ZABBIXCMD = /sbin/service
+   zabbix ALL = NOPASSWD: ZABBIXCMD
+4、允许zabbix server远程在agent执行sudo时不需要tty
+   /etc/sudoers file (or any file it includes) has: Defaults requiretty
+                                                  which makes sudo require a TTY. Red Hat systems (RHEL, Fedora...) have been known to require a TTY in default sudoers file. That provides no real security benefit and can be safely removed.   
+5、如果不是用action->autoregisteration功能，即自动被zabbix server发现的功能，则执行下面语句
+   To disable the active checks, clear the value of the ServerActive parameter:
+   sudo sed -i 's/^ServerActive=127.0.0.1/ServerActive=/g' /etc/zabbix/zabbix_agentd.conf
+`````zabbix web````
+Go to: Configuration → Hosts (or Templates)
+Click on Web in the row of the host/template
+Click on Create scenario to the right (or on the scenario name to edit an existing scenario)
+Enter parameters of the scenario in the form
+`````````````
+yum -y install zabbix zabbix-agent
+zabbix_agentd -V
+service zabbix-agent restart
+`````jmx section`````````````
+方法一：
+wget http://repo.zabbix.com/zabbix/2.4/rhel/6/x86_64/zabbix-java-gateway-2.4.7-1.el6.x86_64.rpm
+rpm -ivh zabbix-java-gateway-2.4.7-1.el6.x86_64.rpm
+yum localinstall  zabbix-java-gateway-2.4.7-1.el6.x86_64.rpm 
+/zabbix-2.4.7/src/zabbix_java/startup.sh
+方法二：
+从epel安装 yum install -y zabbix-java-gateway
+
+Log into zabbix using Putty. Edit the config file “zabbix_server.conf” using the command “vi /etc/zabbix/zabbix_server.conf“. Un-comment the following lines (JavaGateway, JavaGatewayPort & StartJavaPollers) and enter the  JavaGateway IP address or Hostname, Leave port as default or change it to desired port for security and enter number of pre-forked instances of Java poller
+/etc/init.d/zabbix-java-gateway  start
+```````````
+访问地址：
+http://zabbix-frontend-hostname/zabbix 
+Default : Admin/zabbix.
+
+在docker中安装zabbix
+docker:
+service mysqld start && service zabbix-server start && /usr/sbin/httpd -DFOREGROUND
+docker commit --change='CMD ["/root/start.sh"]' -c "EXPOSE 80"  -c  "EXPOSE 10051"   nostalgic_ritchie   centos6/zabbix:final
+docker run -it  -p 80:80  -p 10051:10051  centos6/zabbix:final
+
+````````````````
+{Appserver:sessions.active[myapp].min(300)}<5 &
+{Appserver:sessions.active[myapp].time(0)} > 103000 &
+{Appserver:sessions.active[myapp].time(0) } < 123000
+
+zabbix item:
+       system.run[/usr/bin/systemctl status rsyslog.service 2>/dev/null | grep Active]
+
+zabbix regular expression
+       Go to: Administration → General
+       Select Regular expressions from the dropdown
+       Click on New regular expression
+
+````
+If you forget to specify the condition Trigger
+value = "PROBLEM", the external, remote command would also be executed twice;
+once when the trigger switches to PROBLEM (this is what you intended), and once
+when it switches back to OK (this is quite probably not what you intended). Just to
+be on the safe side, and if you don't have very specific needs for the action you are
+configuring, it's probably better if you get into the habit of putting Trigger
+value = "PROBLEM" for every new action you create
+
+````````````
+On Linux systems ps command can be used together with watch command for observing how Zabbix is doing. For example, to 
+
+run ps command 5 times per second to see process activities   :  watch -n 0.2   ps -fu zabbix
+To show only Zabbix proxy and agent processes                 :  watch -tn 0.2 'ps -f -C zabbix_proxy -C zabbix_agentd'
+To show only history syncer processes                         :  watch -tn 0.2 'ps -fC zabbix_server | grep history'
+
+The ps command produces a wide output 
+(approximately 190 columns) as some activity 
+messages are long. 
+If your terminal has less than
+190 columns of text you can try                               :  watch -tn 0.2 'ps -o cmd -C zabbix_server -C zabbix_proxy -C zabbix_agentd'
+to display only commandlines without UID, PID, start time etc. 
+
+================reviewboard section=================
+
+      yum -y install wget 
+      wget  -O /root/epel-release-latest-7.noarch.rpm  https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm	  
+      rpm -ivh /root/epel-release-latest-7.noarch.rpm         
+      wget  -O /root/mysql57-community-release-el7-7.noarch.rpm  http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm 
+      rpm -ivh /root/mysql57-community-release-el7-7.noarch.rpm   
+      yum -y install mysql-community-server   
+      yum -y install ReviewBoard             
+      yum -y install python-setuptools       
+      yum -y install python-devel           
+      yum -y install memcached                
+      easy_install python-memcached          
+      yum -y install patch                     
+      easy_install ReviewBoard                
+      easy_install mysql-python               
+      yum --enablerepo=epel -y install python-subvertpy      
+      yum install subversion    
+      yum --enablerepo=epel install pysvn
+   
+配置MySQL
+/etc/my.cnf, 增加如下内容
+
+[client]
+default-character-set=utf8
+[mysqld]
+character-set-server=utf8
+登入数据库，密码来自sudo grep 'temporary password' /var/log/mysqld.log
+mysql -u root -pE431e431
+
+执行数据语句
+mysql> CREATE DATABASE reviewboard CHARACTER SET utf8;
+mysql> CREATE USER 'ranbiao'@'localhost' IDENTIFIED BY 'ranbiao!1';
+mysql> GRANT ALL PRIVILEGES ON reviewboard.* to 'ranbiao'@'localhost';
+执行脚本，填问题，大多数取默认值
+rb-site install /var/www/reviews.example.com
+
+$ chown -R apache /var/www/reviews.example.com/htdocs/media/uploaded
+$ chown -R apache /var/www/reviews.example.com/data
+ln -s /var/www/html/reviews.example.com/apache-wsgi.conf /etc/httpd/conf.d/reviewboard-sitename.conf/etc/httpd/conf.d/reviewboard-sitename.conf
+vi /etc/httpd/conf.d/reviewboard-sitename.conf ,virtual machine 参数改成服务器ip地址
+重启 httpd服务
+
+===========awk section===========
+awk -v ps_cri_ch=$page_space_usage_critical_threshold  -v ps_ch=$page_space_usage_threshold '{if($5<ps_cri_ch && $5>=ps_ch) print "Swap space usage rate " $5 "% exceeds threshold on "$1" "$2" " $3 }'
+awk '($3~/U/)&&($4~/H/){print $0;}'
+=====tail section=========
+tail -f v6_webservice01-catalina.out -f v6_front03-catalina.out
+
+======cisco section======
+Cisco VPN Client for Windows 8 and 10
+1:Cisco VPN Client Fix for Windows 8 and 10 (64-bit)
+   http://download.cnet.com/Cisco-VPN-Client-Fix-for-Windows-8-and-10-64-bit/3000-7240_4-76028219.html
+2: “开始” – “运行” – “services.msc” – 停止 “Internet Connection Sharing (ICS)”，话说这类问题虽没什么技术含量，但遇到的时候真的很让人郁闷。
+``````````
+======windows section======
+services.msc
+
+===mail section====
+yum -y install ssmtp
+
+````````
+vi /etc/ssmtp/ssmtp.conf
+
+mailhub=smtp.exmail.qq.com:465
+UseTLS=YES
+#UseSTARTTLS=YES
+FromLineOverride=YES
+RewriteDomain=xinxindai.com
+AuthUser=wujunrong@xinxindai.com
+AuthPass=E431e431
+TLS_CA_File=/etc/pki/tls/certs/ca-bundle.crt
+Hostname=xinxindai.com
+````````````
+Once your configuration work is done, time to try sending some mail! 
+The simplest way to do this is to run sSMTP in a terminal with a recipient email address:
+ssmtp recipient_email@example.com
+
+sSMTP will then wait for you to type your message, which needs to be formatted like this:
+To: recipient_email@example.com
+From: myemailaddress@gmail.com
+Subject: test email
+
+hello world!
+
+Note the blank like after the subject, 
+everything after this line is the body of the email. When you’re finished, press Ctrl-D. 
+sSMTP may take a few seconds to send the message before closing.
+`````````````````````
+echo -e "From: wujunrong@xinxindai.com\nSubject: a test\n\nThis is the email body." | ssmtp -d wujunrong@xinxindai.com
+
+====timezone section====
+centos6:
+# mv /etc/localtime /root/localtime.old
+# ln -s /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
+
+centos7:
+# timedatectl list-timezones
+# timedatectl set-timezone America/Los_Angeles
+
+
+`````mail程序
+yum install mail
+vim /etc/mail.rc
+=====tomcat section=========
+安装tomcat解压安装包即可
+
+/root/apache-tomcat-6.0.45/conf/server.xml
+     Connector port="8080
+	 
+	 
+====clonezilla section==========
+ sudo fdisk /dev/sdc
+ sudo fdisk -l /dev/sdc
+ 
+ fdisk -l /dev/sdd
+ mkfs.vfat -F 32 /dev/sdc1
+ unzip /home/frank/Downloads/clonezilla-live-2.4.5-23-amd64.zip -d /run/media/frank/9187-36DA/
+ 
+== ubuntu section mac section======
+
+  aria2c    http://mirror.its.dal.ca/ubuntu-releases/15.10/ubuntu-15.10-desktop-amd64.iso -x 10
+  hdiutil convert ./ubuntu-15.10-desktop-amd64.iso   -format UDRW -o ./ubuntu15.img
+  diskutil list
+  diskutil unmountDisk /dev/disk2
+  sudo dd if=./ubuntu15.img.dmg of=/dev/disk2
+
+====cobbler section===
+yum install cobbler
+/etc/cobbler/settings
+
+
+====hardware section raid section dell section====
+aptitude install lshw pciutils
+yum      install lshw pciutils
+
+lspci | grep -i raid
+lshw
+
+dmidecode | grep -A3 '^System Information'
+````````查询raid卡``````````
+OpenManage Server Administrator 
+yum -y install wget; \
+wget -q -O - http://linux.dell.com/repo/hardware/dsu/bootstrap.cgi | bash; \
+yum install srvadmin-storageservices -y
+
+   可选：yum install srvadmin-all 或 yum install srvadmin-omacore 或 yum install srvadmin-base
+
+
+/opt/dell/srvadmin/sbin/srvadmin-services.sh   start
+/opt/dell/srvadmin/sbin/srvadmin-services.sh   restart
+/opt/dell/srvadmin/sbin/srvadmin-uninstall.sh
+查询RAID卡        ：/opt/dell/srvadmin/bin/omreport storage vdisk
+查询RAID卡下的硬盘：/opt/dell/srvadmin/bin/omreport storage pdisk controller=0
+相关文档：
+https://centosfreaks.wordpress.com/2012/01/09/monitor-hw-raid-with-dell-openmanage/
+http://linux.dell.com/repo/hardware/omsa.html
+http://linux.dell.com/repo/hardware/dsu/
+http://www.dell.com/support/manuals/us/en/19/dell-opnmang-srvr-admin-v7.4/OMSA_CLI-v3/Command-Summary-Of-The-omreport-Command?guid=GUID-6295CB3A-6545-425A-867C-485CC6B6C668&lang=en-us
+
+
+
+/opt/dell/srvadmin/bin/omreport  chassis remoteaccess
+
+`````````````````````
+#ln    -s /opt/dell/srvadmin/bin/omreport /sbin/omreport
+#chmod +s /opt/dell/srvadmin/bin/omreport
+==========ipmi section========================================
+ipmitool sdr type 'Power Supply'
+
+========elasticsearch section=====
+31.160和31.162 上有fluem服务，在lib目录 /opt/cloudera/parcels/CDH-5.5.0-1.cdh5.5.0.p0.8/lib/flume-ng/lib中增加 elasticsearch-1.7.1.jar 文件
+
+
+=======cx_Oracle section===========
+yum install -y libxml2 libxslt libxslt-devel python-setuptools python-pip
+yum -y install subversion
+yum -y groupinstall "Development Tools"
+wget https://pypi.python.org/packages/2.6/c/cx_Oracle/cx_Oracle-5.2.1-11g-py26-1.x86_64.rpm#md5=257544735910b851dd49e283991dfd2a  --no-check-certificate
+yum localinstall cx_Oracle-5.2.1-11g-py26-1.x86_64.rpm
+
+pip install python-docx
+pip install cx_Oracle
+pip install sqlalchemy
+
+
+=========ntp section=========
+ yum -y install ntp
+ ntpdate pool.ntp.org
+ vi /etc/ntp.conf
+ 
+ chkconfig ntpd on
+ systemctl enable ntpd.service
+ 
+ service ntpd start
+ /bin/systemctl start  ntpd.service
+==============shortcut section======
+ Bash Keyboard ShortcutsMoving the cursor:
+  Ctrl + a   Go to the beginning of the line (Home)
+  Ctrl + e   Go to the End of the line (End)
+  Ctrl + p   Previous command (Up arrow)
+  Ctrl + n   Next command (Down arrow)
+   Alt + b   Back (left) one word
+   Alt + f   Forward (right) one word
+  Ctrl + f   Forward one character
+  Ctrl + b   Backward one character
+  Ctrl + xx  Toggle between the start of line and current cursor position
+
+Editing:
+ Ctrl + L   Clear the Screen, similar to the clear command
+
+  Alt + Del Delete the Word before the cursor.
+  Alt + d   Delete the Word after the cursor.
+ Ctrl + d   Delete character under the cursor
+ Ctrl + h   Delete character before the cursor (Backspace)
+
+ Ctrl + w   Cut the Word before the cursor to the clipboard.
+ Ctrl + k   Cut the Line after the cursor to the clipboard.
+ Ctrl + u   Cut/delete the Line before the cursor to the clipboard.
+
+  Alt + t   Swap current word with previous
+ Ctrl + t   Swap the last two characters before the cursor (typo).
+ Esc  + t   Swap the last two words before the cursor.
+
+ ctrl + y   Paste the last thing to be cut (yank)
+  Alt + u   UPPER capitalize every character from the cursor to the end of the current word.
+  Alt + l   Lower the case of every character from the cursor to the end of the current word.
+  Alt + c   Capitalize the character under the cursor and move to the end of the word.
+  Alt + r   Cancel the changes and put back the line as it was in the history (revert).
+ ctrl + _   Undo
+ 
+ TAB        Tab completion for file/directory names
+
+For example, to move to a directory 'sample1'; Type cd sam ; then press TAB and ENTER. 
+type just enough characters to uniquely identify the directory you wish to open.
+History:
+  Ctrl + r   Recall the last command including the specified character(s)
+             searches the command history as you type.
+             Equivalent to : vim ~/.bash_history. 
+  Ctrl + p   Previous command in history (i.e. walk back through the command history)
+  Ctrl + n   Next command in history (i.e. walk forward through the command history)
+
+  Ctrl + s   Go back to the next most recent command.
+             (beware to not execute it from a terminal because this will also launch its XOFF).
+  Ctrl + o   Execute the command found via Ctrl+r or Ctrl+s
+  Ctrl + g   Escape from history searching mode
+        !!   Repeat last command
+      !abc   Run last command starting with abc
+    !abc:p   Print last command starting with abc
+        !$   Last argument of previous command
+   ALT + .   Last argument of previous command
+        !*   All arguments of previous command
+^abc-^-def   Run previous command, replacing abc with def
+Process control:
+ Ctrl + C   Interrupt/Kill whatever you are running (SIGINT)
+ Ctrl + l   Clear the screen
+ Ctrl + s   Stop output to the screen (for long running verbose commands)
+            Then use PgUp/PgDn for navigation
+ Ctrl + q   Allow output to the screen (if previously stopped using command above)
+ Ctrl + D   Send an EOF marker, unless disabled by an option, this will close the current shell (EXIT)
+ Ctrl + Z   Send the signal SIGTSTP to the current task, which suspends it.
+            To return to it later enter fg 'process name' (foreground).
+===============mysql section======================
+mysql> show databases;
+mysql> show tables;
+mysql> use  zabbix;
+mysql> show tables;
+mysql> SHOW VARIABLES LIKE "%version%";
+
+=======virsh 虚拟机和ip地址对应关系================
+找台31网段下的机器运行 :         nmap -sP 192.168.31.0/24   > network31.txt
+得到ip地址和mac列表
+给出ip地址和mac对应关系：        cat network31.txt | awk '$5~192 {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} '
+列出虚拟机名称和mac地址对应关系：virsh list --all| grep runn   | awk '{print $2}' |xargs  -I '{}' sh -c "echo -n {} ' ' ;sudo virsh domiflist {}|grep vnet|awk '{printf \"%s \", \$5  }';echo " > /tmp/ip_mac.txt
+得到虚拟机名称、ip、mac地址                ：virsh list --all| grep runn   | awk '{print $2}' |xargs  -I '{}' sh -c "echo -n {} ' ' ;sudo virsh domiflist {}|grep vnet|awk '{printf \"%s \", \$5  }';echo " | awk '{ system("echo -n  "$1" ; echo " "; grep -i "$2" /tmp/ip_mac.txt ")}'
+得到虚拟机名称、ip、mac地址(遍历宿主机)    : ansible  hypervisor-machine    -m shell -a 'virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo name\:{};sudo virsh domiflist {} "  |grep "name\|vnet"|awk "\$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} ";echo '
+
+
+=====Esxi section======
+virsh -c esx://root@192.168.129.1?no_verify=1 list --all
+virt-v2v -ic esx://192.168.129.3/?no_verify=1 -os vmdisk --bridge br1 "centos6.4_test dio 192.168.31.193"

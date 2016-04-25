@@ -1,0 +1,125 @@
+```zabbix section````````
+{192.168.31.196:system.run[/opt/dell/srvadmin/bin/omreport storage pdisk controller=0 ].regexp(^Status.*Ok,#1)}=0
+ cat   2015-10-15.csv | grep -v '^$' |awk '{ for (i=1;i<=NF;i++) {   print $i NR-1  }  }'
+``````````
+virsh list --all| grep runn   | awk '{print $2}' |xargs  -I '{}' sh -c "echo -n {} ' ' ;sudo virsh domiflist {}|grep vnet|awk '{printf \"%s \", \$5  }';echo "
+nmap -sP 192.168.31.0/24   > network31.txt
+grep -i 52:54:00:3d:a1:03  network31.txt -B 2 | grep -v Host
+````````````````
+
+virsh list --all| grep runn                   | awk '{print $2}' |xargs  -I '{}' sh -c "echo {} ;sudo virsh domiflist '{}'"
+
+docker build --rm -t local/centos7-reviewboard   .
+docker commit --change='CMD ["/root/start.sh"]'   --change='ENTRYPOINT ["/tini", "--"]'  -c "EXPOSE 8080"  pensive_austin    xxd-tomcat:final
+sudo salt 'test_v6_redis01' cmd.run "netstat -antup| grep redis| awk '{print \$5}' | awk -F: '{print \$1}'" | grep 192|xargs -I {} grep  -B 1 {} ./office.ip.list
+
+http://192.168.38.119/cdh5.5.0-parcels/
+http://192.168.38.119/centos6-cm5.5.0
+
+salt-ssh -i    cloudera-agent3    state.low '{ {% set my_path = salt['grains.get']('id') %} ,  state: cmd ,fun: run ,name: "unzip -o /root/v6_webservice.war  -d  /tmp/root{{ my_path }}" }'
+
+```pv section````
+svn list  http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/    --username wujunrong| grep  ansible |xargs -I {} svn export  http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/{} --force  /etc/ansible/hosts
+ansible test_nginx    -m fetch  -a "src=/var/log/nginx/bigdata_pv.log     dest=/opt/logs/share/{{ inventory_hostname }}.bigdata_pv.log  flat=yes"
+```````````````````
+
+del "\"sys_cofing_RISK_CALL_SWITCH\""
+
+redis安装在192.168.32.251上
+huangchao(黄超（高级系统工程师）) 11-30 17:32:50
+硬盘给50G就可以了
+
+ansible  fix-env   -m shell -a "cd  /tmp/v6/install_packet/&& zip ./conf_file.zip ./redis.properties"
+=======================
+v6test
+
+nginx:
+192.168.38.182:/var/ftp/pub/v6_front/image   /usr/local/nginx/html/static/image
+192.168.38.182:/var/ftp/pub/v6_admin/image   /usr/local/nginx/html/static/admin/image 
+192.168.38.182:/var/ftp/pub/download         /usr/local/nginx/html/static/download 
+
+front:
+192.168.38.182:/var/ftp/pub/v6_front/image   /opt/webserver/v6_tomcat/webapps/ROOT/static/image 
+192.168.38.182:/var/ftp/pub/v6_admin/image   /opt/webserver/v6_tomcat/webapps/ROOT/static/admin/image 
+
+mobile
+
+
+
+192.168.38.182:/var/ftp/pub/v6_front/image   /opt/webserver/v6_tomcat/webapps/v5_mobile/static/image 
+192.168.38.182:/var/ftp/pub/v6_admin/image   /opt/webserver/v6_tomcat/webapps/v5_mobile/static/admin/image 
+
+webapp
+192.168.38.182:/var/ftp/pub/v6_front/image   /opt/webserver/v6_tomcat/webapps/m/static/image
+=============================
+v6stage
+nginx
+192.168.31.250:/volume1/v6/v6_front/image    /usr/local/nginx/html/static/image type nfs (rw,vers=4,addr=192.168.31.250,clientaddr=192.168.31.24)
+192.168.31.250:/volume1/v6/v6_admin/image    /usr/local/nginx/html/static/admin/image type nfs (rw,vers=4,addr=192.168.31.250,clientaddr=192.168.31.24)
+192.168.31.250:/volume1/v6/download          /usr/local/nginx/html/static/download type nfs (rw,vers=4,addr=192.168.31.250,clientaddr=192.168.31.24)
+
+webapp
+192.168.31.250:/volume1/v6/v6_front/image    /opt/webserver/v6_tomcat/webapps/m/static/image
+
+===================
+
+unzip -o /tmp/v6/install_packet/conf_file.zip -d /opt/webserver/v6_tomcat/webapps/xxdai_sys_admin/WEB-INF/classes/
+
+sudo salt -N 'test_v6tomcat' cmd.run "find /opt/webserver/ -type d  -print0 |  grep -EzZ  'classes/com$' |sed 's/WEB-INF\/classes\/com//g';echo"
+sudo salt -N 'stage_v6tomcat'  cmd.run "find /opt/webserver/ -type d  -print0 |  grep -EzZ  'classes/com$' |sed 's/WEB-INF\/classes\/com//g';echo;salt-call --local  grains.item  tomcat_app_dir | grep opt | xargs -I {}  sh -c 'echo {};[ -d {} ] && echo found  || echo not found  '  "
+
+
+test_v6_seo:
+    /opt/webserver/v6_tomcat/webapps/ROOT/
+test_v6_webapp_front01:
+    /opt/webserver/v6_tomcat/webapps/m/
+test_v6_tomcat_admin01:
+    /opt/webserver/v6_tomcat/webapps/v6_admin/
+test_v6_tomcat_batch01:
+    /opt/webserver/v6_tomcat/webapps/xxdai_batch/
+test_v6_tomcat_mobile02:
+    /opt/webserver/v6_tomcat/webapps/v5_mobile/
+test_v6_tomcat_front02:
+    /opt/webserver/v6_tomcat/webapps/ROOT/
+test_v6_tomcat_admin02:
+    /opt/webserver/v6_tomcat/webapps/v6_admin/
+test_v6_tomcat_batch02:
+    /opt/webserver/v6_tomcat/webapps/xxdai_batch/
+test_v6_tomcat_front01:
+    /opt/webserver/v6_tomcat/webapps/ROOT/
+test_v6_tomcat_tradew01:
+    /opt/webserver/v6_tomcat/webapps/v6_tradews/
+test_v6_tomcat_mobile01:
+    /opt/webserver/v6_tomcat/webapps/v5_mobile/
+test_v6_tomcat_webservice01:
+    /opt/webserver/v6_tomcat/webapps/v6_webservice/
+test_v6_tomcat_tradew02:
+    /opt/webserver/v6_tomcat/webapps/v6_tradews/
+test_v6_tomcat_webservice02:
+    /opt/webserver/v6_tomcat/webapps/v6_webservice/
+
+======log section==========
+tar  -zcvf /tmp/wutest.tar.gz   `find . -type f -newerct "2016-03-07  15:00:00"   ! -newerct "2016-03-07 17:00:00"   -regex ".*mobile.*\|.*webser.*" `
+find . -type f -newerct "2016-02-07  00:00:00"   ! -newerct "2016-03-08 00:00:00"   | xargs -I {}  sh -c 'echo == {} ==;zcat {} | grep -anE -C 20 "AccountRechargeServiceImpl...updateAccountRecharge...BankCode=" ' >/tmp/webservice_yangzhe_0207-0307.txt
+============
+
+sudo  salt 'ct-production-tomcat-partener02.xinxindai.com' cp.push '/opt/webserver/tomcat/webapps/v6_partener/WEB-INF/classes/discuz.properties'
+sudo  find /var/cache/salt/master/minions/    -name discuz.properties   -exec cp {} /srv/salt/wujunrong/discuz.properties   \;
+sudo  salt     'ct-production-tomcat-partener01.xinxindai.com'     file.manage_file /opt/webserver/tomcat/webapps/v6_partener/WEB-INF/classes/discuz.properties    '' '{}' salt://wujunrong/discuz.properties     '{hash_type: 'md5', 'hsum': <md5sum>}' root root '644' base 'minion'
+
+堡垒：super/YXauth!@#xxd001
+
+===deploy section========
+diff -r /opt/ci/rsync/v6_static_rsync/    /opt/ci/workspace/dev_v6.4.4_20160308/v6_front/trunk/target/v6_front/static/
+cp -r  /opt/ci/workspace/dev_v6.4.4_20160308/v6_front/trunk/target/v6_front/static/  /opt/ci/rsync/v6_static_rsync/
+find   /opt/ci/workspace/dev_v6.4.4_20160308/  -name pom.xml -exec sh -c 'path_dir=`dirname {}`; cd $path_dir;mvn clean package;' \;
+
+========elasticsearch section=====
+31.160和31.162 上有fluem服务，在lib目录 /opt/cloudera/parcels/CDH-5.5.0-1.cdh5.5.0.p0.8/lib/flume-ng/lib中增加 elasticsearch-1.7.1.jar 文件
+
+salt 'stage_v6_admin01' state.single   file.recurse  source='salt://wujunrong/20160321config/abc'  name='/opt/webserver/v6_tomcat/webapps/xxdai_sys_admin/image/data/xheditor_Upload'
+
+
+
+
+touch /home/wujunrong/tmp/error.txt;find  ./  -type d  -path ./v6_batch/trunk/batch-schedule -prune -o  -name pom.xml   -print | grep -v "v6_batch/trunk/pom.xml" |  xargs -I {}  sh -c 'path_dir=`dirname {}`&& cd $path_dir && mvn clean package ; return_val=$?  | tee ./output.txt; (if [ "$return_val" -ne 0 ];then ( cat ./output.txt  >>/home/wujunrong/tmp/error.txt)  ;else  cp  ./target/*.war   /home/wujunrong/tmp/;fi)   '
