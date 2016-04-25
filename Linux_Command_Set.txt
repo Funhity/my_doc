@@ -3903,6 +3903,8 @@ git config user.name
    git remote add  origin   root@172.16.15.88:/srv/git/xxd_doc_repo.git
    git fetch
    git checkout -t origin/master #-t will set the upstream branch for you
+   git commit -a -m "change command text"
+   git push
 `````````
         git archive   --format=tar --remote=/srv/git/xxd_code_repo.git/           master                    | tar -xf -
 ×ÓÄ¿Â¼£ºgit archive   --format=tar --remote=ssh://remote_server/remote_repository master path1/ path2/      | tar -xv
