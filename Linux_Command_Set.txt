@@ -3905,6 +3905,7 @@ git config user.name
    git checkout -t origin/master #-t will set the upstream branch for you
    git commit -a -m "change command text"
    git push
+   git pull  -s  resolve #pull的时候你这边已经被svn update改了，pull的时候需要指定merge策略
 `````````
         git archive   --format=tar --remote=/srv/git/xxd_code_repo.git/           master                    | tar -xf -
 子目录：git archive   --format=tar --remote=ssh://remote_server/remote_repository master path1/ path2/      | tar -xv
