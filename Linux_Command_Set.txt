@@ -4280,7 +4280,8 @@ everything after this line is the body of the email. When you¡¯re finished, pres
 sSMTP may take a few seconds to send the message before closing.
 `````````````````````
 echo -e "From: wujunrong@xinxindai.com\nSubject: a test\n\nThis is the email body." | ssmtp -d wujunrong@xinxindai.com
-
+yum install -y sharutils
+echo -e "From: wujunrong@xinxindai.com\nSubject: a test\n\nThis is the email body." | (cat - && uuencode ./anaconda-ks.cfg  attachment.name) | ssmtp wujunrong@xinxindai.com
 ====timezone section====
 centos6:
 # mv /etc/localtime /root/localtime.old
