@@ -45,7 +45,7 @@ stage_v6_nginx01:
 address:xinxindai.com
 IDC:YXYWG/xxdyx
 cisco VPN:wujunrong/WJR@Es9i
-
+```
 username wujunrong password WJR@qwexxxd  vpn组：YXVPN/YXvpnasa@*
 huangchao(黄超（高级系统工程师）) 03-07 01:28:13
 拨入地址：oa.xinxindai.com
@@ -788,7 +788,7 @@ cat  install_list/install.txt
 v6stage-credit_app01-192.168.31.89-xinxindai.com#192.168.31.89#192.168.38.118#192.168.31.253#2#2048#100#br1#CentOS6.4-Release.ks
 配置新模块
 vim /srv/pillar/v6/tomcat/init.sls
-
+http://www.xinxindai.com/v6_credit_app/mobile/employee/login.html
 ==========================
 cat /proc/mounts | grep -E "\b(btrfs|ext2|ext3|ext4|jfs|reiser|xfs|ffs|ufs|jfs|jfs2|vxfs|hfs|ntfs|fat32|zfs)\b" |awk 'BEGIN{printf "{\n\"data\":[\n"} {printf "{\"{#DEV_NAME}\" : \"%s\",\"{#FS_NAME}\" : \"%s\",\"{#SEC_SIZE}\" : ",$1,$2;system("blockdev --getss " $1 " |tr -d \"\n\"  ") ; if  ( getline ==1 ) { printf "},\n" } else  printf "}\n"      }   END{printf "  ]\n}\n"} ' 
 

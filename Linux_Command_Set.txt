@@ -78,9 +78,10 @@ no — The /etc/resolv.conf file will not be changed.
 
 /etc/init.d/network restart
    sed -i.bak  's/HOSTNAME=.*/HOSTNAME=cloudera-manager/g' /etc/sysconfig/network
-   
-   arping -c 1 -I br0 192.168.38.150
 
+=====nmap section==arp section==nc section===
+  arping -c 1 -I br0      192.168.38.150
+  arping      -I ens32 -b 192.168.31.123 测试是否有IP冲突
   网络：
   
   nc -v -z salt.master.ip  4505
@@ -3854,7 +3855,7 @@ git config --list
 git config user.name
     git config --global user.name "Your Name"
     git config --global user.email you@example.com
-````````初次使用git要设置```
+```````````
  git config --list
  git config --global user.name "wujunrong"
  git config --global user.email "wujunrong@xinxindai.com"
@@ -3880,41 +3881,23 @@ git config user.name
 
   git remote
   git remote -v
-
+  初始化远程地址
+  git remote add salt-office  root@172.16.15.88:/srv/git/svn_repository.git
   git remote set-url origin   root@172.16.15.88:/srv/git/xxd_doc_repo.git
-
-  git push origin master
+  初始化远程默认push分支，
+  git push --set-upstream salt-office master  #推送当前分支并建立与远程上游的跟踪
 `````````````
-
-1、服务器端，创建空仓库，然后通过客户端，用push往仓库中添加
-   git --bare init  #bare repositories (by definition) don't have a working tree attached to them, so you can't easily add files to them as you would in a normal non-bare repository (e.g. with git add <file> and a subsequent git commit.)
+创建空仓库，然后用push往仓库中添加
+git --bare init  #bare repositories (by definition) don't have a working tree attached to them, so you can't easily add files to them as you would in a normal non-bare repository (e.g. with git add <file> and a subsequent git commit.)
                   You almost always update a bare repository by pushing to it (using git push) from another repository.
 
-2、首个客户端，上传要版本管理的文件到服务器
-   git init
-   git add work_memo.txt
-   初始化远程地址
-   git remote add salt-office  root@172.16.15.88:/srv/git/svn_repository.git
-   初始化远程默认push分支，
-   git push --set-upstream salt-office master  #推送当前分支并建立与远程上游的跟踪
-   git push
-3、第二个客户端从服务器下载
-   git init
-   git remote add  origin   root@172.16.15.88:/srv/git/xxd_doc_repo.git
-   git fetch
-   git checkout -t origin/master #-t will set the upstream branch for you
-   git commit -a -m "change command text"
-   git push
-   git pull  -s  resolve #pull的时候你这边已经被svn update改了，pull的时候需要指定merge策略
 `````````
         git archive   --format=tar --remote=/srv/git/xxd_code_repo.git/           master                    | tar -xf -
 子目录：git archive   --format=tar --remote=ssh://remote_server/remote_repository master path1/ path2/      | tar -xv
         git archive   --format=tar --remote=/srv/git/xxd_code_repo.git            HEAD -- ansible.hosts     | tar -xf -
 
-```````````
-#Git - List all files currently under source control?
-git ls-tree -r master --name-only 
 
+```````````
 git status
 git status -s                                       #Short Status
 git commit -a -m 'added new benchmarks'             #Skipping the Staging Area
@@ -4280,8 +4263,7 @@ everything after this line is the body of the email. When you’re finished, pres
 sSMTP may take a few seconds to send the message before closing.
 `````````````````````
 echo -e "From: wujunrong@xinxindai.com\nSubject: a test\n\nThis is the email body." | ssmtp -d wujunrong@xinxindai.com
-yum install -y sharutils
-echo -e "From: wujunrong@xinxindai.com\nSubject: a test\n\nThis is the email body." | (cat - && uuencode ./anaconda-ks.cfg  attachment.name) | ssmtp wujunrong@xinxindai.com
+
 ====timezone section====
 centos6:
 # mv /etc/localtime /root/localtime.old
@@ -4324,6 +4306,10 @@ yum install cobbler
 
 
 ====hardware section raid section dell section====
+远程控制卡的默认IP是192.168.0.120，
+用户名是root,密码是calvin
+远程控制卡虚拟控制台 插件类型 选择java
+
 aptitude install lshw pciutils
 yum      install lshw pciutils
 
@@ -4340,7 +4326,7 @@ yum install srvadmin-storageservices -y
    可选：yum install srvadmin-all 或 yum install srvadmin-omacore 或 yum install srvadmin-base
 
 
-/opt/dell/srvadmin/sbin/srvadmin-services.sh   start
+/opt/dell/srvadmin/sbin/srvadmin-services.sh   start  #racadm 命令依赖此命令
 /opt/dell/srvadmin/sbin/srvadmin-services.sh   restart
 /opt/dell/srvadmin/sbin/srvadmin-uninstall.sh
 查询RAID卡        ：/opt/dell/srvadmin/bin/omreport storage vdisk
@@ -4354,7 +4340,14 @@ http://www.dell.com/support/manuals/us/en/19/dell-opnmang-srvr-admin-v7.4/OMSA_C
 
 
 /opt/dell/srvadmin/bin/omreport  chassis remoteaccess
-
+````````
+srvadmin-services.sh   start #racadm 依赖srvadmin-services.sh
+racadm racreset #重启
+racadm racresetcfg
+racadm getniccfg
+racadm setniccfg -s 192.168.31.122 255.255.255.0 192.168.0.1
+racadm help setniccfg
+racadm config -g cfgLanNetworking -o cfgNicUseDHCP 1 #从dhcp获取IP地址
 `````````````````````
 #ln    -s /opt/dell/srvadmin/bin/omreport /sbin/omreport
 #chmod +s /opt/dell/srvadmin/bin/omreport
