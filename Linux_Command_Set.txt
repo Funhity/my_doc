@@ -1783,6 +1783,27 @@ cat /etc/logrotate.d/test_webservice
 }
 
 ````````````````````````````````````````````````````````````````````
+        prerotate
+           localtime=$(date "+%Y%m%d")
+           name=$(hostname | awk -F'.' '{print $1}')
+           tomcat_log_dir=/opt/webserver/v6_tomcat/logs/
+           cd $tomcat_log_dir
+           tar -zcf ${name}_${localtime}.tar.gz catalina.out
+           ftp -n <<EOF
+           open 192.168.110.105
+           user yxlog yxlog
+           passive
+           binary
+           cd credit_app_log
+           put ${name}_${localtime}.tar.gz
+           EOF
+        endscript
+        postrotate
+           /sbin/service rsyslog stop  >/dev/null 2>&1
+           [ -f /var/run/catalina-statefile ] && rm -fr /var/run/catalina-statefile
+           sleep 3
+           /sbin/service rsyslog start >/dev/null 2>&1
+        endscript
 
 
 =====================   rsyslog section   =========================
@@ -3855,7 +3876,7 @@ git config --list
 git config user.name
     git config --global user.name "Your Name"
     git config --global user.email you@example.com
-```````````
+````````初次使用git要设置```
  git config --list
  git config --global user.name "wujunrong"
  git config --global user.email "wujunrong@xinxindai.com"
@@ -3886,11 +3907,30 @@ git config user.name
   git remote set-url origin   root@172.16.15.88:/srv/git/xxd_doc_repo.git
   初始化远程默认push分支，
   git push --set-upstream salt-office master  #推送当前分支并建立与远程上游的跟踪
+
+  git push origin master
 `````````````
 创建空仓库，然后用push往仓库中添加
-git --bare init  #bare repositories (by definition) don't have a working tree attached to them, so you can't easily add files to them as you would in a normal non-bare repository (e.g. with git add <file> and a subsequent git commit.)
+1、服务器端，创建空仓库，然后通过客户端，用push往仓库中添加
+   git --bare init  #bare repositories (by definition) don't have a working tree attached to them, so you can't easily add files to them as you would in a normal non-bare repository (e.g. with git add <file> and a subsequent git commit.)
                   You almost always update a bare repository by pushing to it (using git push) from another repository.
 
+2、首个客户端，上传要版本管理的文件到服务器
+   git init
+   git add work_memo.txt
+   初始化远程地址
+   git remote add salt-office  root@172.16.15.88:/srv/git/svn_repository.git
+   初始化远程默认push分支，
+   git push --set-upstream salt-office master  #推送当前分支并建立与远程上游的跟踪
+   git push
+3、第二个客户端从服务器下载
+   git init
+   git remote add  origin   root@172.16.15.88:/srv/git/xxd_doc_repo.git
+   git fetch
+   git checkout -t origin/master #-t will set the upstream branch for you
+   git commit -a -m "change command text"
+   git push
+   git pull  -s  resolve #pull的时候你这边已经被svn update改了，pull的时候需要指定merge策略
 `````````
         git archive   --format=tar --remote=/srv/git/xxd_code_repo.git/           master                    | tar -xf -
 子目录：git archive   --format=tar --remote=ssh://remote_server/remote_repository master path1/ path2/      | tar -xv
@@ -3898,6 +3938,9 @@ git --bare init  #bare repositories (by definition) don't have a working tree at
 
 
 ```````````
+#Git - List all files currently under source control?
+git ls-tree -r master --name-only 
+
 git status
 git status -s                                       #Short Status
 git commit -a -m 'added new benchmarks'             #Skipping the Staging Area
@@ -4263,7 +4306,8 @@ everything after this line is the body of the email. When you’re finished, pres
 sSMTP may take a few seconds to send the message before closing.
 `````````````````````
 echo -e "From: wujunrong@xinxindai.com\nSubject: a test\n\nThis is the email body." | ssmtp -d wujunrong@xinxindai.com
-
+yum install -y sharutils
+echo -e "From: wujunrong@xinxindai.com\nSubject: a test\n\nThis is the email body." | (cat - && uuencode ./anaconda-ks.cfg  attachment.name) | ssmtp wujunrong@xinxindai.com
 ====timezone section====
 centos6:
 # mv /etc/localtime /root/localtime.old
