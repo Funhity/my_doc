@@ -4397,7 +4397,7 @@ systemctl start xinetd
 
 
 mount -o loop  CentOS-6.7-x86_64-bin-DVD1.iso  mnt/
-
+cobbler distro list
 ====hardware section raid section dell section====
 远程控制卡的默认IP是192.168.0.120，
 用户名是root,密码是calvin
