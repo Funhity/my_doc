@@ -4369,6 +4369,7 @@ yum -y install xinetd
 yum install dhcp -y
 cobbler version
 有问题看日志：less /var/log/cobbler/cobbler.log
+                   /var/log/httpd/error_log  
 
 
 
@@ -4381,9 +4382,23 @@ cobbler version
 
 vi /etc/xinetd.d/tftp
    Change disable = yes to disable = no.
-	
+
+vi /etc/xinetd.d/rsync
+    disable = no
+
 vi /etc/cobbler/dhcp.template
    next-server                192.168.122.156;
+
+配置web界面
+vi /etc/cobbler/modules.conf
+   [authentication]
+   module = authn_configfile
+   [authorization]
+   module = authz_allowall
+设置web密码
+   htdigest /etc/cobbler/users.digest "Cobbler" cobbler
+cobbler get-loaders   
+   https://10.0.1.9/cobbler_web/
 
 ``````
 
@@ -4397,7 +4412,40 @@ systemctl start xinetd
 
 
 mount -o loop  CentOS-6.7-x86_64-bin-DVD1.iso  mnt/
+cobbler signature update
+cobbler signature report
 cobbler distro list
+````````
+Commands to create the Xfce and GNOME profiles
+cobbler profile add --name=Fedora17-xfce \
+                    --ksmeta='desktop_pkg_group=@xfce-desktop' \
+                    --kickstart=/var/lib/cobbler/kickstarts/example.ks \
+                    --parent=Fedora17-x86_64
+cobbler profile add --name=Fedora17-gnome \
+                    --ksmeta='desktop_pkg_group=@gnome-desktop' \
+                    --kickstart=/var/lib/cobbler/kickstarts/example.ks \
+                    --parent=Fedora17-x86_64
+cobbler profile report
+#获取变量替换后的ks文件
+cobbler profile getks --name=Fedora17-xfce
+
+Associating machines with their profiles
+cobbler system add --name=desktop-xfce-1 \
+                   --profile=Fedora17-xfce \
+                   --mac=52:54:00:b8:5e:8f \
+                   --ip-address=192.168.122.10
+cobbler system add --name=desktop-gnome-1 \
+                   --profile=Fedora17-gnome \
+                   --mac=52:54:00:88:f3:44 \
+                   --ip-address=192.168.122.11
+cobbler system report
+
+
+
+
+
+````````
+
 ====hardware section raid section dell section====
 远程控制卡的默认IP是192.168.0.120，
 用户名是root,密码是calvin
