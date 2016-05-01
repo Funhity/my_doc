@@ -2653,6 +2653,8 @@ virt-install  -n centos  -r 2048  --vcpus=2  --os-variant=rhel5.4  --accelerate 
                               -l http://mirrors.nixcraft.in/centos/5.5/os/x86_64/ \
                               -nographics \
                               -x "ks=http://10.10.21.3/static/ks.cfg ksdevice=eth0 ip=10.10.21.76 netmask=255.255.255.240 dns=10.10.21.1 gateway=10.10.21.100"		 
+
+pxe:		virt-install -n centos6-pxe -r 1024 --disk=path=/home/frank/my-vm/kvm/images/test-pxe.qcow2   --network bridge=br0       --os-type=linux    --os-variant=rhel6 --pxe --force
 		 
 ``````use exeisting image``````````
           virt-install --connect qemu:///system --ram 1024 -n rhel_64 -r 2048 --os-type=linux --os-variant=rhel5  --disk path=/root/RHEL-Server-5.8-64-virtio.qcow2,device=disk,bus=virtio,format=qcow2 --vcpus=2 --vnc --noautoconsole --import
@@ -4364,11 +4366,11 @@ vim /etc/mail.rc
 rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 yum install cobbler cobbler-web pykickstart -y wget
 yum -y install xinetd
-
+yum install dhcp -y
 cobbler version
 有问题看日志：less /var/log/cobbler/cobbler.log
 
-cobbler get-loaders
+
 
 `````
 /etc/cobbler/settings
@@ -4378,12 +4380,17 @@ cobbler get-loaders
    default_password_crypted: "$1$U.Svb2gw$MNHrAmG.axVHYQaQRySR5/"
 
 vi /etc/xinetd.d/tftp
-    Change disable = yes to disable = no.
+   Change disable = yes to disable = no.
+	
+vi /etc/cobbler/dhcp.template
+   next-server                192.168.122.156;
+
 ``````
 
 systemctl restart httpd
-systemctl restart cobblerd.service
 cobbler check
+cobbler get-loaders
+systemctl restart cobblerd.service
 cobbler sync
 systemctl enable xinetd
 systemctl start xinetd
