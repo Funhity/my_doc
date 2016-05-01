@@ -3951,6 +3951,7 @@ git config user.name
 		git archive   --format=tar --remote=/srv/git/xxd_code_repo.git            HEAD -- ansible.hosts     | tar -xf -
         git archive   --format=tar --remote=/srv/git/xxd_code_repo.git            HEAD -- ansible.hosts     | tar -xf - -C /etc/ansible
 
+
 ```````````
 #Git - List all files currently under source control?
 git ls-tree -r master --name-only 
