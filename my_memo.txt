@@ -129,4 +129,9 @@ gpgkey=https://repo.saltstack.com/yum/rhel6/SALTSTACK-GPG-KEY.pub
 
 
 ansible stage_redis  -a "/usr/local/redis/redis-server  --version"
- ansible cloudera_redis -m shell -a "echo nameserver 192.168.38.118>>/etc/resolv.conf"
+ansible cloudera_redis -m shell -a "echo nameserver 192.168.38.118>>/etc/resolv.conf"
+
+=====zabbix section=======
+sudo sed -i 's/^ServerActive=127.0.0.1/ServerActive=/g' /etc/zabbix/zabbix_agentd.conf
+sudo sed -i 's/^ServerActive=127.0.0.1/ServerActive=/g' /etc/zabbix/zabbix_agentd.conf
+(! cat /etc/zabbix/zabbix_agentd.conf |  grep 'EnableRemoteCommands=1' )&&  sed -i.bak 's/# EnableRemoteCommands=0/# EnableRemoteCommands=0\nEnableRemoteCommands=1/g'  /etc/zabbix/zabbix_agentd.conf

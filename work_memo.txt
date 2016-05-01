@@ -111,9 +111,11 @@ sudo  salt     'ct-production-tomcat-partener01.xinxindai.com'     file.manage_f
 
 ===deploy section========
 diff -r /opt/ci/rsync/v6_static_rsync/    /opt/ci/workspace/dev_v6.4.4_20160308/v6_front/trunk/target/v6_front/static/
-cp -r  /opt/ci/workspace/dev_v6.4.4_20160308/v6_front/trunk/target/v6_front/static/  /opt/ci/rsync/v6_static_rsync/
 find   /opt/ci/workspace/dev_v6.4.4_20160308/  -name pom.xml -exec sh -c 'path_dir=`dirname {}`; cd $path_dir;mvn clean package;' \;
-
+````
+rm -fr /opt/ci/rsync/v6_static_rsync/*
+cp -r  /opt/ci/workspace/dev_v6.4.4_20160308/v6_front/trunk/target/v6_front/static/*  /opt/ci/rsync/v6_static_rsync/
+````
 ========elasticsearch section=====
 31.160和31.162 上有fluem服务，在lib目录 /opt/cloudera/parcels/CDH-5.5.0-1.cdh5.5.0.p0.8/lib/flume-ng/lib中增加 elasticsearch-1.7.1.jar 文件
 
@@ -123,3 +125,8 @@ salt 'stage_v6_admin01' state.single   file.recurse  source='salt://wujunrong/20
 
 
 touch /home/wujunrong/tmp/error.txt;find  ./  -type d  -path ./v6_batch/trunk/batch-schedule -prune -o  -name pom.xml   -print | grep -v "v6_batch/trunk/pom.xml" |  xargs -I {}  sh -c 'path_dir=`dirname {}`&& cd $path_dir && mvn clean package ; return_val=$?  | tee ./output.txt; (if [ "$return_val" -ne 0 ];then ( cat ./output.txt  >>/home/wujunrong/tmp/error.txt)  ;else  cp  ./target/*.war   /home/wujunrong/tmp/;fi)   '
+
+主机名规范：环境-(业务)-运行服务-ip.地点
+           test-v6_front01-tomcat-192.168.38.1.yh
+           base-svn_master-192.168.1.1.yh
+           stage-hypervisor_kvm01-192.168.1.2.yh
