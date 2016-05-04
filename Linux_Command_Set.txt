@@ -80,6 +80,7 @@ no — The /etc/resolv.conf file will not be changed.
    sed -i.bak  's/HOSTNAME=.*/HOSTNAME=cloudera-manager/g' /etc/sysconfig/network
 
 =====nmap section==arp section==nc section===
+  sudo yum install nmap -y 
   arping -c 1 -I br0      192.168.38.150
   arping      -I ens32 -b 192.168.31.123 测试是否有IP冲突
   网络：
@@ -904,6 +905,8 @@ sudo yum install https://repo.saltstack.com/yum/redhat/salt-repo-2015.8-2.el6.no
   salt '*' state.highstate -t 60  # On the master 
   salt '*' state.single pkg.installed name='vim'
   salt '*' state.low '{name: vim, state: pkg, fun: installed}'
+  
+  sudo salt-run manage.down
   ``````````````````````````````````````````
   file_roots:
     base:
@@ -1026,6 +1029,8 @@ apache:
        salt 'stage_v6_front01'  file.list_backups      /opt/webserver/v6_tomcat/webapps/ROOT/redenvelops/Red-envelopes-down.jsp
        salt 'stage_v6_front01'  file.restore_backups   1
 	   salt 'stage_v6_front01'  file.delete_backups    3
+  
+   sudo salt test-v6_credit_app01-tomcat-192.168.38.160.yh  state.single  file.append  name='/etc/sudoers' text='yxaccount ALL=(ALL) NOPASSWD:ALL'
   ``````````````````````````````````
   salt 'source-minion'          cp.push /absolute/path/file                   # Push the file to the master
   salt 'kbclient3.example.com'  cp.push /root/test_hour.sh
@@ -1438,7 +1443,8 @@ svn  import -m "风控脚本" ./fk.sh  http://192.168.38.230/YXITD/10-运维部/吴军荣/
 
 url="http://192.168.38.230/YXPRJ/05DEPLOYMENT/fk/Test Release/2015-7-1/YX.war"
 svn export "$url"
-svn export "http://wujunrong@192.168.38.230/YXITD/saltstack/trunk/wujunrong/ansible.hosts" --username wujunrong
+方法一：svn export "http://wujunrong@192.168.38.230/YXITD/saltstack/trunk/wujunrong/ansible.hosts" --username wujunrong
+方法二：wget --user wujunrong --password E431e4314  "http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/ansible.hosts"
 svn export         "http://192.168.38.230/YXPRJ/05DEPLOYMENT/fk/Test Release/2015-10-8/YX.war"      /home/wujunrong/work/YX.war
 svn export -r 16873 http://core.svn.wordpress.org/branches/2.8/wp-admin/css
  
@@ -1499,7 +1505,7 @@ svn resolve --accept=working code/bar.c
 ```````````````````````````````````
 
 ============netstat section===========
-
+yum -y install net-tools
 netstat --listen
 netstat  -nr
 netstat -antup 
@@ -1807,7 +1813,24 @@ cat /etc/logrotate.d/test_webservice
            sleep 3
            /sbin/service rsyslog start >/dev/null 2>&1
         endscript
+``````````````````````````````````````
+cat /etc/logrotate.d/logrotate_tomcat 
+/opt/webserver/v6_tomcat/logs/catalina.out {
+	daily
+        rotate 60
+	copytruncate
+	dateext
+	nocompress
+	missingok
+        sharedscripts
+        postrotate
+           /sbin/service rsyslog stop  >/dev/null 2>&1 
+           [ -f /var/run/catalina-statefile ] && rm -fr /var/run/catalina-statefile
+           sleep 3 
+           /sbin/service rsyslog start >/dev/null 2>&1
+        endscript
 
+}
 
 =====================   rsyslog section   =========================
 /etc/rsyslog.conf
@@ -2253,6 +2276,15 @@ tar   zxvf jdk-8uversion-linux-x64.tar.gz
 tar   -cf config_file_credit.tar   ./test_v6_mobile/   ./stage_v6_mobile/ 
 zip   abc.zip *
 
+tar -xzf rebol.tar.gz
+
+
+?$ tar -zxvf filename.tgz
+$ tar -zxvf filename.tar.gz
+$ tar -jxvf filename.tar.bz2
+
+tar -zcvf /tmp/webservice-trade.tar.gz   ./{*webservice*11-11*,*webser*.out,*tra*11-11*,*tra*.out}
+
 ``````````tomcat section``````
 The CATALINA_HOME environment variable should be set to the location of the
 root directory of the "binary" distribution of Tomcat.
@@ -2654,8 +2686,7 @@ virt-install  -n centos  -r 2048  --vcpus=2  --os-variant=rhel5.4  --accelerate 
                               -nographics \
                               -x "ks=http://10.10.21.3/static/ks.cfg ksdevice=eth0 ip=10.10.21.76 netmask=255.255.255.240 dns=10.10.21.1 gateway=10.10.21.100"		 
 
-pxe:		virt-install -n centos6-pxe -r 1024 --disk=path=/home/frank/my-vm/kvm/images/test-pxe.qcow2   --network bridge=br0       --os-type=linux    --os-variant=rhel6 --pxe --force
-		 
+pxe:		virt-install -n centos6-pxe -r 1024  --vcpus=2  --disk=path=/home/frank/my-vm/kvm/images/test-pxe.qcow2   --network bridge=br0   --network bridge=virbr0    --os-type=linux  --graphics vnc,password=w123456,listen=0.0.0.0   --os-variant=rhel6 --pxe --force
 ``````use exeisting image``````````
           virt-install --connect qemu:///system --ram 1024 -n rhel_64 -r 2048 --os-type=linux --os-variant=rhel5  --disk path=/root/RHEL-Server-5.8-64-virtio.qcow2,device=disk,bus=virtio,format=qcow2 --vcpus=2 --vnc --noautoconsole --import
           virt-install --name NewVM --ram 512 --vcpus 1 --disk path=/var/lib/libvirt/images/centos.img --import --noautoconsole --force
@@ -2907,6 +2938,7 @@ crontab -l
 
 ````````epel section````
   wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+  yum upgrade ca-certificates --disablerepo=epel -y
   wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
   或 rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
   sudo yum -y install ansible
@@ -3780,6 +3812,12 @@ iscsiadm -m node --login
 sudo iscsiadm -m node -T iqn.2003-01.org.linux-iscsi.test-cento7.x8664:sn.328e9fadb8e6   -l
 iscsiadm -m session -o show
 
+
+  iscsi-shutdown.service                 loaded    active   exited  Logout off all iSCSI sessions on shutdown
+  iscsi.service                          loaded    active   exited  Login and scanning of iSCSI devices 我停掉此服务，让他停止扫描关闭的iscsi服务
+  iscsid.service                         loaded    active   running Open-iSCSI
+  iscsiuio.service                       loaded    inactive dead    iSCSI UserSpace I/O driver
+  
 `````````````
 fdisk -l
 sudo parted /dev/sda print
@@ -4364,17 +4402,40 @@ vim /etc/mail.rc
 
 ====cobbler section===
 rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-yum install cobbler cobbler-web pykickstart -y wget
+yum install cobbler cobbler-web pykickstart wget fence-agents -y 
 yum -y install xinetd
 yum install dhcp -y
 cobbler version
 有问题看日志：less /var/log/cobbler/cobbler.log
                    /var/log/httpd/error_log  
 
+```````
+kickstart file： /var/lib/cobbler/kickstarts
+snippets         /var/lib/cobbler/snippets
+
+
+
+sudo blkid | grep swap
+```````
+clearpart --all --initlabel
+part /boot --fstype ext4 --size=500 --asprimary
+part pv.00 --size=1 --grow
+volgroup vg00 pv.00
+logvol / --fstype=ext4 --name=lv_root --vgname=vg00 --grow --size=1024 --maxsize=51200
+logvol /u02 --fstype=ext4 --name=lv_u02 --vgname=vg00 --grow --size=1024
+logvol swap --name=lv_swap --vgname=vg00 --grow --size=4032 --recommended
+````````````
+
+
+cobbler profile report
+cobbler system report
+
+
 
 
 `````
-/etc/cobbler/settings
+openssl passwd -1
+vi /etc/cobbler/settings
    server: 192.168.122.156
    next_server: 192.168.122.156
    manage_dhcp: 0
@@ -4397,24 +4458,42 @@ vi /etc/cobbler/modules.conf
    module = authz_allowall
 设置web密码
    htdigest /etc/cobbler/users.digest "Cobbler" cobbler
-cobbler get-loaders   
+   
+````   
+   cobbler get-loaders   
    https://10.0.1.9/cobbler_web/
 
 ``````
 
 systemctl restart httpd
-cobbler check
-cobbler get-loaders
 systemctl restart cobblerd.service
-cobbler sync
+systemctl start   rsyncd.service
+systemctl enable  rsyncd.service
 systemctl enable xinetd
 systemctl start xinetd
+systemctl restart dhcpd.service
+systemctl start  tftp.service
+
+cobbler get-loaders
+cobbler check
 
 
-mount -o loop  CentOS-6.7-x86_64-bin-DVD1.iso  mnt/
+cobbler sync
+
+
+
+mount -o loop  CentOS-6.7-x86_64-bin-DVD1.iso  /root/mnt/
+cobbler import --path=root/mnt/ --name=CentOS_6.6
+
 cobbler signature update
 cobbler signature report
 cobbler distro list
+```````
+http://www.ibm.com/developerworks/library/l-cobbler/index.html
+
+#see all the templating variables at your disposal.
+cobbler system add --name=xxd --profile=CentOS_6-x86_64   --ksmeta="verb=jump"
+cobbler system dumpvars --name=xxd
 ````````
 Commands to create the Xfce and GNOME profiles
 cobbler profile add --name=Fedora17-xfce \
@@ -4429,6 +4508,7 @@ cobbler profile report
 #获取变量替换后的ks文件
 cobbler profile getks --name=Fedora17-xfce
 
+````````````````
 Associating machines with their profiles
 cobbler system add --name=desktop-xfce-1 \
                    --profile=Fedora17-xfce \
@@ -4439,9 +4519,10 @@ cobbler system add --name=desktop-gnome-1 \
                    --mac=52:54:00:88:f3:44 \
                    --ip-address=192.168.122.11
 cobbler system report
-
-
-
+````````````
+获取生产的kickstart样例
+cobbler profile report
+cobbler profile getks --name=CentOS_6.6-x86_64
 
 
 ````````
@@ -4594,20 +4675,24 @@ mysql> use  zabbix;
 mysql> show tables;
 mysql> SHOW VARIABLES LIKE "%version%";
 
-=======virsh 虚拟机和ip地址对应关系================
+=======kvm section 虚拟机和ip地址对应关系================
 第一步：找台31网段下的机器运行 :         nmap -sP 192.168.31.0/24   > network31.txt
 第二步：得到ip地址和mac列表
         给出ip地址和mac对应关系          ：        cat network31.txt | awk '$5~192 {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} '
         得到虚拟机名称、ip、mac地址(遍历宿主机)    : ansible  hypervisor-machine    -m shell -a 'virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo name\:{};sudo virsh domiflist {} "  |grep "name\|vnet"|awk "\$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} ";echo '
 
 		
-第三步
+第三步:
         列出虚拟机名称和mac地址对应关系：virsh list --all| grep runn   | awk '{print $2}' |xargs  -I '{}' sh -c "echo -n {} ' ' ;sudo virsh domiflist {}|grep vnet|awk '{printf \"%s \", \$5  }';echo " > /tmp/ip_mac.txt
         得到虚拟机名称、ip、mac地址        版本1        ：          virsh list --all| grep runn   | awk '{print $2}' |xargs  -I '{}' sh -c "echo -n {} ' ' ;sudo virsh domiflist {}|grep vnet|awk '{printf \"%s \", \$5  }';echo " | awk '{ system("echo -n  "$1" ; echo " "; grep -i "$2" /tmp/ip_mac.txt ")}'
                                            版本2        ：     sudo virsh list --all| grep runn   | awk '{print $2}' |xargs  -I '{}' sh -c "echo -n {} ' ' ;sudo virsh domiflist {}|grep vnet|awk '{printf \"%s \", \$5  }';echo " | awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt ")}'
 
-单个宿主机，上面3步合并
-sudo nmap -sP 172.16.15.0/24  | awk '$5~/[0-9]{3}/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' >././network172_mac_ip.txt ;sudo virsh list --all| grep runn   | awk '{print $2}' |xargs  -I '{}' sh -c "echo -n {} ' ' ;sudo virsh domiflist {}|grep vnet|awk '{printf \"%s \", \$5  }';echo " | awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt ")}'
+       单个宿主机，上面3步合并  参数：172.16.15.0/24 
+       sudo nmap -sP 172.16.15.0/24  | awk '$5~/[0-9]{3}/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' >./network172_mac_ip.txt ;sudo virsh list --all| grep runn   | awk '{print $2}' |xargs  -I '{}' sh -c "echo -n {} ' ' ;sudo virsh domiflist {}|grep vnet|awk '{printf \"%s \", \$5  }';echo " | awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt ")}'
+
+	   跨  宿主机，上面3步合并  参数：192.168.38.0/24 ，ansible的hypervisor_v6_test*
+                                            { sudo nmap -sP 192.168.38.0/24   | awk '$5~/[0-9][0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' >./network172_mac_ip.txt ; ansible  hypervisor_v6_test*     -m shell -a 'virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo -n "$(hostname)";echo -name\:{};sudo virsh domiflist {} "  |grep "name\|vnet"|awk "\$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} ";echo '| grep name |sudo  awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt ")}';echo; } |column -t;
+       { ansible test-centos7-wu -m shell -a "sudo nmap -sP 192.168.31.0/24"  | awk '$5~/[0-9][0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' >./network172_mac_ip.txt ; ansible  hypervisor_v6_stage*    -m shell -a 'virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo -n "$(hostname)";echo -name\:{};sudo virsh domiflist {} "  |grep "name\|vnet"|awk "\$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} ";echo '| grep name |sudo  awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt ")}';echo; } |column -t;
 
 =====Esxi section======
 virsh -c esx://root@192.168.129.1?no_verify=1 list --all

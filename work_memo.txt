@@ -130,3 +130,149 @@ touch /home/wujunrong/tmp/error.txt;find  ./  -type d  -path ./v6_batch/trunk/ba
            test-v6_front01-tomcat-192.168.38.1.yh
            base-svn_master-192.168.1.1.yh
            stage-hypervisor_kvm01-192.168.1.2.yh
+		   
+===================================================================
+		      
+YH-Virtualization-KVM04-192.168.38.200.xinxindai.com-name:test_fkoracle                                 192.168.38.156                                                       52:54:00:08:9C:96
+YH-Virtualization-KVM04-192.168.38.200.xinxindai.com-name:oracle_test                                   192.168.38.207                                                       52:54:00:97:9D:E8
+YH-Virtualization-KVM04-192.168.38.200.xinxindai.com-name:ct-test-tomcat-partener01.xinxindai.com       192.168.38.183                                                       52:54:00:33:B6:2A
+YH-Virtualization-KVM04-192.168.38.200.xinxindai.com-name:dev_zookeeper                                 192.168.38.163                                                       52:54:00:77:CD:29
+YH-Virtualization-KVM04-192.168.38.200.xinxindai.com-name:dev_zookeeper02                               192.168.38.164                                                       52:54:00:C8:70:1E
+YH-Virtualization-KVM04-192.168.38.200.xinxindai.com-name:dev_zookeeper03                               192.168.38.165                                                       52:54:00:E2:36:CC
+YH-Virtualization-KVM04-192.168.38.200.xinxindai.com-name:lvs01                                         192.168.38.170                                                       52:54:00:A9:0C:8B
+                                                                                                        192.168.38.175                                                       52:54:00:A9:0C:8B
+YH-Virtualization-KVM04-192.168.38.200.xinxindai.com-name:nginx01                                       192.168.38.172                                                       52:54:00:BC:A9:74
+YH-Virtualization-KVM04-192.168.38.200.xinxindai.com-name:redis01                                       192.168.38.176                                                       52:54:00:66:2B:5B
+                                                                                                        192.168.38.178                                                       52:54:00:66:2B:5B
+YH-Virtualization-KVM04-192.168.38.200.xinxindai.com-name:test_fk001                                    192.168.38.155                                                       52:54:00:F9:FC:9C
+YH-Virtualization-KVM04-192.168.38.200.xinxindai.com-name:test_fk002                                    192.168.38.157                                                       52:54:00:90:8C:C2
+YH-Virtualization-KVM04-192.168.38.200.xinxindai.com-name:test_fk_nginx                                 192.168.38.154                                                       52:54:00:BE:56:9F
+YH-Virtualization-KVM04-192.168.38.200.xinxindai.com-name:test_v6_tomcat_mobile01                       192.168.38.158                                                       52:54:00:26:57:12
+YH-Virtualization-KVM04-192.168.38.200.xinxindai.com-name:tomcat_admin02                                192.168.38.141                                                       52:54:00:F2:CA:D6
+YH-Virtualization-KVM04-192.168.38.200.xinxindai.com-name:tomcat_batch02                                192.168.38.147                                                       52:54:00:5F:C9:A6
+YH-Virtualization-KVM04-192.168.38.200.xinxindai.com-name:tomcat_tran02                                 192.168.38.153                                                       52:54:00:8E:CC:8C
+YH-Virtualization-KVM04-192.168.38.200.xinxindai.com-name:tomcat_webservice02                           192.168.38.143                                                       52:54:00:1D:EF:BB
+YH-Virtualization-KVM04-192.168.38.200.xinxindai.com-name:v6tomcat1                                     192.168.38.160                                                       192.168.38.161     52:54:00:25:62:AF
+YH-Virtualization-KVM04-192.168.38.200.xinxindai.com-name:zookeeper01                                   192.168.38.180                                                       52:54:00:67:00:4C
+YH-Virtualization-KVM04-192.168.38.200.xinxindai.com-name:test-v6_credit_app01-192.168.38.160.yh        192.168.38.160
+                                                                                                        
+                                                                                                        
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:svnbackup                                     192.168.38.229                                                       52:54:00:29:54:D7
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:oracletech                                    192.168.38.219                                                       52:54:00:12:B4:BA
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:oracle01                                      192.168.38.107                                                       52:54:00:BB:FE:1F
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:v6nfs                                         192.168.38.182                                                       52:54:00:72:C4:0E
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:ct-test-tomcat-partener02.xinxindai.com       192.168.38.184                                                       52:54:00:86:6A:E8
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:donglian                                      192.168.38.218                                                       52:54:00:C4:EF:A1
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:lvs02                                         192.168.38.171                                                       52:54:00:C8:D7:0B
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:monitor                                       192.168.38.169                                                       52:54:00:1F:EF:55
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:nginx02                                       192.168.38.173                                                       52:54:00:20:B0:2A
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:nginx_service01                               192.168.38.148                                                       52:54:00:EB:C5:1C
+                                                                                                        192.168.38.152                                                       52:54:00:EB:C5:1C
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:nginx_service02                               192.168.38.149                                                       52:54:00:F6:AE:5E
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:redis02                                       192.168.38.177                                                       52:54:00:C4:54:3F
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:rewrite                                       192.168.38.151                                                       52:54:00:C6:50:3A
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:test_v6_tomcat_mobile02                       192.168.38.159                                                       52:54:00:8B:AD:12
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:test_v6_webapp_front01                        192.168.38.206                                                       52:54:00:BA:E0:C1
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:test_v6_webapp_webservice01                   192.168.38.208                                                       52:54:00:52:A3:9E
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:tomcat_admin01                                192.168.38.140                                                       52:54:00:61:73:98
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:tomcat_batch01                                192.168.38.146                                                       52:54:00:3B:AC:C3
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:tomcat_tran01                                 192.168.38.144                                                       52:54:00:F0:2E:83
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:tomcat_webservice01                           192.168.38.142                                                       52:54:00:A0:F0:29
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:v6tomcat2                                     192.168.38.162                                                       52:54:00:47:BC:56
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:zookeeper02                                   192.168.38.181                                                       52:54:00:D4:16:A7
+YH-Virtualization-KVM03-192.168.38.190.xinxindai.com-name:saltstack                                     192.168.38.10                                                        52:54:00:BB:32:1F
+                                                                                                        
+
+
+YH-Virtualization-KVM08-192.168.31.17.xinxindai.com-name:jenkins                                        192.168.31.81                                                              52:54:00:0B:72:59
+YH-Virtualization-KVM08-192.168.31.17.xinxindai.com-name:stage_oa.xinxindai.com                         192.168.31.40                                                              52:54:00:A0:CE:68
+YH-Virtualization-KVM08-192.168.31.17.xinxindai.com-name:stage_oa2.xinxindai.com                        192.168.31.41                                                              52:54:00:DD:63:58
+YH-Virtualization-KVM08-192.168.31.17.xinxindai.com-name:stage_oa3.xinxindai.com                        
+YH-Virtualization-KVM08-192.168.31.17.xinxindai.com-name:stage_v6_admin03                               192.168.31.31                                                              52:54:00:A7:91:48
+YH-Virtualization-KVM08-192.168.31.17.xinxindai.com-name:stage_v6_front03                               192.168.31.28                                                              52:54:00:E4:49:1A
+YH-Virtualization-KVM08-192.168.31.17.xinxindai.com-name:stage_v6_mobile01.xinxindai.com                192.168.31.70                                                              52:54:00:8F:19:66
+YH-Virtualization-KVM08-192.168.31.17.xinxindai.com-name:stage_v6_nginx03                               192.168.31.24                                                              52:54:00:BE:B6:0C
+YH-Virtualization-KVM08-192.168.31.17.xinxindai.com-name:stage_v6_redis02                               192.168.31.66                                                              52:54:00:4E:1E:F2
+YH-Virtualization-KVM08-192.168.31.17.xinxindai.com-name:stage_v6_seo002                                192.168.31.88                                                              52:54:00:02:FC:E4
+YH-Virtualization-KVM08-192.168.31.17.xinxindai.com-name:stage_v6_tradew03                              192.168.31.56                                                              52:54:00:B5:F2:EC
+YH-Virtualization-KVM08-192.168.31.17.xinxindai.com-name:stage_v6_webapp02                              192.168.31.73                                                              52:54:00:BC:45:91
+YH-Virtualization-KVM08-192.168.31.17.xinxindai.com-name:stage_v6_webservice03                          192.168.31.52                                                              52:54:00:0E:2D:56
+YH-Virtualization-KVM08-192.168.31.17.xinxindai.com-name:stage_v6_zookeeper03                           192.168.31.62                                                              52:54:00:EB:7C:BC
+YH-Virtualization-KVM07-192.168.31.16.xinxindai.com-name:ct-stage-tomcat-partener02.xinxindai.com       192.168.31.91                                                              52:54:00:77:6B:12
+YH-Virtualization-KVM07-192.168.31.16.xinxindai.com-name:stage_fk002                                    192.168.31.86                                                              52:54:00:97:A8:A8
+YH-Virtualization-KVM07-192.168.31.16.xinxindai.com-name:stage_fk_nginx02                               192.168.31.84                                                              52:54:00:72:12:6E
+YH-Virtualization-KVM07-192.168.31.16.xinxindai.com-name:stage_v6_admin02                               192.168.31.30                                                              52:54:00:65:50:95
+YH-Virtualization-KVM07-192.168.31.16.xinxindai.com-name:stage_v6_batch02                               192.168.31.58                                                              52:54:00:11:01:89
+YH-Virtualization-KVM07-192.168.31.16.xinxindai.com-name:stage_v6_front02                               192.168.31.27                                                              52:54:00:11:FB:BC
+YH-Virtualization-KVM07-192.168.31.16.xinxindai.com-name:stage_v6_lvs02                                 192.168.31.21                                                              52:54:00:95:20:E4
+YH-Virtualization-KVM07-192.168.31.16.xinxindai.com-name:stage_v6_mobile02                              192.168.31.71                                                              52:54:00:07:B0:8A
+YH-Virtualization-KVM07-192.168.31.16.xinxindai.com-name:stage_v6_nginx02                               192.168.31.23                                                              52:54:00:E6:77:0F
+YH-Virtualization-KVM07-192.168.31.16.xinxindai.com-name:stage_v6_nginxws02                             192.168.31.33                                                              52:54:00:8A:C9:A7
+YH-Virtualization-KVM07-192.168.31.16.xinxindai.com-name:stage_v6_redis01                               192.168.31.65                                                              52:54:00:E3:AC:88
+                                                                                                        192.168.31.67                                                                                           52:54:00:E3:AC:88
+YH-Virtualization-KVM07-192.168.31.16.xinxindai.com-name:stage_v6_seo001                                192.168.31.87                                                              52:54:00:B8:3C:E9
+YH-Virtualization-KVM07-192.168.31.16.xinxindai.com-name:stage_v6_tradew02                              192.168.31.55                                                              52:54:00:62:18:78
+YH-Virtualization-KVM07-192.168.31.16.xinxindai.com-name:stage_v6_webapp01                              192.168.31.72                                                              52:54:00:FF:E9:99
+YH-Virtualization-KVM07-192.168.31.16.xinxindai.com-name:stage_v6_webservice02                          192.168.31.51                                                              52:54:00:BD:6F:02
+YH-Virtualization-KVM07-192.168.31.16.xinxindai.com-name:stage_v6_zookeeper02                           192.168.31.61                                                              52:54:00:77:79:32
+YH-Virtualization-KVM06-192.168.31.15.xinxindai.com-name:ct-stage-tomcat-partener01.xinxindai.com       192.168.31.90                                                              52:54:00:AC:3F:87
+YH-Virtualization-KVM06-192.168.31.15.xinxindai.com-name:stage_fk001                                    192.168.31.85                                                              52:54:00:E3:B4:7E
+YH-Virtualization-KVM06-192.168.31.15.xinxindai.com-name:stage_fk_nginx01                               192.168.31.82                                                              52:54:00:E9:3F:F5
+                                                                                                        192.168.31.83                                                                                           52:54:00:E9:3F:F5
+YH-Virtualization-KVM06-192.168.31.15.xinxindai.com-name:stage_v6_admin01                               192.168.31.29                                                              52:54:00:EC:87:DF
+YH-Virtualization-KVM06-192.168.31.15.xinxindai.com-name:stage_v6_batch02                               192.168.31.57                                                              52:54:00:34:FD:30
+YH-Virtualization-KVM06-192.168.31.15.xinxindai.com-name:stage_v6_front01                               192.168.31.26                                                              52:54:00:2F:0A:E3
+YH-Virtualization-KVM06-192.168.31.15.xinxindai.com-name:stage_v6_lvs01                                 192.168.31.20                                                              52:54:00:3E:28:62
+                                                                                                        192.168.31.25                                                                                           52:54:00:3E:28:62
+YH-Virtualization-KVM06-192.168.31.15.xinxindai.com-name:stage_v6_nginx01                               192.168.31.22                                                              52:54:00:41:9C:3B
+YH-Virtualization-KVM06-192.168.31.15.xinxindai.com-name:stage_v6_nginxws01                             192.168.31.32                                                              52:54:00:56:D5:EE
+                                                                                                        192.168.31.34                                                                                           52:54:00:56:D5:EE
+YH-Virtualization-KVM06-192.168.31.15.xinxindai.com-name:stage_v6_tradew01                              192.168.31.54                                                              52:54:00:8D:9C:9D
+YH-Virtualization-KVM06-192.168.31.15.xinxindai.com-name:stage_v6_webservice01                          192.168.31.50                                                              52:54:00:A9:DF:AF
+YH-Virtualization-KVM06-192.168.31.15.xinxindai.com-name:stage_v6_zookeeper01                           192.168.31.60                                                              52:54:00:89:72:F0
+YH-Virtualization-KVM06-192.168.31.15.xinxindai.com-name:stage-v6_credit_app01-tomcat-192.168.31.89.yh  192.168.31.89                                                              52:54:00:12:EB:1E
+
+
+YH-Virtualization-KVM02-192.168.38.100.xinxindai.com-name:git                                            192.168.38.12      52:54:00:C3:4A:E8
+YH-Virtualization-KVM02-192.168.38.100.xinxindai.com-name:jumpserver                                     192.168.38.121     52:54:00:0F:D2:3F
+YH-Virtualization-KVM02-192.168.38.100.xinxindai.com-name:logstash                                       192.168.38.11      52:54:00:AF:D3:C5
+YH-Virtualization-KVM02-192.168.38.100.xinxindai.com-name:luo_test                                       192.168.38.205     52:54:00:84:8D:D9
+YH-Virtualization-KVM02-192.168.38.100.xinxindai.com-name:mysql_testdb                                   192.168.38.235     52:54:00:4E:29:EB
+YH-Virtualization-KVM02-192.168.38.100.xinxindai.com-name:openldap-master                                192.168.38.120     52:54:00:6F:F8:EA
+YH-Virtualization-KVM02-192.168.38.100.xinxindai.com-name:saltweb                                        192.168.38.122     52:54:00:FE:D3:6D
+YH-Virtualization-KVM02-192.168.38.100.xinxindai.com-name:v4_test001                                     192.168.38.232     52:54:00:A9:ED:5F
+YH-Virtualization-KVM02-192.168.38.100.xinxindai.com-name:v5_sc_mysql                                    192.168.38.111     52:54:00:96:E8:0C
+YH-Virtualization-KVM02-192.168.38.100.xinxindai.com-name:v5_stage001                                    192.168.38.145     52:54:00:71:0F:F9
+                                                                                                         192.168.38.236     52:54:00:71:0F:F9
+YH-Virtualization-KVM02-192.168.38.100.xinxindai.com-name:redmine                                        192.168.38.239     52:54:00:36:6B:DB
+YH-Virtualization-KVM02-192.168.38.100.xinxindai.com-name:YH-base-ansible01-192.168.38.13.xinxindai.com  192.168.38.13      52:54:00:2C:69:A1
+
+
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:test_lvs001                                              192.168.31.101     52:54:00:2A:9D:D6
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:test_lvs002                                              192.168.31.100     52:54:00:AF:61:7A
+                                                                                                                   192.168.31.102     52:54:00:AF:61:7A
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:v6mon_front002                                           192.168.31.107     52:54:00:AB:66:72
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:v6mon_redies001                                          192.168.31.127     52:54:00:0C:44:51
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:v6mon_redies002                                          192.168.31.126     52:54:00:2F:32:EC
+                                                                                                                   192.168.31.128     52:54:00:2F:32:EC
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:v6mon_redies003                                          192.168.31.129     52:54:00:F2:7C:3C
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:v6mon_zookeeper001                                       192.168.31.130     52:54:00:E2:B5:96
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:centos6-wu                                               192.168.31.7       52:54:00:43:00:60
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:test_nginx001                                            192.168.31.103     52:54:00:1A:5A:BB
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:test_nginx002                                            192.168.31.104     52:54:00:BD:7D:A8
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:v6_admin001                                              192.168.31.205     52:54:00:91:0E:04
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:v6_batch001                                              192.168.31.213     52:54:00:35:85:8E
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:v6_front001                                              192.168.31.203     52:54:00:7C:19:91
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:v6_redies001                                             192.168.31.215     52:54:00:95:2D:35
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:v6_trader001                                             192.168.31.211     52:54:00:88:20:B4
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:v6_webservice001                                         192.168.31.209     52:54:00:6C:5B:1F
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:v6_zookeeper001                                          192.168.31.217     52:54:00:76:D5:9A
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:v6mon_admin001                                           192.168.31.109     52:54:00:B5:22:A8
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:v6mon_batch001                                           192.168.31.124     52:54:00:84:95:2C
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:v6mon_front001                                           192.168.31.106     52:54:00:32:75:37
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:v6mon_mobile001                                          192.168.31.112     52:54:00:F9:DB:1F
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:v6mon_trader001                                          192.168.31.121     52:54:00:91:DF:94
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:v6mon_webapp001                                          192.168.31.115     52:54:00:B0:EE:09
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:v6mon_webservice001                                      192.168.31.118     52:54:00:A7:CA:6F
+YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:CT-YH-v6test2-credit_app01-192.168.31.206-xinxindai.com  192.168.31.206     52:54:00:D6:14:6B
+
