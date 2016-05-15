@@ -1,3 +1,66 @@
+
+sudo yum install https://repo.saltstack.com/yum/redhat/salt-repo-2015.8-2.el6.noarch.rpm -y
+ansible perf_zookeep01  -m shell -a "sed -i.bak  s/HOSTNAME=.*/HOSTNAME=pf-zookeep01/g   /etc/sysconfig/network;hostname pf-zookeep01"
+ansible perf_zookeep0?  -m shell -a "echo 192.168.129.41 salt>>/etc/hosts"
+ansible perf_zookeep0?  -m shell -a "sudo yum install https://repo.saltstack.com/yum/redhat/salt-repo-2015.8-2.el6.noarch.rpm -y"
+ansible perf_zookeep0?  -m shell -a " yum update python  -y"
+ansible perf_zookeep0?  -m shell -a " yum -y install salt-minion"
+ansible perf_zookeep0?  -m shell -a " service salt-minion start ;chkconfig  salt-minion on"
+ansible perf_salt       -m shell -a "service salt-master start; chkconfig salt-master on"
+ansible perf_salt       -m shell -a " yum -y install libselinux-python"
+ansible perf_salt       -m copy  -a "src=/root/zookeeper-3.4.8.tar.gz dest=/root/"
+ansible perf_zoo*       -m shell -a  "chmod +x /root/jdk-6u45-linux-x64-rpm.bin"
+ansible perf_zoo*       -m shell -a  "/root/jdk-6u45-linux-x64-rpm.bin"
+ansible perf_zoo*       -m shell -a  "yum -y remove java-1.7.0-openjdk.x86_64"
+
+ansible perf*  -m shell -a "chkconfig iptables off"
+
+ansible perf_zookeep02  -m shell -a "cp  /root/xxd/zookeeper-3.4.8/conf/zoo_sample.cfg  /root/xxd/zookeeper-3.4.8/conf/zoo.cfg"
+ansible perf_zookeep02  -m shell -a "echo -e \"server.1=192.168.129.50:2888:3888\nserver.2=192.168.129.51:2888:3888\nserver.3=192.168.129.52:2888:3888\">>/root/xxd/zookeeper-3.4.8/conf/zoo.cfg"
+ansible perf_zookeep0?  -m shell -a "mkdir   /tmp/zookeeper/"
+ansible perf_zookeep01  -m shell -a "echo 1 >   /tmp/zookeeper/myid"
+echo -e "server.1=192.168.129.50:2888:3888\nserver.2=192.168.129.51:2888:3888\nserver.3=192.168.129.52:2888:3888"
+
+
+
+=======
+ansible perf_zookeep0?  -m shell -a "cd /root/xxd/zookeeper-3.4.8/bin/ &&./zkServer.sh restart"
+ansible perf_zookeep0?  -m shell -a "cd /root/xxd/zookeeper-3.4.8/bin/ &&./zkServer.sh status"
+ansible perf_redis0? -m copy -a "src=/root/redis-3.2.0.tar.gz   dest=/root/"
+
+ansible perf_redis0? -m shell  -a "yum install  libselinux-python  -y"
+ansible perf_redis01   -m shell -a "sed -i.bak  s/HOSTNAME=.*/HOSTNAME=pf-redis01/g   /etc/sysconfig/network;hostname pf-redis01"
+ 
+ansible perf_redis0? -m shell -a "tar zxf /root/redis-3.2.0.tar.gz -C /root/" 
+cd  /root/redis-3.2.0/src  &&  yum -y groupinstall 'Development Tools' && make && make install
+
+sed -e "s/^daemonize no$/daemonize yes/" -e "s/^dir \.\//dir \/var\/lib\/redis\//" -e "s/^loglevel debug$/loglevel notice/" -e "s/^logfile stdout$/logfile \/var\/log\/redis.log/" redis.conf > /etc/redis/redis.conf
+ansible perf_ngi*   -m copy -a "src=/root/nginx-1.10.0.tar.gz dest=/root/"
+
+
+
+
+
+sudo tee /etc/yum.repos.d/docker.repo <<-'EOF'
+[dockerrepo]
+name=Docker Repository
+baseurl=https://yum.dockerproject.org/repo/main/centos/$releasever/
+enabled=1
+gpgcheck=1
+gpgkey=https://yum.dockerproject.org/gpg
+EOF
+
+vi install_nginx.sh
+sudo tee /etc/yum.repos.d/nginx.repo<<-'EOF'
+[nginx]
+name=nginx repo
+baseurl=http://nginx.org/packages/centos/6/$basearch/
+gpgcheck=0
+enabled=1
+EOF
+ansible perf_ngi*   -m  script -a "/root/install_nginx.sh"
+ansible perf_ngi*  -m shell -a "cat /etc/yum.repos.d/nginx.repo"
+
 ```zabbix section````````
 {192.168.31.196:system.run[/opt/dell/srvadmin/bin/omreport storage pdisk controller=0 ].regexp(^Status.*Ok,#1)}=0
  cat   2015-10-15.csv | grep -v '^$' |awk '{ for (i=1;i<=NF;i++) {   print $i NR-1  }  }'
@@ -275,4 +338,49 @@ YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:v6mon_trader001       
 YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:v6mon_webapp001                                          192.168.31.115     52:54:00:B0:EE:09
 YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:v6mon_webservice001                                      192.168.31.118     52:54:00:A7:CA:6F
 YH-Virtualization-KVM05-192.168.31.200.xinxindai.com-name:CT-YH-v6test2-credit_app01-192.168.31.206-xinxindai.com  192.168.31.206     52:54:00:D6:14:6B
+
+---------------
+v6_pro01.xinxindai.com-name:v6_lvs01                                       192.168.110.20     52:54:00:13:72:E3
+                                                                           192.168.110.25     52:54:00:13:72:E3
+v6_pro01.xinxindai.com-name:v6_nginx01                                     192.168.110.22     52:54:00:9A:67:E7
+v6_pro01.xinxindai.com-name:v6_front01                                     192.168.110.26     52:54:00:BC:0D:5E
+v6_pro01.xinxindai.com-name:v6_admin01                                     192.168.110.29     52:54:00:A2:60:6A
+v6_pro01.xinxindai.com-name:v6_nginxws01                                   192.168.110.31     52:54:00:C6:A2:55
+                                                                           192.168.110.33     52:54:00:C6:A2:55
+v6_pro01.xinxindai.com-name:v6_webservice01                                192.168.110.40     52:54:00:F2:DE:17
+v6_pro01.xinxindai.com-name:v6_tradew01                                    192.168.110.43     52:54:00:5A:42:9E
+v6_pro01.xinxindai.com-name:v6_batch01                                     192.168.110.46     52:54:00:14:8C:F8
+v6_pro01.xinxindai.com-name:v6_redis01                                     192.168.110.51     52:54:00:A8:89:4B
+                                                                           192.168.110.53     52:54:00:A8:89:4B
+v6_pro01.xinxindai.com-name:v6_zookeeper01                                 192.168.110.48     52:54:00:EF:9F:33
+v6_pro01.xinxindai.com-name:v6_seo01                                       192.168.110.76     52:54:00:8A:DB:1F
+v6_pro01.xinxindai.com-name:v6_credit_app01                                192.168.110.81     52:54:00:9F:D0:11
+------------
+v6_pro03.xinxindai.com-name:v6_nginx03                                     192.168.110.24     52:54:00:7D:0C:00
+v6_pro03.xinxindai.com-name:v6_front03                                     192.168.110.28     52:54:00:2D:CE:C8
+v6_pro03.xinxindai.com-name:v6_webservice03                                192.168.110.42     52:54:00:E2:EE:04
+v6_pro03.xinxindai.com-name:v6_tradew03                                    192.168.110.45     52:54:00:DA:57:34
+v6_pro03.xinxindai.com-name:v6_mobile02                                    192.168.110.71     52:54:00:06:60:0D
+v6_pro03.xinxindai.com-name:v6_zookeeper03                                 192.168.110.50     52:54:00:77:2D:BA
+v6_pro03.xinxindai.com-name:v6_webapp_front02                              192.168.110.73     52:54:00:F2:0E:48
+v6_pro03.xinxindai.com-name:ct-production-tomcat-partener02.xinxindai.com  192.168.110.80     52:54:00:39:31:56
+v6_pro03.xinxindai.com-name:sftp_slave_192.168.110.91                      192.168.110.91     52:54:00:7E:BF:44
+--------------
+v6_pro02.xinxindai.com-name:v6_lvs02                                       192.168.110.21     52:54:00:8D:AB:67
+v6_pro02.xinxindai.com-name:v6_nginx02                                     192.168.110.23     52:54:00:31:5D:D4
+v6_pro02.xinxindai.com-name:v6_front02                                     192.168.110.27     52:54:00:10:68:1D
+v6_pro02.xinxindai.com-name:v6_admin02                                     192.168.110.30     52:54:00:1C:DA:41
+v6_pro02.xinxindai.com-name:v6_nginxws02                                   192.168.110.32     52:54:00:A0:15:A2
+v6_pro02.xinxindai.com-name:v6_webservice02                                192.168.110.41     52:54:00:6D:D2:5B
+v6_pro02.xinxindai.com-name:v6_tradew02                                    192.168.110.44     52:54:00:A9:7F:C7
+v6_pro02.xinxindai.com-name:v6_batch02                                     192.168.110.47     52:54:00:B9:25:A0
+v6_pro02.xinxindai.com-name:v6_redis02                                     192.168.110.52     52:54:00:41:CB:0E
+v6_pro02.xinxindai.com-name:v6_mobile01                                    192.168.110.70     52:54:00:7C:80:42
+v6_pro02.xinxindai.com-name:v6_zookeeper02                                 192.168.110.49     52:54:00:B2:1F:36
+v6_pro02.xinxindai.com-name:v6_webapp_front01                              192.168.110.72     52:54:00:38:5D:B8
+v6_pro02.xinxindai.com-name:v6_seo02                                       192.168.110.77     52:54:00:E9:C7:C4
+v6_pro02.xinxindai.com-name:ct-production-tomcat-partener01.xinxindai.com  192.168.110.79     52:54:00:C8:27:86
+v6_pro02.xinxindai.com-name:v6_credit_app02                                192.168.110.82     52:54:00:35:DF:42
+v6_pro02.xinxindai.com-name:sftp_master_192.168.110.90                     192.168.110.90     52:54:00:7A:76:BB
+
 

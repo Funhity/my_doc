@@ -48,10 +48,11 @@ address:xinxindai.com
 IDC:YXYWG/xxdyx
 cisco VPN:wujunrong/WJR@Es9i
 ```
-username wujunrong password WJR@qwexxxd  vpn组：YXVPN/YXvpnasa@*
+super：   username wujunrong password WJR@qwexxxd  vpn组：YXVPN/YXvpnasa@*
 huangchao(黄超（高级系统工程师）) 03-07 01:28:13
 拨入地址：oa.xinxindai.com
 NAS 192.168.60.3 master/Master@storage
+Master@storage
 https://192.168.60.3:8088
 ````````````zabbix section``````````````````````````````````
 http://192.168.110.60/zabbix
@@ -684,6 +685,7 @@ test_v6_tomcat_webservice0? or test_v6_webapp_front01'         cmd.script salt:/
 salt 'stage_v6_webapp01'        cmd.script salt://wujunrong/install_files/run_before_starting_rsyslog.sh   reset_system_locale=False cwd=/tmp
  ========================================================================
 export LC_ALL=
+ salt test_v6_redis0?   cmd.run 'date -s "20160511 12:47"'
 salt  -C  'test_v6_tomcat* or test_v6_webapp_front01' cmd.run 'date +%T     -s "14:00"'
 salt  -C  'test_v6_tomcat* or test_v6_webapp_front01' cmd.run 'date +%Y%m%d -s "20150919" && date +%T     -s "0:00" && date'
 salt  -C  'test_v6_tomcat* or test_v6_webapp_front01' cmd.run 'date'

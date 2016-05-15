@@ -121,7 +121,7 @@ rm -f /etc/udev/rules.d/70-persistent-net.rules
 ````````````````````
   
   apt-get install lrzsz
-  yum install lrzsz
+  yum install lrzsz -y 
   ZMODEM sz,rz
   
   tail -f /var/log/foo | grep --line-buffered
@@ -132,11 +132,14 @@ rm -f /etc/udev/rules.d/70-persistent-net.rules
   `````````find section``````````
   find /  -type d -name 'httpdocs'
                   -iname pattern       #Like  -name, but the match is case insensitive.
+  find /usr   -path   '*usr/bin*'			  
+				  
   搜索包含classes/com/的目录
   find /opt/webserver/ -type d  -print0 |  grep -EzZ  'classes/com$';echo
   find /opt/webserver/ -type d  -print0 |  grep -EzZ  'classes/com$' |sed 's/WEB-INF\/classes\/com//g';echo
   sudo salt -N 'test_v6tomcat' cmd.run "find /opt/webserver/ -type d  -print0 |  grep -Ez 'classes/com$' |sed 's/WEB-INF\/classes\/com//g'"
   
+  find . -path \*content/docs/file.xml
   
   find . -type f -newerct "2016-04-14  15:00:00"  -regextype posix-extended  -regex ".*(tra|webservice).*"
   find ./ -type f -mmin -200 | xargs ls -ltr 
@@ -567,13 +570,15 @@ mysqladmin -u root -p shutdown
 mysql -uroot  -p < mysqlsampledatabase1
   
 
-```````````````
+`````修改密码``````````
 setting /etc/my.conf using validate-password = off
 
 sudo grep 'temporary password' /var/log/mysqld.log
 mysql -uroot -p 
 ALTER USER 'root'@'localhost' IDENTIFIED BY 'E431e4311!';
+quit
 
+````````其他````
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '<E431e4311!>' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '<E431e4311!>' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
@@ -1031,6 +1036,9 @@ apache:
 	   salt 'stage_v6_front01'  file.delete_backups    3
   
    sudo salt test-v6_credit_app01-tomcat-192.168.38.160.yh  state.single  file.append  name='/etc/sudoers' text='yxaccount ALL=(ALL) NOPASSWD:ALL'
+   
+   salt '*'                  file.blockreplace        /etc/hosts       '#-- start managed zone foobar : DO NOT EDIT --' '#-- end managed zone foobar --' '10.0.1.1 foo.foobar\n10.0.1.2 bar.foobar' True
+   salt bbs-wu  state.single file.blockreplace  name='/etc/hosts'  marker_start='#wujunrong' marker_end='#end wujunrong' content='salt 172.16.15.79'  append_if_not_found='True' backup='.bak'  show_changes='True' 
   ``````````````````````````````````
   salt 'source-minion'          cp.push /absolute/path/file                   # Push the file to the master
   salt 'kbclient3.example.com'  cp.push /root/test_hour.sh
@@ -1516,7 +1524,7 @@ ss -napt | grep 3260
   windows:  netstat -an
   配置ssh:  ssh-host-config
             net start sshd
-			用 cyg_server 用户 或 当前使用用户名登入ssh
+			用 cyg_server 用户 或 当前使用用户名登入ssh  有时候得在windows上重新设置一下priviledged server的密码才能登入
 install svn: package subversion
 
 ===============================================  
@@ -1580,7 +1588,7 @@ chmod -R g-s /var/mailman/
 chmod u-s /sbin/{pwdb_chkpwd,unix_chkpwd,cardctl}
 
 chmod -R 755 /home/frank
-======================   tee      =========================
+======================   tee section      =========================
 
 wget -O - http://example.com/dvd.iso  | tee >(sha1sum > dvd.sha1) > dvd.iso
 wget -O - http://example.com/dvd.iso  | tee dvd.iso | sha1sum > dvd.sha1
@@ -1609,7 +1617,19 @@ name=nginx repo
 baseurl=http://nginx.org/packages/centos/6/$basearch/
 gpgcheck=0
 enabled=1
+``````用ansible安装yum源``````````
+vi install_nginx.sh
+    sudo tee /etc/yum.repos.d/nginx.repo<<-'EOF'
+    [nginx]
+    name=nginx repo
+    baseurl=http://nginx.org/packages/centos/6/$basearch/
+    gpgcheck=0
+    enabled=1
+    EOF
+ansible perf_ngi*   -m  script -a "/root/install_nginx.sh"
+ansible perf_ngi*   -m  shell -a "cat /etc/yum.repos.d/nginx.repo"
 
+``````````````
 vi /etc/nginx/nginx.conf
 ````````````
 
@@ -2268,7 +2288,10 @@ fuser -v test.txt
 rpm -ivh jdk-8uversion-linux-x64.rpm  #Install the package.
 rpm -Uvh jdk-8uversion-linux-x64.rpm  #To upgrade a package
 rpm -e <package name>  #remove package
+
 rpm -q --whatprovides java            #check which specific RPM package provides the java files
+rpm -qa| grep jdk
+
 rpm -qf `which scp`
 rpm -q jdk  #remove jdk
 ``````````tar section```````
@@ -2277,7 +2300,7 @@ tar   -cf config_file_credit.tar   ./test_v6_mobile/   ./stage_v6_mobile/
 zip   abc.zip *
 
 tar -xzf rebol.tar.gz
-
+tar zxf file.tar.gz -C /root/Desktop/folder
 
 ?$ tar -zxvf filename.tgz
 $ tar -zxvf filename.tar.gz
@@ -2348,7 +2371,7 @@ mvn package  #Making a JAR file
 方法三：打包并把错误输出到文件
          >/home/wujunrong/tmp/error.txt; find  ./  -type d  -path ./v6_batch/trunk/batch-schedule -prune -o  -name pom.xml   -print | grep -v "v6_batch/trunk/pom.xml" |  xargs -I {}  sh -c 'path_dir=`dirname {}`&& cd $path_dir && { mvn clean package ; echo $? >./return_val.txt ; }  | tee ./output.txt  ;return_val=`cat ./return_val.txt` ;  if [ "$return_val" -ne 0 ];then ( cat ./output.txt  >>/home/wujunrong/tmp/error.txt)  ;else  cp  ./target/*.war   /home/wujunrong/tmp/;fi  '					
 方法四：打包错误发邮件
-         >/home/wujunrong/mvn_error.txt;find  ./    -name pom.xml   | grep -v "v6_batch/trunk/pom.xml" |  xargs -I {}  sh -c 'path_dir=`dirname {}`&& cd $path_dir && { mvn clean package ; echo $? >./return_val.txt ; }  | tee ./output.txt  ;return_val=`cat ./return_val.txt` ;  if [ "$return_val" -ne 0 ];then ( cat ./output.txt  >>/home/wujunrong/mvn_error.txt)  ;else  cp  ./target/*.war   /root/;fi' ; if [ -s /root/mvn_error.txt ] ;then { echo -e "From: wujunrong@xinxindai.com\nSubject: mvn build error info \n\nThe following is error message after building.";cat /home/wujunrong/mvn_error.txt; } | ssmtp -d wujunrong@xinxindai.com ; fi		 
+         >/home/wujunrong/mvn_error.txt;find  ./    -name pom.xml   | grep -v "v6_batch/trunk/pom.xml" | grep -v ./v6_batch/trunk/batch-core/pom.xml |  xargs -I {}  sh -c 'path_dir=`dirname {}`&& cd $path_dir && { mvn clean package ; echo $? >./return_val.txt ; }  | tee ./output.txt  ;return_val=`cat ./return_val.txt` ;  if [ "$return_val" -ne 0 ];then ( cat ./output.txt  >>/home/wujunrong/mvn_error.txt)  ;else  cp  ./target/*.war   /home/wujunrong/  ;fi' ; if [ -s /home/wujunrong/mvn_error.txt ] ;then { echo -e "From: wujunrong@xinxindai.com\nSubject: mvn build error info \n\nThe following is error message after building.";cat /home/wujunrong/mvn_error.txt; } | ssmtp -d wujunrong@xinxindai.com ; fi
 		 
 部署 ： 
 find /root/xxd      -name *.war   -exec sh -c 'folder_name=`echo {}| cut -d "/" -f  3`; unzip -o {} -d /root/apache-tomcat-6.0.45/webapps/"$folder_name"'   \;
@@ -2832,7 +2855,7 @@ cat /etc/selinux/config
 /etc/selinux/targeted/setrans.conf
 
 关闭selinux： cat /etc/sysconfig/selinux  (SELINUX=disabled)
-centos7: sed -i.bak "s/SELINUX=enforcing/SELINUX=permissive/"   /etc/sysconfig/selinux
+无效centos7: sed -i.bak "s/SELINUX=enforcing/SELINUX=permissive/"   /etc/sysconfig/selinux
 centos6: sed -i.bak "s/SELINUX=enforcing/SELINUX=permissive/"   /etc/selinux/config
 
 sestatus       #Verify SELinux Status
@@ -3014,7 +3037,7 @@ ansible test             -m yum   -a "name=svn      state=latest"
 
 ansible webservers       -m git        -a "repo=git://foo.example.org/repo.git dest=/srv/myapp version=HEAD"
 ansible webservers       -m subversion -a "repo=svn+ssh://an.example.org/path/to/repo dest=/src/export export=True"
-=========================   ps command  ====================================
+=========================   ps section command  ====================================
 
 From the man page, there are a few thread options:
 
@@ -3023,8 +3046,6 @@ THREAD DISPLAY
 -L Show threads, possibly with LWP and NLWP columns
 -T Show threads, possibly with SPID column
 -m Show threads after processes
-
-===============================================================
 
 
 
@@ -3156,6 +3177,8 @@ sudo apt-get install build-essential
   grep -v 'adoring_dubinsky\|NAMES'
   
   grep -r --exclude-dir={packages,rsync,workspace} xinxindai  *
+  
+  grep -e pattern1 -e pattern2 filename
 ``````````````````````````````
 
 
@@ -3607,6 +3630,7 @@ yum -y install  aria2
 aria2c  https://github.com/antirez/redis/archive/2.8.23.tar.gz  --check-certificate=false -x10
 
 ``````redis install section ````
+http://heylinux.com/archives/1942.html
 方法一：
 wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
 rpm -ivh  epel-release-latest-6.noarch.rpm
@@ -3617,6 +3641,14 @@ tar zxvf redis2.8.23.tar.gz
 cd redis-2.8.23/src
 yum -y groupinstall "Development Tools && make && make install
 /usr/local/bin/redis-server &
+`````````
+chmod  +x /etc/keepalived/scripts/*.sh
+mkdir  /etc/redis && mkdir /var/lib/redis && cd /root/redis-3.2.0/ && sed -e "s/^daemonize no$/daemonize yes/" -e "s/^dir \.\//dir \/var\/lib\/redis\//" -e "s/^loglevel debug$/loglevel notice/" -e "s/^logfile stdout$/logfile \/var\/log\/redis.log/" redis.conf > /etc/redis/redis.conf
+/usr/local/bin/redis-server /etc/redis/redis.conf
+````
+vi /etc/keepalived/keepalived.conf
+state BACKUP                                ###设置为BACKUP
+priority 100                            ###权重值
 ```````````
 redis-server --version
 redis.conf 
@@ -3994,8 +4026,8 @@ git config user.name
 
 ```````````
 #Git - List all files currently under source control?
-git ls-tree -r master --name-only 
-
+       git ls-tree -r master --name-only 
+``````
 git status
 git status -s                                       #Short Status
 git commit -a -m 'added new benchmarks'             #Skipping the Staging Area
@@ -4167,7 +4199,7 @@ yum install percona-zabbix-templates
 zabbix server:
 wget https://www.percona.com/downloads/percona-monitoring-plugins/1.1.6/percona-zabbix-templates-1.1.6-1.noarch.rpm
 
-``````````zabbix agent section`````````````	 
+``````````zabbix agent section```zabbix client``````````	 
 方法一：用epel安装(目前只有老版本)
 wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
 rpm -ivh epel-release-latest-6.noarch.rpm
@@ -4180,6 +4212,8 @@ CentOS/RHEL 7:# rpm -Uvh http://repo.zabbix.com/zabbix/2.2/rhel/7/x86_64/zabbix-
            sudo rpm -ivh http://repo.zabbix.com./zabbix/2.4/rhel/7/x86_64/zabbix-release-2.4-1.el7.noarch.rpm
 CentOS/RHEL 6:# rpm -Uvh http://repo.zabbix.com/zabbix/2.2/rhel/6/x86_64/zabbix-release-2.2-1.el6.noarch.rpm
                          http://repo.zabbix.com/zabbix/3.0/rhel/6/x86_64/zabbix-agent-3.0.1-2.el6.x86_64.rpm
+			    yum install logrotate -y
+                rpm -ivh  http://repo.zabbix.com/zabbix/2.4/rhel/6/x86_64/zabbix-agent-2.4.7-1.el6.x86_64.rpm
 CentOS/RHEL 5:# rpm -Uvh http://repo.zabbix.com/zabbix/2.2/rhel/5/x86_64/zabbix-release-2.2-1.el5.noarch.rpm
 
 `````````允许远程command`````
@@ -4403,7 +4437,7 @@ vim /etc/mail.rc
 ====cobbler section===
 rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 yum install cobbler cobbler-web pykickstart wget fence-agents -y 
-yum -y install xinetd
+yum -y install xinetd -y
 yum install dhcp -y
 cobbler version
 有问题看日志：less /var/log/cobbler/cobbler.log
@@ -4429,8 +4463,6 @@ logvol swap --name=lv_swap --vgname=vg00 --grow --size=4032 --recommended
 
 cobbler profile report
 cobbler system report
-
-
 
 
 `````
@@ -4479,7 +4511,7 @@ cobbler check
 
 
 cobbler sync
-
+cobbler status
 
 
 mount -o loop  CentOS-6.7-x86_64-bin-DVD1.iso  /root/mnt/
@@ -4494,6 +4526,13 @@ http://www.ibm.com/developerworks/library/l-cobbler/index.html
 #see all the templating variables at your disposal.
 cobbler system add --name=xxd --profile=CentOS_6-x86_64   --ksmeta="verb=jump"
 cobbler system dumpvars --name=xxd
+
+
+cobbler profile add --name=foo --distro=RHEL-5-i386 --kickstart=/opt/cobbler/templates/example
+cobbler profile edit --name=foo --ksmeta="noun=spot verb=run"
+cobbler system add --name=bar --profile=foo --ksmeta="verb=jump"
+
+
 ````````
 Commands to create the Xfce and GNOME profiles
 cobbler profile add --name=Fedora17-xfce \
@@ -4520,9 +4559,11 @@ cobbler system add --name=desktop-gnome-1 \
                    --ip-address=192.168.122.11
 cobbler system report
 ````````````
-获取生产的kickstart样例
+修改kickstart变量，并查看生产结果
 cobbler profile report
+cobbler profile  edit --name=CentOS_6.6-x86_64  --ksmeta="net_dev=eth0 ip_addr=192.168.126.194 my_gateway=192.168.126.253 my_nameserver=192.168.39.21 my_hostname=wujunrong-test2"
 cobbler profile getks --name=CentOS_6.6-x86_64
+默认使用的Kickstart文件                      : /var/lib/cobbler/kickstarts/sample_end.ks  （用cobbler profile report命令查询）
 
 
 ````````
@@ -4691,9 +4732,92 @@ mysql> SHOW VARIABLES LIKE "%version%";
        sudo nmap -sP 172.16.15.0/24  | awk '$5~/[0-9]{3}/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' >./network172_mac_ip.txt ;sudo virsh list --all| grep runn   | awk '{print $2}' |xargs  -I '{}' sh -c "echo -n {} ' ' ;sudo virsh domiflist {}|grep vnet|awk '{printf \"%s \", \$5  }';echo " | awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt ")}'
 
 	   跨  宿主机，上面3步合并  参数：192.168.38.0/24 ，ansible的hypervisor_v6_test*
-                                            { sudo nmap -sP 192.168.38.0/24   | awk '$5~/[0-9][0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' >./network172_mac_ip.txt ; ansible  hypervisor_v6_test*     -m shell -a 'virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo -n "$(hostname)";echo -name\:{};sudo virsh domiflist {} "  |grep "name\|vnet"|awk "\$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} ";echo '| grep name |sudo  awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt ")}';echo; } |column -t;
-       { ansible test-centos7-wu -m shell -a "sudo nmap -sP 192.168.31.0/24"  | awk '$5~/[0-9][0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' >./network172_mac_ip.txt ; ansible  hypervisor_v6_stage*    -m shell -a 'virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo -n "$(hostname)";echo -name\:{};sudo virsh domiflist {} "  |grep "name\|vnet"|awk "\$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} ";echo '| grep name |sudo  awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt ")}';echo; } |column -t;
+                                      使用ansible 遍历     { sudo nmap -sP 192.168.38.0/24    | awk '$5~/[0-9][0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' >./network172_mac_ip.txt ; ansible  hypervisor_v6_test*     -m shell -a 'virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo -n "$(hostname)";echo -name\:{};sudo virsh domiflist {} "  |grep "name\|vnet"|awk "\$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} ";echo '| grep name |sudo  awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt ")}';echo; } |column -t;
+                                      使用salt遍历         { sudo nmap -sP 192.168.110.0/24   | awk '$5~/[0-9][0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' >./network172_mac_ip.txt ; sudo salt  v6_pro0?  cmd.run      'virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo -n "$(hostname)";echo -name\:{};sudo virsh domiflist {} "  |grep "name\|vnet"|awk "\$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} ";echo '| grep name |sudo  awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt ")}';echo; } |column -t;
+	   { ansible test-centos7-wu -m shell -a "sudo nmap -sP 192.168.31.0/24"  | awk '$5~/[0-9][0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' >./network172_mac_ip.txt ; ansible  hypervisor_v6_stage*    -m shell -a 'virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo -n "$(hostname)";echo -name\:{};sudo virsh domiflist {} "  |grep "name\|vnet"|awk "\$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} ";echo '| grep name |sudo  awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt ")}';echo; } |column -t;
+ `````
 
+ 
 =====Esxi section======
-virsh -c esx://root@192.168.129.1?no_verify=1 list --all
-virt-v2v -ic esx://192.168.129.3/?no_verify=1 -os vmdisk --bridge br1 "centos6.4_test dio 192.168.31.193"
+
+virsh -c esx://root@192.168.129.1?no_verify=1 list     --all
+virsh -c esx://root@192.168.129.1?no_verify=1 dominfo  ceontos7_cobbler_吴军荣_192.168.31.192_192.168.129.90
+yum  -y install open-vm-tools
+```````````
+virsh 访问 esxi 无需密码:
+步骤一：
+cat  /etc/libvirt/auth.conf 
+     [credentials-esx]
+     authname=root
+     password=xinxindai
+ 
+     [auth-esx-192.168.129.1]
+     credentials=esx
+
+	 [auth-esx-192.168.129.1]
+     credentials=esx
+步骤二：
+	 sudo systemctl restart libvirtd.service
+
+The credentials-esx block defines the credentials
+credentials-esx  #  The esx in this part defines the name of the credential set
+The second block defines the service and hostname
+auth-esx #  This defines which credential block to use.  In this case, the esx credentials
+auth-esx-hostname #  This defines the host to use the esx credentials for
+
+```````````
+从Esxi迁移到kvm
+     virt-v2v -ic esx://192.168.129.3/?no_verify=1 -os vmdisk --bridge br1 "centos6.4_test dio 192.168.31.193"
+``````````
+列出 Esxi上虚拟机名称和ip地址列表
+     sudo virsh -c esx://root@192.168.129.7?no_verify=1 list     --all | grep -v ID | awk '{print $5 " " $3}' |column -t | sort -n -k 1
+
+=======bbs section====
+yum -y install php-mysql
+Ucenter:
+vi /etc/httpd/conf/httpd.conf
+
+    AddType application/x-httpd-php .php
+    DirectoryIndex index.html index.htm index.php
+	
+vi /etc/php.ini
+     disable_functions = phpinfo,passthru,exec,system,chroot,scandir,chgrp,chown,shell_exec,proc_open,proc_get_status,ini_alter,ini_alter,ini_restore,dl,pfsockopen,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server
+    short_open_tag = On
+chmod -R  777 ./data
+
+vi /etc/php.ini找到extension=msql.so，然后在它下方去掉前面分号然后添加如下：
+extension=mysql.so
+extension=mysqli.so
+extension=pdo_MySQL.so
+
+
+Discu7.2:
+http://172.16.15.82/discuz72/install
+chmod -R 777 ./config.inc.php  ./attachments  ./forumdata ./forumdata/cache ./forumdata/templates ./forumdata/threadcaches ./forumdata/logs ./uc_client/data/cache
+
+use ucenter
+DROP TABLE IF EXISTS uc_pms;
+CREATE TABLE uc_pms (
+pmid int(10) unsigned NOT NULL auto_increment,
+msgfrom varchar(15) NOT NULL default '',
+msgfromid mediumint(8) unsigned NOT NULL default '0',
+msgtoid mediumint(8) unsigned NOT NULL default '0',
+folder enum('inbox','outbox') NOT NULL default 'inbox',
+new tinyint(1) NOT NULL default '0',
+subject varchar(75) NOT NULL default '',
+dateline int(10) unsigned NOT NULL default '0',
+message text NOT NULL,
+delstatus tinyint(1) unsigned NOT NULL default '0',
+related int(10) unsigned NOT NULL default '0',
+PRIMARY KEY(pmid),
+KEY msgtoid(msgtoid,folder,dateline),
+KEY msgfromid(msgfromid,folder,dateline),
+KEY related (related),
+KEY getnum (msgtoid,folder,delstatus)
+) ENGINE=MyISAM;
+
+
+=====echo section=====
+ echo -e "server.1=192.168.129.50:2888:3888\nserver.2=192.168.129.51:2888:3888\nserver.3=192.168.129.52:2888:3888"
+ 
+
