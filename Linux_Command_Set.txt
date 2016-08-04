@@ -5081,8 +5081,6 @@ racadm config -g cfgLanNetworking -o cfgNicUseDHCP 1 #从dhcp获取IP地址
 ==========ipmi section========================================
 ipmitool sdr type 'Power Supply'
 
-========elasticsearch section=====
-31.160和31.162 上有fluem服务，在lib目录 /opt/cloudera/parcels/CDH-5.5.0-1.cdh5.5.0.p0.8/lib/flume-ng/lib中增加 elasticsearch-1.7.1.jar 文件
 
 
 =======cx_Oracle section===========
@@ -5402,6 +5400,23 @@ npm search express
 You can use following command to check all the modules installed globally:
 $ npm ls -g
 ``````
+========elasticsearch section=====
+31.160和31.162 上有fluem服务，在lib目录 /opt/cloudera/parcels/CDH-5.5.0-1.cdh5.5.0.p0.8/lib/flume-ng/lib中增加 elasticsearch-1.7.1.jar 文件
+
+view the mapping :  GET /gb/_mapping/tweet
+字段和哪个类型绑定（map） 是针对index下的type的
+
+POST /_bulk
+{ "delete": { "_index": "website", "_type": "blog", "_id": "123" }} 
+{ "create": { "_index": "website", "_type": "blog", "_id": "123" }}
+{ "title":    "My first blog post" }
+{ "index":  { "_index": "website", "_type": "blog" }}
+{ "title":    "My second blog post" }
+{ "update": { "_index": "website", "_type": "blog", "_id": "123", "_retry_on_conflict" : 3} }
+{ "doc" : {"title" : "My updated blog post"} } 
+做索引的对象是一条条用json表达的类似数据库的记录
+
+
 =====Filebeat section====================
 curl -L -O https://download.elastic.co/beats/filebeat/filebeat-1.2.3-x86_64.rpm
 sudo rpm -vi filebeat-1.2.3-x86_64.rpm
