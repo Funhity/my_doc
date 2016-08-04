@@ -1,10 +1,10 @@
 ===kernel version section ====
 uname -r
 2.6.32-431.11.2.el6.x86_64
-2 ¨C Kernel Version
-6 ¨C Major Revision
-32 ¨C Minor Revision
-431.11.2.el6 ¨C Fix/Revision Detail
+2 â€“ Kernel Version
+6 â€“ Major Revision
+32 â€“ Minor Revision
+431.11.2.el6 â€“ Fix/Revision Detail
 ============
 firfox on debian :
 deb http://packages.linuxmint.com debian import
@@ -24,7 +24,7 @@ chkconfig --list glassfish4
 centos7:   /etc/hostname
            /etc/hosts
 centos6:   /etc/sysconfig/network
-           ĞŞ¸ÄÖ÷»úÃûÃüÁî£ºhostname yh_zabbix_server;sed -i.bak  s/HOSTNAME=.*/HOSTNAME=yh_zabbix_server/g   /etc/sysconfig/network ;hostname
+           ä¿®æ”¹ä¸»æœºåå‘½ä»¤ï¼šhostname yh_zabbix_server;sed -i.bak  s/HOSTNAME=.*/HOSTNAME=yh_zabbix_server/g   /etc/sysconfig/network ;hostname
     
 Debian:    /etc/hostname
 
@@ -72,8 +72,8 @@ GATEWAY=192.168.38.251
 DNS1=192.168.38.118
 
 PEERDNS=<answer>, where <answer> is one of the following:
-yes ¡ª This interface will modify your system's /etc/resolv.conf file entries to use the DNS servers provided by the remote system when a connection is established.
-no ¡ª The /etc/resolv.conf file will not be changed.
+yes â€” This interface will modify your system's /etc/resolv.conf file entries to use the DNS servers provided by the remote system when a connection is established.
+no â€” The /etc/resolv.conf file will not be changed.
 
 ```````````post-up section````````````````
 On CentOS, network interface related scripts are found in /etc/sysconfig/network-scripts. 
@@ -90,7 +90,7 @@ no such script exists. So in order to run a startup script automatically after a
 create an executable script /sbin/ifup-local, and put in there any command or script you want to run. For example:
 
 
-»ò  vi /root/ifup-local
+æˆ–  vi /root/ifup-local
     `````
     #!/bin/bash
 	sudo tee /sbin/ifup-local<<-'EOF'  
@@ -140,8 +140,8 @@ fi
 =====nmap section==arp section==nc section===
   sudo yum install nmap -y 
   arping -c 1 -I br0      192.168.38.150
-  arping      -I ens32 -b 192.168.31.123 ²âÊÔÊÇ·ñÓĞIP³åÍ»
-  ÍøÂç£º
+  arping      -I ens32 -b 192.168.31.123 æµ‹è¯•æ˜¯å¦æœ‰IPå†²çª
+  ç½‘ç»œï¼š
   
   nc -v -z salt.master.ip  4505
   nc -v -z 192.168.56.101  4506
@@ -169,7 +169,7 @@ sudo telinit 4
 # vi /etc/network/interfaces
 # vi /etc/resolv.conf
 post-up ifconfig eth0 down
-ÇåÍø¿¨
+æ¸…ç½‘å¡
 rm -f /etc/udev/rules.d/70-persistent-net.rules
 
 ``````````zcat section gzip section zip section``````````````````
@@ -200,7 +200,7 @@ rm -f /etc/udev/rules.d/70-persistent-net.rules
   
   find . -type f -newerct "2016-06-14  00:00:00"    ! -newerct "2016-06-14 19:10:00"    -regextype posix-extended  -regex ".*(tra|webservice).*" 
   
-  ËÑË÷°üº¬classes/com/µÄÄ¿Â¼
+  æœç´¢åŒ…å«classes/com/çš„ç›®å½•
   find /opt/webserver/ -type d  -print0 |  grep -EzZ  'classes/com$';echo
   find /opt/webserver/ -type d  -print0 |  grep -EzZ  'classes/com$' |sed 's/WEB-INF\/classes\/com//g';echo
   sudo salt -N 'test_v6tomcat' cmd.run "find /opt/webserver/ -type d  -print0 |  grep -Ez 'classes/com$' |sed 's/WEB-INF\/classes\/com//g'"
@@ -209,7 +209,7 @@ rm -f /etc/udev/rules.d/70-persistent-net.rules
   find ./ -type f -mmin -200 | xargs ls -ltr 
      -mtime +60 means you are looking for a file modified 60 days ago.
      -mtime -60 means less than 60 days.
-     -mtime  60 If you skip + or ¨C it means exactly 60 days.
+     -mtime  60 If you skip + or â€“ it means exactly 60 days.
     
   find ~ -type f -mtime +1825 |xargs -r ls -l  #One problem with the above approach is that a complete listing of the current directory will occurif the find command does not find any files!Xargs sees a list of zero files, but still issues the 'ls -l' command.To overcome this, simply use the xargs option '-r' which meansIf the standard input does not contain any nonblanks, do not run the command.So, our command now becomes:
 
@@ -217,7 +217,7 @@ rm -f /etc/udev/rules.d/70-persistent-net.rules
   find /dir -type f -executable  -name 'abc'
   find . -type f -exec grep -Iq . {} \; -and -exec grep -Hn oa_ip {} \;
   ````backup section
-  ±¸·İ/opt/saltstack/salt/ci/filesÄ¿Â¼ÏÂµÄËùÓĞÎÄ¼ş£¬ÌŞ³ıÒş²ØÎÄ¼ş¡¢Òş²ØÄ¿Â¼¡¢¿ÉÖ´ĞĞÎÄ¼ş£º
+  å¤‡ä»½/opt/saltstack/salt/ci/filesç›®å½•ä¸‹çš„æ‰€æœ‰æ–‡ä»¶ï¼Œå‰”é™¤éšè—æ–‡ä»¶ã€éšè—ç›®å½•ã€å¯æ‰§è¡Œæ–‡ä»¶ï¼š
   find /opt/saltstack  -type d -path '*/\.*' -prune -o -not -name '.*' -type f | xargs file | awk -F: '$2 ~ /text/ { print $1 }' |   cut -d "/" -f 4- | rsync --files-from=- -av     /opt/saltstack/       /home/wujunrong/backup/xxd/saltstack/  --dry-run
   find /opt/           -type d  \( -path /opt/test -o -path  /opt/ci/packages -o -path /opt/ci/rsync  -o -path /opt/ci/workspace -o -path '*/\.*'  \) -prune -o -not -name '.*' -type f  -print | xargs file | awk -F: '$2 ~ /text/ { print $1 }' |   cut -d "/" -f 3- | rsync --files-from=- -av     /opt/                 /home/wujunrong/backup/xxd/            --dry-run   --exclude test  --exclude ci/packages --exclude ci/rsync   --exclude ci/workspace
 ====== xargs section =======
@@ -230,22 +230,22 @@ rm -f /etc/udev/rules.d/70-persistent-net.rules
   useradd -e 2009-12-31 -f 30 jerry
   usermod -g primarygroupname username
   
-  ¼¤»îÓÃ»§ÃüÁî : usermod -U zoo£»
-  Ëø¶¨ÓÃ»§ÃüÁî : usermod -L zoo  
+  æ¿€æ´»ç”¨æˆ·å‘½ä»¤ : usermod -U zooï¼›
+  é”å®šç”¨æˆ·å‘½ä»¤ : usermod -L zoo  
   
   
   ansible perf*tomcat -m shell -a "useradd tomcat"
    ansible perf*tomcat -m shell -a "usermod -u 1510  tomcat"
 
   
-  sudo chown -R username:group directory  #Ä¿Â¼
-  sudo chown username:group directory     #Ä¿Â¼ÏÂµÄÎÄ¼ş
+  sudo chown -R username:group directory  #ç›®å½•
+  sudo chown username:group directory     #ç›®å½•ä¸‹çš„æ–‡ä»¶
 
    id tom
    You need to kill all process owned by tom user and forcefully logged him out of the system:
    # pkill -u tom pid
    # pkill -9 -u tom
-   usermod -l jerry      tom       °ÑÓÃ»§ÃûÓÉtom¸Ä³Éjerry
+   usermod -l jerry      tom       æŠŠç”¨æˆ·åç”±tomæ”¹æˆjerry
    usermod -l login-name old-name
    
    Task: User home directory from /home/tom/ to /home/jerry
@@ -449,7 +449,7 @@ docker rmi training/sinatra
 
 sudo docker run -i -t ubuntu /bin/bash
      docker run -it  --name java-test2  centos:6.6 bash
-     #Æô¶¯´øsystemdµÄ²Ù×÷ÏµÍ³
+     #å¯åŠ¨å¸¦systemdçš„æ“ä½œç³»ç»Ÿ
 	 docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro -p 80:80 local/centos7:yum-repository   
 #To start a container in detached mode, you use -d=true or just -d option
      docker run -d -p 80:80 my_image service nginx start
@@ -514,21 +514,21 @@ yum repolist
 yum --disablerepo="*" --enablerepo="google" list available
 yum list installed| grep audit 
 
-²éÑ¯ÃüÁîÔÚÄÄ¸örpm°üÖĞ
+æŸ¥è¯¢å‘½ä»¤åœ¨å“ªä¸ªrpmåŒ…ä¸­
 rpm -q --whatprovides /opt/dell/srvadmin/bin/omreport
 srvadmin-omacore-8.2.0-1739.8348.el6.x86_64
 ``````````````private repo`````````````
 
 Yum Cache: /var/cache/yum/$basearch/$releasever/
-[main] section of /etc/yum.conf   ÖĞÉèÖÃkeepcache = 1
+[main] section of /etc/yum.conf   ä¸­è®¾ç½®keepcache = 1
 yum makecache
 find  /var/cache/yum/$basearch/$releasever/  -type f -name "*.rpm" -exec sh -c 'mv  {} /var/www/html/' \;
 find  /var/cache/yum/$basearch/$releasever/ -atime -1  -type f -name "*.rpm" -exec sh -c 'ansible test-xxd -m copy -a "src={} dest=/var/www/html/packages/"' \; 
 find  /var/cache/yum/$basearch/$releasever/ -amin -60  -type f -name "*.rpm"
 
-1¡¢vi /etc/yum.conf   ÖĞÉèÖÃkeepcache = 1
-2¡¢yum makecache
-3¡¢find  /var/cache/yum/$basearch/$releasever/ -amin -60  -type f -name "*.rpm"
+1ã€vi /etc/yum.conf   ä¸­è®¾ç½®keepcache = 1
+2ã€yum makecache
+3ã€find  /var/cache/yum/$basearch/$releasever/ -amin -60  -type f -name "*.rpm"
 
 
 yum -y install httpd
@@ -543,7 +543,7 @@ enabled=1
 gpgcheck=0
 priority=2
 
-¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤
+Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·
 Use yum to install a local packvi age, automatically checking/satisfying dependencies
 yum --nogpgcheck localinstall packagename.arch.rpm  
 yum localinstall /home/frank/Downloads/VirtualBox-5.0-5.0.6_103037_el7-1.x86_64.rpm 
@@ -665,7 +665,7 @@ mysqladmin -u root -p shutdown
 mysql -uroot  -p < mysqlsampledatabase1
   
 
-`````ĞŞ¸ÄÃÜÂë``````````
+`````ä¿®æ”¹å¯†ç ``````````
 setting /etc/my.conf using validate-password = off
 
 sudo grep 'temporary password' /var/log/mysqld.log
@@ -673,7 +673,7 @@ mysql -uroot -p
 ALTER USER 'root'@'localhost' IDENTIFIED BY 'E431e4311!';
 quit
 
-````````ÆäËû````
+````````å…¶ä»–````
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '<E431e4311!>' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '<E431e4311!>' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
@@ -685,9 +685,9 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
  SHOW COLUMNS FROM City;
  SHOW DATABASES;
 ``````````````````````````````
-±¸·İËùÓĞÊı¾İ¿â
+å¤‡ä»½æ‰€æœ‰æ•°æ®åº“
 mysqldump -u root -p --all-databases >  /tmp/database-backup-$(date +%Y%m%d).sql
-²éÑ¯Êı¾İ¿â´óĞ¡
+æŸ¥è¯¢æ•°æ®åº“å¤§å°
 
 
 ======================= proxy  ========================
@@ -781,7 +781,7 @@ wjr@ramnode.com * jY89634_HIB *
 
 ===virtualbox section=========
 "%programfiles%\Oracle\VirtualBox\VBoxHeadless" --startvm "Debian"
-"%programfiles%\Oracle\VirtualBox\VBoxHeadless" --startvm "CentOS7 ¸±±¾2"
+"%programfiles%\Oracle\VirtualBox\VBoxHeadless" --startvm "CentOS7 å‰¯æœ¬2"
 
 
 "%programfiles%\Oracle\VirtualBox\VBoxManage" clonehd "source.vmdk" "cloned.vdi" --format vdi
@@ -794,7 +794,7 @@ vboxmanage internalcommands sethduuid  '/media/frank/3172e678-9cfa-4781-9900-0d7
 
 
 "%programfiles%\Oracle\VirtualBox\VBoxHeadless" --startvm "Debian"
-"%programfiles%\Oracle\VirtualBox\VBoxHeadless" --startvm "CentOS7 ¸±±¾2"
+"%programfiles%\Oracle\VirtualBox\VBoxHeadless" --startvm "CentOS7 å‰¯æœ¬2"
 
 xrandr -s 1024x768
 X11Forwarding yes must specified in /etc/ssh/sshd_config
@@ -846,11 +846,11 @@ X11Forwarding yes must specified in /etc/ssh/sshd_config
   systemctl start getty@tty7.service
   
   //Notify systemd that a new name.service file exists by executing the following command as root
-  systemctl daemon-reload                 //ĞŞ¸ÄunitÅäÖÃÎÄ¼şºóÖ´ĞĞ
+  systemctl daemon-reload                 //ä¿®æ”¹unité…ç½®æ–‡ä»¶åæ‰§è¡Œ
   systemctl reload        httpd           //Reload service (reloads config file):
   systemctl start         squid3.service 
   systemctl disable       squid3.service
-  systemctl enable        squid3.service  //»á×Ô¶¯Ö´ĞĞsystemctl daemon-reload 
+  systemctl enable        squid3.service  //ä¼šè‡ªåŠ¨æ‰§è¡Œsystemctl daemon-reload 
   systemctl enable        sshd-second.service
   systemctl is-enabled    gdm.service
   systemctl is-active     gdm.service
@@ -885,7 +885,10 @@ inactive - a service (unit) is currently disabled, but may get started, i.e. bec
 
 
 
-```````personal service``````
+```````personal service````init.d section``
+/etc/rc.local
+ä»¥ä¸‹åŠŸèƒ½ç±»ä¼¼rc.local
+ 
 /etc/systemd/system/multi-user.target.wants/wujunrong.service
 /etc/systemd/system/wujunrong.service  
 
@@ -926,7 +929,7 @@ a change in the config file will also trigger a restart of the respective servic
   The third line, called the Function declaration, defines which function in the pkg state module to call.
 Jinja -> YAML -> Highstate -> low state -> execution
 
-·ÇrootÓÃ»§ÔËĞĞ£ºhttp://docs.saltstack.com/en/latest/ref/configuration/nonroot.html
+érootç”¨æˆ·è¿è¡Œï¼šhttp://docs.saltstack.com/en/latest/ref/configuration/nonroot.html
 ``````````````````````install ````````````````````````
   
   yum install salt-ssh
@@ -951,7 +954,7 @@ sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el6
   `````````
   salt --versions-report
   
-  minionÅäÖÃ: /etc/salt/minion
+  minioné…ç½®: /etc/salt/minion
   #master: salt
   /etc/salt/master
   /etc/salt/minion
@@ -990,9 +993,9 @@ sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el6
     - 'G@foo:baz'
   
   
-  ``````Çå³ısalt-minionÃû×Ö·½·¨clear not wanted and invalid minion id```
+  ``````æ¸…é™¤salt-minionåå­—æ–¹æ³•clear not wanted and invalid minion id```
   on master: rm -fr /etc/salt/pki/master/minions_denied/vm-template
-  on minion: ansible minions  -m shell -a  '>/etc/salt/minion_id' #Çå¿ÕidÎÄ¼ş
+  on minion: ansible minions  -m shell -a  '>/etc/salt/minion_id' #æ¸…ç©ºidæ–‡ä»¶
   #When the minion is started, it will generate an id value, unless it has been generated on a previous run and cached in the configuration directory, which is /etc/salt by default
 ``````````````````````````````````````
   systemctl start  salt-master
@@ -1077,8 +1080,8 @@ apache:
 
   yum -y install salt-ssh
 
-  ´ò¿ªÎÄ¼ş£º/etc/salt/roster
-  ÎÄ¼ş°üº¬ÈçÏÂÄÚÈİ£º
+  æ‰“å¼€æ–‡ä»¶ï¼š/etc/salt/roster
+  æ–‡ä»¶åŒ…å«å¦‚ä¸‹å†…å®¹ï¼š
   
   test_fk:
    host: 192.168.38.155
@@ -1098,7 +1101,7 @@ apache:
   
   `````````````````salt file````````````````````````` 
   salt-key -L
-  salt-key -A  #½ÓÊÕËùÓĞµÄkey
+  salt-key -A  #æ¥æ”¶æ‰€æœ‰çš„key
   salt-key -a keyname
   
   
@@ -1125,7 +1128,7 @@ apache:
      file.recurse:
        - source: salt://code/flask
        - include_empty: True
-  ÎÄ¼şÏÂ´«
+  æ–‡ä»¶ä¸‹ä¼ 
   
        salt perf_nginxws01            state.single   file.recurse name='/root'            source='salt://files/'  include_pat='*.xxd'
   sudo salt 'test_v6_tomcat_front01'  state.single   file.recurse name='/tmp/wujunrong'   source='salt://wujunrong'
@@ -1164,7 +1167,7 @@ apache:
   salt  -b 5 -C 'stage_v6_batch0? or stage_v6_front0?'   cmd.script salt://wujunrong/install_files/run_before_starting_rsyslog.sh    reset_system_locale=False cwd=/tmp
   
   ```````````````````salt svn``````````````````````````````````
-  svnÂ·¾¶ http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/fk_test.sh
+  svnè·¯å¾„ http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/fk_test.sh
   /etc/salt/master
   
   
@@ -1213,7 +1216,7 @@ apache:
   
   salt   '*'         svn.checkout /path/to/repo     svn://remote/repo username=wujunrong password=test
   salt   '*'         svn.export   /path/to/repo     svn://remote/repo username=wujunrong password=test
-  salt   'debian'    cmd.shell   'cd /tmp/&&svn export "http://192.168.38.230/YXITD/10-ÔËÎ¬²¿/Îâ¾üÈÙ/test2"'  reset_system_locale=false
+  salt   'debian'    cmd.shell   'cd /tmp/&&svn export "http://192.168.38.230/YXITD/10-è¿ç»´éƒ¨/å´å†›è£/test2"'  reset_system_locale=false
   salt   '*'         file.append /etc/motd \
                          "With all thine offerings thou shalt offer salt." \
                          "Salt is what makes things taste bad when it isn't in them."
@@ -1337,12 +1340,12 @@ apache:
   
   
 
-¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤salt diff¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤
+Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·salt diffÂ·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·
   diff <(salt 'stage_v6_nginx01' cmd.run "cat /root/install.sh")   <(salt 'stage_v6_nginx02' cmd.run "cat /root/install.sh")
   diff ./application.properties    <( salt 'stage_v6_batch01' cmd.run "cat /opt/webserver/v6_tomcat/webapps/xxdai_batch/WEB-INF/classes/application.properties"|sed '1d'| cut -d " " -f   5- )
-¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤
+Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·
 
-  É¾³ıÇ°2ÁĞ
+  åˆ é™¤å‰2åˆ—
   cut -d " " -f 3- input_filename > output_filename
   Explanation:
   
@@ -1502,7 +1505,7 @@ rsyslog-restart-blockreplace:
 			
 ======================= svn section========================  
 #a new caret (^) notation, Note that this URL syntax works only when your current working directory is a 
-working copy¡ªthe command-line client knows the repository's root URL by looking at the working copy's metadata
+working copyâ€”the command-line client knows the repository's root URL by looking at the working copy's metadata
 
 client and server
 client:  yum -y install subversion
@@ -1510,10 +1513,10 @@ server:  yum -y install mod_dav_svn
 systemctl start  svnserve
 
 ```````
-1¡¢·şÎñ¶Ë´´½¨²Ö¿â
+1ã€æœåŠ¡ç«¯åˆ›å»ºä»“åº“
 cd /srv/svn
 $ svnadmin create repos
-2¡¢µ¼Èë´úÂë£¬´úÂëÔÚ /tmp/xxd_code_repo/dev_v6.5.4_20160628/ Ä¿Â¼ÖĞ
+2ã€å¯¼å…¥ä»£ç ï¼Œä»£ç åœ¨ /tmp/xxd_code_repo/dev_v6.5.4_20160628/ ç›®å½•ä¸­
 svn import  /tmp/xxd_code_repo/dev_v6.5.4_20160628/   file:///srv/svnrepos/xxd-v6 -m "initial import" 
 
 ``````````````````
@@ -1541,7 +1544,7 @@ svn checkout svn://host.example.com/project1
 /etc/subversion
 ```````````````````````
   svn info
-  svn status | grep ^?   ÁĞ³öÃ»ÓĞ±»°æ±¾¹ÜÀíµÄÎÄ¼ş
+  svn status | grep ^?   åˆ—å‡ºæ²¡æœ‰è¢«ç‰ˆæœ¬ç®¡ç†çš„æ–‡ä»¶
   svn status
   svn status --no-ignore
   svn status --show-updates  #The -u (or --show-updates) option to svn status causes svn to contact the repository and show stuff that's changed in the repository - is that enough for you ? Depending on what you need, you might want the -q or --verbose flag too
@@ -1549,7 +1552,7 @@ svn checkout svn://host.example.com/project1
   svn log -v
   svn log -v integer.c
   svn log --verbose -r 42 #List files committed for a revision
-  svn log http://192.168.38.230/YXITD/10-ÔËÎ¬²¿/Îâ¾üÈÙ/test2/¹¤×÷ĞÅÏ¢.TXT@454  -v
+  svn log http://192.168.38.230/YXITD/10-è¿ç»´éƒ¨/å´å†›è£/test2/å·¥ä½œä¿¡æ¯.TXT@454  -v
   svn log -r{2011-08-01}:HEAD|awk '$14 ~/line/ {print $3}'|sort|uniq -c   #List svn commits by user for a date range
   svn log --search james --search-and "Sep 2012"
   
@@ -1620,12 +1623,12 @@ svn copy my-working-copy \
     http://svn.example.com/repos/calc/tags/mytag \
     -m "Tag my existing working copy state."
     
-svn  import -m "·ç¿Ø½Å±¾" ./fk.sh  http://192.168.38.230/YXITD/10-ÔËÎ¬²¿/Îâ¾üÈÙ/fk.sh
+svn  import -m "é£æ§è„šæœ¬" ./fk.sh  http://192.168.38.230/YXITD/10-è¿ç»´éƒ¨/å´å†›è£/fk.sh
 
 url="http://192.168.38.230/YXPRJ/05DEPLOYMENT/fk/Test Release/2015-7-1/YX.war"
 svn export "$url"
-·½·¨Ò»£ºsvn export "http://wujunrong@192.168.38.230/YXITD/saltstack/trunk/wujunrong/ansible.hosts" --username wujunrong
-·½·¨¶ş£ºwget --user wujunrong --password E431e4314  "http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/ansible.hosts"
+æ–¹æ³•ä¸€ï¼šsvn export "http://wujunrong@192.168.38.230/YXITD/saltstack/trunk/wujunrong/ansible.hosts" --username wujunrong
+æ–¹æ³•äºŒï¼šwget --user wujunrong --password E431e4314  "http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/ansible.hosts"
 svn export         "http://192.168.38.230/YXPRJ/05DEPLOYMENT/fk/Test Release/2015-10-8/YX.war"      /home/wujunrong/work/YX.war
 svn export -r 16873 http://core.svn.wordpress.org/branches/2.8/wp-admin/css
  
@@ -1648,7 +1651,7 @@ svn move -m "Move a file" http://svn.red-bean.com/repos/foo.c \
                           
 svn list http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/ --username wujunrong | grep grains| xargs -I {} svn export http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/{}
 `````````````````commit and checkout  only one file ```````````````````````````````````````````````````````                 
-$ svn co --depth=empty http://192.168.38.230/YXITD/10-ÔËÎ¬²¿/Îâ¾üÈÙ/backup  
+$ svn co --depth=empty http://192.168.38.230/YXITD/10-è¿ç»´éƒ¨/å´å†›è£/backup  
   cd backup && svn up install_site_local.sh            
 $ cd mydirectory            #Enter the empty working copy just checked out
 $ svn update fileToChange   #Adds file you want to change to your working dir
@@ -1678,9 +1681,9 @@ svnadmin hotcopy --clean-logs /path/to/bdb-repos /path/to/bdb-repos-backup
 #bar.c changed to baz.c
 #Because a move in Subversion is implemented as a copy operation followed by a delete operation
 
-1¡¢ÁĞ³ö×Ô¼º×öÁËÄÄĞ©ĞŞ¸Ä£ºsvn diff code/bar.c > PATCHFILE
-2¡¢°ÑÎÄ¼şÖĞµÄcode/bar.c¸Ä³Écode/baz.c
-3¡¢°Ñ×Ô¼º±ä»¯¸üĞÂµ½ĞÂÎÄ¼şbaz.cÖĞÈ¥£ºsvn patch PATCHFILE
+1ã€åˆ—å‡ºè‡ªå·±åšäº†å“ªäº›ä¿®æ”¹ï¼šsvn diff code/bar.c > PATCHFILE
+2ã€æŠŠæ–‡ä»¶ä¸­çš„code/bar.cæ”¹æˆcode/baz.c
+3ã€æŠŠè‡ªå·±å˜åŒ–æ›´æ–°åˆ°æ–°æ–‡ä»¶baz.cä¸­å»ï¼šsvn patch PATCHFILE
 svn delete --force code/bar.c
 svn resolve --accept=working code/bar.c
 ```````````````````````````````````
@@ -1690,14 +1693,14 @@ yum -y install net-tools
 netstat --listen
 netstat  -nr
 netstat -antup 
-netstat -anp |grep 2181   #²é¿´Ë­ Á¬µ½ 2181
-netstat -anp --inet       #²é¿´Ë­ Á¬µ½ Ë­
+netstat -anp |grep 2181   #æŸ¥çœ‹è° è¿åˆ° 2181
+netstat -anp --inet       #æŸ¥çœ‹è° è¿åˆ° è°
 ss -napt | grep 3260 
 =======================  cygwin section  ========================     
   windows:  netstat -an
-  ÅäÖÃssh:  ssh-host-config
+  é…ç½®ssh:  ssh-host-config
             net start sshd
-			ÓÃ cyg_server ÓÃ»§ »ò µ±Ç°Ê¹ÓÃÓÃ»§ÃûµÇÈëssh  ÓĞÊ±ºòµÃÔÚwindowsÉÏÖØĞÂÉèÖÃÒ»ÏÂpriviledged serverµÄÃÜÂë²ÅÄÜµÇÈë
+			ç”¨ cyg_server ç”¨æˆ· æˆ– å½“å‰ä½¿ç”¨ç”¨æˆ·åç™»å…¥ssh  æœ‰æ—¶å€™å¾—åœ¨windowsä¸Šé‡æ–°è®¾ç½®ä¸€ä¸‹priviledged serverçš„å¯†ç æ‰èƒ½ç™»å…¥
 install svn: package subversion
 
 ===============================================  
@@ -1743,11 +1746,11 @@ vim scp://root@cloudera-agent1///etc/yum.repos.d/my-cloudera-manager.repo
 Searching and Replacing
 :%s/HOME=\/var\/lib\/zabbix/HOME=\/etc\/zabbix/g
 =======================  sudo section   ========================   
-ÃüÁî£ºvisudo //press escape, then type ZZ
+å‘½ä»¤ï¼švisudo //press escape, then type ZZ
 Cmnd_Alias SALTCMD = /usr/bin/salt, /usr/bin/salt-key, /usr/bin/salt-run, /usr/bin/salt-ssh, /usr/bin/salt-cp
 wujunrong ALL = NOPASSWD: SALTCMD
 
-»ò: wujunrong ALL=(ALL) NOPASSWD:ALL
+æˆ–: wujunrong ALL=(ALL) NOPASSWD:ALL
 =======================suid section,sgid section  ======================
 sgid:  chmod g+s ./test_list_date.sh
 suid:  chmod u+s ./test_list_date.sh
@@ -1768,7 +1771,7 @@ wget -O - http://example.com/dvd.iso  | tee dvd.iso | sha1sum > dvd.sha1
 wget -O - http://example.com/dvd.iso  | tee >(sha1sum > dvd.sha1)   >(md5sum > dvd.md5)   > dvd.iso
 
 pgrep -a fk.sh| tee ./fk.log| wc -l
-crontab -l | tee crontab-backup.txt | sed 's/old/new/' | crontab ¨C
+crontab -l | tee crontab-backup.txt | sed 's/old/new/' | crontab â€“
 exec &> >(tee "$log_file")
 # $log_file will contain the output of the script and any subprocesses, and the output will also be printed to the screen.
 #  >(...) starts the process ... and returns a file representing its standard input. exec &> ... redirects both standard output and standard error into ... for the remainder of the script (use just exec > ... for stdout only). tee -a appends its standard input to the file, and also prints it to the screen.
@@ -1781,7 +1784,7 @@ name=nginx repo
 baseurl=http://nginx.org/packages/OS/OSRELEASE/$basearch/
 gpgcheck=0
 enabled=1
-Replace ¡°OS¡± with ¡°rhel¡± or ¡°centos¡±, depending on the distribution used, and ¡°OSRELEASE¡± with ¡°5¡±, ¡°6¡±, or ¡°7¡±, for 5.x, 6.x, or 7.x versions, respectively.
+Replace â€œOSâ€ with â€œrhelâ€ or â€œcentosâ€, depending on the distribution used, and â€œOSRELEASEâ€ with â€œ5â€, â€œ6â€, or â€œ7â€, for 5.x, 6.x, or 7.x versions, respectively.
 
 ````````````````
 cat /etc/yum.repos.d/nginx.repo
@@ -1791,7 +1794,7 @@ baseurl=http://nginx.org/packages/centos/6/$basearch/
 gpgcheck=0
 enabled=1
 `````````````````````
-ÓÃansible°²×°yumÔ´:
+ç”¨ansibleå®‰è£…yumæº:
 vi install_nginx.sh
     sudo tee /etc/yum.repos.d/nginx.repo<<-'EOF'
     [nginx]
@@ -1823,10 +1826,10 @@ rewrite_log off;
 
 start nginx:nginx 
 nginx -s signal
-         stop   ¡ª fast shutdown
-         quit   ¡ª graceful shutdown
-         reload ¡ª reloading the configuration file
-         reopen ¡ª reopening the log files
+         stop   â€” fast shutdown
+         quit   â€” graceful shutdown
+         reload â€” reloading the configuration file
+         reopen â€” reopening the log files
 kill -s QUIT 1628         
 nginx -s reload
 ps -ax | grep nginx
@@ -1838,7 +1841,7 @@ nginx -t -c /usr/local/nginx/conf/nginx.conf  //This will test the configuration
       server {
            server_name website.com;
            location = /abcd {
-              [¡­]
+              [â€¦]
            }
       }
       The configuration in the location block:
@@ -1856,7 +1859,7 @@ nginx -t -c /usr/local/nginx/conf/nginx.conf  //This will test the configuration
        server {
              server_name website.com;
              location /abcd {
-             [¡­]
+             [â€¦]
              }
        }
        The configuration in the location block:
@@ -1879,7 +1882,7 @@ nginx -t -c /usr/local/nginx/conf/nginx.conf  //This will test the configuration
        server {
                server_name website.com;
                location ~ ^/abcd$ {
-               [¡­]
+               [â€¦]
                }
        }
        The ^/abcd$ regular expression used in this example specifies that the
@@ -1932,7 +1935,7 @@ Nginx will search for matching patterns in a specific order:
    beginning of the requested URI, Nginx retains the location block
    In that extent, the ^~ modifier begins to make sense, and we can envision cases where it becomes useful.
 `````````````````````
-www.example.com×ªexample.com
+www.example.comè½¬example.com
 
 server {
     server_name www.example.com;
@@ -2151,7 +2154,7 @@ if $fromhost-ip == '192.168.152.137' then {
         stop
     }
 
-# Note that ¡°stop¡± is the discard action!.
+# Note that â€œstopâ€ is the discard action!.
 # only messages not from 192.0.21 make it past this point
 
 # The authpriv file has restricted access.
@@ -2201,7 +2204,7 @@ ruleset(name="rulesetname") {
       rule 
       rule2
       call rulesetname2
-      ¡­ 
+      â€¦ 
 }
 ``````````````````````````````````````````````````````````````````````
 #load needed modules
@@ -2340,7 +2343,7 @@ module(load="imfile" PollingInterval="10")
 input (
     type="imfile"
     File="/opt/webserver/v6_tomcat/logs/catalina.out"
-    #startmsg.regex="^\\["   #Æ¥Åä¶àĞĞ
+    #startmsg.regex="^\\["   #åŒ¹é…å¤šè¡Œ
     Tag="tomcat/stage/admin"
     Facility="user"
     Severity="info"
@@ -2461,16 +2464,16 @@ apt-get install auditd audispd-plugins
 
 ``````````````````````````````````````````````````````````````````````
 auditctl -a action,filter -S system_call -F field=value -k key_name
-Æô¶¯¼à¿ØÎÄ¼şÎÄ¼ş      £ºauditctl -w /usr/local/nginx/html/static/image/data/avatar/no_pic.gif  -p wa -k gif_moniter_huangchao
-    ¼à¿ØÃüÁîÖ´ĞĞ        sudo auditctl -a exit,always -F arch=b64 -F path=/usr/sbin/service   -S execve  -k wujunrong
-É¾³ıÊÂ¼ş·¢Éúºó²é¿´ÈÕÖ¾£ºausearch -i -k  gif_moniter_huangchao  
-ÁĞ³öµ±Ç°ÉúĞ§µÄÉó¼Æ¹æÔò£ºauditctl -l
-É¾³ıËùÓĞÉó¼Æ¹æÔò      £ºauditctl -D
+å¯åŠ¨ç›‘æ§æ–‡ä»¶æ–‡ä»¶      ï¼šauditctl -w /usr/local/nginx/html/static/image/data/avatar/no_pic.gif  -p wa -k gif_moniter_huangchao
+    ç›‘æ§å‘½ä»¤æ‰§è¡Œ        sudo auditctl -a exit,always -F arch=b64 -F path=/usr/sbin/service   -S execve  -k wujunrong
+åˆ é™¤äº‹ä»¶å‘ç”ŸåæŸ¥çœ‹æ—¥å¿—ï¼šausearch -i -k  gif_moniter_huangchao  
+åˆ—å‡ºå½“å‰ç”Ÿæ•ˆçš„å®¡è®¡è§„åˆ™ï¼šauditctl -l
+åˆ é™¤æ‰€æœ‰å®¡è®¡è§„åˆ™      ï¼šauditctl -D
        
-         r ¡ª read access to a file or a directory.
-         w ¡ª write access to a file or a directory.
-         x ¡ª execute access to a file or a directory.
-         a ¡ª change in the file's or directory's attribute.
+         r â€” read access to a file or a directory.
+         w â€” write access to a file or a directory.
+         x â€” execute access to a file or a directory.
+         a â€” change in the file's or directory's attribute.
 
                         auditctl -l
                         auditctl -s  
@@ -2505,7 +2508,7 @@ aureport --start this-week --file --failed -i
 man 8 auditd
 
 ````````````````````````````````````````````````````````
-#Configuring PAM for Auditing ÔÚÎÄ¼şÖĞÔö¼ÓÈçÏÂÅäÖÃÏî
+#Configuring PAM for Auditing åœ¨æ–‡ä»¶ä¸­å¢åŠ å¦‚ä¸‹é…ç½®é¡¹
 session   required pam_tty_audit.so disable=* enable=root
 
 debian:     /etc/pam.d/sshd
@@ -2565,7 +2568,7 @@ $ tar -jxvf filename.tar.bz2
 tar -zcvf /tmp/webservice-trade.tar.gz   ./{*webservice*11-11*,*webser*.out,*tra*11-11*,*tra*.out}
 
 ``````````tomcat section``````
-°²×°tomcat½âÑ¹°²×°°ü¼´¿É
+å®‰è£…tomcatè§£å‹å®‰è£…åŒ…å³å¯
 wget http://apache.fayea.com/tomcat/tomcat-6/v6.0.45/bin/apache-tomcat-6.0.45.tar.gz
 /root/apache-tomcat-6.0.45/conf/server.xml
      Connector port="8080
@@ -2583,10 +2586,10 @@ If both JRE_HOME and JAVA_HOME are specified, JRE_HOME is use
 
 
 
-°²×°java  :   Ö´ĞĞ/tmp/jdk-6u45-linux-x64-rpm.bin  
-              ´Ë.binÎÄ¼şÊÇ¸ö×Ô½âÑ¹ÎÄ¼ş£¬½âÑ¹µ½µ±Ç°Ä¿Â¼ÏÂ£¬Éú³É¶à¸örpm°ü
+å®‰è£…java  :   æ‰§è¡Œ/tmp/jdk-6u45-linux-x64-rpm.bin  
+              æ­¤.binæ–‡ä»¶æ˜¯ä¸ªè‡ªè§£å‹æ–‡ä»¶ï¼Œè§£å‹åˆ°å½“å‰ç›®å½•ä¸‹ï¼Œç”Ÿæˆå¤šä¸ªrpmåŒ…
               java -version
-°²×°tomcat:   tar zxvf /root/apache-tomcat-6.0.45.tar.gz
+å®‰è£…tomcat:   tar zxvf /root/apache-tomcat-6.0.45.tar.gz
 ./apache-tomcat-6.0.45/bin/catalina.sh   stop 5  -force
 cat /etc/profile.d/java.sh 
    export JAVA_HOME=/usr/java/default
@@ -2600,7 +2603,7 @@ cat setenv.sh
     CATALINA_PID="$CATALINA_BASE/tomcat.pid"
     CATALINA_OPTS="-server -Xms1024m -Xmx5120m -XX:PermSize=128m -XX:MaxPermSize=2048m -XX:NewSize=192m -XX:MaxNewSize=2048m -Dfile.encoding=UTF-8 -Dcom.sun.management.jmxremote  -Dcom.sun.management.jmxremote.port=1234  -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
 ``````````````````````
-×Ô¶¯»¯ÉèÖÃ»·¾³
+è‡ªåŠ¨åŒ–è®¾ç½®ç¯å¢ƒ
 ansible perf*tomcat -m  script -a "/root/install_java_env.sh"
 cat /root/install_java_env.sh
      #!/bin/bash
@@ -2637,7 +2640,7 @@ export PATH=$JAVA_HOME/bin:$PATH
 chmod +x  /etc/profile.d/java.sh
 ``````````````````````````````````````
 /usr/local/maven/conf/settings.xml
-ÅäÖÃÎÄ¼ş£¨ÉèÖÃnexus²Ö¿â£©£º/root/apache-maven-3.2.3/conf/settings.xml
+é…ç½®æ–‡ä»¶ï¼ˆè®¾ç½®nexusä»“åº“ï¼‰ï¼š/root/apache-maven-3.2.3/conf/settings.xml
 
 mvn -v
 Apache Maven 3.2.3 (33f8c3e1027c3ddde99d3cdebad2656a31e8fdf4; 2014-08-12T04:58:10+08:00)
@@ -2652,19 +2655,19 @@ OS name: "linux", version: "2.6.32-358.el6.x86_64", arch: "amd64", family: "unix
 
 mvn package  #Making a JAR file
 
-´ò°üµ½/rootÄ¿Â¼ÏÂ£º 
-        ¹ıÂËµôv6_batch/trunk/pom.xmlºÍ ./v6_batch/trunk/batch-schedule ÏÂµÄpom.xmlÎÄ¼ş
+æ‰“åŒ…åˆ°/rootç›®å½•ä¸‹ï¼š 
+        è¿‡æ»¤æ‰v6_batch/trunk/pom.xmlå’Œ ./v6_batch/trunk/batch-schedule ä¸‹çš„pom.xmlæ–‡ä»¶
 
-·½·¨Ò»£ºÈ«²¿´ò°ü
+æ–¹æ³•ä¸€ï¼šå…¨éƒ¨æ‰“åŒ…
         find  ./  -type d  -path ./v6_batch/trunk/batch-schedule -prune -o  -name pom.xml   -print | grep -v "v6_batch/trunk/pom.xml" |  xargs -I {}  sh -c 'path_dir=`dirname {}`&& cd $path_dir && mvn clean package && cp  ./target/*.war   /root/' ;
-·½·¨¶ş£ºÒ»µ©ÓĞ´í¾ÍÍ£Ö¹
+æ–¹æ³•äºŒï¼šä¸€æ—¦æœ‰é”™å°±åœæ­¢
         echo -e  \#\!/bin/bash \\nset -e >/root/wu.sh  &&  find  ./  -type d  -path ./v6_batch/trunk/batch-core  -prune -o  -name pom.xml   -print | grep -v "v6_batch/trunk/pom.xml" |  xargs -I {}  sh -c 'path_dir=`dirname {}` && head_path_dir=`pwd` &&  echo cd $head_path_dir  \;  cd $path_dir \;  mvn clean package \; cp  ./target/*.war   /root/   >>/root/wu.sh ' && chmod +x /root/wu.sh  && /root/wu.sh
-·½·¨Èı£º´ò°ü²¢°Ñ´íÎóÊä³öµ½ÎÄ¼ş
+æ–¹æ³•ä¸‰ï¼šæ‰“åŒ…å¹¶æŠŠé”™è¯¯è¾“å‡ºåˆ°æ–‡ä»¶
          >/home/wujunrong/tmp/error.txt; find  ./  -type d  -path ./v6_batch/trunk/batch-schedule -prune -o  -name pom.xml   -print | grep -v "v6_batch/trunk/pom.xml" |  xargs -I {}  sh -c 'path_dir=`dirname {}`&& cd $path_dir && { mvn clean package ; echo $? >./return_val.txt ; }  | tee ./output.txt  ;return_val=`cat ./return_val.txt` ;  if [ "$return_val" -ne 0 ];then ( cat ./output.txt  >>/home/wujunrong/tmp/error.txt)  ;else  cp  ./target/*.war   /home/wujunrong/tmp/;fi  '					
-·½·¨ËÄ£º´ò°ü´íÎó·¢ÓÊ¼ş
+æ–¹æ³•å››ï¼šæ‰“åŒ…é”™è¯¯å‘é‚®ä»¶
          >/home/wujunrong/mvn_error.txt;rm -rf /usr/local/maven/mvn_repo/com/xxdai/*;find  ./    -name pom.xml   | grep -v "v6_batch/trunk/pom.xml" | grep -v v6_batch/trunk/batch-core/pom.xml  |grep -v  -E '\./pom.xml'|  xargs -I {}  sh -c 'path_dir=`dirname {}`&& cd $path_dir && { mvn clean package ; echo $? >./return_val.txt ; }  | tee ./output.txt  ;return_val=`cat ./return_val.txt` ;  if [ "$return_val" -ne 0 ];then ( cat ./output.txt  >>/home/wujunrong/mvn_error.txt)  ;else  cp  ./target/*.war   /home/wujunrong/  ;fi' ; if [ -s /home/wujunrong/mvn_error.txt ] ;then { echo -e "From: wujunrong@xinxindai.com\nSubject: mvn build error info \n\nThe following is error message after building.";cat /home/wujunrong/mvn_error.txt; } | ssmtp -d wujunrong@xinxindai.com,sunjiao@xinxindai.com;exit 77 ; fi
 		 
-²¿Êğ £º 
+éƒ¨ç½² ï¼š 
 find /root/xxd      -name *.war   -exec sh -c 'folder_name=`echo {}| cut -d "/" -f  3`; unzip -o {} -d /root/apache-tomcat-6.0.45/webapps/"$folder_name"'   \;
 
 mvn test
@@ -2711,8 +2714,8 @@ yum install spice-server spice-client spice-protocol
 virsh version
 virsh nodememstats
 virsh nodecpustats              #The above numbers are in nanoseconds of time available for user/system/idle etc.
-virsh nodecpustats ¨Ccpu     1
-virsh nodecpustats ¨Cpercent
+virsh nodecpustats â€“cpu     1
+virsh nodecpustats â€“percent
 virsh dominfo       BaseMachine
 virsh vcpucount     centos-64
 virsh dommemstat    centos-64
@@ -2768,9 +2771,9 @@ resize image
 2:virt-filesystems --long -h --all -a /home/frank/kvm/images/windows8-office.img
 3:truncate -r windows8-office.img windows8-in-office.img
 4:truncate -s +15G windows8-in-office.img
-5:²é¿´imageÖĞµÄÎÄ¼şÏµÍ³£¬È·¶¨ÒªÉı¼¶ÄÇ¸ö·ÖÇø
+5:æŸ¥çœ‹imageä¸­çš„æ–‡ä»¶ç³»ç»Ÿï¼Œç¡®å®šè¦å‡çº§é‚£ä¸ªåˆ†åŒº
      virt-filesystems --long --parts --blkdevs -h -a  /home/frank/kvm/images/my-wd-disk/windows8-for-office.img
-  »ò virt-filesystems --long -h --all -a              /home/frank/kvm/images/windows8-office.img
+  æˆ– virt-filesystems --long -h --all -a              /home/frank/kvm/images/windows8-office.img
 6:virt-resize --expand /dev/sda2 windows8-office.img    windows8-in-office.img
 7:on windows: use DISKPART's "extend filesystem" to correct disk size 
   DISKPART
@@ -2778,13 +2781,13 @@ resize image
   select volume [x]
   extend filesystem
 
-#»ñÈ¡imageÎÄ¼şµØÖ·£¬ÆäÖĞxpathÃüÁîÓÃÀ´½âÎöxml
+#è·å–imageæ–‡ä»¶åœ°å€ï¼Œå…¶ä¸­xpathå‘½ä»¤ç”¨æ¥è§£æxml
  sudo virsh dumpxml cloudera-manager | xpath /domain/devices/disk/source  
-#²é¿´imageÎÄ¼şÖĞµÄÎÄ¼şÏµÍ³
+#æŸ¥çœ‹imageæ–‡ä»¶ä¸­çš„æ–‡ä»¶ç³»ç»Ÿ
  virt-filesystems --long --parts --blkdevs -h -a  /home/frank/kvm/images/my-wd-disk/cloudera-manager.qcow2
-#²é¿´°²×°µÄ³ÌĞò¼°OS°æ±¾
+#æŸ¥çœ‹å®‰è£…çš„ç¨‹åºåŠOSç‰ˆæœ¬
  sudo virt-inspector -a  ./test-centos7.qcow2
-#¸ñÊ½×ª»»
+#æ ¼å¼è½¬æ¢
  qemu-img convert test-centos7.qcow2   my-wd-disk/test-centos7.img
 ```````snapshot section`````````
 virsh snapshot-list    cloudera-manager
@@ -3121,8 +3124,8 @@ chattr  +i /etc/services
 #Linux users in the sysadm_t, staff_t, user_t, and xguest_t domains can log in via the X Window System and a terminal.
 
 #The role is an attribute of RBAC. SELinux users are authorized for roles, and roles are authorized for domains
-#roleºÍprocess¶¼ÓĞdomain,role   ºÍselinux user ÊôĞÔ¹ØÁª£¨The role serves as an intermediary between domains and SELinux users£©,
-                         processºÍselinux type ÊôĞÔ¹ØÁª,Í¨¹ıdomainÕâ¸öÖĞ½éÁ¬½ÓÆğÀ´
+#roleå’Œprocesséƒ½æœ‰domain,role   å’Œselinux user å±æ€§å…³è”ï¼ˆThe role serves as an intermediary between domains and SELinux usersï¼‰,
+                         processå’Œselinux type å±æ€§å…³è”,é€šè¿‡domainè¿™ä¸ªä¸­ä»‹è¿æ¥èµ·æ¥
 #If an unconfined Linux user executes an application that SELinux policy defines as one that can transition from the unconfined_t domain to its own confined domain, the unconfined Linux user is still subject to the restrictions of that confined domain.
 #By default, Linux users in the staff_t and user_t domains can execute applications in their home directories and /tmp/
 
@@ -3138,7 +3141,7 @@ whether it be a domain accessing a type, or a domain accessing another domain.
 sesearch
 allow <domain> <type>:<class> { <permissions> };
 
- <type>:<class> ±íÊ¾what resource  a process  of certain domain is trying to access  
+ <type>:<class> è¡¨ç¤ºwhat resource  a process  of certain domain is trying to access  
 Class defines what the resource actually represents (file, directory, symbolic link, device, ports, cursor etc.)
 ```````````````````````````````````````````````
 
@@ -3147,15 +3150,15 @@ Class defines what the resource actually represents (file, directory, symbolic l
 cat /etc/selinux/config
 /etc/selinux/targeted/setrans.conf
 
-¹Ø±Õselinux£º cat /etc/sysconfig/selinux  (SELINUX=disabled)
-ÎŞĞ§centos7: sed -i.bak "s/SELINUX=enforcing/SELINUX=permissive/"   /etc/sysconfig/selinux
+å…³é—­selinuxï¼š cat /etc/sysconfig/selinux  (SELINUX=disabled)
+æ— æ•ˆcentos7: sed -i.bak "s/SELINUX=enforcing/SELINUX=permissive/"   /etc/sysconfig/selinux
 centos6: sed -i.bak "s/SELINUX=enforcing/SELINUX=permissive/"   /etc/selinux/config
 
 sestatus       #Verify SELinux Status
 getenforce     #confirm that the getenforce command returns Disabled:
 setenforce 0   #Enable permissive mode
 semanage login   -l  #yum install policycoreutils-python,view a list of mappings between SELinux and Linux user accounts (you need to have the policycoreutils-python package installed)
-semanage boolean -l | grep rsync   #rsyncÊÇ·şÎñÃû
+semanage boolean -l | grep rsync   #rsyncæ˜¯æœåŠ¡å
 seinfo           -r  #To list all available roles,yum install setools-console , 
 
 setsebool    httpd_can_network_connect_db on
@@ -3206,13 +3209,13 @@ semodule -l | grep permissive
 semanage permissive -d httpd_t
 ``````````````````````Creating Custom SELinux Policy Modules with audit2allow````````````````````````````````````````````````````````
 step 1:
-·¢ÉúÈ¨ÏŞÎÊÌâ²»¼ÇauditÈÕÖ¾,Ğè¹Ø±Õ²»¼ÇÂ¼auditÈÕÖ¾µÄ¹æÔò¿ª¹ØPossible Causes of Silent Denials
+å‘ç”Ÿæƒé™é—®é¢˜ä¸è®°auditæ—¥å¿—,éœ€å…³é—­ä¸è®°å½•auditæ—¥å¿—çš„è§„åˆ™å¼€å…³Possible Causes of Silent Denials
 sesearch --dontaudit  | grep "dontaudit syslog*"   
 sesearch --dontaudit -s smbd_t | grep squid
 semodule -DB  #To temporarily disable dontaudit rules
 semodule -B   #To rebuild policy and enable dontaudit rules
 setp 2:
-´ÓauditÈÕÖ¾ÖĞÌáÈ¡´íÎó£¬Éú³Éselinux²ßÂÔ
+ä»auditæ—¥å¿—ä¸­æå–é”™è¯¯ï¼Œç”Ÿæˆselinuxç­–ç•¥
 grep syslogd_t /var/log/audit/audit.log| audit2allow -m  rsysloglocal > wu.log
 grep syslogd_t /var/log/audit/audit.log| audit2allow -M  rsysloglocal
 semodule -i rsysloglocal.pp
@@ -3225,9 +3228,9 @@ the task will run every third month.
 `````````````````````````````````````
 
 
-1¡¢ÁĞ³öËùÓĞÓÃ»§µÄ¶¨Ê±ÈÎÎñ£ºcat /var/spool/cron/* 
+1ã€åˆ—å‡ºæ‰€æœ‰ç”¨æˆ·çš„å®šæ—¶ä»»åŠ¡ï¼šcat /var/spool/cron/* 
                                /var/spool/cron/  #The user-defined crontabs are stored
-2¡¢È«¾ÖÅäÖÃÎÄ¼ş          £º/etc/crontab
+2ã€å…¨å±€é…ç½®æ–‡ä»¶          ï¼š/etc/crontab
 
 /etc/cron.d/ 
 /etc/cron.hourly/
@@ -3259,15 +3262,15 @@ crontab -l
 ============================   ansible section =================================
 The goal of a play is to map a group of hosts to some well defined roles, represented by things ansible calls tasks. At a basic level, a task is nothing more than a call to an ansible module (see About Modules).
 ````````epel section````
-·½·¨Ò»£º  
+æ–¹æ³•ä¸€ï¼š  
   sudo yum -y install epel-release
   ansible salt_perf*   -m shell -a "sudo yum -y install epel-release"
   ansible salt_perf*   -m shell -a "yum --disablerepo=epel -y update  ca-certificates"
-·½·¨¶ş£º  
+æ–¹æ³•äºŒï¼š  
   wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
   yum upgrade ca-certificates --disablerepo=epel -y
   wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-  »ò rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+  æˆ– rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
   sudo yum -y install ansible
   yum -y install openssh-clients #ssh seciton
   yum -y install libselinux-python
@@ -3285,7 +3288,7 @@ host_key_checking=false
        yum -y install openssh-clients
        yum -y install libselinux-python
 
-     ĞŞ¸ÄÅäÖÃÎÄ¼ş£¬°Ñ
+     ä¿®æ”¹é…ç½®æ–‡ä»¶ï¼ŒæŠŠ
        /etc/ansible/ansible.cfg  
       [defaults]
       host_key_checking=false
@@ -3307,26 +3310,26 @@ localhost              ansible_connection=local
 other1.example.com     ansible_connection=ssh        ansible_ssh_user=mpdehaan
 other2.example.com     ansible_connection=ssh        ansible_ssh_user=mdehaan
 
-ÃÜÂë´ø#ºÅµÄÇ°ÃæÓÃ\×ªÒå×Ö·û
+å¯†ç å¸¦#å·çš„å‰é¢ç”¨\è½¬ä¹‰å­—ç¬¦
 When you put a password with special characters inside host inventory file it breaks everything after it and even if you put the password parameter at the end the login result in a authentication failure.
 \# works. Ansible 1.9.1 though. 
 ct-stage-tomcat-partener02   ansible_ssh_host=192.168.31.91  ansible_connection=ssh ansible_ssh_user=yxaccount ansible_ssh_pass=YXxxd7361^@\#
 
 
-#Let¡¯s run a playbook using a parallelism level of 10:
+#Letâ€™s run a playbook using a parallelism level of 10:
 ansible-playbook playbook.yml -f 10
 
 ``````````````````
-´ÓsvnÖĞÈ¡³öansibleÅäÖÃÎÄ¼ş
+ä»svnä¸­å–å‡ºansibleé…ç½®æ–‡ä»¶
 cat ./ansible-svn.sh 
 #!/bin/bash
 svn list  http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/    --username wujunrong| grep  ansible |xargs -I {} svn export  http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/{} --force  /etc/ansible/hosts
 
 
 ````````xshell section````````````
-/etc/ansible/hosts->xshell ÅäÖÃÎÄ¼ş
+/etc/ansible/hosts->xshell é…ç½®æ–‡ä»¶
 cat /etc/ansible/hosts| grep -E -v "^[[:space:]]*$"  | grep -v -E "\[.*\]" | grep -v "^#.*" | grep -v localhost | awk '{system("echo -ne "$1" \",\"  ; echo -ne "$2" | cut -d = -f 2- | tr -d \"\n\" ; echo -ne \",\" ssh ;echo -ne \",\" 22 \",\"; echo  -ne "$4" | cut -d = -f 2-  | tr -d \"\n\"   ;echo -ne \",\" ;  echo -e   "$5" | cut -d = -f 2-  ")}' |sed  's/\\//g' |sed 's/ //g'>./xshell.csv
-./xshell.csv¸ñÊ½ÈçÏÂ£º
+./xshell.csvæ ¼å¼å¦‚ä¸‹ï¼š
 product-v6_pro03-v6_webapp_front02,192.168.110.73,ssh,22,yxaccount,YXxxd7361^@#
 product-v6_pro03-ct-production-tomcat-partener02.xinxindai.com,192.168.110.80,ssh,22,yxaccount,YXxxd7361^@#
 product-v6_pro03-sftp_slave_192.168.110.91,192.168.110.91,ssh,22,yxaccount,YXxxd7361^@#
@@ -3372,8 +3375,8 @@ ansible-playbook site.yml --limit @retry_hosts.txt
 
 
 ansible-pull                 -o           -d /tmp/test-ansible/git/   -i /etc/ansible/hosts  -U /srv/git/xxd_code_repo.git
-Ñ°ÕÒlocal.yml              ÓĞ±ä»¯²ÅÖ´ĞĞ
-»òÕßoffice-salt.ymlÎÄ¼ş                   checkout Â·¾¶                  hostÎÄ¼ş            gitÔ´Â·¾¶
+å¯»æ‰¾local.yml              æœ‰å˜åŒ–æ‰æ‰§è¡Œ
+æˆ–è€…office-salt.ymlæ–‡ä»¶                   checkout è·¯å¾„                  hostæ–‡ä»¶            gitæºè·¯å¾„
 
 =========================   ps section command  ====================================
 
@@ -3387,7 +3390,7 @@ THREAD DISPLAY
 
 
 
-============= ·­Ç½ ================
+============= ç¿»å¢™ ================
 
 lantern :sudo apt-get install libappindicator3-1
 ranbiao/ranbiao
@@ -3403,22 +3406,22 @@ yum -y install rsync
 
 rsync -avz rpmpkgs/ root@192.168.0.101:/home/
 rsync  -avzh  /opt/webserver/v6_tomcat/webapps/v6_admin/image/   root@192.168.31.29:/opt/webserver/v6_tomcat/webapps/xxdai_sys_admin/image/ --dry-run
-               ¿½±´Ô´Í·                                          ¿½±´Ä¿±ê
+               æ‹·è´æºå¤´                                          æ‹·è´ç›®æ ‡
 
 #Copy/Sync a Remote Directory to a Local Machine:a directory /home/tarunika/rpmpkgs which is on a remote server is being copied in your local computer in /tmp/myrpms
 rsync -avzh root@192.168.0.100:/home/tarunika/rpmpkgs /tmp/myrpms
 rsync -avzh /var/www/html/cdh5/  root@192.168.38.119:/tmp/wujunrong
 
-/var/www/html/cdh5/ ,/tmp/wujunrong ±ØĞè´æÔÚ£¬rsyncÖ»Í¬²½ÕâÁ½¸öÄ¿Â¼ÖĞµÄÄÚÈİ
-Èç¹û²ÎÊı×îºó²»´ø·´Ğ±¸Ü¡°/¡±£¬rsync»á°Ñcm5Ä¿Â¼ÒÆ¶¯µ½wujunrongÄ¿Â¼ÏÂ£¬ÀıÈç£º
+/var/www/html/cdh5/ ,/tmp/wujunrong å¿…éœ€å­˜åœ¨ï¼ŒrsyncåªåŒæ­¥è¿™ä¸¤ä¸ªç›®å½•ä¸­çš„å†…å®¹
+å¦‚æœå‚æ•°æœ€åä¸å¸¦åæ–œæ â€œ/â€ï¼Œrsyncä¼šæŠŠcm5ç›®å½•ç§»åŠ¨åˆ°wujunrongç›®å½•ä¸‹ï¼Œä¾‹å¦‚ï¼š
 rsync -avzh  /var/www/html/cm5   root@192.168.38.119:/var/www/html/centos6-cm5.5.0
 
 
-±¸·İÑùÀı
+å¤‡ä»½æ ·ä¾‹
 rsync -av /srv/     /tmp/wujunrong/backup/srv/     --exclude   salt/xinxindai_tomcat/files/v6_packages    --exclude=*.zip  --exclude=*.jpg   --exclude=*.png    --cvs-exclude    --exclude=*.apk   --exclude=*.bin  --exclude=*.gz  --exclude=*.jsp  --exclude=*.js  --exclude=*.rpm    --exclude=*.class  --exclude=.*  --exclude=*.txt
 
 
-Ê¹rsync·şÎñÊ¹ÓÃselinux±£»¤»úÖÆ ÅäÖÃ·½·¨£º
+ä½¿rsyncæœåŠ¡ä½¿ç”¨selinuxä¿æŠ¤æœºåˆ¶ é…ç½®æ–¹æ³•ï¼š
 semanage fcontext -a -t initrc_exec_t "/etc/rc.d/init.d/rsyncd"
 grep rsync /etc/selinux/targeted/contexts/files/file_contexts.local
 restorecon -R -v /etc/rc.d/init.d/rsyncd
@@ -3435,14 +3438,14 @@ Ctrl-A to get to the beginning
 M-b and M-f for moving backwards and forwards to the current word,
 xshell meta key
 File -> Properties -> Terminal -> Keyboard
-°Ñ "Use Alt as Meta key" Õâ¸öÑ¡Ïî¹´ÉÏ
+æŠŠ "Use Alt as Meta key" è¿™ä¸ªé€‰é¡¹å‹¾ä¸Š
  
 ``````````````````````````````
-²ÎÊı"-"´ú±í standard input
+å‚æ•°"-"ä»£è¡¨ standard input
 echo $?  ##see exit status of cal command type following command:
 >/dev/null 2>&1
-```````Íø°²````````````````````
-cat *.csv    | grep -v '^$'  | awk  -F,   -f ./china_network.awk  | grep ¹Ø¼ü´ÊÃû³Æ | grep -v ¶¯´Ê |awk '{ $1=""; $2=""; print $0 }'| tr -d '\n'| sed -e 's/\s\+/\n/g'| grep -v '^$' | awk '{ print "¹Ø¼ü´Ê," $0}' | grep -v ¹Ø¼ü´ÊÃû³Æ| grep -v ×¨Êô´ÊÓï   > bbs_key_word_filter.txt
+```````ç½‘å®‰````````````````````
+cat *.csv    | grep -v '^$'  | awk  -F,   -f ./china_network.awk  | grep å…³é”®è¯åç§° | grep -v åŠ¨è¯ |awk '{ $1=""; $2=""; print $0 }'| tr -d '\n'| sed -e 's/\s\+/\n/g'| grep -v '^$' | awk '{ print "å…³é”®è¯," $0}' | grep -v å…³é”®è¯åç§°| grep -v ä¸“å±è¯è¯­   > bbs_key_word_filter.txt
 
 
 # cat china_network.awk
@@ -3479,7 +3482,7 @@ unset HISTFILE
 tar xjvf strongswan-5.2.1.tar.bz2
 zipinfo conf_file.zip
 
-sort <file> | uniq -c            #¼ÆËãÖØ¸´´ÎÊı
+sort <file> | uniq -c            #è®¡ç®—é‡å¤æ¬¡æ•°
 sort <file> | uniq --count
 pwdx <PID>  #Find out current working directory of a running process?
 ``````memory section```
@@ -3510,8 +3513,8 @@ git clone --branch 5.2.1  https://git.strongswan.org/strongswan.git
 sudo yum groupinstall  "Development Tools"
 sudo apt-get install build-essential
 ``````grep section````````````````
-  grep -inr "ramesh" *     #exclude case from a grep to make it not case sensitive ¨C simply add -i
-  grep -I -n -H ºöÂÔ¶ş½øÖÆÎÄ¼ş
+  grep -inr "ramesh" *     #exclude case from a grep to make it not case sensitive â€“ simply add -i
+  grep -I -n -H å¿½ç•¥äºŒè¿›åˆ¶æ–‡ä»¶
        -I -- process a binary file as if it did not contain matching data; 
        -n -- prefix each line of output with the 1-based line number within its input file
        -H -- print the file name for each match
@@ -3534,7 +3537,7 @@ sudo apt-get install build-essential
   
   cat v6_nginx01-tomcat_access-2016-06-07-14_05_01.log |   gawk -F@  '{print $1 $5  $9}' |  grep -E "[[:space:]]+/[[:space:]]*$" |  gawk -F@  '{print $1 $5 $9 $17}'
 
-  grep -E -v "^[[:space:]]*$"  #È¥¿ÕĞĞ    
+  grep -E -v "^[[:space:]]*$"  #å»ç©ºè¡Œ    
 ``````````````````````````````
 
 
@@ -3542,9 +3545,9 @@ profile: Add this bash function to your ~/.bashrc and `source ~/.bashrc`
 while pgrep vpnserver > /dev/null; do sleep 1; done
 process_number=$[$line_number-1]
 ln -s  ~/backup/fk_stage.sh  fk_stage.sh
-       ´æÔÚµÄ                ĞÂ½¨µÄ
+       å­˜åœ¨çš„                æ–°å»ºçš„
 ```````````diff section`````````````````
-cmp -l file1.bin file2.bin   #¶ş½øÖÆÎÄ¼ş¶Ô±È
+cmp -l file1.bin file2.bin   #äºŒè¿›åˆ¶æ–‡ä»¶å¯¹æ¯”
 diff -Naur               stage_v6_webservice/  temp_v6_webservice/
 diff -r --exclude=".svn" dev_v6.4.4_20160308/  ../wujunrong/dev_v6.4.4_20160308/
 ```````````du section````````````````````
@@ -3567,8 +3570,8 @@ stat zhihuitui1_release_new.apk
 Device: fd03h/64771d	Inode: 394807      Links: 1
 Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
 Access: 2016-06-23 03:39:52.118611000 +0800
-Modify: 2016-06-22 17:03:06.000000000 +0800   ÕæÊµĞŞ¸ÄÊ±¼ä
-Change: 2016-07-26 14:09:02.708560334 +0800   ×ö¹ıcopyºóµÄÊ±¼ä
+Modify: 2016-06-22 17:03:06.000000000 +0800   çœŸå®ä¿®æ”¹æ—¶é—´
+Change: 2016-07-26 14:09:02.708560334 +0800   åšè¿‡copyåçš„æ—¶é—´
 
 
 Access - the last time the file was read
@@ -3579,16 +3582,16 @@ Change - the last time meta data of the file was changed (e.g. permissions)
 The cp command -p option is equivalent to --preserve=mode,ownership,timestamps
 cp -p tre.sh /tmp/tre.sh.5
 ``````````tree section``````````````````
-Ö»ÏÔÊ¾Ä¿Â¼
+åªæ˜¾ç¤ºç›®å½•
 tree -d
-tree -d -L 4  #Ä¿Â¼Éî¶È
+tree -d -L 4  #ç›®å½•æ·±åº¦
 
 pstree
 
 ``````````````date section `````````````````````````````
 date +%Y%m%d -s "20150721"
 date +%T     -s "11:04:13"
-i=1440137634;date -u -d @${i} +"%T"  #°ÑÃë×ª»»³ÉĞ¡Ê±·ÖÖÓ
+i=1440137634;date -u -d @${i} +"%T"  #æŠŠç§’è½¬æ¢æˆå°æ—¶åˆ†é’Ÿ
 
 sudo salt  -N     'stage_v6tomcat'     cmd.run 'date -s "20160722 23:59"'
 find .  -type f -exec sh -c 'second=$(echo {}|  sed  -r   -n  "s/.*-([0-9]+)\.out/\1/p") && \
@@ -3596,7 +3599,7 @@ find .  -type f -exec sh -c 'second=$(echo {}|  sed  -r   -n  "s/.*-([0-9]+)\.ou
                              new_file_name=$(echo {}|sed  -r  "s/([0-9]+)\.out/$my_second.out/g") && \
                              mv {}   $new_file_name '  \;
 							 
-```````````````````````````È¡ÈÕÖ¾ log section``````
+```````````````````````````å–æ—¥å¿— log section``````
 salt 'v6_webservice02' cmd.run "ls -lh /opt/webserver/v6_tomcat/logs/catalina.out.20150905"
                                 grep -E "^\[v6_webservice\]\[INFO\]2015-09-05\s12:00"   /opt/webserver/v6_tomcat/logs/catalina.out.20150905
 salt 'v6_webservice02' cmd.run 'grep -E "^\[v6_webservice\]\[INFO\]2015-09-05\s12:00"   /opt/webserver/v6_tomcat/logs/catalina.out.20150905'
@@ -3619,11 +3622,11 @@ tar -zcvf /tmp/tradews_webservice_20160614.tar.gz  `find . -type f -newerct "201
  
 tar    -zcvf /tmp/front-and-webservice-2016-06-02.tar.gz    `find . -type f -newerct "2016-06-02  09:00:00"    -iregex ".*v6_front.*\|.*webservice.*" `
 tar    -zcvf /tmp/front-and-webservice-2016-06-01.tar.gz    `find . -type f -newerct "2016-06-01  14:00:00"   ! -newerct "2016-06-01 19:10:00"    -iregex ".*v6_front.*\|.*webservice.*" `
-catalina.outÍÚÈÕÖ¾
+catalina.outæŒ–æ—¥å¿—
 ls *20160514*  | xargs -I {}    sh -c  " zcat {} | sed -n  '/^\[v6_webservice\]\[INFO\]2016-05-14\s11:00/,/^\[v6_webservice\]\[INFO\]2016-05-14\s13:00/w  /tmp/{}_extracted.txt'"	
 ls *20160601*  | xargs -I {}    sh -c  " zcat {} | sed -n  '/^\[v6_webservice\]\[INFO\]2016-06-01\s16:00/,/^\[v6_webservice\]\[INFO\]2016-06-01\s17:00/w  /tmp/{}_extracted.txt'; zip /tmp/20160601.zip -m  /tmp/{}_extracted.txt"										 
 ls *20160627* | xargs -I {}    sh -c  " zcat {} | sed -n  '/2016-06-27\s16:00/,/2016-06-27\s17:00/w  /tmp/{}_extracted.txt'; zip /tmp/front20160627.zip -m  /tmp/{}_extracted.txt"
-ÎÄ¼şÃûÓÅ»¯£º ls *20160628* | xargs -I {}    sh -c  'file_name={}; zcat {} | sed -n  "/2016-06-28\s01:00/,/2016-06-28\s02:00/w  /tmp/${file_name/.tar.gz/.txt}"; zip /tmp/webservice20160628_2.zip -m  /tmp/${file_name/.tar.gz/.txt} '
+æ–‡ä»¶åä¼˜åŒ–ï¼š ls *20160628* | xargs -I {}    sh -c  'file_name={}; zcat {} | sed -n  "/2016-06-28\s01:00/,/2016-06-28\s02:00/w  /tmp/${file_name/.tar.gz/.txt}"; zip /tmp/webservice20160628_2.zip -m  /tmp/${file_name/.tar.gz/.txt} '
 
 zcat v6_mobile01_20151201.tar.gz| grep -aHn 15120115162100176722
 
@@ -3637,27 +3640,27 @@ find . -type f -newerct "2015-12-31 07:00:00" ! -newerct "2015-12-31 09:00:00"  
 find /path/to/dir -newermt yyyy-mm-dd ! -newermt yyyy-mm-dd -ls
 find ./  -mmin -480  -name  '*ng*'  -exec grep check  {} \; |wc -l
 find ./  -mmin -60   -name  '*ng*'  -exec grep quick_03.png {}  \; | grep 117.136.4.216
-¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤
-nginx ÍÚÈÕÖ¾£ºzcat v6_nginx01_20160713.tar.gz | sed -n  "/2016:16:00/,/2016:16:30/p"
+Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·
+nginx æŒ–æ—¥å¿—ï¼šzcat v6_nginx01_20160713.tar.gz | sed -n  "/2016:16:00/,/2016:16:30/p"
 
-IPµØÖ·ÅÅĞò£º    cat v6_nginx01-tomcat_access-2015-12-11-08_05_01.log |  gawk -F@  '{print $1}' | grep -v '^[[:space:]]*$'  | sort |uniq -c  | sort -s -n -k 1,1
-urlÅÅĞò£º       cat v6_nginx01-tomcat_access-2015-12-11-08_05_01.log |  gawk -F@  '{print $9}' | grep -v '^[[:space:]]*$'  | sort |uniq -c  | sort -s -n -k 1,1
-IPµØÖ·¶ÔÓ¦url£º cat v6_nginx01-tomcat_access-2015-12-11-08_05_01.log |  grep 218.6.70.170 |  gawk -F@  '{print $1 $5 $9 $17}'
-url   ¶ÔÓ¦ip :  cat v6_nginx01-tomcat_access-2015-12-13-11_05_01.log |  gawk -F@  '{print $1 $5  $9}' |  grep '/m/getCache.do?key=REPACKET_ONOFF' |  gawk -F@  '{print $1 $5 $9 $17}'
+IPåœ°å€æ’åºï¼š    cat v6_nginx01-tomcat_access-2015-12-11-08_05_01.log |  gawk -F@  '{print $1}' | grep -v '^[[:space:]]*$'  | sort |uniq -c  | sort -s -n -k 1,1
+urlæ’åºï¼š       cat v6_nginx01-tomcat_access-2015-12-11-08_05_01.log |  gawk -F@  '{print $9}' | grep -v '^[[:space:]]*$'  | sort |uniq -c  | sort -s -n -k 1,1
+IPåœ°å€å¯¹åº”urlï¼š cat v6_nginx01-tomcat_access-2015-12-11-08_05_01.log |  grep 218.6.70.170 |  gawk -F@  '{print $1 $5 $9 $17}'
+url   å¯¹åº”ip :  cat v6_nginx01-tomcat_access-2015-12-13-11_05_01.log |  gawk -F@  '{print $1 $5  $9}' |  grep '/m/getCache.do?key=REPACKET_ONOFF' |  gawk -F@  '{print $1 $5 $9 $17}'
 
-url: XXXX·ÃÎÊ·ÖÎö
-url£ºXXXXÔÚÃ¿¸öÎÄ¼şÖĞ³öÏÖ¹ı¶àÉÙ´Î    £º    find ./ -name "*ng*" -exec sh -c 'echo -n {} " ";grep "Code=xft_cqs" {} | wc -l  '  \;
-url£ºXXXXÃ¿¸öÎÄ¼şÃ¿´Î³öÏÖµÄipµØÖ·µÈ  £º    find ./ -name "*ng*" -exec sh -c 'grep "XXXX" {} | gawk -F@  "{print  \$1 }" ' \;
-·ÃÎÊ´Ëurl£ºXXXX·ÖÎö ipµØÖ·ÅÅĞò       £º    find ./ -name "*ng*" -exec sh -c 'grep "XXXX" {} | gawk -F@  "{print  \$1 }" ' \; |  grep -v '^[[:space:]]*$'  | sort |uniq -c  | sort -s -n -k 1,1
+url: XXXXè®¿é—®åˆ†æ
+urlï¼šXXXXåœ¨æ¯ä¸ªæ–‡ä»¶ä¸­å‡ºç°è¿‡å¤šå°‘æ¬¡    ï¼š    find ./ -name "*ng*" -exec sh -c 'echo -n {} " ";grep "Code=xft_cqs" {} | wc -l  '  \;
+urlï¼šXXXXæ¯ä¸ªæ–‡ä»¶æ¯æ¬¡å‡ºç°çš„ipåœ°å€ç­‰  ï¼š    find ./ -name "*ng*" -exec sh -c 'grep "XXXX" {} | gawk -F@  "{print  \$1 }" ' \;
+è®¿é—®æ­¤urlï¼šXXXXåˆ†æ ipåœ°å€æ’åº       ï¼š    find ./ -name "*ng*" -exec sh -c 'grep "XXXX" {} | gawk -F@  "{print  \$1 }" ' \; |  grep -v '^[[:space:]]*$'  | sort |uniq -c  | sort -s -n -k 1,1
                                            zcat v6_nginx01_20160713.tar.gz | sed -n  "/2016:16:00/,/2016:16:30/p"|  grep "/v5_mobile/mobile/xplan/newPlanListandFund2.html"| gawk -F@  '{print  $1 }' |  grep -v '^[[:space:]]*$'   | sort |uniq -c  | sort -s -n -k 1,1 
-·ÃÎÊ´Ëurl£ºXXXX×Ü´ÎÊı                £º    find ./ -name "*ng*" -exec sh -c 'grep "Code=xft_cqs" {} | gawk -F@  "{print \$1 }" ' \; |  grep -v '^[[:space:]]*$'  | sort |uniq -c  | sort -s -n -k 1,1 | gawk  '{ sum+=$1 } END{ print sum }'
+è®¿é—®æ­¤urlï¼šXXXXæ€»æ¬¡æ•°                ï¼š    find ./ -name "*ng*" -exec sh -c 'grep "Code=xft_cqs" {} | gawk -F@  "{print \$1 }" ' \; |  grep -v '^[[:space:]]*$'  | sort |uniq -c  | sort -s -n -k 1,1 | gawk  '{ sum+=$1 } END{ print sum }'
 
-·ÃÎÊ´ÎÊı:¾ßÌåµÚ¼¸·ÖÖÓ cat ./v6_nginx01-tomcat_access-2016-04-29-05_05_01.log |  grep 118.193.192.62  |  gawk -F@  '{print $1 $5 $9 $17}' | awk -F: '{print  $3 }'  |uniq  -c |sort -s -n -k 1.1
+è®¿é—®æ¬¡æ•°:å…·ä½“ç¬¬å‡ åˆ†é’Ÿ cat ./v6_nginx01-tomcat_access-2016-04-29-05_05_01.log |  grep 118.193.192.62  |  gawk -F@  '{print $1 $5 $9 $17}' | awk -F: '{print  $3 }'  |uniq  -c |sort -s -n -k 1.1
 
 ========================   DHCP section  ==============================
 
 
-DHCP client µØÖ·£º 
+DHCP client åœ°å€ï¼š 
 debian :  /var/lib/dhcp/dhclient.eth1.leases
 centos7: /var/lib/dhclient/dhclient-66ad3be3-4b10-4647-808b-70ddf469d2ba-enp0s3.lease
 #To release the DHCP address on the system
@@ -3866,7 +3869,7 @@ lock
 connect-delay 5000
 name "ranbiao"
 password "ranbiao"
-¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤
+Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·
 
 
 ===========================  samba section  ==========================================
@@ -3906,7 +3909,7 @@ centos7: yum install -y krb5-server krb5-workstation pam_krb5
  kinit  or kinit principal(supply kinit with the name of the correct principal as an argument on the command line)
  klist
 ```````````````````````````````
- ĞŞ¸ÄÃÜÂë£º
+ ä¿®æ”¹å¯†ç ï¼š
  cpw -pw E431e431 user01
  kadmin -q "change_password -pw <newpassword>  <username>"
 =============================hadoop section================
@@ -4010,17 +4013,17 @@ lvs
 pvdisplay
 lvdisplay
 
-dev/sdc3ÎªLVM·ÖÇø£¬Ãû×Ö½Ğ/dev/ubuntu-vg/£¬ÊÇÒ»¸öÎïÀí¾í£¨pvs¡¢pvdisplay£©
-1¡¢ÓÃgparted dev/sdc3ÖØĞÂ¸Ä±ä·ÖÇø´óĞ¡
-2¡¢À©ÈİÎïÀí¾í£¬sudo pvresize /dev/sdc3
-3¡¢À©ÈİÂß¼­¾í£¬sudo lvextend /dev/ubuntu-vg/root  /dev/sdc3
-4¡¢À©ÈİÎÄ¼şÏµÍ³
+dev/sdc3ä¸ºLVMåˆ†åŒºï¼Œåå­—å«/dev/ubuntu-vg/ï¼Œæ˜¯ä¸€ä¸ªç‰©ç†å·ï¼ˆpvsã€pvdisplayï¼‰
+1ã€ç”¨gparted dev/sdc3é‡æ–°æ”¹å˜åˆ†åŒºå¤§å°
+2ã€æ‰©å®¹ç‰©ç†å·ï¼Œsudo pvresize /dev/sdc3
+3ã€æ‰©å®¹é€»è¾‘å·ï¼Œsudo lvextend /dev/ubuntu-vg/root  /dev/sdc3
+4ã€æ‰©å®¹æ–‡ä»¶ç³»ç»Ÿ
    An ext4 file system may be grown while mounted using the resize2fs command:
    resize2fs /dev/mapper/ubuntu--vg-root
-   »òresize2fs /mount/dir
+   æˆ–resize2fs /mount/dir
    
  
-``````ĞŞ¸Ävg Ãû³Æ```````````
+``````ä¿®æ”¹vg åç§°```````````
 lvm vgchange -a n
 sudo vgrename   ubuntu-vg  ubuntu-vg-lacie
 
@@ -4029,7 +4032,7 @@ sudo vgrename   ubuntu-vg  ubuntu-vg-lacie
 ansible cloudera_redis          -m shell  -a   "yum -y install make gcc tcl"
  /usr/local/redis/redis-cli keys *dic_common_BORROW_TYPE*
  /usr/local/redis/redis-cli del   "\"dic_common_BORROW_TYPE_13\""
-²éÑ¯channel¸öÊı
+æŸ¥è¯¢channelä¸ªæ•°
  pubsub channels *
  pubsub numsub "trade_transfer_result_topic"
 `````aria2 section```download section``````
@@ -4044,12 +4047,12 @@ aria2c  https://github.com/antirez/redis/archive/2.8.23.tar.gz  --check-certific
 
 ``````redis install section ````
 http://heylinux.com/archives/1942.html
-·½·¨Ò»£º
+æ–¹æ³•ä¸€ï¼š
 wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
 rpm -ivh  epel-release-latest-6.noarch.rpm
 yum -y  install redis.x86_64
 service redis start
-·½·¨¶ş£º
+æ–¹æ³•äºŒï¼š
 tar zxvf redis2.8.23.tar.gz
 cd redis-2.8.23/src
 yum -y groupinstall "Development Tools && make && make install
@@ -4060,8 +4063,8 @@ mkdir  /etc/redis && mkdir /var/lib/redis && cd /root/redis-3.2.0/ && sed -e "s/
 /usr/local/bin/redis-server /etc/redis/redis.conf
 ````
 vi /etc/keepalived/keepalived.conf
-state BACKUP                                ###ÉèÖÃÎªBACKUP
-priority 100                            ###È¨ÖØÖµ
+state BACKUP                                ###è®¾ç½®ä¸ºBACKUP
+priority 100                            ###æƒé‡å€¼
 ```````````
 vi /etc/redis/redis.conf
 #bind 127.0.0.1
@@ -4204,8 +4207,10 @@ exportfs -rav  reload /etc/exports file.
 yum -y install showmount
 showmount -e 192.168.0.100
 mount -t nfs 192.168.0.100:/nfsshare /mnt/nfsshare
+
+æ£€æŸ¥mountç›®å½•è¢«è°ä½¿ç”¨äº† sudo lsof  | grep /my-wd-disk
 ````````
-Åöµ½´Ë´íÎóÊ±£¬ÓÃÈçÏÂÃüÁî£ºmount.nfs: access denied by server while mounting 192.168.31.178:/root/docker_test
+ç¢°åˆ°æ­¤é”™è¯¯æ—¶ï¼Œç”¨å¦‚ä¸‹å‘½ä»¤ï¼šmount.nfs: access denied by server while mounting 192.168.31.178:/root/docker_test
 mount -t nfs  -o nfsvers=3  192.168.31.178:/root/docker_test    /root/mnt/
 ``````````````````````
 mount -o loop disk1.iso /mnt/disk
@@ -4230,23 +4235,23 @@ aria2c  https://github.com/antirez/redis/archive/2.8.23.tar.gz
 
 ```keepalived````````
 
-·½°¸1£º
+æ–¹æ¡ˆ1ï¼š
 aria2c  http://www.keepalived.org/software/keepalived-1.2.7.tar.gz
 yum install -y net-snmp.x86_64 net-snmp-devel.x86_64
 ./configure && make && make install
 
-·½°¸2 (¿ÉÄÜ²»ĞèÒªipvsadm¹¤¾ß£©:
+æ–¹æ¡ˆ2 (å¯èƒ½ä¸éœ€è¦ipvsadmå·¥å…·ï¼‰:
 yum install gcc kernel-headers kernel-devel
 yum install keepalived -y
 service keepalived start
 ``````````````````````````
 /etc/keepalived/keepalived.conf
-    ÔÚÍ¬Ò»Íø¶ÎÄÚ²»Í¬keepalived¼¯ÈºµÄ virtual_router_id Öµ²»ÄÜÏàÍ¬£¬
-	                keepalived¼¯ÈºÄÚµÄvirtual_router_id±ØĞëÏàÍ¬
-	Èç¹ûÏàÍ¬»áÔÚmessagesÖĞÊÕµ½VRRP´íÎó°ü 
-    ËùÒÔĞèÒª¸ü¸Ä virual_router_id 
+    åœ¨åŒä¸€ç½‘æ®µå†…ä¸åŒkeepalivedé›†ç¾¤çš„ virtual_router_id å€¼ä¸èƒ½ç›¸åŒï¼Œ
+	                keepalivedé›†ç¾¤å†…çš„virtual_router_idå¿…é¡»ç›¸åŒ
+	å¦‚æœç›¸åŒä¼šåœ¨messagesä¸­æ”¶åˆ°VRRPé”™è¯¯åŒ… 
+    æ‰€ä»¥éœ€è¦æ›´æ”¹ virual_router_id 
 	
- advert_int 1   #×é²¥ĞÅÏ¢·¢ËÍ¼ä¸ô£¬Á½¸ö½ÚµãÉèÖÃ±ØĞëÒ»Ñù
+ advert_int 1   #ç»„æ’­ä¿¡æ¯å‘é€é—´éš”ï¼Œä¸¤ä¸ªèŠ‚ç‚¹è®¾ç½®å¿…é¡»ä¸€æ ·
 ```````````````````````
 
 
@@ -4296,7 +4301,7 @@ iscsiadm -m session -o show
 
 
   iscsi-shutdown.service                 loaded    active   exited  Logout off all iSCSI sessions on shutdown
-  iscsi.service                          loaded    active   exited  Login and scanning of iSCSI devices ÎÒÍ£µô´Ë·şÎñ£¬ÈÃËûÍ£Ö¹É¨Ãè¹Ø±ÕµÄiscsi·şÎñ
+  iscsi.service                          loaded    active   exited  Login and scanning of iSCSI devices æˆ‘åœæ‰æ­¤æœåŠ¡ï¼Œè®©ä»–åœæ­¢æ‰«æå…³é—­çš„iscsiæœåŠ¡
   iscsid.service                         loaded    active   running Open-iSCSI
   iscsiuio.service                       loaded    inactive dead    iSCSI UserSpace I/O driver
   
@@ -4334,11 +4339,11 @@ sudo yum -y install recode
 recode UTF-8  grains.*
 file -bi grains.test_nginx
 =============ruby section================
-ºáÏò´òÓ¡³öIPµØÖ·
+æ¨ªå‘æ‰“å°å‡ºIPåœ°å€
 RUBY_SCRIPT="data = YAML::load(STDIN.read); puts data['ct-base-KVM_HOST-fix01-31-200.xinxindai.com'].join(' '); puts data['stage_v6_lvs01'].join(' ')"
 cat office.ip.list |ruby -ryaml -e "$RUBY_SCRIPT"
 `````````````
-´òÓ¡³ö·şÎñÆ÷Ãû³Æ
+æ‰“å°å‡ºæœåŠ¡å™¨åç§°
 RUBY_SCRIPT="data = YAML::load(STDIN.read); array = data.keys; puts array"
 cat office.ip.list |ruby -ryaml -e "$RUBY_SCRIPT"
 ```````````
@@ -4360,9 +4365,9 @@ array = data.keys;
 #puts "#{data.keys}:#{data.value}"
 data.each { |inner| puts inner.join(' ') }
 -----
-Ö´ĞĞÃüÁî£ºruby ip-list.rb
+æ‰§è¡Œå‘½ä»¤ï¼šruby ip-list.rb
 `````````````````````````````````````
-ÁíÒ»ÖÖ±éÀú·½Ê½
+å¦ä¸€ç§éå†æ–¹å¼
 data.each do |key,value|
   puts "#{key}:#{value.join(' ')}"
 end1
@@ -4370,10 +4375,10 @@ end1
 
 ====sed section awk section========
 sed -e "s/stage_/\/stage/g" -e "s/v6_webservice/\/webservice\//g"
-É¾³ıµÚËÄĞĞ
+åˆ é™¤ç¬¬å››è¡Œ
 sed   -i.bak   '4d' /etc/hosts  
 cat /proc/mounts | grep -E "\b(btrfs|ext2|ext3|ext4|jfs|reiser|xfs|ffs|ufs|jfs|jfs2|vxfs|hfs|ntfs|fat32|zfs)\b" |awk 'BEGIN{printf "{\n\"data\":[\n"} {printf "{\"{#DEV_NAME}\" : \"%s\",\"{#FS_NAME}\" : \"%s\",\"{#SEC_SIZE}\" : ",$1,$2;system("blockdev --getss " $1 " |tr -d \"\n\"  ") ;printf "},\n"}   END{printf "  ]\n}\n"} '   | tac | sed  '3s/\({.*}\),/\1/g'|tac
-É¾³ı¿ÕĞĞ
+åˆ é™¤ç©ºè¡Œ
 sed '/^\s*$/d' 
 
 find ./grains.test_* | xargs -I {} sed  -i  "s/ci\/files\/test_v6_mobile/wujunrong\/xxd_configure\/test\/v6\/mobile/g;w /dev/stdout"   {}
@@ -4406,7 +4411,7 @@ rdesktop 192.168.1.23 -k de -g 1500x1150 -r disk:mydisk=/home/soma
 ~/.gitconfig or ~/.config/git/config          git config  --global 
 .git/config                                   Specific to that single repository
 
-``````````³õÊ¼»¯ git``````````
+``````````åˆå§‹åŒ– git``````````
 svn mkdir <url> -m <msg>
 cd <localdir>
 svn co <url> .
@@ -4418,16 +4423,16 @@ git config --list
 git config user.name
     git config --global user.name "Your Name"
     git config --global user.email you@example.com
-````````³õ´ÎÊ¹ÓÃgitÒªÉèÖÃ```
+````````åˆæ¬¡ä½¿ç”¨gitè¦è®¾ç½®```
  git config --list
  git config --global user.name "wujunrong"
  git config --global user.email "wujunrong@xinxindai.com"
  git config --global core.editor "'C:/Program Files (x86)/Notepad++/notepad++.exe' -multiInst -nosession"
- ´´½¨ÒªÇ¨ÒÆµÄ²Ö¿âÎÄ¼ş
- git clone --bare my_project my_project.git £¨µÈ¼ÛÓÚ£ºcp -Rf my_project/.git my_project.git£©
+ åˆ›å»ºè¦è¿ç§»çš„ä»“åº“æ–‡ä»¶
+ git clone --bare my_project my_project.git ï¼ˆç­‰ä»·äºï¼šcp -Rf my_project/.git my_project.gitï¼‰
  scp -r my_project.git user@git.example.com:/srv/git
  git clone user@git.example.com:/srv/git/my_project.git
- ÉèÖÃ×éÈ¨ÏŞ
+ è®¾ç½®ç»„æƒé™
  $ ssh user@git.example.com
  $ cd /srv/git/my_project.git
  $ git init --bare --shared
@@ -4440,43 +4445,43 @@ git config user.name
   track the remote master branch (or whatever the default branch is called) on
   the server you cloned from. Running git pull generally fetches data from the
   server you originally cloned from and automatically tries to merge it into the
-  code you¡¯re currently working on.
+  code youâ€™re currently working on.
 
   git remote
   git remote -v
-  ³õÊ¼»¯Ô¶³ÌµØÖ·
+  åˆå§‹åŒ–è¿œç¨‹åœ°å€
   git remote add salt-office  root@172.16.15.88:/srv/git/svn_repository.git
   git remote set-url origin   root@172.16.15.88:/srv/git/xxd_doc_repo.git
-  ³õÊ¼»¯Ô¶³ÌÄ¬ÈÏpush·ÖÖ§£¬
-  git push --set-upstream salt-office master  #ÍÆËÍµ±Ç°·ÖÖ§²¢½¨Á¢ÓëÔ¶³ÌÉÏÓÎµÄ¸ú×Ù
+  åˆå§‹åŒ–è¿œç¨‹é»˜è®¤pushåˆ†æ”¯ï¼Œ
+  git push --set-upstream salt-office master  #æ¨é€å½“å‰åˆ†æ”¯å¹¶å»ºç«‹ä¸è¿œç¨‹ä¸Šæ¸¸çš„è·Ÿè¸ª
 
   git push origin master
 `````````````
-´´½¨ÖĞĞÄ²Ö¿â£¬ÊÇ¿Õ²Ö¿â£¬È»ºóÓÃpushÍù²Ö¿âÖĞÌí¼Ó
-1¡¢·şÎñÆ÷¶Ë£¬´´½¨¿Õ²Ö¿â£¬È»ºóÍ¨¹ı¿Í»§¶Ë£¬ÓÃpushÍù²Ö¿âÖĞÌí¼Ó
+åˆ›å»ºä¸­å¿ƒä»“åº“ï¼Œæ˜¯ç©ºä»“åº“ï¼Œç„¶åç”¨pushå¾€ä»“åº“ä¸­æ·»åŠ 
+1ã€æœåŠ¡å™¨ç«¯ï¼Œåˆ›å»ºç©ºä»“åº“ï¼Œç„¶åé€šè¿‡å®¢æˆ·ç«¯ï¼Œç”¨pushå¾€ä»“åº“ä¸­æ·»åŠ 
    git --bare init  #bare repositories (by definition) don't have a working tree attached to them, so you can't easily add files to them as you would in a normal non-bare repository (e.g. with git add <file> and a subsequent git commit.)
                   You almost always update a bare repository by pushing to it (using git push) from another repository.
-   »ò git init --bare  jenkins-test.git
-2¡¢Ê×¸ö¿Í»§¶Ë£¬ÉÏ´«Òª°æ±¾¹ÜÀíµÄÎÄ¼şµ½·şÎñÆ÷
+   æˆ– git init --bare  jenkins-test.git
+2ã€é¦–ä¸ªå®¢æˆ·ç«¯ï¼Œä¸Šä¼ è¦ç‰ˆæœ¬ç®¡ç†çš„æ–‡ä»¶åˆ°æœåŠ¡å™¨
    git init
    git add work_memo.txt
-   ³õÊ¼»¯Ô¶³ÌµØÖ·
+   åˆå§‹åŒ–è¿œç¨‹åœ°å€
    git remote add salt-office  root@172.16.15.88:/srv/git/svn_repository.git
-   ³õÊ¼»¯Ô¶³ÌÄ¬ÈÏpush·ÖÖ§£¬
-   git push --set-upstream salt-office master  #ÍÆËÍµ±Ç°·ÖÖ§²¢½¨Á¢ÓëÔ¶³ÌÉÏÓÎµÄ¸ú×Ù
+   åˆå§‹åŒ–è¿œç¨‹é»˜è®¤pushåˆ†æ”¯ï¼Œ
+   git push --set-upstream salt-office master  #æ¨é€å½“å‰åˆ†æ”¯å¹¶å»ºç«‹ä¸è¿œç¨‹ä¸Šæ¸¸çš„è·Ÿè¸ª
    git push
-3¡¢µÚ¶ş¸ö¿Í»§¶Ë´Ó·şÎñÆ÷ÏÂÔØ
+3ã€ç¬¬äºŒä¸ªå®¢æˆ·ç«¯ä»æœåŠ¡å™¨ä¸‹è½½
    git init
    git remote add  origin   root@172.16.15.88:/srv/git/xxd_doc_repo.git
    git fetch
    git checkout -t origin/master #-t will set the upstream branch for you
    git commit -a -m "change command text"
    git push
-   git pull  -s  resolve #pullµÄÊ±ºòÄãÕâ±ßÒÑ¾­±»svn update¸ÄÁË£¬pullµÄÊ±ºòĞèÒªÖ¸¶¨merge²ßÂÔ
+   git pull  -s  resolve #pullçš„æ—¶å€™ä½ è¿™è¾¹å·²ç»è¢«svn updateæ”¹äº†ï¼Œpullçš„æ—¶å€™éœ€è¦æŒ‡å®šmergeç­–ç•¥
 `````````
         git archive   --format=tar --remote=/srv/git/xxd_code_repo.git/           master                    | tar -xf -
-×ÓÄ¿Â¼£ºgit archive   --format=tar --remote=ssh://remote_server/remote_repository master path1/ path2/      | tar -xv
-µ¼³ö¾ßÌåÎÄ¼ş£º        
+å­ç›®å½•ï¼šgit archive   --format=tar --remote=ssh://remote_server/remote_repository master path1/ path2/      | tar -xv
+å¯¼å‡ºå…·ä½“æ–‡ä»¶ï¼š        
 		git archive   --format=tar --remote=/srv/git/xxd_code_repo.git            HEAD -- ansible.hosts     | tar -xf -
         git archive   --format=tar --remote=/srv/git/xxd_code_repo.git            HEAD -- ansible.hosts     | tar -xf - -C /etc/ansible
 
@@ -4515,13 +4520,13 @@ git remote show     origin
 git remote rename   pb     paul
 git remote rm       paul
 
-git commit --amend #Undoing Things:ÖØĞÂcommit
+git commit --amend #Undoing Things:é‡æ–°commit
 
 git tag
 git tag -l "v1.8.5*"
 git tag -a v1.4      -m "my version 1.4"
 git show   v1.4
-git tag    v1.4-lw             #To create a lightweight tag, don¡¯t supply the -a, -s, or -m option
+git tag    v1.4-lw             #To create a lightweight tag, donâ€™t supply the -a, -s, or -m option
 git tag -a v1.2     9fceb02    #you specify the commit checksum (or part of it) at the end of the command   
 
 git push origin   v1.5
@@ -4531,7 +4536,7 @@ git checkout -b [branchname] [tagname]:
 git checkout -b version2     v2.0.0
 
 git branch   testing
-ÇĞ»»±¾µØ·ÖÖ§
+åˆ‡æ¢æœ¬åœ°åˆ†æ”¯
 git checkout testing   #To switch to an existing branch
 git checkout master
 
@@ -4547,16 +4552,16 @@ RUN   rpm -ivh http://repo.zabbix.com/zabbix/2.4/rhel/6/x86_64/zabbix-release-2.
 	  
 (! cat /etc/zabbix/zabbix_agentd.conf |  grep 'EnableRemoteCommands=1' )&&  sed -i.bak 's/# EnableRemoteCommands=0/# EnableRemoteCommands=0\nEnableRemoteCommands=1/g'  /etc/zabbix/zabbix_agentd.conf
 	  
-¡¤¡¤¡¤¡¤¡¤¡¤¡¤zabbix server ×ÔÉí¼à¿Ø£¬ip µØÖ·ÅäÖÃ¡¤¡¤¡¤¡¤
+Â·Â·Â·Â·Â·Â·Â·zabbix server è‡ªèº«ç›‘æ§ï¼Œip åœ°å€é…ç½®Â·Â·Â·Â·
 Administration->Installation 
-ÅäÖÃÏîÄ¿£º·şÎñÆ÷µØÖ·£¬Êı¾İ¿âµÈ£¬
-ÅäÖÃĞÅÏ¢Ğ´ÔÚ/etc/zabbix/web/zabbix.conf.phpÎÄ¼şÖĞ
+é…ç½®é¡¹ç›®ï¼šæœåŠ¡å™¨åœ°å€ï¼Œæ•°æ®åº“ç­‰ï¼Œ
+é…ç½®ä¿¡æ¯å†™åœ¨/etc/zabbix/web/zabbix.conf.phpæ–‡ä»¶ä¸­
 ```````````````
 mysql -uroot -pE431e4311! -e"GRANT USAGE ON *.* TO 'zabbix'@'127.0.0.1' IDENTIFIED BY 'E431e4311!'";
 mysql -uroot -pE431e4311! -e"GRANT USAGE ON *.* TO 'zabbix'@'localhost' IDENTIFIED BY 'E431e4311!'";
 mysql -uroot -pE431e4311! -e"flush privileges"
 mysql -uzabbix -pE431e4311! -e"status"
-µÚ¶ş²½£º
+ç¬¬äºŒæ­¥ï¼š
 vi /etc/zabbix/.my.cnf
 [mysql]
 user=zabbix
@@ -4564,16 +4569,16 @@ password=E431e4311!
 [mysqladmin]
 user=zabbix
 password=E431e4311!
-µÚÈı²½£º
+ç¬¬ä¸‰æ­¥ï¼š
 Edit the file /etc/zabbix/zabbix_agentd.d/userparameter_mysql.conf and 
 replace HOME=/var/lib/zabbix with HOME=/etc/zabbix (should appear three times).
-µÚËÄ²½:
+ç¬¬å››æ­¥:
 service zabbix-agent restart
 systemctl start   zabbix-agent.service
 ``````mysql monitor`````	  
-yum -y install unixODBC unixODBC-devel  mysql-connector-odbc  #Êı¾İ¿â¼à¿Ø,mysql-connector-odbcÊÇmysqlµÄodbcÇı¶¯
-¹²Á½¸öÅäÖÃÎÄ¼ş
-vi /etc/odbcinst.ini ÀïÃæÁĞ³öÁËËùÓĞÇı¶¯
+yum -y install unixODBC unixODBC-devel  mysql-connector-odbc  #æ•°æ®åº“ç›‘æ§,mysql-connector-odbcæ˜¯mysqlçš„odbcé©±åŠ¨
+å…±ä¸¤ä¸ªé…ç½®æ–‡ä»¶
+vi /etc/odbcinst.ini é‡Œé¢åˆ—å‡ºäº†æ‰€æœ‰é©±åŠ¨
 vi /etc/odbc.ini
 
 [zabbix_mysql_monitor]
@@ -4585,7 +4590,7 @@ Password    = E431e4311!
 Port        = 3306
 Database    = zabbix
 	      
-²âÊÔ/etc/odbc.iniÃüÁî£ºisql zabbix_mysql_monitor
+æµ‹è¯•/etc/odbc.iniå‘½ä»¤ï¼šisql zabbix_mysql_monitor
 service zabbix-server restart
 `````zabbix ipmi`````
 # vi /etc/zabbix/zabbix_server.conf
@@ -4601,7 +4606,7 @@ service zabbix-server restart
 
 
 ``````````zabbix media script````````````
-ÀıÈçÎ¢ĞÅ·¢ËÍ½Å±¾£¬Î¢ĞÅ·¢ËÍ½Å±¾ÀàËÆÓÚemail media
+ä¾‹å¦‚å¾®ä¿¡å‘é€è„šæœ¬ï¼Œå¾®ä¿¡å‘é€è„šæœ¬ç±»ä¼¼äºemail media
 vi /etc/zabbix/zabbix_server.conf
      AlertScriptsPath=/usr/lib/zabbix/alertscripts
 	 
@@ -4616,7 +4621,7 @@ vi /etc/zabbix/zabbix_server.conf
 sudo systemctl restart zabbix-agent.service
 service   zabbix-agent start
 `````zabbix install````
-°²×°mysql
+å®‰è£…mysql
 grep 'temporary password' /var/log/mysqld.log
 shell> mysql -uroot -pE431e4311!
 
@@ -4634,7 +4639,7 @@ mysql> grant all privileges on zabbix.* to zabbix@localhost identified by 'E431e
 mysql> FLUSH PRIVILEGES;
 mysql> quit;	  
 vi /etc/httpd/conf.d/zabbix.conf
-     #ĞŞ¸ÄÊ±Çø
+     #ä¿®æ”¹æ—¶åŒº
      php_value date.timezone China/Shanghai  
 
 	  
@@ -4644,7 +4649,7 @@ DBName=zabbix
 DBUser=zabbix
 DBPassword=E431e4311!
 
-ÏÂÔØÔ´´úÂë£¬»ñÈ¡Êı¾İ¿â³õÊ¼»¯½Å±¾
+ä¸‹è½½æºä»£ç ï¼Œè·å–æ•°æ®åº“åˆå§‹åŒ–è„šæœ¬
 curl -O  http://iweb.dl.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/2.4.7/zabbix-2.4.7.tar.gz
 curl   http://iweb.dl.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/2.4.7/zabbix-2.4.7.tar.gz -o /root/zabbix-2.4.7.tar.gz
 yum -y install tar
@@ -4653,21 +4658,21 @@ mysql -uzabbix -pE431e4311! zabbix  < /root/zabbix-2.4.7/database/mysql/schema.s
 mysql -uzabbix -pE431e4311! zabbix  < /root/zabbix-2.4.7/database/mysql/images.sql 
 mysql -uzabbix -pE431e4311! zabbix  < /root/zabbix-2.4.7/database/mysql/data.sql 
 ``````zabbix percona`
-mysql zabbix agent²å¼ş:
+mysql zabbix agentæ’ä»¶:
 yum install http://www.percona.com/downloads/percona-release/redhat/0.1-3/percona-release-0.1-3.noarch.rpm
 yum install percona-zabbix-templates
 zabbix server:
 wget https://www.percona.com/downloads/percona-monitoring-plugins/1.1.6/percona-zabbix-templates-1.1.6-1.noarch.rpm
 
 ``````````zabbix agent section```zabbix client``````````	 
-·½·¨Ò»£ºÓÃepel°²×°(Ä¿Ç°Ö»ÓĞÀÏ°æ±¾)
+æ–¹æ³•ä¸€ï¼šç”¨epelå®‰è£…(ç›®å‰åªæœ‰è€ç‰ˆæœ¬)
 wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
 rpm -ivh epel-release-latest-6.noarch.rpm
 yum upgrade ca-certificates --disablerepo=epel -y
 yum -y install zabbix-agent
 
 
-·½·¨¶ş£º´Ó¹ÙÍøÏÂÔØyumÔ´
+æ–¹æ³•äºŒï¼šä»å®˜ç½‘ä¸‹è½½yumæº
 CentOS/RHEL 7:# rpm -Uvh http://repo.zabbix.com/zabbix/2.2/rhel/7/x86_64/zabbix-release-2.2-1.el7.noarch.rpm
            sudo rpm -ivh http://repo.zabbix.com./zabbix/2.4/rhel/7/x86_64/zabbix-release-2.4-1.el7.noarch.rpm
 CentOS/RHEL 6:# rpm -Uvh http://repo.zabbix.com/zabbix/2.2/rhel/6/x86_64/zabbix-release-2.2-1.el6.noarch.rpm
@@ -4676,31 +4681,31 @@ CentOS/RHEL 6:# rpm -Uvh http://repo.zabbix.com/zabbix/2.2/rhel/6/x86_64/zabbix-
                 rpm -ivh  http://repo.zabbix.com/zabbix/2.4/rhel/6/x86_64/zabbix-agent-2.4.7-1.el6.x86_64.rpm
 CentOS/RHEL 5:# rpm -Uvh http://repo.zabbix.com/zabbix/2.2/rhel/5/x86_64/zabbix-release-2.2-1.el5.noarch.rpm
 
-`````````ÔÊĞíÔ¶³Ìcommand`````
+`````````å…è®¸è¿œç¨‹command`````
 (! cat /etc/zabbix/zabbix_agentd.conf |  grep 'EnableRemoteCommands=1' )&&  sed -i.bak 's/# EnableRemoteCommands=0/# EnableRemoteCommands=0\nEnableRemoteCommands=1/g'  /etc/zabbix/zabbix_agentd.conf
 ``````````````````
 vi /etc/zabbix/zabbix_agentd.conf
-1¡¢ÅäÖÃ·şÎñÆ÷µØÖ·
+1ã€é…ç½®æœåŠ¡å™¨åœ°å€
 #Server=[zabbix server ip]
-#Hostname=[ Hostname of client system ]×¢ÊÍµôHostnameÕâÒ»ĞĞ£¬Ê¹µÃ×Ô¶¯×¢²áÄÜÓÃhostnameÃüÁîÀ´ÃüÃû»úÆ÷£¬Active checkÊ±£¬agentÓÃÕâ¸öÖµÏòserverÖ÷¶¯·¢ÆğÇëÇó
+#Hostname=[ Hostname of client system ]æ³¨é‡Šæ‰Hostnameè¿™ä¸€è¡Œï¼Œä½¿å¾—è‡ªåŠ¨æ³¨å†Œèƒ½ç”¨hostnameå‘½ä»¤æ¥å‘½åæœºå™¨ï¼ŒActive checkæ—¶ï¼Œagentç”¨è¿™ä¸ªå€¼å‘serverä¸»åŠ¨å‘èµ·è¯·æ±‚
    Server=192.168.1.11
    #Hostname=Zabbix server
-2¡¢ÅäÖÃÔÊĞízabbix serverÔ¶³ÌÔÚagentÖ´ĞĞÃüÁî
+2ã€é…ç½®å…è®¸zabbix serverè¿œç¨‹åœ¨agentæ‰§è¡Œå‘½ä»¤
 vi /etc/zabbix/zabbix_agentd.conf
    EnableRemoteCommands=1
    Server=172.16.15.87
-3¡¢ÅäÖÃÔÊĞízabbix serverÔ¶³ÌÔÚagentÖ´ĞĞsudo   
+3ã€é…ç½®å…è®¸zabbix serverè¿œç¨‹åœ¨agentæ‰§è¡Œsudo   
    Cmnd_Alias ZABBIXCMD = /sbin/service
    zabbix ALL = NOPASSWD: ZABBIXCMD
-4¡¢ÔÊĞízabbix serverÔ¶³ÌÔÚagentÖ´ĞĞsudoÊ±²»ĞèÒªtty
+4ã€å…è®¸zabbix serverè¿œç¨‹åœ¨agentæ‰§è¡Œsudoæ—¶ä¸éœ€è¦tty
    /etc/sudoers file (or any file it includes) has: Defaults requiretty
                                                   which makes sudo require a TTY. Red Hat systems (RHEL, Fedora...) have been known to require a TTY in default sudoers file. That provides no real security benefit and can be safely removed.   
-5¡¢Èç¹û²»ÊÇÓÃaction->autoregisteration¹¦ÄÜ£¬¼´×Ô¶¯±»zabbix server·¢ÏÖµÄ¹¦ÄÜ£¬ÔòÖ´ĞĞÏÂÃæÓï¾ä
+5ã€å¦‚æœä¸æ˜¯ç”¨action->autoregisterationåŠŸèƒ½ï¼Œå³è‡ªåŠ¨è¢«zabbix serverå‘ç°çš„åŠŸèƒ½ï¼Œåˆ™æ‰§è¡Œä¸‹é¢è¯­å¥
    To disable the active checks, clear the value of the ServerActive parameter:
    sudo sed -i 's/^ServerActive=127.0.0.1/ServerActive=/g' /etc/zabbix/zabbix_agentd.conf
 
 `````zabbix web````
-Go to: Configuration ¡ú Hosts (or Templates)
+Go to: Configuration â†’ Hosts (or Templates)
 Click on Web in the row of the host/template
 Click on Create scenario to the right (or on the scenario name to edit an existing scenario)
 Enter parameters of the scenario in the form
@@ -4709,24 +4714,24 @@ yum -y install zabbix zabbix-agent
 zabbix_agentd -V
 service zabbix-agent restart
 `````jmx section`````````````
-·½·¨Ò»£º
+æ–¹æ³•ä¸€ï¼š
 wget http://repo.zabbix.com/zabbix/2.4/rhel/6/x86_64/zabbix-java-gateway-2.4.7-1.el6.x86_64.rpm
 rpm -ivh zabbix-java-gateway-2.4.7-1.el6.x86_64.rpm
-»ò rpm -ivh http://repo.zabbix.com/zabbix/2.4/rhel/6/x86_64/zabbix-java-gateway-2.4.7-1.el6.x86_64.rpm
+æˆ– rpm -ivh http://repo.zabbix.com/zabbix/2.4/rhel/6/x86_64/zabbix-java-gateway-2.4.7-1.el6.x86_64.rpm
 yum localinstall  zabbix-java-gateway-2.4.7-1.el6.x86_64.rpm 
 /zabbix-2.4.7/src/zabbix_java/startup.sh
-·½·¨¶ş£º
-´Óepel°²×° yum install -y zabbix-java-gateway
+æ–¹æ³•äºŒï¼š
+ä»epelå®‰è£… yum install -y zabbix-java-gateway
 
-Log into zabbix using Putty. Edit the config file ¡°zabbix_server.conf¡± using the command ¡°vi /etc/zabbix/zabbix_server.conf¡°. Un-comment the following lines (JavaGateway, JavaGatewayPort & StartJavaPollers) and enter the  JavaGateway IP address or Hostname, Leave port as default or change it to desired port for security and enter number of pre-forked instances of Java poller
+Log into zabbix using Putty. Edit the config file â€œzabbix_server.confâ€ using the command â€œvi /etc/zabbix/zabbix_server.confâ€œ. Un-comment the following lines (JavaGateway, JavaGatewayPort & StartJavaPollers) and enter the  JavaGateway IP address or Hostname, Leave port as default or change it to desired port for security and enter number of pre-forked instances of Java poller
 /etc/init.d/zabbix-java-gateway  start
 ```````````
-·ÃÎÊµØÖ·£º
+è®¿é—®åœ°å€ï¼š
 http://zabbix-frontend-hostname/zabbix 
 Default : Admin/zabbix.
 
 
-ÔÚdockerÖĞ°²×°zabbix
+åœ¨dockerä¸­å®‰è£…zabbix
 docker:
 service mysqld start && service zabbix-server start && /usr/sbin/httpd -DFOREGROUND
 docker commit --change='CMD ["/root/start.sh"]' -c "EXPOSE 80"  -c  "EXPOSE 10051"   nostalgic_ritchie   centos6/zabbix:final
@@ -4741,7 +4746,7 @@ zabbix item:
        system.run[/usr/bin/systemctl status rsyslog.service 2>/dev/null | grep Active]
 
 zabbix regular expression
-       Go to: Administration ¡ú General
+       Go to: Administration â†’ General
        Select Regular expressions from the dropdown
        Click on New regular expression
 
@@ -4788,28 +4793,28 @@ to display only commandlines without UID, PID, start time etc.
       yum install subversion    
       yum --enablerepo=epel install pysvn
    
-ÅäÖÃMySQL
-/etc/my.cnf, Ôö¼ÓÈçÏÂÄÚÈİ
+é…ç½®MySQL
+/etc/my.cnf, å¢åŠ å¦‚ä¸‹å†…å®¹
 
 [client]
 default-character-set=utf8
 [mysqld]
 character-set-server=utf8
-µÇÈëÊı¾İ¿â£¬ÃÜÂëÀ´×Ôsudo grep 'temporary password' /var/log/mysqld.log
+ç™»å…¥æ•°æ®åº“ï¼Œå¯†ç æ¥è‡ªsudo grep 'temporary password' /var/log/mysqld.log
 mysql -u root -pE431e431
 
-Ö´ĞĞÊı¾İÓï¾ä
+æ‰§è¡Œæ•°æ®è¯­å¥
 mysql> CREATE DATABASE reviewboard CHARACTER SET utf8;
 mysql> CREATE USER 'ranbiao'@'localhost' IDENTIFIED BY 'ranbiao!1';
 mysql> GRANT ALL PRIVILEGES ON reviewboard.* to 'ranbiao'@'localhost';
-Ö´ĞĞ½Å±¾£¬ÌîÎÊÌâ£¬´ó¶àÊıÈ¡Ä¬ÈÏÖµ
+æ‰§è¡Œè„šæœ¬ï¼Œå¡«é—®é¢˜ï¼Œå¤§å¤šæ•°å–é»˜è®¤å€¼
 rb-site install /var/www/reviews.example.com
 
 $ chown -R apache /var/www/reviews.example.com/htdocs/media/uploaded
 $ chown -R apache /var/www/reviews.example.com/data
 ln -s /var/www/html/reviews.example.com/apache-wsgi.conf /etc/httpd/conf.d/reviewboard-sitename.conf/etc/httpd/conf.d/reviewboard-sitename.conf
-vi /etc/httpd/conf.d/reviewboard-sitename.conf ,virtual machine ²ÎÊı¸Ä³É·şÎñÆ÷ipµØÖ·
-ÖØÆô httpd·şÎñ
+vi /etc/httpd/conf.d/reviewboard-sitename.conf ,virtual machine å‚æ•°æ”¹æˆæœåŠ¡å™¨ipåœ°å€
+é‡å¯ httpdæœåŠ¡
 
 ===========awk section===========
 awk -v ps_cri_ch=$page_space_usage_critical_threshold  -v ps_ch=$page_space_usage_threshold '{if($5<ps_cri_ch && $5>=ps_ch) print "Swap space usage rate " $5 "% exceeds threshold on "$1" "$2" " $3 }'
@@ -4821,7 +4826,7 @@ tail -f v6_webservice01-catalina.out -f v6_front03-catalina.out
 Cisco VPN Client for Windows 8 and 10
 1:Cisco VPN Client Fix for Windows 8 and 10 (64-bit)
    http://download.cnet.com/Cisco-VPN-Client-Fix-for-Windows-8-and-10-64-bit/3000-7240_4-76028219.html
-2: ¡°¿ªÊ¼¡± ¨C ¡°ÔËĞĞ¡± ¨C ¡°services.msc¡± ¨C Í£Ö¹ ¡°Internet Connection Sharing (ICS)¡±£¬»°ËµÕâÀàÎÊÌâËäÃ»Ê²Ã´¼¼Êõº¬Á¿£¬µ«Óöµ½µÄÊ±ºòÕæµÄºÜÈÃÈËÓôÃÆ¡£
+2: â€œå¼€å§‹â€ â€“ â€œè¿è¡Œâ€ â€“ â€œservices.mscâ€ â€“ åœæ­¢ â€œInternet Connection Sharing (ICS)â€ï¼Œè¯è¯´è¿™ç±»é—®é¢˜è™½æ²¡ä»€ä¹ˆæŠ€æœ¯å«é‡ï¼Œä½†é‡åˆ°çš„æ—¶å€™çœŸçš„å¾ˆè®©äººéƒé—·ã€‚
 ``````````
 ======windows section======
 services.msc
@@ -4854,9 +4859,9 @@ Subject: test email
 hello world!
 
 Note the blank like after the subject, 
-everything after this line is the body of the email. When you¡¯re finished, press Ctrl-D. 
+everything after this line is the body of the email. When youâ€™re finished, press Ctrl-D. 
 sSMTP may take a few seconds to send the message before closing.
-```````````·¢´ø¸½¼şµÄÓÊ¼ş``````````
+```````````å‘å¸¦é™„ä»¶çš„é‚®ä»¶``````````
 echo -e "From: wujunrong@xinxindai.com\nSubject: a test\n\nThis is the email body." | ssmtp -d wujunrong@xinxindai.com
 yum install -y sharutils
 echo -e "From: wujunrong@xinxindai.com\nSubject: a test\n\nThis is the email body." | (cat - && uuencode ./anaconda-ks.cfg  attachment.name) | ssmtp wujunrong@xinxindai.com
@@ -4870,7 +4875,7 @@ centos7:
 # timedatectl set-timezone America/Los_Angeles
 
 
-======mail³ÌĞò
+======mailç¨‹åº
 yum install mail
 vim /etc/mail.rc
 
@@ -4897,14 +4902,14 @@ yum install cobbler cobbler-web pykickstart wget fence-agents -y
 yum -y install xinetd -y
 yum install dhcp -y
 cobbler version
-ÓĞÎÊÌâ¿´ÈÕÖ¾£ºless /var/log/cobbler/cobbler.log
+æœ‰é—®é¢˜çœ‹æ—¥å¿—ï¼šless /var/log/cobbler/cobbler.log
                    /var/log/httpd/error_log  
 ```````````
 mount -t iso9660 -o loop,ro /path/to/isos/Fedora-17-x86_64-DVD.iso /mnt
 cobbler import --name=fedora17 --arch=x86_64 --path=/mnt
 
 ```````
-kickstart file£º /var/lib/cobbler/kickstarts
+kickstart fileï¼š /var/lib/cobbler/kickstarts
 snippets         /var/lib/cobbler/snippets
 
 
@@ -4941,13 +4946,13 @@ vi /etc/xinetd.d/rsync
 vi /etc/cobbler/dhcp.template
    next-server                192.168.122.156;
 
-ÅäÖÃweb½çÃæ
+é…ç½®webç•Œé¢
 vi /etc/cobbler/modules.conf
    [authentication]
    module = authn_configfile
    [authorization]
    module = authz_allowall
-ÉèÖÃwebÃÜÂë
+è®¾ç½®webå¯†ç 
    htdigest /etc/cobbler/users.digest "Cobbler" cobbler
    
 ````   
@@ -4972,15 +4977,15 @@ cobbler check
 cobbler sync
 cobbler status
 `````````````````````````````
-µ¹ÈëDVDÎÄ¼ş
-²½ÖèÒ»£ºmount -o loop  CentOS-6.7-x86_64-bin-DVD1.iso  /root/mnt/
-²½Öè¶ş£ºcobbler import --path=root/mnt/ --name=CentOS_6.6
-²½ÖèÈı£ºcobbler profile report #ÓÃ´Ë²é¿´CentOS_7-x86_64¶ÔÓ¦µÄkickstartÎÄ¼ş
-²½ÖèËÄ£ºĞŞ¸Äkickstart±äÁ¿£¬²¢²é¿´Éú²ú½á¹û
+å€’å…¥DVDæ–‡ä»¶
+æ­¥éª¤ä¸€ï¼šmount -o loop  CentOS-6.7-x86_64-bin-DVD1.iso  /root/mnt/
+æ­¥éª¤äºŒï¼šcobbler import --path=root/mnt/ --name=CentOS_6.6
+æ­¥éª¤ä¸‰ï¼šcobbler profile report #ç”¨æ­¤æŸ¥çœ‹CentOS_7-x86_64å¯¹åº”çš„kickstartæ–‡ä»¶
+æ­¥éª¤å››ï¼šä¿®æ”¹kickstartå˜é‡ï¼Œå¹¶æŸ¥çœ‹ç”Ÿäº§ç»“æœ
 cobbler profile report
 cobbler profile  edit --name=CentOS_6.6-x86_64  --ksmeta="net_dev=eth0 ip_addr=192.168.126.194 my_gateway=192.168.126.253 my_nameserver=192.168.39.21 my_hostname=wujunrong-test2"
 cobbler profile getks --name=CentOS_6.6-x86_64
-Ä¬ÈÏÊ¹ÓÃµÄKickstartÎÄ¼ş                      : /var/lib/cobbler/kickstarts/sample_end.ks  £¨ÓÃcobbler profile reportÃüÁî²éÑ¯£©
+é»˜è®¤ä½¿ç”¨çš„Kickstartæ–‡ä»¶                      : /var/lib/cobbler/kickstarts/sample_end.ks  ï¼ˆç”¨cobbler profile reportå‘½ä»¤æŸ¥è¯¢ï¼‰
 
 ``````````````
 
@@ -5011,7 +5016,7 @@ cobbler profile add --name=Fedora17-gnome \
                     --kickstart=/var/lib/cobbler/kickstarts/example.ks \
                     --parent=Fedora17-x86_64
 cobbler profile report
-#»ñÈ¡±äÁ¿Ìæ»»ºóµÄksÎÄ¼ş
+#è·å–å˜é‡æ›¿æ¢åçš„ksæ–‡ä»¶
 cobbler profile getks --name=Fedora17-xfce
 
 ````````````````
@@ -5028,9 +5033,9 @@ cobbler system report
 
 
 ====hardware section raid section dell section====
-Ô¶³Ì¿ØÖÆ¿¨µÄÄ¬ÈÏIPÊÇ192.168.0.120£¬
-ÓÃ»§ÃûÊÇroot,ÃÜÂëÊÇcalvin
-Ô¶³Ì¿ØÖÆ¿¨ĞéÄâ¿ØÖÆÌ¨ ²å¼şÀàĞÍ Ñ¡Ôñjava
+è¿œç¨‹æ§åˆ¶å¡çš„é»˜è®¤IPæ˜¯192.168.0.120ï¼Œ
+ç”¨æˆ·åæ˜¯root,å¯†ç æ˜¯calvin
+è¿œç¨‹æ§åˆ¶å¡è™šæ‹Ÿæ§åˆ¶å° æ’ä»¶ç±»å‹ é€‰æ‹©java
 
 aptitude install lshw pciutils
 yum      install lshw pciutils
@@ -5039,21 +5044,21 @@ lspci | grep -i raid
 lshw
 
 dmidecode | grep -A3 '^System Information'
-````````²éÑ¯raid¿¨``````````
+````````æŸ¥è¯¢raidå¡``````````
 OpenManage Server Administrator 
 yum -y install wget; \
 wget -q -O - http://linux.dell.com/repo/hardware/dsu/bootstrap.cgi | bash; \
 yum install srvadmin-storageservices -y
 
-   ¿ÉÑ¡£ºyum install srvadmin-all »ò yum install srvadmin-omacore »ò yum install srvadmin-base
+   å¯é€‰ï¼šyum install srvadmin-all æˆ– yum install srvadmin-omacore æˆ– yum install srvadmin-base
 
 
-/opt/dell/srvadmin/sbin/srvadmin-services.sh   start  #racadm ÃüÁîÒÀÀµ´ËÃüÁî
+/opt/dell/srvadmin/sbin/srvadmin-services.sh   start  #racadm å‘½ä»¤ä¾èµ–æ­¤å‘½ä»¤
 /opt/dell/srvadmin/sbin/srvadmin-services.sh   restart
 /opt/dell/srvadmin/sbin/srvadmin-uninstall.sh
-²éÑ¯RAID¿¨        £º/opt/dell/srvadmin/bin/omreport storage vdisk
-²éÑ¯RAID¿¨ÏÂµÄÓ²ÅÌ£º/opt/dell/srvadmin/bin/omreport storage pdisk controller=0
-Ïà¹ØÎÄµµ£º
+æŸ¥è¯¢RAIDå¡        ï¼š/opt/dell/srvadmin/bin/omreport storage vdisk
+æŸ¥è¯¢RAIDå¡ä¸‹çš„ç¡¬ç›˜ï¼š/opt/dell/srvadmin/bin/omreport storage pdisk controller=0
+ç›¸å…³æ–‡æ¡£ï¼š
 https://centosfreaks.wordpress.com/2012/01/09/monitor-hw-raid-with-dell-openmanage/
 http://linux.dell.com/repo/hardware/omsa.html
 http://linux.dell.com/repo/hardware/dsu/
@@ -5063,13 +5068,13 @@ http://www.dell.com/support/manuals/us/en/19/dell-opnmang-srvr-admin-v7.4/OMSA_C
 
 /opt/dell/srvadmin/bin/omreport  chassis remoteaccess
 ````````
-srvadmin-services.sh   start #racadm ÒÀÀµsrvadmin-services.sh
-racadm racreset #ÖØÆô
+srvadmin-services.sh   start #racadm ä¾èµ–srvadmin-services.sh
+racadm racreset #é‡å¯
 racadm racresetcfg
 racadm getniccfg
 racadm setniccfg -s 192.168.31.122 255.255.255.0 192.168.0.1
 racadm help setniccfg
-racadm config -g cfgLanNetworking -o cfgNicUseDHCP 1 #´Ódhcp»ñÈ¡IPµØÖ·
+racadm config -g cfgLanNetworking -o cfgNicUseDHCP 1 #ä»dhcpè·å–IPåœ°å€
 `````````````````````
 #ln    -s /opt/dell/srvadmin/bin/omreport /sbin/omreport
 #chmod +s /opt/dell/srvadmin/bin/omreport
@@ -5077,7 +5082,7 @@ racadm config -g cfgLanNetworking -o cfgNicUseDHCP 1 #´Ódhcp»ñÈ¡IPµØÖ·
 ipmitool sdr type 'Power Supply'
 
 ========elasticsearch section=====
-31.160ºÍ31.162 ÉÏÓĞfluem·şÎñ£¬ÔÚlibÄ¿Â¼ /opt/cloudera/parcels/CDH-5.5.0-1.cdh5.5.0.p0.8/lib/flume-ng/libÖĞÔö¼Ó elasticsearch-1.7.1.jar ÎÄ¼ş
+31.160å’Œ31.162 ä¸Šæœ‰fluemæœåŠ¡ï¼Œåœ¨libç›®å½• /opt/cloudera/parcels/CDH-5.5.0-1.cdh5.5.0.p0.8/lib/flume-ng/libä¸­å¢åŠ  elasticsearch-1.7.1.jar æ–‡ä»¶
 
 
 =======cx_Oracle section===========
@@ -5188,47 +5193,47 @@ mysql> use  zabbix;
 mysql> show tables;
 mysql> SHOW VARIABLES LIKE "%version%";
 
-=======kvm section ĞéÄâ»úºÍipµØÖ·¶ÔÓ¦¹ØÏµ================
-µÚÒ»²½£ºÕÒÌ¨31Íø¶ÎÏÂµÄ»úÆ÷ÔËĞĞ :         nmap -sP 192.168.31.0/24   > network31.txt
-µÚ¶ş²½£ºµÃµ½ipµØÖ·ºÍmacÁĞ±í
-        ¸ø³öipµØÖ·ºÍmac¶ÔÓ¦¹ØÏµ          £º        cat network31.txt | awk '$5~192 {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} '
-        µÃµ½ĞéÄâ»úÃû³Æ¡¢ip¡¢macµØÖ·(±éÀúËŞÖ÷»ú)    : ansible  hypervisor-machine    -m shell -a 'virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo name\:{};sudo virsh domiflist {} "  |grep "name\|vnet"|awk "\$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} ";echo '
+=======kvm section è™šæ‹Ÿæœºå’Œipåœ°å€å¯¹åº”å…³ç³»================
+ç¬¬ä¸€æ­¥ï¼šæ‰¾å°31ç½‘æ®µä¸‹çš„æœºå™¨è¿è¡Œ :         nmap -sP 192.168.31.0/24   > network31.txt
+ç¬¬äºŒæ­¥ï¼šå¾—åˆ°ipåœ°å€å’Œmacåˆ—è¡¨
+        ç»™å‡ºipåœ°å€å’Œmacå¯¹åº”å…³ç³»          ï¼š        cat network31.txt | awk '$5~192 {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} '
+        å¾—åˆ°è™šæ‹Ÿæœºåç§°ã€ipã€macåœ°å€(éå†å®¿ä¸»æœº)    : ansible  hypervisor-machine    -m shell -a 'virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo name\:{};sudo virsh domiflist {} "  |grep "name\|vnet"|awk "\$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} ";echo '
                                                     
 		{ sudo nmap -sP 192.168.31.0/24   | grep -v 192.168.31.178 |awk '$5~/[0-9][0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' | grep -v ansible >./network172_mac_ip.txt ; ansible  hypervisor-machine     -m shell -a 'echo "hyper-"`hostname`;virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo hostname\:{};sudo virsh domiflist {} "  |grep "hyper\|name\|vnet"|awk "\$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} ";echo '| grep "hyper-\|name" |sudo  awk '{ system("echo -n  "$1" \" \"; echo "$2"; echo ")}';echo; } |column -t 
 		
-µÚÈı²½:
-        ÁĞ³öĞéÄâ»úÃû³ÆºÍmacµØÖ·¶ÔÓ¦¹ØÏµ£ºvirsh list --all| grep runn   | awk '{print $2}' |xargs  -I '{}' sh -c "echo -n {} ' ' ;sudo virsh domiflist {}|grep vnet|awk '{printf \"%s \", \$5  }';echo " > /tmp/ip_mac.txt
-        µÃµ½ĞéÄâ»úÃû³Æ¡¢ip¡¢macµØÖ·        °æ±¾1        £º          virsh list --all| grep runn   | awk '{print $2}' |xargs  -I '{}' sh -c "echo -n {} ' ' ;sudo virsh domiflist {}|grep vnet|awk '{printf \"%s \", \$5  }';echo " | awk '{ system("echo -n  "$1" ; echo " "; grep -i "$2" /tmp/ip_mac.txt ")}'
-                                           °æ±¾2        £º     sudo virsh list --all| grep runn   | awk '{print $2}' |xargs  -I '{}' sh -c "echo -n {} ' ' ;sudo virsh domiflist {}|grep vnet|awk '{printf \"%s \", \$5  }';echo " | awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt ")}'
+ç¬¬ä¸‰æ­¥:
+        åˆ—å‡ºè™šæ‹Ÿæœºåç§°å’Œmacåœ°å€å¯¹åº”å…³ç³»ï¼švirsh list --all| grep runn   | awk '{print $2}' |xargs  -I '{}' sh -c "echo -n {} ' ' ;sudo virsh domiflist {}|grep vnet|awk '{printf \"%s \", \$5  }';echo " > /tmp/ip_mac.txt
+        å¾—åˆ°è™šæ‹Ÿæœºåç§°ã€ipã€macåœ°å€        ç‰ˆæœ¬1        ï¼š          virsh list --all| grep runn   | awk '{print $2}' |xargs  -I '{}' sh -c "echo -n {} ' ' ;sudo virsh domiflist {}|grep vnet|awk '{printf \"%s \", \$5  }';echo " | awk '{ system("echo -n  "$1" ; echo " "; grep -i "$2" /tmp/ip_mac.txt ")}'
+                                           ç‰ˆæœ¬2        ï¼š     sudo virsh list --all| grep runn   | awk '{print $2}' |xargs  -I '{}' sh -c "echo -n {} ' ' ;sudo virsh domiflist {}|grep vnet|awk '{printf \"%s \", \$5  }';echo " | awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt ")}'
 
-       µ¥¸öËŞÖ÷»ú£¬ÉÏÃæ3²½ºÏ²¢  ²ÎÊı1£º172.16.15.0/24  ²ÎÊı2£ºËŞÖ÷»ú±¾ÉíÒª192.168.40.20È¥µô
+       å•ä¸ªå®¿ä¸»æœºï¼Œä¸Šé¢3æ­¥åˆå¹¶  å‚æ•°1ï¼š172.16.15.0/24  å‚æ•°2ï¼šå®¿ä¸»æœºæœ¬èº«è¦192.168.40.20å»æ‰
        sudo nmap -sP 192.168.40.0/24 | grep -v 192.168.40.20 | awk '$5~/[0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' >./network172_mac_ip.txt ;sudo virsh list --all| grep runn   | awk '{print $2}' |xargs  -I '{}' sh -c "echo -n {} ' ' ;sudo virsh domiflist {}|grep vnet|awk '{printf \"%s \", \$5  }';echo " | awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt;echo; ")}'
 
 	   { echo "hyper-"`hostname`;virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo hostname\:{};sudo virsh domiflist {} "  |grep "hyper\|name\|vnet"    | awk "\$1~/hyper/ {printf \"\n%s\",\$1}    \$1~/name/ {printf \"\n%s \", \$1}     \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} " | sudo  awk '$1~/hyper-/ { print $1 }    $1~/name/ { system("echo -n  "$1" \" \"; grep -E -i "$2" ./network172_mac_ip.txt ; echo") } ' ; }|grep -v ^$  | column -t
 	   
 	   
-	   ¿ç  ËŞÖ÷»ú£¬ÉÏÃæ3²½ºÏ²¢  ²ÎÊı£º192.168.38.0/24 £¬ansibleµÄhypervisor_v6_test*
-                                      Ê¹ÓÃansible ±éÀú     { sudo nmap -sP 192.168.31.0/24    | grep -v 192.168.31.178 |awk '$5~/[0-9][0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' | grep -v ansible >./network172_mac_ip.txt ; ansible  hypervisor-machine     -m shell -a 'echo "hyper-"`hostname`;virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo hostname\:{};sudo virsh domiflist {} "  |grep "hyper\|name\|vnet"  ';} |  { awk "\$1~/hyper/ {printf \"\n%s\",\$1}  \$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} " |   sudo  awk '$1~/hyper-/ { print $1 } $1~/name/ { system("echo -n  "$1" \" \"; grep -E -i "$2" ./network172_mac_ip.txt ; echo")}';echo; } | column -t|grep -E -v "^[[:space:]]*$"  ;
-                                      Ê¹ÓÃsalt±éÀú         { sudo nmap -sP 192.168.110.0/24   | grep -v 192.168.110.102|awk '$5~/[0-9][0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' | grep -v ansible >./network172_mac_ip.txt ;  sudo salt  v6_pro0?  cmd.run  'echo "hyper-"`hostname`;virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo hostname\:{};sudo virsh domiflist {} "  |grep "hyper\|name\|vnet"  ';} |  { awk "\$1~/hyper/ {printf \"\n%s\",\$1}  \$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} " |   sudo  awk '$1~/hyper-/ { print $1 } $1~/name/ { system("echo -n  "$1" \" \"; grep -E -i "$2" ./network172_mac_ip.txt ; echo")}';echo; } | column -t|grep -E -v "^[[:space:]]*$"  ;
-									  ÔÚsystemÃüÁîÔÚansibleÖĞÊä³ö»áÈ±ÉÙÄÚÈİ { ansible test-centos7-wu -m shell -a "sudo nmap -sP 192.168.31.0/24"  | awk '$5~/[0-9][0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' >./network172_mac_ip.txt ; ansible  hypervisor_v6_stage*    -m shell -a 'virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo -n "$(hostname)";echo -name\:{};sudo virsh domiflist {} "  |grep "name\|vnet"|awk "\$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} ";echo '| grep name |sudo  awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt ")}';echo; } |column -t;
+	   è·¨  å®¿ä¸»æœºï¼Œä¸Šé¢3æ­¥åˆå¹¶  å‚æ•°ï¼š192.168.38.0/24 ï¼Œansibleçš„hypervisor_v6_test*
+                                      ä½¿ç”¨ansible éå†     { sudo nmap -sP 192.168.31.0/24    | grep -v 192.168.31.178 |awk '$5~/[0-9][0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' | grep -v ansible >./network172_mac_ip.txt ; ansible  hypervisor-machine     -m shell -a 'echo "hyper-"`hostname`;virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo hostname\:{};sudo virsh domiflist {} "  |grep "hyper\|name\|vnet"  ';} |  { awk "\$1~/hyper/ {printf \"\n%s\",\$1}  \$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} " |   sudo  awk '$1~/hyper-/ { print $1 } $1~/name/ { system("echo -n  "$1" \" \"; grep -E -i "$2" ./network172_mac_ip.txt ; echo")}';echo; } | column -t|grep -E -v "^[[:space:]]*$"  ;
+                                      ä½¿ç”¨saltéå†         { sudo nmap -sP 192.168.110.0/24   | grep -v 192.168.110.102|awk '$5~/[0-9][0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' | grep -v ansible >./network172_mac_ip.txt ;  sudo salt  v6_pro0?  cmd.run  'echo "hyper-"`hostname`;virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo hostname\:{};sudo virsh domiflist {} "  |grep "hyper\|name\|vnet"  ';} |  { awk "\$1~/hyper/ {printf \"\n%s\",\$1}  \$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} " |   sudo  awk '$1~/hyper-/ { print $1 } $1~/name/ { system("echo -n  "$1" \" \"; grep -E -i "$2" ./network172_mac_ip.txt ; echo")}';echo; } | column -t|grep -E -v "^[[:space:]]*$"  ;
+									  åœ¨systemå‘½ä»¤åœ¨ansibleä¸­è¾“å‡ºä¼šç¼ºå°‘å†…å®¹ { ansible test-centos7-wu -m shell -a "sudo nmap -sP 192.168.31.0/24"  | awk '$5~/[0-9][0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' >./network172_mac_ip.txt ; ansible  hypervisor_v6_stage*    -m shell -a 'virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo -n "$(hostname)";echo -name\:{};sudo virsh domiflist {} "  |grep "name\|vnet"|awk "\$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} ";echo '| grep name |sudo  awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt ")}';echo; } |column -t;
  `````
-¸ù¾İ/etc/ansible/hosts¸Ähostname
+æ ¹æ®/etc/ansible/hostsæ”¹hostname
 cat /etc/ansible/hosts| grep perf_ |awk '{print $1}'|xargs -I {} ansible {} -m shell -a "hostname {};sed -i.bak  s/HOSTNAME=.*/HOSTNAME={}/g   /etc/sysconfig/network ;hostname"
 
  
 =====Esxi section======
-Ô¶³Ì¿¨Ïà¹Ø£º
+è¿œç¨‹å¡ç›¸å…³ï¼š
 C:\Program Files (x86)\VMware\VMware vSphere CLI>esxcli.exe --server 172.16.15.89 software vib install -d /var/log/vmware
 esxcli software vib install -d /tmp/OM-SrvAdmin-Dell-Web-8.1.0-1518.VIB-ESX60i_A00.zip
-µ½esxi·şÎñÆ÷ÉÏ£¬²éÑ¯ÒÑ°²×°µÄÄ£¿é£ºesxcli software vib list
+åˆ°esxiæœåŠ¡å™¨ä¸Šï¼ŒæŸ¥è¯¢å·²å®‰è£…çš„æ¨¡å—ï¼šesxcli software vib list
 ``````````
 
 virsh -c esx://root@192.168.129.1?no_verify=1 list     --all
-virsh -c esx://root@192.168.129.1?no_verify=1 dominfo  ceontos7_cobbler_Îâ¾üÈÙ_192.168.31.192_192.168.129.90
+virsh -c esx://root@192.168.129.1?no_verify=1 dominfo  ceontos7_cobbler_å´å†›è£_192.168.31.192_192.168.129.90
 yum  -y install open-vm-tools
 ```````````
-virsh ·ÃÎÊ esxi ÎŞĞèÃÜÂë:
-²½ÖèÒ»£º
+virsh è®¿é—® esxi æ— éœ€å¯†ç :
+æ­¥éª¤ä¸€ï¼š
 cat  /etc/libvirt/auth.conf 
      [credentials-esx]
      authname=root
@@ -5239,7 +5244,7 @@ cat  /etc/libvirt/auth.conf
 
 	 [auth-esx-192.168.129.1]
      credentials=esx
-²½Öè¶ş£º
+æ­¥éª¤äºŒï¼š
 	 sudo systemctl restart libvirtd.service
 
 The credentials-esx block defines the credentials
@@ -5249,17 +5254,17 @@ auth-esx #  This defines which credential block to use.  In this case, the esx c
 auth-esx-hostname #  This defines the host to use the esx credentials for
 
 ``````kvm esxi`````
-´ÓEsxiÇ¨ÒÆµ½kvm
+ä»Esxiè¿ç§»åˆ°kvm
      sudo yum -y install virt-v2v 
      virt-v2v -ic esx://192.168.129.3/?no_verify=1 -os vmdisk --bridge br1 "centos6.4_test dio 192.168.31.193"
 	 
 	 export LIBGUESTFS_BACKEND=direct
-	 virt-v2v -v -x -ic vpx://xinxindai@192.168.129.252/xinxindai-oa/192.168.129.1?no_verify=1 "centos7_64_v6_test_Îâ¾üÈÙ_192.168.31.178" -o local -os  /home/frank/kvm/images/my-wd-disk
+	 virt-v2v -v -x -ic vpx://xinxindai@192.168.129.252/xinxindai-oa/192.168.129.1?no_verify=1 "centos7_64_v6_test_å´å†›è£_192.168.31.178" -o local -os  /home/frank/kvm/images/my-wd-disk
 ``````````
-ÁĞ³ö EsxiÉÏĞéÄâ»úÃû³ÆºÍipµØÖ·ÁĞ±í
+åˆ—å‡º Esxiä¸Šè™šæ‹Ÿæœºåç§°å’Œipåœ°å€åˆ—è¡¨
      sudo virsh -c esx://root@192.168.129.7?no_verify=1 list     --all | grep -v ID | awk '{print $5 " " $3}' |column -t | sort -n -k 1
 
-`````±éÀú·şÎñÆ÷``````	 
+`````éå†æœåŠ¡å™¨``````	 
 cat ./playbook.yml 
 - hosts: localhost
   remote_user: root
@@ -5288,7 +5293,7 @@ vi /etc/php.ini
     short_open_tag = On
 chmod -R  777 ./data
 
-vi /etc/php.iniÕÒµ½extension=msql.so£¬È»ºóÔÚËüÏÂ·½È¥µôÇ°Ãæ·ÖºÅÈ»ºóÌí¼ÓÈçÏÂ£º
+vi /etc/php.iniæ‰¾åˆ°extension=msql.soï¼Œç„¶ååœ¨å®ƒä¸‹æ–¹å»æ‰å‰é¢åˆ†å·ç„¶åæ·»åŠ å¦‚ä¸‹ï¼š
 extension=mysql.so
 extension=mysqli.so
 extension=pdo_MySQL.so
@@ -5322,29 +5327,29 @@ KEY getnum (msgtoid,folder,delstatus)
 
 =====echo section=====
  echo -e "server.1=192.168.129.50:2888:3888\nserver.2=192.168.129.51:2888:3888\nserver.3=192.168.129.52:2888:3888"
- echo -ne " " ÎŞ»»ĞĞ·û
+ echo -ne " " æ— æ¢è¡Œç¬¦
 ===tr section===
-È¥µô»»ĞĞ·û
+å»æ‰æ¢è¡Œç¬¦
 tr -d \"\n\" 
 ====passwd section===
 echo "root:xinxindai" |chpasswd
 ========= cut section ===========
-N          N¡¯th byte, character or field, counted from 1
-N-         from N¡¯th byte, character or field, to end of line
-N-M        from N¡¯th to M¡¯th (included) byte, character or field
--M         from first to M¡¯th (included) byte, character or field
+N          Nâ€™th byte, character or field, counted from 1
+N-         from Nâ€™th byte, character or field, to end of line
+N-M        from Nâ€™th to Mâ€™th (included) byte, character or field
+-M         from first to Mâ€™th (included) byte, character or field
 
 cut -f 3- -d \|
 
 ==========jenkins section==============
 docker pull jenkinsci/jenkins
-ÎÒÓÃ¹ıµÄ²å¼ş
+æˆ‘ç”¨è¿‡çš„æ’ä»¶
 1.folder
 2.pipeline
 3.Pipeline: Multibranch
 4.GitHub Organization Folder Plugin
-5.build-blocker-plugin £º Èç¹ûÄ³Ğ©jobÔÚÔËĞĞÊ±µÈ´ı£¬ÄÇÃ´Õâ¸öjobµÈ´ı
-6.parameterized-trigger£ºfree-style-project¿ªÊ¼ÓÉÒ»¸öÏîÄ¿job´¥·¢ÁíÒ»¸öÔÚfolderÖĞµÄÏîÄ¿£¬When using the "Trigger/Call builds on another project" item.
+5.build-blocker-plugin ï¼š å¦‚æœæŸäº›jobåœ¨è¿è¡Œæ—¶ç­‰å¾…ï¼Œé‚£ä¹ˆè¿™ä¸ªjobç­‰å¾…
+6.parameterized-triggerï¼šfree-style-projectå¼€å§‹ç”±ä¸€ä¸ªé¡¹ç›®jobè§¦å‘å¦ä¸€ä¸ªåœ¨folderä¸­çš„é¡¹ç›®ï¼ŒWhen using the "Trigger/Call builds on another project" item.
 ``````````````
 To reset it without disabling security if you're using matrix permissions (probably easily adaptable to other login methods):
 In config.xml , set disableSignup to false .
@@ -5397,7 +5402,7 @@ npm search express
 You can use following command to check all the modules installed globally:
 $ npm ls -g
 ``````
-=====Filebeat section=========elk section===========
+=====Filebeat section====================
 curl -L -O https://download.elastic.co/beats/filebeat/filebeat-1.2.3-x86_64.rpm
 sudo rpm -vi filebeat-1.2.3-x86_64.rpm
 /etc/filebeat/filebeat.yml
