@@ -5414,8 +5414,24 @@ POST /_bulk
 { "title":    "My second blog post" }
 { "update": { "_index": "website", "_type": "blog", "_id": "123", "_retry_on_conflict" : 3} }
 { "doc" : {"title" : "My updated blog post"} } 
-做索引的对象是一条条用json表达的类似数据库的记录
+做索引的对象是一条条用json表达的类似数据库的记录，如果添加array的话会丢失信息
 
+例如：
+{
+    "followers": [
+        { "age": 35, "name": "Mary White"},
+        { "age": 26, "name": "Alex Jones"},
+        { "age": 19, "name": "Lisa Smith"}
+    ]
+}
+This document will be flattened as we described previously, but the result will look like this:
+
+{
+    "followers.age":    [19, 26, 35],
+    "followers.name":   [alex, jones, lisa, smith, mary, white]
+}
+
+一条记录在elasticsearch中被称之为一个document
 
 =====Filebeat section====================
 curl -L -O https://download.elastic.co/beats/filebeat/filebeat-1.2.3-x86_64.rpm
