@@ -20,11 +20,15 @@ cat /etc/*release*
 chkconfig --add glassfish4
 chkconfig --list glassfish4
 
-````hostname section`````
+````hostname section```host section``
 centos7:   /etc/hostname
            /etc/hosts
 centos6:   /etc/sysconfig/network
+           修改主机名命令：hostname yh_zabbix_server;sed -i.bak  s/HOSTNAME=.*/HOSTNAME=yh_zabbix_server/g   /etc/sysconfig/network ;hostname
+    
 Debian:    /etc/hostname
+
+windows:   C:\Windows\System32\drivers\etc
 =====================  DNS section ====================
 /etc/sysconfig/network
 cat /etc/resolv.conf 
@@ -70,6 +74,60 @@ DNS1=192.168.38.118
 PEERDNS=<answer>, where <answer> is one of the following:
 yes — This interface will modify your system's /etc/resolv.conf file entries to use the DNS servers provided by the remote system when a connection is established.
 no — The /etc/resolv.conf file will not be changed.
+
+```````````post-up section````````````````
+On CentOS, network interface related scripts are found in /etc/sysconfig/network-scripts. 
+Among them is ifup-post which is supposed to be called right after any network interface is brought up online. 
+In this script, you will find the following code snippet toward the end.
+
+    #!/bin/sh
+    if [ -x /sbin/ifup-local ]; then
+        /sbin/ifup-local ${DEVICE}
+`````
+The code snippet means that if there exists a script called ifup-local in /sbin, 
+the script gets executed with an interface name argument. On vanilla CentOS system, 
+no such script exists. So in order to run a startup script automatically after a network interface is up, 
+create an executable script /sbin/ifup-local, and put in there any command or script you want to run. For example:
+
+
+或  vi /root/ifup-local
+    `````
+    #!/bin/bash
+	sudo tee /sbin/ifup-local<<-'EOF'  
+    if [[ "$1" == "eth0" ]]
+    then
+         echo start configure $1    
+         ip r add  172.16.0.0/255.255.0.0   via 192.168.129.253
+         ip r delete  default
+         ip r add  default via 192.168.129.254
+         ip r add  192.168.0.0/255.255.0.0   via 192.168.129.253
+    
+    fi
+	EOF
+    chmod +x /sbin/ifup-local
+	`````
+    ansible perf_mobile01_tomcat  -m  script -a "/root/ifup-local"
+
+```
+
+cat  /sbin/ifup-local
+#!/bin/sh
+if [[ "$1" == "eth0" ]]
+then
+    
+     ip r add  172.16.0.0/255.255.0.0   via 192.168.129.253
+     ip r delete  default
+     ip r add  default via 192.168.129.254
+     ip r add  192.168.0.0/255.255.0.0   via 192.168.129.253
+
+else
+      #DO_NOTHING
+     echo "do nothing"
+fi
+
+
+
+
 ```````````
 #To restart network service
   ifdown eth0
@@ -111,10 +169,13 @@ sudo telinit 4
 # vi /etc/network/interfaces
 # vi /etc/resolv.conf
 post-up ifconfig eth0 down
+清网卡
 rm -f /etc/udev/rules.d/70-persistent-net.rules
 
 ``````````zcat section gzip section zip section``````````````````
   gzip, gunzip, zcat,zless 
+  zip xxdai_release.zip   -r ./xxdai_release
+  zip front_config.zip *
   gunzip -S .zip mysqlsampledatabase1.zip
   zcat v6_mobile01_20151103.tar.gz| less
   zcat v6_mobile01_20151201.tar.gz| grep -aHn 15120115162100176722
@@ -132,21 +193,26 @@ rm -f /etc/udev/rules.d/70-persistent-net.rules
   `````````find section``````````
   find /  -type d -name 'httpdocs'
                   -iname pattern       #Like  -name, but the match is case insensitive.
-  find /usr   -path   '*usr/bin*'			  
-				  
+  find /usr   -path   '*usr/bin*'
+  find /opt/webserver/   -path  '*web*\intr*'
+  find . -path \*content/docs/file.xml  
+  find . -type f \( -name "*.java" -o -name "*.xml" -o -name "*.html" \)
+  
+  find . -type f -newerct "2016-06-14  00:00:00"    ! -newerct "2016-06-14 19:10:00"    -regextype posix-extended  -regex ".*(tra|webservice).*" 
+  
   搜索包含classes/com/的目录
   find /opt/webserver/ -type d  -print0 |  grep -EzZ  'classes/com$';echo
   find /opt/webserver/ -type d  -print0 |  grep -EzZ  'classes/com$' |sed 's/WEB-INF\/classes\/com//g';echo
   sudo salt -N 'test_v6tomcat' cmd.run "find /opt/webserver/ -type d  -print0 |  grep -Ez 'classes/com$' |sed 's/WEB-INF\/classes\/com//g'"
-  
-  find . -path \*content/docs/file.xml
   
   find . -type f -newerct "2016-04-14  15:00:00"  -regextype posix-extended  -regex ".*(tra|webservice).*"
   find ./ -type f -mmin -200 | xargs ls -ltr 
      -mtime +60 means you are looking for a file modified 60 days ago.
      -mtime -60 means less than 60 days.
      -mtime  60 If you skip + or – it means exactly 60 days.
-  
+    
+  find ~ -type f -mtime +1825 |xargs -r ls -l  #One problem with the above approach is that a complete listing of the current directory will occurif the find command does not find any files!Xargs sees a list of zero files, but still issues the 'ls -l' command.To overcome this, simply use the xargs option '-r' which meansIf the standard input does not contain any nonblanks, do not run the command.So, our command now becomes:
+
   find . -maxdepth 1 -type d -exec ls -ld "{}" \;
   find /dir -type f -executable  -name 'abc'
   find . -type f -exec grep -Iq . {} \; -and -exec grep -Hn oa_ip {} \;
@@ -154,12 +220,23 @@ rm -f /etc/udev/rules.d/70-persistent-net.rules
   备份/opt/saltstack/salt/ci/files目录下的所有文件，剔除隐藏文件、隐藏目录、可执行文件：
   find /opt/saltstack  -type d -path '*/\.*' -prune -o -not -name '.*' -type f | xargs file | awk -F: '$2 ~ /text/ { print $1 }' |   cut -d "/" -f 4- | rsync --files-from=- -av     /opt/saltstack/       /home/wujunrong/backup/xxd/saltstack/  --dry-run
   find /opt/           -type d  \( -path /opt/test -o -path  /opt/ci/packages -o -path /opt/ci/rsync  -o -path /opt/ci/workspace -o -path '*/\.*'  \) -prune -o -not -name '.*' -type f  -print | xargs file | awk -F: '$2 ~ /text/ { print $1 }' |   cut -d "/" -f 3- | rsync --files-from=- -av     /opt/                 /home/wujunrong/backup/xxd/            --dry-run   --exclude test  --exclude ci/packages --exclude ci/rsync   --exclude ci/workspace
-  `````user section```````````````
+====== xargs section =======
+  You can force xargs to use at most max-args arguments per command line. For example following will use first two argument per command:
+  $ echo 1 2 3 4 | xargs -n 2
+==========user section==================
   useradd rakhi
   passwd  rakhi
   useradd -e 2008-12-31 jerry
   useradd -e 2009-12-31 -f 30 jerry
   usermod -g primarygroupname username
+  
+  激活用户命令 : usermod -U zoo；
+  锁定用户命令 : usermod -L zoo  
+  
+  
+  ansible perf*tomcat -m shell -a "useradd tomcat"
+   ansible perf*tomcat -m shell -a "usermod -u 1510  tomcat"
+
   
   sudo chown -R username:group directory  #目录
   sudo chown username:group directory     #目录下的文件
@@ -180,7 +257,11 @@ rm -f /etc/udev/rules.d/70-persistent-net.rules
    Task: Change user tom UID from 5001 to 10000
    # id tom
    # usermod -u 10000 tom
-   # id tom
+   # id tomn
+   `````
+   usermod  -u 1510 tomcat
+   groupmod -g 1510 tomcat
+
 =====================  NetworkManager section ====================================
 
 nmcli dev status
@@ -368,7 +449,8 @@ docker rmi training/sinatra
 
 sudo docker run -i -t ubuntu /bin/bash
      docker run -it  --name java-test2  centos:6.6 bash
-     docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro -p 80:80 local/centos7:yum-repository
+     #启动带systemd的操作系统
+	 docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro -p 80:80 local/centos7:yum-repository   
 #To start a container in detached mode, you use -d=true or just -d option
      docker run -d -p 80:80 my_image service nginx start
 	 docker run -a stdin -a stdout -i -t ubuntu /bin/bash
@@ -394,6 +476,7 @@ sudo docker load -i <path to copied image file>
 ````````````````
 docker stop $(docker ps -a -q)
 docker rm   $(docker ps -a -q)
+docker rm -v   /dbdata nostalgic_morse  #To delete the volume from disk, you must explicitly call docker rm -v against the last container with a reference to the volume.
 docker ps -a | grep -v 'adoring_dubinsky\|NAMES'| awk '{print $1}'|xargs docker rm
  
  docker rm  -f  $(docker ps -a -q)
@@ -411,6 +494,9 @@ docker ps -a | grep -v 'adoring_dubinsky\|NAMES'| awk '{print $1}'|xargs docker 
 cat /root/start.sh
     #!/bin/bash
     /root/apache-tomcat-6.0.45/bin/startup.sh&&bash
+	
+````````````
+docker run --volumes-from dbdata -v $(pwd):/backup ubuntu tar cvf /backup/backup.tar /dbdata
 ======================  yum section and apt-get section dpkg section========================================
 yum install yum-plugin-fastestmirror
 vi /etc/yum/pluginconf.d/fastestmirror.conf 
@@ -499,7 +585,7 @@ dpkg --listfiles openjdk-6-jre
 dpkg -S /path/to/some/file      #to find out which package a file belongs to.
 sudo dpkg -i DEB_PACKAGE
 
-
+sudo apt-get purge linux-image-4.2.0-{16,30} #free up more space in /boot
 ======================= ip_forward  ======================================
 
 debian:
@@ -532,6 +618,15 @@ ip addr show virbr0
 
 post-up ip route add default dev eth1  metric 2
 pre-down route del default
+
+
+````````````
+ansible Cloudera*        -m copy   -a "src=/root/ifup-local           dest=/sbin/ifup-local  "
+ansible Cloudera*        -m shell  -a "chmod +x  /sbin/ifup-local  "
+ansible Cloudera*        -m shell  -a "service network restart"
+ansible Cloudera*        -m shell  -a "ip r"
+ansible Cloudera*        -m shell  -a "ping www.sina.com.cn -c 1"
+
 ======================= copy scp section ssh section======================================
 sshpass -p 'password' scp user1@xxx.xxx.x.5:sys_config /var/www/dev/
 scp on esxi :
@@ -590,7 +685,9 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
  SHOW COLUMNS FROM City;
  SHOW DATABASES;
 ``````````````````````````````
-
+备份所有数据库
+mysqldump -u root -p --all-databases >  /tmp/database-backup-$(date +%Y%m%d).sql
+查询数据库大小
 
 
 ======================= proxy  ========================
@@ -846,7 +943,7 @@ gpgcheck=1
 gpgkey=https://repo.saltstack.com/yum/rhel7/SALTSTACK-GPG-KEY.pub
 
 CentOS 6:/etc/yum.repos.d/saltstack.repo:
-sudo yum install https://repo.saltstack.com/yum/redhat/salt-repo-2015.8-2.el6.noarch.rpm -y
+sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el6.noarch.rpm
   
   ``````install minion````
   yum update python  -y
@@ -1029,6 +1126,8 @@ apache:
        - source: salt://code/flask
        - include_empty: True
   文件下传
+  
+       salt perf_nginxws01            state.single   file.recurse name='/root'            source='salt://files/'  include_pat='*.xxd'
   sudo salt 'test_v6_tomcat_front01'  state.single   file.recurse name='/tmp/wujunrong'   source='salt://wujunrong'
        salt 'stage_v6_front0?'  state.single      file.managed  name='/opt/webserver/v6_tomcat/webapps/ROOT/redenvelops/Red-envelopes-down.jsp'   source='salt://wujunrong/20160310XA-emergency/Red-envelopes-down.jsp'  backup='minion'
        salt 'stage_v6_front01'  file.list_backups      /opt/webserver/v6_tomcat/webapps/ROOT/redenvelops/Red-envelopes-down.jsp
@@ -1047,9 +1146,7 @@ apache:
   
   #/etc/salt/master 
   set file_recv to True 
-  ``````salt crontab````salt cmd`````
-  salt 'cloudera-agent1'   state.single     cron.present  name='date > /tmp/crontest '  user='root' minute=49 hour=17
-  salt 'cloudera-agent1'   state.single     cron.absent  name='date > /tmp/crontest'  user='root' minute=7 hour=2
+
   ``````````````salt network`````````````
   
   salt-run mine.get '*'       network.interfaces
@@ -1125,6 +1222,8 @@ apache:
   salt-run          //Salt runners are simple modules used to execute convenience functions on the master
   
   salt-cp   'debian'              Dockerfile.V1   /tmp/
+  sudo salt-cp  v6_front001.xxdaid.com   /home/wujunrong/office.ip.list  /tmp/
+  sudo salt-cp  v6_front001.xxdaid.com   /home/wujunrong/office.ip.list  /tmp/office2.ip.list
   ``````````salt ssh````````````
   salt-ssh  -i test_fk test.ping
   salt-ssh  -i test_fk cp.get_file  salt://YX.war   /tmp/
@@ -1145,7 +1244,32 @@ apache:
   salt-run  pillar.show_top    'test_v6_redis02'
   salt-call pillar.get         bind
   
+  
+  `````
+                        cat rsyslog_restart_block_test.sls 
+
+
+                      rsyslog-restart-blockreplace:
+                        file.blockreplace:
+                          - name: /tmp/cut_log.sh
+                          - marker_start: "# BLOCK TOP : added by wujunrong"
+                          - marker_end: "# BLOCK BOTTOM : added by wujunrong" 
+                          - content: |
+                                 /sbin/service rsyslog stop  >/dev/null 2>&1
+                                 sleep 3
+                                 {{ pillar['extra_code'] }}
+                                 [ -f /var/run/catalina-statefile ] && rm -fr /var/run/catalina-statefile
+                                 /sbin/service rsyslog start >/dev/null 2>&1
+                          - show_changes: True
+                          - append_if_not_found: True
+                          - backup: '.bak'
+                      
+  sudo salt  v6_admin001.xxdaid.com state.sls wujunrong.rsyslog_restart_block_test  pillar='{extra_code: "sleep 5"}'
   salt '*' state.highstate pillar='{"cheese": "spam"}'
+ 
+  
+  ``````
+  
   salt '*' saltutil.refresh_pillar
   ``````````salt grains````````
   salt '*' cmd.run template=jinja "ls -l /tmp/{{grains.id}} | awk '/foo/{print \$2}'"
@@ -1332,7 +1456,7 @@ smtp.subject: salttest
 #smtp.fields (optional)
 
 salt '*' test.ping --return smtp
-`````````````````salt crontab ```````````````````
+`````````````````salt crontab on salt master```````````````````
 schedule:
     ----------
     schedule-test:
@@ -1353,7 +1477,29 @@ schedule:
             - Wednesday 5:00pm
             - Thursday 3:00pm
             - Friday 3:33pm
+			
+`````````````````salt crontab on salt minion`````````````
+  salt 'cloudera-agent1'   state.single     cron.present  name='date > /tmp/crontest '  user='root' minute=49 hour=17
+  salt 'cloudera-agent1'   state.single     cron.absent  name='date > /tmp/crontest'  user='root' minute=7 hour=2
+``````````````salt blockreplace``````````````````
 
+sudo salt v6_front001.xxdaid.com  state.sls wujunrong.rsyslog_restart_block
+cat rsyslog_restart_block.sls 
+
+rsyslog-restart-blockreplace:
+  file.blockreplace:
+    - name: /opt/webserver/v6_tomcat/bin/cut_log.sh
+    - marker_start: "# BLOCK TOP : added by wujunrong"
+    - marker_end: "# BLOCK BOTTOM : added by wujunrong" 
+    - content: |
+           /sbin/service rsyslog stop  >/dev/null 2>&1
+           sleep 3
+           [ -f /var/run/catalina-statefile ] && rm -fr /var/run/catalina-statefile
+           /sbin/service rsyslog start >/dev/null 2>&1
+    - show_changes: True
+    - append_if_not_found: True
+    - backup: '.bak'
+			
 ======================= svn section========================  
 #a new caret (^) notation, Note that this URL syntax works only when your current working directory is a 
 working copy—the command-line client knows the repository's root URL by looking at the working copy's metadata
@@ -1361,15 +1507,41 @@ working copy—the command-line client knows the repository's root URL by looking
 client and server
 client:  yum -y install subversion
 server:  yum -y install mod_dav_svn
+systemctl start  svnserve
 
+```````
+1、服务端创建仓库
+cd /srv/svn
+$ svnadmin create repos
+2、导入代码，代码在 /tmp/xxd_code_repo/dev_v6.5.4_20160628/ 目录中
+svn import  /tmp/xxd_code_repo/dev_v6.5.4_20160628/   file:///srv/svnrepos/xxd-v6 -m "initial import" 
+
+``````````````````
 /etc/httpd/conf/httpd.conf
+LoadModule dav_module modules/mod_dav.so
+LoadModule dav_svn_module modules/mod_dav_svn.so
+<Location /svn>
+DAV svn
+# Automatically map any "/svn/foo" URL to repository /var/svn/foo
+SVNParentPath /srv/svnrepos
+</Location>
 
+
+``````````````
+
+
+http://172.16.15.88/svn/xxd-v6/
 
 
 ``````````````````````````````````````````````````
+svnserve -d -r /var/svn
+svn checkout svn://host.example.com/project1
+````````````````
+
 /etc/subversion
 ```````````````````````
   svn info
+  svn status | grep ^?   列出没有被版本管理的文件
   svn status
   svn status --no-ignore
   svn status --show-updates  #The -u (or --show-updates) option to svn status causes svn to contact the repository and show stuff that's changed in the repository - is that enough for you ? Depending on what you need, you might want the -q or --verbose flag too
@@ -1391,6 +1563,7 @@ server:  yum -y install mod_dav_svn
   svn log -v --xml | grep 'action="[A|D]"'   #get a list of added or deleted files from Subversion
   
   svn add fk_stage.sh
+  svn rm --keep-local   saltstack/salt/ci/files/data_v6_front/conf_file.zip  #undo svn add
   svn cat http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/rsyslog.conf
   
 svn copy   http://svn.example.com/repos/calc/trunk \
@@ -1617,7 +1790,8 @@ name=nginx repo
 baseurl=http://nginx.org/packages/centos/6/$basearch/
 gpgcheck=0
 enabled=1
-``````用ansible安装yum源``````````
+`````````````````````
+用ansible安装yum源:
 vi install_nginx.sh
     sudo tee /etc/yum.repos.d/nginx.repo<<-'EOF'
     [nginx]
@@ -1628,9 +1802,12 @@ vi install_nginx.sh
     EOF
 ansible perf_ngi*   -m  script -a "/root/install_nginx.sh"
 ansible perf_ngi*   -m  shell -a "cat /etc/yum.repos.d/nginx.repo"
-
+ansible perf_ngi*   -m shell -a "yum -y install nginx"
+ansible perf_ngi*  -m shell -a "/etc/init.d/nginx start"
+ansible perf_ngi*  -m shell -a "nginx -v"
 ``````````````
 vi /etc/nginx/nginx.conf
+mv  /etc/nginx/conf.d/default.conf /tmp/
 ````````````
 
 #Where level is one of the following values: debug, info, notice, warn, error, and crit
@@ -1755,8 +1932,16 @@ Nginx will search for matching patterns in a specific order:
    beginning of the requested URI, Nginx retains the location block
    In that extent, the ^~ modifier begins to make sense, and we can envision cases where it becomes useful.
 `````````````````````
+www.example.com转example.com
 
-
+server {
+    server_name www.example.com;
+    return 301 $scheme://example.com$request_uri;
+}
+server {
+    server_name example.com;
+    # [...]
+}
 
 ==========logrotate section`````````````
 copytruncate instruct logrotate to creates the copy of the original file
@@ -1785,6 +1970,25 @@ http://xmodulo.com/logrotate-manage-log-files-linux.html
 
 logrotate -vf /etc/logrotate.conf 
 cp -pv /etc/rsyslog.conf /etc/rsyslog.conf.orig
+````````````
+/opt/webserver/v6_tomcat/logs/catalina.out {
+        rotate 15
+        copytruncate
+        daily
+        dateext
+        nocompress
+        missingok
+        sharedscripts
+        postrotate
+           /sbin/service rsyslog stop  >/dev/null 2>&1
+           [ -f /var/run/catalina-statefile ] && rm -fr /var/run/catalina-statefile
+           sleep 3
+           /sbin/service rsyslog start >/dev/null 2>&1
+        endscript
+
+}
+
+
 ``````````````````````````````````````````````````````````````
 size 100k
 size 100M
@@ -1853,6 +2057,10 @@ cat /etc/logrotate.d/logrotate_tomcat
 }
 
 =====================   rsyslog section   =========================
+yum:http://www.rsyslog.com/rhelcentos-rpms/
+cd /etc/yum.repos.d/  && wget http://rpms.adiscon.com/v8-stable/rsyslog.repo
+yum install rsyslog -y
+````````
 /etc/rsyslog.conf
 systemctl start rsyslog
 ``````facility``````
@@ -2123,9 +2331,36 @@ local7.*                                ?HostAudit;auditFormat
                                      &  @@192.168.56.101:10516
 
 
-`````````````````````````rsyslog server`````````````````````````````````````````````
+```````````````rsyslog8 section````````````````````````									 
+client:
+cat collect-tomcat.conf 
+module(load="imfile" PollingInterval="10")
 
 
+input (
+    type="imfile"
+    File="/opt/webserver/v6_tomcat/logs/catalina.out"
+    #startmsg.regex="^\\["   #匹配多行
+    Tag="tomcat/stage/admin"
+    Facility="user"
+    Severity="info"
+    reopenOnTruncate="on"
+    freshStartTail="on"
+    Ruleset="collect_forward"    
+)
+
+
+ruleset(name="collect_forward") {
+    action(type="omfwd" Target="192.168.129.99" Port="514" Protocol="tcp")
+    stop
+}
+	
+server:
+	
+`````````````````````````rsyslog server 1`````````````````````````````````````````````
+module(load="imudp")
+input(type="imudp" port="514" ruleset="remote")
+````
 #wujunrong
 module(load="imtcp")
 input(type="imtcp" port="10516" ruleset="remote-10516")
@@ -2136,17 +2371,38 @@ ruleset(name="remote-10516"){
     action(type="omfile" DynaFile="TmplMsg" template="auditFormat")
 }
 
-```````````````
-$template TmplAuth, "/var/log/xinxindai/%source%-%PROGRAMNAME:::secpath-replace%"
+```````````````rsyslog server 2``````````````
+$umask 0000
+$DirCreateMode 0755
+$FileCreateMode 0644
+
+module(load="imudp")
+input(type="imudp" port="514" ruleset="remote")
+
+$template old_file, "/var/log/xinxindai/%source%-%PROGRAMNAME:::secpath-replace%"
 $template DFile,"/opt/logs/%syslogtag%/%HOSTNAME%-%$year%%$month%%$day%_%$hour%.log"
 $template auditFormat, "%msg%\n"
+$template NginxErrorFile,"/tmp/wujunrong.log"
 
+#if $syslogfacility-text == 'local6' and $syslogtag contains_i 'nginx'  and re_match($msg,'[^@]+@){10}( 200 )@.*')   then /tmp/wujunrong.log
 ruleset(name="remote"){
         if $fromhost-ip == '192.168.34.10' then {
                 action(type="omfile" DynaFile="TmplAuth" template="auditFormat")
                 stop
         }
+        if $syslogfacility-text == 'local6' and $syslogtag contains_i 'nginx'  and re_match($msg,'([^@]+@){10}( 502 )@([^@]+@)+') then {
+                action(type="omfile" DynaFile="NginxErrorFile" template="auditFormat")
+                stop
+        }
+
         action(type="omfile" DynaFile="DFile" template="auditFormat" dirCreateMode="0755" FileCreateMode="0644")
+#        if $syslogtag contains_i 'real' then @@192.168.31.160:5144;auditFormat
+#        if $syslogtag contains_i 'nginx' then @@192.168.31.160:5143;auditFormat
+}
+
+
+#:syslogtag,regex,".*realtime.*"   /tmp/wujunrong.log
+
 
 =====================  journal section   =============================== 
 /etc/systemd/journald.conf
@@ -2309,6 +2565,13 @@ $ tar -jxvf filename.tar.bz2
 tar -zcvf /tmp/webservice-trade.tar.gz   ./{*webservice*11-11*,*webser*.out,*tra*11-11*,*tra*.out}
 
 ``````````tomcat section``````
+安装tomcat解压安装包即可
+wget http://apache.fayea.com/tomcat/tomcat-6/v6.0.45/bin/apache-tomcat-6.0.45.tar.gz
+/root/apache-tomcat-6.0.45/conf/server.xml
+     Connector port="8080
+	 
+	 
+
 The CATALINA_HOME environment variable should be set to the location of the
 root directory of the "binary" distribution of Tomcat.
 The CATALINA_BASE environment variable specifies location of the root
@@ -2321,9 +2584,10 @@ If both JRE_HOME and JAVA_HOME are specified, JRE_HOME is use
 
 
 安装java  :   执行/tmp/jdk-6u45-linux-x64-rpm.bin  
+              此.bin文件是个自解压文件，解压到当前目录下，生成多个rpm包
               java -version
 安装tomcat:   tar zxvf /root/apache-tomcat-6.0.45.tar.gz
-
+./apache-tomcat-6.0.45/bin/catalina.sh   stop 5  -force
 cat /etc/profile.d/java.sh 
    export JAVA_HOME=/usr/java/default
    export CATALINA_HOME=/root/apache-tomcat-6.0.45
@@ -2335,18 +2599,45 @@ cat setenv.sh
     #JAVA_HOME=/usr/java/latest
     CATALINA_PID="$CATALINA_BASE/tomcat.pid"
     CATALINA_OPTS="-server -Xms1024m -Xmx5120m -XX:PermSize=128m -XX:MaxPermSize=2048m -XX:NewSize=192m -XX:MaxNewSize=2048m -Dfile.encoding=UTF-8 -Dcom.sun.management.jmxremote  -Dcom.sun.management.jmxremote.port=1234  -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
+``````````````````````
+自动化设置环境
+ansible perf*tomcat -m  script -a "/root/install_java_env.sh"
+cat /root/install_java_env.sh
+     #!/bin/bash
+     set -e
+     sudo tee /etc/profile.d/java.sh<<-'EOF'
+        export JAVA_HOME=/usr/java/default
+        export CATALINA_HOME=/opt/webserver/v6_tomcat/
+        #export PATH=/root/apache-maven-3.2.5/bin:$PATH
+     EOF
+     chmod +x /etc/profile.d/java.sh
+     
+     sudo tee /opt/webserver/v6_tomcat/bin/setenv.sh<<-'EOF' 
+         #JAVA_HOME=/usr/java/latest
+         CATALINA_PID="$CATALINA_BASE/tomcat.pid"
+         CATALINA_OPTS="-server -Xms1024m -Xmx5120m -XX:PermSize=128m -XX:MaxPermSize=2048m -XX:NewSize=192m -XX:MaxNewSize=2048m -Dfile.encoding=UTF-8 -Dcom.sun.management.jmxremote  -Dcom.sun.management.jmxremote.port=1234  -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
+     EOF
 
-./apache-tomcat-6.0.45/bin/catalina.sh   stop 5  -force
+    chmod +x  /opt/webserver/v6_tomcat/bin/setenv.sh
+```````````````
+	
+	
+	
+	
+
 ====================maven section======mvn section================================
 wget       https://archive.apache.org/dist/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.zip
 unzip      apache-maven-3.3.3-bin.zip
 
-export PATH=/opt/apache-maven-3.3.3/bin:$PATH
-export JAVA_HOME=jdk-install-dir
+vi  /etc/profile.d/java.sh
+export PATH=/root/apache-maven-3.2.5/bin:$PATH
+export JAVA_HOME=/usr/java/default
 export PATH=$JAVA_HOME/bin:$PATH
+
+chmod +x  /etc/profile.d/java.sh
 ``````````````````````````````````````
 /usr/local/maven/conf/settings.xml
-/root/apache-maven-3.2.3/conf/settings.xml
+配置文件（设置nexus仓库）：/root/apache-maven-3.2.3/conf/settings.xml
 
 mvn -v
 Apache Maven 3.2.3 (33f8c3e1027c3ddde99d3cdebad2656a31e8fdf4; 2014-08-12T04:58:10+08:00)
@@ -2371,7 +2662,7 @@ mvn package  #Making a JAR file
 方法三：打包并把错误输出到文件
          >/home/wujunrong/tmp/error.txt; find  ./  -type d  -path ./v6_batch/trunk/batch-schedule -prune -o  -name pom.xml   -print | grep -v "v6_batch/trunk/pom.xml" |  xargs -I {}  sh -c 'path_dir=`dirname {}`&& cd $path_dir && { mvn clean package ; echo $? >./return_val.txt ; }  | tee ./output.txt  ;return_val=`cat ./return_val.txt` ;  if [ "$return_val" -ne 0 ];then ( cat ./output.txt  >>/home/wujunrong/tmp/error.txt)  ;else  cp  ./target/*.war   /home/wujunrong/tmp/;fi  '					
 方法四：打包错误发邮件
-         >/home/wujunrong/mvn_error.txt;find  ./    -name pom.xml   | grep -v "v6_batch/trunk/pom.xml" | grep -v ./v6_batch/trunk/batch-core/pom.xml |  xargs -I {}  sh -c 'path_dir=`dirname {}`&& cd $path_dir && { mvn clean package ; echo $? >./return_val.txt ; }  | tee ./output.txt  ;return_val=`cat ./return_val.txt` ;  if [ "$return_val" -ne 0 ];then ( cat ./output.txt  >>/home/wujunrong/mvn_error.txt)  ;else  cp  ./target/*.war   /home/wujunrong/  ;fi' ; if [ -s /home/wujunrong/mvn_error.txt ] ;then { echo -e "From: wujunrong@xinxindai.com\nSubject: mvn build error info \n\nThe following is error message after building.";cat /home/wujunrong/mvn_error.txt; } | ssmtp -d wujunrong@xinxindai.com ; fi
+         >/home/wujunrong/mvn_error.txt;rm -rf /usr/local/maven/mvn_repo/com/xxdai/*;find  ./    -name pom.xml   | grep -v "v6_batch/trunk/pom.xml" | grep -v v6_batch/trunk/batch-core/pom.xml  |grep -v  -E '\./pom.xml'|  xargs -I {}  sh -c 'path_dir=`dirname {}`&& cd $path_dir && { mvn clean package ; echo $? >./return_val.txt ; }  | tee ./output.txt  ;return_val=`cat ./return_val.txt` ;  if [ "$return_val" -ne 0 ];then ( cat ./output.txt  >>/home/wujunrong/mvn_error.txt)  ;else  cp  ./target/*.war   /home/wujunrong/  ;fi' ; if [ -s /home/wujunrong/mvn_error.txt ] ;then { echo -e "From: wujunrong@xinxindai.com\nSubject: mvn build error info \n\nThe following is error message after building.";cat /home/wujunrong/mvn_error.txt; } | ssmtp -d wujunrong@xinxindai.com,sunjiao@xinxindai.com;exit 77 ; fi
 		 
 部署 ： 
 find /root/xxd      -name *.war   -exec sh -c 'folder_name=`echo {}| cut -d "/" -f  3`; unzip -o {} -d /root/apache-tomcat-6.0.45/webapps/"$folder_name"'   \;
@@ -2648,7 +2939,9 @@ title Red Hat Enterprise Linux Server (2.6.32-36.x86-64)
 
      virsh console centos64
 sudo virsh console  --force  test-centos7 
+yum install guestfish
 guestfish --rw -a disk.img -i edit /boot/grub/grub.conf
+guestfish --rw -d centos6-wu   -i edit /boot/grub/grub.conf
 ```````````````pool section``````````
 virsh pool-list --all
 virsh pool-define-as   guest_images_dir  dir  - - - - "/guest_images"
@@ -2930,14 +3223,20 @@ For example, the minute value defined as 0-59/2 denotes every other minute in th
 Step values can also be used with an asterisk. For instance, if the month value is defined as */3, 
 the task will run every third month.
 `````````````````````````````````````
-/var/spool/cron/  #The user-defined crontabs are stored 
-/etc/crontab
+
+
+1、列出所有用户的定时任务：cat /var/spool/cron/* 
+                               /var/spool/cron/  #The user-defined crontabs are stored
+2、全局配置文件          ：/etc/crontab
+
 /etc/cron.d/ 
 /etc/cron.hourly/
 /etc/cron.daily/
 /etc/cron.weekly/
 /etc/cron.monthly/
 /etc/cron.daily/jobs.deny 
+
+/var/spool/cron
 minute   hour   day   month   dayofweek   command
 `````````````````````````````````````
 centos6:  yum install cronie
@@ -2958,8 +3257,13 @@ crontab -l
 ============================   puppet   =================================
 /var/log/messages
 ============================   ansible section =================================
-
+The goal of a play is to map a group of hosts to some well defined roles, represented by things ansible calls tasks. At a basic level, a task is nothing more than a call to an ansible module (see About Modules).
 ````````epel section````
+方法一：  
+  sudo yum -y install epel-release
+  ansible salt_perf*   -m shell -a "sudo yum -y install epel-release"
+  ansible salt_perf*   -m shell -a "yum --disablerepo=epel -y update  ca-certificates"
+方法二：  
   wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
   yum upgrade ca-certificates --disablerepo=epel -y
   wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
@@ -3008,8 +3312,32 @@ When you put a password with special characters inside host inventory file it br
 \# works. Ansible 1.9.1 though. 
 ct-stage-tomcat-partener02   ansible_ssh_host=192.168.31.91  ansible_connection=ssh ansible_ssh_user=yxaccount ansible_ssh_pass=YXxxd7361^@\#
 
-````````````````````ssh section```````````````````````````````````
 
+#Let’s run a playbook using a parallelism level of 10:
+ansible-playbook playbook.yml -f 10
+
+``````````````````
+从svn中取出ansible配置文件
+cat ./ansible-svn.sh 
+#!/bin/bash
+svn list  http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/    --username wujunrong| grep  ansible |xargs -I {} svn export  http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/{} --force  /etc/ansible/hosts
+
+
+````````xshell section````````````
+/etc/ansible/hosts->xshell 配置文件
+cat /etc/ansible/hosts| grep -E -v "^[[:space:]]*$"  | grep -v -E "\[.*\]" | grep -v "^#.*" | grep -v localhost | awk '{system("echo -ne "$1" \",\"  ; echo -ne "$2" | cut -d = -f 2- | tr -d \"\n\" ; echo -ne \",\" ssh ;echo -ne \",\" 22 \",\"; echo  -ne "$4" | cut -d = -f 2-  | tr -d \"\n\"   ;echo -ne \",\" ;  echo -e   "$5" | cut -d = -f 2-  ")}' |sed  's/\\//g' |sed 's/ //g'>./xshell.csv
+./xshell.csv格式如下：
+product-v6_pro03-v6_webapp_front02,192.168.110.73,ssh,22,yxaccount,YXxxd7361^@#
+product-v6_pro03-ct-production-tomcat-partener02.xinxindai.com,192.168.110.80,ssh,22,yxaccount,YXxxd7361^@#
+product-v6_pro03-sftp_slave_192.168.110.91,192.168.110.91,ssh,22,yxaccount,YXxxd7361^@#
+product-v6_pro01_v6_lvs01,192.168.110.20,ssh,22,yxaccount,YXxxd7361^@#
+product-v6_pro01_v6_nginx01,192.168.110.22,ssh,22,yxaccount,YXxxd7361^@#
+
+
+
+
+````````````````````ssh section```````````````````````````````````
+ssh -vvv root@192.168.129.76
 ssh-keygen -t rsa  
 ssh-copy-id -i ~/.ssh/id_rsa.pub $remote_user@$remote_host
 ssh-agent bash
@@ -3037,6 +3365,16 @@ ansible test             -m yum   -a "name=svn      state=latest"
 
 ansible webservers       -m git        -a "repo=git://foo.example.org/repo.git dest=/srv/myapp version=HEAD"
 ansible webservers       -m subversion -a "repo=svn+ssh://an.example.org/path/to/repo dest=/src/export export=True"
+
+
+ansible-playbook site.yml --limit datacenter2
+ansible-playbook site.yml --limit @retry_hosts.txt
+
+
+ansible-pull                 -o           -d /tmp/test-ansible/git/   -i /etc/ansible/hosts  -U /srv/git/xxd_code_repo.git
+寻找local.yml              有变化才执行
+或者office-salt.yml文件                   checkout 路径                  host文件            git源路径
+
 =========================   ps section command  ====================================
 
 From the man page, there are a few thread options:
@@ -3060,6 +3398,9 @@ yum -y install rsync
 /var/log/rsync.log
 /var/run/rsyncd.lock
 
+-C, --cvs-exclude           auto-ignore files in the same way CVS does
+
+
 rsync -avz rpmpkgs/ root@192.168.0.101:/home/
 rsync  -avzh  /opt/webserver/v6_tomcat/webapps/v6_admin/image/   root@192.168.31.29:/opt/webserver/v6_tomcat/webapps/xxdai_sys_admin/image/ --dry-run
                拷贝源头                                          拷贝目标
@@ -3071,6 +3412,10 @@ rsync -avzh /var/www/html/cdh5/  root@192.168.38.119:/tmp/wujunrong
 /var/www/html/cdh5/ ,/tmp/wujunrong 必需存在，rsync只同步这两个目录中的内容
 如果参数最后不带反斜杠“/”，rsync会把cm5目录移动到wujunrong目录下，例如：
 rsync -avzh  /var/www/html/cm5   root@192.168.38.119:/var/www/html/centos6-cm5.5.0
+
+
+备份样例
+rsync -av /srv/     /tmp/wujunrong/backup/srv/     --exclude   salt/xinxindai_tomcat/files/v6_packages    --exclude=*.zip  --exclude=*.jpg   --exclude=*.png    --cvs-exclude    --exclude=*.apk   --exclude=*.bin  --exclude=*.gz  --exclude=*.jsp  --exclude=*.js  --exclude=*.rpm    --exclude=*.class  --exclude=.*  --exclude=*.txt
 
 
 使rsync服务使用selinux保护机制 配置方法：
@@ -3133,7 +3478,7 @@ jps -l -v                #java section
 unset HISTFILE
 tar xjvf strongswan-5.2.1.tar.bz2
 zipinfo conf_file.zip
-file -bi [filename]  #utf-8
+
 sort <file> | uniq -c            #计算重复次数
 sort <file> | uniq --count
 pwdx <PID>  #Find out current working directory of a running process?
@@ -3166,6 +3511,13 @@ sudo yum groupinstall  "Development Tools"
 sudo apt-get install build-essential
 ``````grep section````````````````
   grep -inr "ramesh" *     #exclude case from a grep to make it not case sensitive – simply add -i
+  grep -I -n -H 忽略二进制文件
+       -I -- process a binary file as if it did not contain matching data; 
+       -n -- prefix each line of output with the 1-based line number within its input file
+       -H -- print the file name for each match
+  
+  
+  find ./ -path "*.yml" |xargs -I {} grep -H owner=  {} 
   grep -e listen -e standard_conforming_strings
 
   #For BSD or GNU grep you can use -B num to set how many lines before the match and -A num for the number of lines after the match.
@@ -3179,6 +3531,10 @@ sudo apt-get install build-essential
   grep -r --exclude-dir={packages,rsync,workspace} xinxindai  *
   
   grep -e pattern1 -e pattern2 filename
+  
+  cat v6_nginx01-tomcat_access-2016-06-07-14_05_01.log |   gawk -F@  '{print $1 $5  $9}' |  grep -E "[[:space:]]+/[[:space:]]*$" |  gawk -F@  '{print $1 $5 $9 $17}'
+
+  grep -E -v "^[[:space:]]*$"  #去空行    
 ``````````````````````````````
 
 
@@ -3195,9 +3551,30 @@ diff -r --exclude=".svn" dev_v6.4.4_20160308/  ../wujunrong/dev_v6.4.4_20160308/
 du -ah /root
 du -ak /root
 du --max-depth  1 -h
+du -k --exclude /opt/webserver/v6_tomcat/webapps/m/static/image   | sort -nk1 
 ```````````ls section``````````````````````````
 ls -ltr
-stat ./v6_tomcat_webservice01-catalina.out 
+
+```file section````````
+stat ./v6_tomcat_webservice01-catalina.out
+file -bi [filename]  #utf-8
+stat -f /dev/sda
+
+
+stat zhihuitui1_release_new.apk
+  File: `zhihuitui1_release_new.apk'
+  Size: 17283280  	Blocks: 33760      IO Block: 4096   regular file
+Device: fd03h/64771d	Inode: 394807      Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2016-06-23 03:39:52.118611000 +0800
+Modify: 2016-06-22 17:03:06.000000000 +0800   真实修改时间
+Change: 2016-07-26 14:09:02.708560334 +0800   做过copy后的时间
+
+
+Access - the last time the file was read
+Modify - the last time the file was modified (content has been modified)
+Change - the last time meta data of the file was changed (e.g. permissions)
+
 ````````
 The cp command -p option is equivalent to --preserve=mode,ownership,timestamps
 cp -p tre.sh /tmp/tre.sh.5
@@ -3213,11 +3590,12 @@ date +%Y%m%d -s "20150721"
 date +%T     -s "11:04:13"
 i=1440137634;date -u -d @${i} +"%T"  #把秒转换成小时分钟
 
-
+sudo salt  -N     'stage_v6tomcat'     cmd.run 'date -s "20160722 23:59"'
 find .  -type f -exec sh -c 'second=$(echo {}|  sed  -r   -n  "s/.*-([0-9]+)\.out/\1/p") && \
                              [ ! -z "$second" ] && my_second=$(date -u -d @$second +"%H_%M_%S")  && \
                              new_file_name=$(echo {}|sed  -r  "s/([0-9]+)\.out/$my_second.out/g") && \
                              mv {}   $new_file_name '  \;
+							 
 ```````````````````````````取日志 log section``````
 salt 'v6_webservice02' cmd.run "ls -lh /opt/webserver/v6_tomcat/logs/catalina.out.20150905"
                                 grep -E "^\[v6_webservice\]\[INFO\]2015-09-05\s12:00"   /opt/webserver/v6_tomcat/logs/catalina.out.20150905
@@ -3235,7 +3613,18 @@ tar -O -xzvf ./v6_webservice01_20150905.tar.gz |  grep -E "^\[v6_webservice\]\[I
 tar    -zcvf /tmp/webservice-trade.tar.gz   ./{*webservice*11-11*,*webser*.out,*tra*11-11*,*tra*.out}
 tar    -zcvf /tmp/trade-12-7.tar.gz         `find ./ -amin -180 -type f | grep tra`
 tar    -zcvf /tmp/fk-2016-01-27.tar.gz      `find . -type f -newerct "2016-01-27 00:00:00"    -regex ".*fk.*" `
-                                             find . -type f -newerct "2016-04-14  15:00:00"  -regextype posix-extended  -regex ".*(tra|webservice).*"
+tar    -zcvf /tmp/fk-2016-01-27.tar.gz      `find . -type f -newerct "2016-04-14  15:00:00"  -regextype posix-extended  -regex ".*(tra|webservice).*" `
+											 
+tar -zcvf /tmp/tradews_webservice_20160614.tar.gz  `find . -type f -newerct "2016-06-14  00:00:00"     -regextype posix-extended  -regex ".*(tra|webservice).*" `
+ 
+tar    -zcvf /tmp/front-and-webservice-2016-06-02.tar.gz    `find . -type f -newerct "2016-06-02  09:00:00"    -iregex ".*v6_front.*\|.*webservice.*" `
+tar    -zcvf /tmp/front-and-webservice-2016-06-01.tar.gz    `find . -type f -newerct "2016-06-01  14:00:00"   ! -newerct "2016-06-01 19:10:00"    -iregex ".*v6_front.*\|.*webservice.*" `
+catalina.out挖日志
+ls *20160514*  | xargs -I {}    sh -c  " zcat {} | sed -n  '/^\[v6_webservice\]\[INFO\]2016-05-14\s11:00/,/^\[v6_webservice\]\[INFO\]2016-05-14\s13:00/w  /tmp/{}_extracted.txt'"	
+ls *20160601*  | xargs -I {}    sh -c  " zcat {} | sed -n  '/^\[v6_webservice\]\[INFO\]2016-06-01\s16:00/,/^\[v6_webservice\]\[INFO\]2016-06-01\s17:00/w  /tmp/{}_extracted.txt'; zip /tmp/20160601.zip -m  /tmp/{}_extracted.txt"										 
+ls *20160627* | xargs -I {}    sh -c  " zcat {} | sed -n  '/2016-06-27\s16:00/,/2016-06-27\s17:00/w  /tmp/{}_extracted.txt'; zip /tmp/front20160627.zip -m  /tmp/{}_extracted.txt"
+文件名优化： ls *20160628* | xargs -I {}    sh -c  'file_name={}; zcat {} | sed -n  "/2016-06-28\s01:00/,/2016-06-28\s02:00/w  /tmp/${file_name/.tar.gz/.txt}"; zip /tmp/webservice20160628_2.zip -m  /tmp/${file_name/.tar.gz/.txt} '
+
 zcat v6_mobile01_20151201.tar.gz| grep -aHn 15120115162100176722
 
 `````````````
@@ -3249,6 +3638,8 @@ find /path/to/dir -newermt yyyy-mm-dd ! -newermt yyyy-mm-dd -ls
 find ./  -mmin -480  -name  '*ng*'  -exec grep check  {} \; |wc -l
 find ./  -mmin -60   -name  '*ng*'  -exec grep quick_03.png {}  \; | grep 117.136.4.216
 ·····················
+nginx 挖日志：zcat v6_nginx01_20160713.tar.gz | sed -n  "/2016:16:00/,/2016:16:30/p"
+
 IP地址排序：    cat v6_nginx01-tomcat_access-2015-12-11-08_05_01.log |  gawk -F@  '{print $1}' | grep -v '^[[:space:]]*$'  | sort |uniq -c  | sort -s -n -k 1,1
 url排序：       cat v6_nginx01-tomcat_access-2015-12-11-08_05_01.log |  gawk -F@  '{print $9}' | grep -v '^[[:space:]]*$'  | sort |uniq -c  | sort -s -n -k 1,1
 IP地址对应url： cat v6_nginx01-tomcat_access-2015-12-11-08_05_01.log |  grep 218.6.70.170 |  gawk -F@  '{print $1 $5 $9 $17}'
@@ -3258,9 +3649,11 @@ url: XXXX访问分析
 url：XXXX在每个文件中出现过多少次    ：    find ./ -name "*ng*" -exec sh -c 'echo -n {} " ";grep "Code=xft_cqs" {} | wc -l  '  \;
 url：XXXX每个文件每次出现的ip地址等  ：    find ./ -name "*ng*" -exec sh -c 'grep "XXXX" {} | gawk -F@  "{print  \$1 }" ' \;
 访问此url：XXXX分析 ip地址排序       ：    find ./ -name "*ng*" -exec sh -c 'grep "XXXX" {} | gawk -F@  "{print  \$1 }" ' \; |  grep -v '^[[:space:]]*$'  | sort |uniq -c  | sort -s -n -k 1,1
+                                           zcat v6_nginx01_20160713.tar.gz | sed -n  "/2016:16:00/,/2016:16:30/p"|  grep "/v5_mobile/mobile/xplan/newPlanListandFund2.html"| gawk -F@  '{print  $1 }' |  grep -v '^[[:space:]]*$'   | sort |uniq -c  | sort -s -n -k 1,1 
 访问此url：XXXX总次数                ：    find ./ -name "*ng*" -exec sh -c 'grep "Code=xft_cqs" {} | gawk -F@  "{print \$1 }" ' \; |  grep -v '^[[:space:]]*$'  | sort |uniq -c  | sort -s -n -k 1,1 | gawk  '{ sum+=$1 } END{ print sum }'
 
 访问次数:具体第几分钟 cat ./v6_nginx01-tomcat_access-2016-04-29-05_05_01.log |  grep 118.193.192.62  |  gawk -F@  '{print $1 $5 $9 $17}' | awk -F: '{print  $3 }'  |uniq  -c |sort -s -n -k 1.1
+
 ========================   DHCP section  ==============================
 
 
@@ -3477,9 +3870,26 @@ password "ranbiao"
 
 
 ===========================  samba section  ==========================================
-yum install samba samba-client samba-common
-/etc/samba/smb.conf 
+yum install -y samba samba-client samba-common
+cat /etc/samba/smb.conf 
 
+[global]
+workgroup = WORKGROUP
+server string = Samba Server %v
+netbios name = centos
+security = user
+map to guest = bad user
+dns proxy = no
+printing = bsd
+printcap name = /dev/null
+#============================ Share Definitions ============================== 
+[Anonymous]
+path = /opt/logs
+#path = /var/log/xinxindai
+browsable =yes
+writable = yes
+guest ok = yes
+read only = no
 
 
 ==============================Kerberos section========================================================
@@ -3617,8 +4027,11 @@ sudo vgrename   ubuntu-vg  ubuntu-vg-lacie
 
 ========redis section =======
 ansible cloudera_redis          -m shell  -a   "yum -y install make gcc tcl"
-
-
+ /usr/local/redis/redis-cli keys *dic_common_BORROW_TYPE*
+ /usr/local/redis/redis-cli del   "\"dic_common_BORROW_TYPE_13\""
+查询channel个数
+ pubsub channels *
+ pubsub numsub "trade_transfer_result_topic"
 `````aria2 section```download section``````
 
 ubuntu:   sudo apt-get install  aria2
@@ -3650,11 +4063,15 @@ vi /etc/keepalived/keepalived.conf
 state BACKUP                                ###设置为BACKUP
 priority 100                            ###权重值
 ```````````
+vi /etc/redis/redis.conf
+#bind 127.0.0.1
+#protected-mode no
+````````
 redis-server --version
 redis.conf 
 redis-cli -h 127.0.0.1 -p 6379 -a "mypass"
 
-
+info keyspace
 
 CONFIG SET loglevel "notice"
 CONFIG GET loglevel
@@ -3734,6 +4151,7 @@ systemctl start nfs-idmap  #rpc.idmapd is the NFSv4 ID <-> name mapping daemon. 
 
 ```````````
 /etc/idmapd.conf
+Domain = xinxindai.com
 [Mapping]
 Nobody-User = galaxy
 Nobody-Group = galaxy
@@ -3759,22 +4177,42 @@ sudo vi /etc/exports
   /usr/local 192.168.0.0/255.255.255.0(ro)
   /home      192.168.0.0/255.255.255.0(rw)
 
-
+  
+cat /etc/exports
+/root/docker_test     172.16.15.0/255.255.255.0(rw,all_squash,anonuid=1000,anongid=1000)  192.168.38.0/255.255.255.0(rw,all_squash,anonuid=1000,anongid=1000)  
+````````````````````  
+  
+centos7:
 systemctl restart nfs-server
 
-
+centos6:
+service  nfs-server  restart
+service rpcbind restart
+/etc/init.d/nfs-kernel-server restart
+ 
 1. make sure ids on host and client are identical
 2. make sure the domain names are correctly set
+```````````````````````````
+mount -a  Mount all filesystems (of the given types) mentioned in fstab
 
-
+`````````````````
+sudo exportfs 192.16.15.88:/root/docker_test   -o rw,async,no_root_squash,no_subtree_check
+exportfs -v 
+exportfs -rav  reload /etc/exports file.
 
 ``````````mount section client``````
 yum -y install showmount
 showmount -e 192.168.0.100
 mount -t nfs 192.168.0.100:/nfsshare /mnt/nfsshare
+````````
+碰到此错误时，用如下命令：mount.nfs: access denied by server while mounting 192.168.31.178:/root/docker_test
+mount -t nfs  -o nfsvers=3  192.168.31.178:/root/docker_test    /root/mnt/
+``````````````````````
 mount -o loop disk1.iso /mnt/disk
 mount |column -t
-
+```````mount cdrom``````````` 
+ ll /dev | grep sr0
+ mount -r -t iso9660 /dev/sr0 /root/mnt/
 ```````````hfsplus section``````````
 sudo mount -v  -t hfsplus -o force,rw   /dev/sdc1  /home/frank/mac_mini_storage/
 sudo mount -v  -t hfsplus -o remount,force,ro,loop,offset=209735680,sizelimit=250140434432   /dev/sda2  /home/frank/mac_mini_storage/
@@ -3799,9 +4237,19 @@ yum install -y net-snmp.x86_64 net-snmp-devel.x86_64
 
 方案2 (可能不需要ipvsadm工具）:
 yum install gcc kernel-headers kernel-devel
-yum install keepalived
+yum install keepalived -y
 service keepalived start
+``````````````````````````
 /etc/keepalived/keepalived.conf
+    在同一网段内不同keepalived集群的 virtual_router_id 值不能相同，
+	                keepalived集群内的virtual_router_id必须相同
+	如果相同会在messages中收到VRRP错误包 
+    所以需要更改 virual_router_id 
+	
+ advert_int 1   #组播信息发送间隔，两个节点设置必须一样
+```````````````````````
+
+
 chkconfig keepalived on
 
 ```````````````````````````
@@ -3811,6 +4259,8 @@ make && make install
 
 /usr/sbin/keepalived  --version
 echo 1 > /proc/sys/net/ipv4/ip_forward 
+
+
 
 ========== ipMsg message section============
 sudo yum install git gtk2-devel GConf2-devel gcc-c++ make autoconf libtool automake
@@ -3920,12 +4370,19 @@ end1
 
 ====sed section awk section========
 sed -e "s/stage_/\/stage/g" -e "s/v6_webservice/\/webservice\//g"
+删除第四行
+sed   -i.bak   '4d' /etc/hosts  
 cat /proc/mounts | grep -E "\b(btrfs|ext2|ext3|ext4|jfs|reiser|xfs|ffs|ufs|jfs|jfs2|vxfs|hfs|ntfs|fat32|zfs)\b" |awk 'BEGIN{printf "{\n\"data\":[\n"} {printf "{\"{#DEV_NAME}\" : \"%s\",\"{#FS_NAME}\" : \"%s\",\"{#SEC_SIZE}\" : ",$1,$2;system("blockdev --getss " $1 " |tr -d \"\n\"  ") ;printf "},\n"}   END{printf "  ]\n}\n"} '   | tac | sed  '3s/\({.*}\),/\1/g'|tac
+删除空行
+sed '/^\s*$/d' 
+
+find ./grains.test_* | xargs -I {} sed  -i  "s/ci\/files\/test_v6_mobile/wujunrong\/xxd_configure\/test\/v6\/mobile/g;w /dev/stdout"   {}
+
+echo "abc 123" | sed 's/[0-9]\+/& &/'  #the special character "&." It corresponds to the pattern found.
+
 ====alternatives section=========
 sudo alternatives --install /usr/bin/genericcmd genericcmd /usr/bin/cmd-21.0
 alternatives --display genericcmd
-
-
 =============rdesktop section====
 
 wget https://github.com/rdesktop/rdesktop/releases/download/v1.8.3/rdesktop-1.8.3.tar.gz
@@ -3995,11 +4452,11 @@ git config user.name
 
   git push origin master
 `````````````
-创建空仓库，然后用push往仓库中添加
+创建中心仓库，是空仓库，然后用push往仓库中添加
 1、服务器端，创建空仓库，然后通过客户端，用push往仓库中添加
    git --bare init  #bare repositories (by definition) don't have a working tree attached to them, so you can't easily add files to them as you would in a normal non-bare repository (e.g. with git add <file> and a subsequent git commit.)
                   You almost always update a bare repository by pushing to it (using git push) from another repository.
-
+   或 git init --bare  jenkins-test.git
 2、首个客户端，上传要版本管理的文件到服务器
    git init
    git add work_memo.txt
@@ -4074,11 +4531,14 @@ git checkout -b [branchname] [tagname]:
 git checkout -b version2     v2.0.0
 
 git branch   testing
+切换本地分支
 git checkout testing   #To switch to an existing branch
+git checkout master
+
 
 git archive --format zip --output /full/path master
 ===========zabbix section===========
-
+zabbix_server --version
 zabbix-server-mysql.x86_64 : Zabbix server compiled to use MySQL database
 zabbix-server-pgsql.x86_64 : Zabbix server compiled to use PostgresSQL database
 
@@ -4193,7 +4653,7 @@ mysql -uzabbix -pE431e4311! zabbix  < /root/zabbix-2.4.7/database/mysql/schema.s
 mysql -uzabbix -pE431e4311! zabbix  < /root/zabbix-2.4.7/database/mysql/images.sql 
 mysql -uzabbix -pE431e4311! zabbix  < /root/zabbix-2.4.7/database/mysql/data.sql 
 ``````zabbix percona`
-zabbix agent:
+mysql zabbix agent插件:
 yum install http://www.percona.com/downloads/percona-release/redhat/0.1-3/percona-release-0.1-3.noarch.rpm
 yum install percona-zabbix-templates
 zabbix server:
@@ -4207,7 +4667,7 @@ yum upgrade ca-certificates --disablerepo=epel -y
 yum -y install zabbix-agent
 
 
-方法二：从官网下载
+方法二：从官网下载yum源
 CentOS/RHEL 7:# rpm -Uvh http://repo.zabbix.com/zabbix/2.2/rhel/7/x86_64/zabbix-release-2.2-1.el7.noarch.rpm
            sudo rpm -ivh http://repo.zabbix.com./zabbix/2.4/rhel/7/x86_64/zabbix-release-2.4-1.el7.noarch.rpm
 CentOS/RHEL 6:# rpm -Uvh http://repo.zabbix.com/zabbix/2.2/rhel/6/x86_64/zabbix-release-2.2-1.el6.noarch.rpm
@@ -4222,9 +4682,9 @@ CentOS/RHEL 5:# rpm -Uvh http://repo.zabbix.com/zabbix/2.2/rhel/5/x86_64/zabbix-
 vi /etc/zabbix/zabbix_agentd.conf
 1、配置服务器地址
 #Server=[zabbix server ip]
-#Hostname=[ Hostname of client system ]
+#Hostname=[ Hostname of client system ]注释掉Hostname这一行，使得自动注册能用hostname命令来命名机器，Active check时，agent用这个值向server主动发起请求
    Server=192.168.1.11
-   Hostname=Server1
+   #Hostname=Zabbix server
 2、配置允许zabbix server远程在agent执行命令
 vi /etc/zabbix/zabbix_agentd.conf
    EnableRemoteCommands=1
@@ -4238,6 +4698,7 @@ vi /etc/zabbix/zabbix_agentd.conf
 5、如果不是用action->autoregisteration功能，即自动被zabbix server发现的功能，则执行下面语句
    To disable the active checks, clear the value of the ServerActive parameter:
    sudo sed -i 's/^ServerActive=127.0.0.1/ServerActive=/g' /etc/zabbix/zabbix_agentd.conf
+
 `````zabbix web````
 Go to: Configuration → Hosts (or Templates)
 Click on Web in the row of the host/template
@@ -4251,6 +4712,7 @@ service zabbix-agent restart
 方法一：
 wget http://repo.zabbix.com/zabbix/2.4/rhel/6/x86_64/zabbix-java-gateway-2.4.7-1.el6.x86_64.rpm
 rpm -ivh zabbix-java-gateway-2.4.7-1.el6.x86_64.rpm
+或 rpm -ivh http://repo.zabbix.com/zabbix/2.4/rhel/6/x86_64/zabbix-java-gateway-2.4.7-1.el6.x86_64.rpm
 yum localinstall  zabbix-java-gateway-2.4.7-1.el6.x86_64.rpm 
 /zabbix-2.4.7/src/zabbix_java/startup.sh
 方法二：
@@ -4411,13 +4873,8 @@ centos7:
 ======mail程序
 yum install mail
 vim /etc/mail.rc
-=====tomcat section=========
-安装tomcat解压安装包即可
 
-/root/apache-tomcat-6.0.45/conf/server.xml
-     Connector port="8080
-	 
-	 
+
 ====clonezilla section==========
  sudo fdisk /dev/sdc
  sudo fdisk -l /dev/sdc
@@ -4442,11 +4899,13 @@ yum install dhcp -y
 cobbler version
 有问题看日志：less /var/log/cobbler/cobbler.log
                    /var/log/httpd/error_log  
+```````````
+mount -t iso9660 -o loop,ro /path/to/isos/Fedora-17-x86_64-DVD.iso /mnt
+cobbler import --name=fedora17 --arch=x86_64 --path=/mnt
 
 ```````
 kickstart file： /var/lib/cobbler/kickstarts
 snippets         /var/lib/cobbler/snippets
-
 
 
 sudo blkid | grep swap
@@ -4496,12 +4955,12 @@ vi /etc/cobbler/modules.conf
    https://10.0.1.9/cobbler_web/
 
 ``````
+systemctl enable  rsyncd.service
+systemctl enable xinetd
 
 systemctl restart httpd
 systemctl restart cobblerd.service
 systemctl start   rsyncd.service
-systemctl enable  rsyncd.service
-systemctl enable xinetd
 systemctl start xinetd
 systemctl restart dhcpd.service
 systemctl start  tftp.service
@@ -4512,10 +4971,18 @@ cobbler check
 
 cobbler sync
 cobbler status
+`````````````````````````````
+倒入DVD文件
+步骤一：mount -o loop  CentOS-6.7-x86_64-bin-DVD1.iso  /root/mnt/
+步骤二：cobbler import --path=root/mnt/ --name=CentOS_6.6
+步骤三：cobbler profile report #用此查看CentOS_7-x86_64对应的kickstart文件
+步骤四：修改kickstart变量，并查看生产结果
+cobbler profile report
+cobbler profile  edit --name=CentOS_6.6-x86_64  --ksmeta="net_dev=eth0 ip_addr=192.168.126.194 my_gateway=192.168.126.253 my_nameserver=192.168.39.21 my_hostname=wujunrong-test2"
+cobbler profile getks --name=CentOS_6.6-x86_64
+默认使用的Kickstart文件                      : /var/lib/cobbler/kickstarts/sample_end.ks  （用cobbler profile report命令查询）
 
-
-mount -o loop  CentOS-6.7-x86_64-bin-DVD1.iso  /root/mnt/
-cobbler import --path=root/mnt/ --name=CentOS_6.6
+``````````````
 
 cobbler signature update
 cobbler signature report
@@ -4558,15 +5025,7 @@ cobbler system add --name=desktop-gnome-1 \
                    --mac=52:54:00:88:f3:44 \
                    --ip-address=192.168.122.11
 cobbler system report
-````````````
-修改kickstart变量，并查看生产结果
-cobbler profile report
-cobbler profile  edit --name=CentOS_6.6-x86_64  --ksmeta="net_dev=eth0 ip_addr=192.168.126.194 my_gateway=192.168.126.253 my_nameserver=192.168.39.21 my_hostname=wujunrong-test2"
-cobbler profile getks --name=CentOS_6.6-x86_64
-默认使用的Kickstart文件                      : /var/lib/cobbler/kickstarts/sample_end.ks  （用cobbler profile report命令查询）
 
-
-````````
 
 ====hardware section raid section dell section====
 远程控制卡的默认IP是192.168.0.120，
@@ -4643,7 +5102,7 @@ pip install sqlalchemy
  
  service ntpd start
  /bin/systemctl start  ntpd.service
-==============shortcut section======
+==============shortcut section bash section======
  Bash Keyboard ShortcutsMoving the cursor:
   Ctrl + a   Go to the beginning of the line (Home)
   Ctrl + e   Go to the End of the line (End)
@@ -4709,6 +5168,19 @@ Process control:
  Ctrl + D   Send an EOF marker, unless disabled by an option, this will close the current shell (EXIT)
  Ctrl + Z   Send the signal SIGTSTP to the current task, which suspends it.
             To return to it later enter fg 'process name' (foreground).
+```````````````````````			
+Ctrl-u - Cut everything before the cursor
+
+Other Bash shortcuts,
+
+Ctrl-a  Move cursor to beginning of line
+Ctrl-e  Move cursor to end of line
+Ctrl-b  Move cursor back one word
+Ctrl-f  Move cursor forward one word
+Ctrl-w  Cut the last word
+Ctrl-k  Cut everything after the cursor
+Ctrl-y  Paste the last thing to be cut
+Ctrl-_  Undo
 ===============mysql section======================
 mysql> show databases;
 mysql> show tables;
@@ -4721,24 +5193,35 @@ mysql> SHOW VARIABLES LIKE "%version%";
 第二步：得到ip地址和mac列表
         给出ip地址和mac对应关系          ：        cat network31.txt | awk '$5~192 {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} '
         得到虚拟机名称、ip、mac地址(遍历宿主机)    : ansible  hypervisor-machine    -m shell -a 'virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo name\:{};sudo virsh domiflist {} "  |grep "name\|vnet"|awk "\$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} ";echo '
-
+                                                    
+		{ sudo nmap -sP 192.168.31.0/24   | grep -v 192.168.31.178 |awk '$5~/[0-9][0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' | grep -v ansible >./network172_mac_ip.txt ; ansible  hypervisor-machine     -m shell -a 'echo "hyper-"`hostname`;virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo hostname\:{};sudo virsh domiflist {} "  |grep "hyper\|name\|vnet"|awk "\$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} ";echo '| grep "hyper-\|name" |sudo  awk '{ system("echo -n  "$1" \" \"; echo "$2"; echo ")}';echo; } |column -t 
 		
 第三步:
         列出虚拟机名称和mac地址对应关系：virsh list --all| grep runn   | awk '{print $2}' |xargs  -I '{}' sh -c "echo -n {} ' ' ;sudo virsh domiflist {}|grep vnet|awk '{printf \"%s \", \$5  }';echo " > /tmp/ip_mac.txt
         得到虚拟机名称、ip、mac地址        版本1        ：          virsh list --all| grep runn   | awk '{print $2}' |xargs  -I '{}' sh -c "echo -n {} ' ' ;sudo virsh domiflist {}|grep vnet|awk '{printf \"%s \", \$5  }';echo " | awk '{ system("echo -n  "$1" ; echo " "; grep -i "$2" /tmp/ip_mac.txt ")}'
                                            版本2        ：     sudo virsh list --all| grep runn   | awk '{print $2}' |xargs  -I '{}' sh -c "echo -n {} ' ' ;sudo virsh domiflist {}|grep vnet|awk '{printf \"%s \", \$5  }';echo " | awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt ")}'
 
-       单个宿主机，上面3步合并  参数：172.16.15.0/24 
-       sudo nmap -sP 172.16.15.0/24  | awk '$5~/[0-9]{3}/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' >./network172_mac_ip.txt ;sudo virsh list --all| grep runn   | awk '{print $2}' |xargs  -I '{}' sh -c "echo -n {} ' ' ;sudo virsh domiflist {}|grep vnet|awk '{printf \"%s \", \$5  }';echo " | awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt ")}'
+       单个宿主机，上面3步合并  参数1：172.16.15.0/24  参数2：宿主机本身要192.168.40.20去掉
+       sudo nmap -sP 192.168.40.0/24 | grep -v 192.168.40.20 | awk '$5~/[0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' >./network172_mac_ip.txt ;sudo virsh list --all| grep runn   | awk '{print $2}' |xargs  -I '{}' sh -c "echo -n {} ' ' ;sudo virsh domiflist {}|grep vnet|awk '{printf \"%s \", \$5  }';echo " | awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt;echo; ")}'
 
+	   { echo "hyper-"`hostname`;virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo hostname\:{};sudo virsh domiflist {} "  |grep "hyper\|name\|vnet"    | awk "\$1~/hyper/ {printf \"\n%s\",\$1}    \$1~/name/ {printf \"\n%s \", \$1}     \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} " | sudo  awk '$1~/hyper-/ { print $1 }    $1~/name/ { system("echo -n  "$1" \" \"; grep -E -i "$2" ./network172_mac_ip.txt ; echo") } ' ; }|grep -v ^$  | column -t
+	   
+	   
 	   跨  宿主机，上面3步合并  参数：192.168.38.0/24 ，ansible的hypervisor_v6_test*
-                                      使用ansible 遍历     { sudo nmap -sP 192.168.38.0/24    | awk '$5~/[0-9][0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' >./network172_mac_ip.txt ; ansible  hypervisor_v6_test*     -m shell -a 'virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo -n "$(hostname)";echo -name\:{};sudo virsh domiflist {} "  |grep "name\|vnet"|awk "\$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} ";echo '| grep name |sudo  awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt ")}';echo; } |column -t;
-                                      使用salt遍历         { sudo nmap -sP 192.168.110.0/24   | awk '$5~/[0-9][0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' >./network172_mac_ip.txt ; sudo salt  v6_pro0?  cmd.run      'virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo -n "$(hostname)";echo -name\:{};sudo virsh domiflist {} "  |grep "name\|vnet"|awk "\$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} ";echo '| grep name |sudo  awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt ")}';echo; } |column -t;
-	   { ansible test-centos7-wu -m shell -a "sudo nmap -sP 192.168.31.0/24"  | awk '$5~/[0-9][0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' >./network172_mac_ip.txt ; ansible  hypervisor_v6_stage*    -m shell -a 'virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo -n "$(hostname)";echo -name\:{};sudo virsh domiflist {} "  |grep "name\|vnet"|awk "\$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} ";echo '| grep name |sudo  awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt ")}';echo; } |column -t;
+                                      使用ansible 遍历     { sudo nmap -sP 192.168.31.0/24    | grep -v 192.168.31.178 |awk '$5~/[0-9][0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' | grep -v ansible >./network172_mac_ip.txt ; ansible  hypervisor-machine     -m shell -a 'echo "hyper-"`hostname`;virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo hostname\:{};sudo virsh domiflist {} "  |grep "hyper\|name\|vnet"  ';} |  { awk "\$1~/hyper/ {printf \"\n%s\",\$1}  \$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} " |   sudo  awk '$1~/hyper-/ { print $1 } $1~/name/ { system("echo -n  "$1" \" \"; grep -E -i "$2" ./network172_mac_ip.txt ; echo")}';echo; } | column -t|grep -E -v "^[[:space:]]*$"  ;
+                                      使用salt遍历         { sudo nmap -sP 192.168.110.0/24   | grep -v 192.168.110.102|awk '$5~/[0-9][0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' | grep -v ansible >./network172_mac_ip.txt ;  sudo salt  v6_pro0?  cmd.run  'echo "hyper-"`hostname`;virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo hostname\:{};sudo virsh domiflist {} "  |grep "hyper\|name\|vnet"  ';} |  { awk "\$1~/hyper/ {printf \"\n%s\",\$1}  \$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} " |   sudo  awk '$1~/hyper-/ { print $1 } $1~/name/ { system("echo -n  "$1" \" \"; grep -E -i "$2" ./network172_mac_ip.txt ; echo")}';echo; } | column -t|grep -E -v "^[[:space:]]*$"  ;
+									  在system命令在ansible中输出会缺少内容 { ansible test-centos7-wu -m shell -a "sudo nmap -sP 192.168.31.0/24"  | awk '$5~/[0-9][0-9][0-9]/  {printf "%s ", $5} $3~/[0-9][0-9]:/ {print $3} ' >./network172_mac_ip.txt ; ansible  hypervisor_v6_stage*    -m shell -a 'virsh list --all| grep runn   | awk "{print \$2}"  |xargs  -I  {} sh -c "echo -n "$(hostname)";echo -name\:{};sudo virsh domiflist {} "  |grep "name\|vnet"|awk "\$1~/name/ {printf \"\n%s \", \$1} \$5~/[0-9][0-9]:/ {printf \"%s \", \$5} ";echo '| grep name |sudo  awk '{ system("echo -n  "$1" \" \"; grep -i "$2" ./network172_mac_ip.txt ")}';echo; } |column -t;
  `````
+根据/etc/ansible/hosts改hostname
+cat /etc/ansible/hosts| grep perf_ |awk '{print $1}'|xargs -I {} ansible {} -m shell -a "hostname {};sed -i.bak  s/HOSTNAME=.*/HOSTNAME={}/g   /etc/sysconfig/network ;hostname"
 
  
 =====Esxi section======
+远程卡相关：
+C:\Program Files (x86)\VMware\VMware vSphere CLI>esxcli.exe --server 172.16.15.89 software vib install -d /var/log/vmware
+esxcli software vib install -d /tmp/OM-SrvAdmin-Dell-Web-8.1.0-1518.VIB-ESX60i_A00.zip
+到esxi服务器上，查询已安装的模块：esxcli software vib list
+``````````
 
 virsh -c esx://root@192.168.129.1?no_verify=1 list     --all
 virsh -c esx://root@192.168.129.1?no_verify=1 dominfo  ceontos7_cobbler_吴军荣_192.168.31.192_192.168.129.90
@@ -4765,13 +5248,33 @@ The second block defines the service and hostname
 auth-esx #  This defines which credential block to use.  In this case, the esx credentials
 auth-esx-hostname #  This defines the host to use the esx credentials for
 
-```````````
+``````kvm esxi`````
 从Esxi迁移到kvm
+     sudo yum -y install virt-v2v 
      virt-v2v -ic esx://192.168.129.3/?no_verify=1 -os vmdisk --bridge br1 "centos6.4_test dio 192.168.31.193"
+	 
+	 export LIBGUESTFS_BACKEND=direct
+	 virt-v2v -v -x -ic vpx://xinxindai@192.168.129.252/xinxindai-oa/192.168.129.1?no_verify=1 "centos7_64_v6_test_吴军荣_192.168.31.178" -o local -os  /home/frank/kvm/images/my-wd-disk
 ``````````
 列出 Esxi上虚拟机名称和ip地址列表
      sudo virsh -c esx://root@192.168.129.7?no_verify=1 list     --all | grep -v ID | awk '{print $5 " " $3}' |column -t | sort -n -k 1
 
+`````遍历服务器``````	 
+cat ./playbook.yml 
+- hosts: localhost
+  remote_user: root
+  tasks:
+     - name: list all esxi vm 
+       shell: virsh -c esx://root@{{ item }}?no_verify=1 list --all >> ./output_of_ansible.txt
+       register: virsh
+       with_items:
+          - 192.168.129.1
+          - 192.168.129.3
+          - 192.168.129.5
+          - 192.168.129.7
+ 
+     - debug: var=virsh.stdout_lines	 
+ansible-playbook playbook.yml
 =======bbs section====
 yum -y install php-mysql
 Ucenter:
@@ -4819,5 +5322,83 @@ KEY getnum (msgtoid,folder,delstatus)
 
 =====echo section=====
  echo -e "server.1=192.168.129.50:2888:3888\nserver.2=192.168.129.51:2888:3888\nserver.3=192.168.129.52:2888:3888"
- 
+ echo -ne " " 无换行符
+===tr section===
+去掉换行符
+tr -d \"\n\" 
+====passwd section===
+echo "root:xinxindai" |chpasswd
+========= cut section ===========
+N          N’th byte, character or field, counted from 1
+N-         from N’th byte, character or field, to end of line
+N-M        from N’th to M’th (included) byte, character or field
+-M         from first to M’th (included) byte, character or field
+
+cut -f 3- -d \|
+
+==========jenkins section==============
+docker pull jenkinsci/jenkins
+我用过的插件
+1.folder
+2.pipeline
+3.Pipeline: Multibranch
+4.GitHub Organization Folder Plugin
+5.build-blocker-plugin ： 如果某些job在运行时等待，那么这个job等待
+6.parameterized-trigger：free-style-project开始由一个项目job触发另一个在folder中的项目，When using the "Trigger/Call builds on another project" item.
+``````````````
+To reset it without disabling security if you're using matrix permissions (probably easily adaptable to other login methods):
+In config.xml , set disableSignup to false .
+Restart Jenkins.
+Go to the Jenkins web page and sign up with a new user.
+````````````````
+curl -u wujunrong:wujunrong http://192.168.31.178:8080/job/wu/build?token=abc
+
+/var/jenkins_home/workspace/wu
+==========nexus section=============================
+user/passwd:admin/admin123
+$ sudo cp nexus-2.13.0-01-bundle.tar.gz /usr/local
+$ cd /usr/local
+$ sudo tar xvzf nexus-2.13.0-01-bundle.tar.gz
+$ sudo ln -s nexus-2.13.0-01 nexus
+NEXUS_HOME=/usr/local/nexus
+
+chown    wujunrong:wujunrong /usr/local/nexus
+chown -R wujunrong:wujunrong /usr/local/nexus-3.0.0-03/
+
+`````````
+vi /root/start.sh
+su - wujunrong -c "cd /usr/local/nexus && ./bin/nexus start"
+``````````
+
+view /usr/local/nexus/logs/wrapper.log
+````````````
+mvn deploy:deploy-file  -DgroupId=com.xxdai  -DartifactId=oa_dynamicode  -Dversion=4.0.0 -DgeneratePom=true   -Dpackaging=jar -DrepositoryId=nexus  -Durl=http://192.168.31.178:8081/repository/xxdai_release    -Dfile=./com/xxdai/oa_dynamicode/1.3/oa_dynamicode-1.3.jar
+mvn deploy:deploy-file  -DgroupId=com.xxdai  -DartifactId=v6_parent      -Dversion=1.0   -DgeneratePom=false  -Dpackaging=jar -DrepositoryId=nexus "-Durl=http://192.168.31.178:8081/repository/xxdai_release"   -DpomFile=/tmp/xxdai_release/com/xxdai/v6_flow/1.0/v6_flow-1.0.pom   -Dfile=/tmp/xxdai_release/com/xxdai/v6_flow/1.0/v6_flow-1.0.jar
+mvn deploy:deploy-file  -DgroupId=com.xxdai  -DartifactId=xxdai-dbutils      -Dversion=1.1-SNAPSHOT   -DgeneratePom=false  -Dpackaging=jar -DrepositoryId=nexus "-Durl=http://192.168.31.178:8081/repository/xxdai_snapshot"   -DpomFile=/tmp/xxdai_snapshot/com/xxdai/xxdai-dbutils/1.1-SNAPSHOT/xxdai-dbutils-1.1-20150629.080248-1.pom   -Dfile=/tmp/xxdai_snapshot/com/xxdai/xxdai-dbutils/1.1-SNAPSHOT/xxdai-dbutils-1.1-20150629.080248-1.jar
+curl -v -u admin:admin123 --upload-file  /tmp/xxdai_snapshot/com/xxdai/v6_parent/1.2.4-SNAPSHOT/v6_parent-1.2.4-SNAPSHOT.pom  http://192.168.31.178:8081/repository/xxdai_snapshot/com/xxdai/v6_parent/1.2.4-SNAPSHOT/v6_parent-1.2.4-SNAPSHOT.pom
+
+ The "repositoryId" parameter is not a Nexus repository ID, it is the ID of a server section in your settings.xml file which has then credentials needed for deployment.
+`````````````
+=======unix command section======
+#display all the permissions on a path
+namei -om /home/frank
+f: /home/frank
+ drwxr-xr-x root  root  /
+ drwxr-xr-x root  root  home
+ drwxr-xr-x frank frank frank
+========node.js section========
+npm install <Module Name>
+npm install   express
+npm uninstall express
+var express = require('express');
+npm update express  #Update package.json and change the version of the dependency which to be updated and run this command.
+npm search express
+````````````
+You can use following command to check all the modules installed globally:
+$ npm ls -g
+``````
+=====Filebeat section=========elk section===========
+curl -L -O https://download.elastic.co/beats/filebeat/filebeat-1.2.3-x86_64.rpm
+sudo rpm -vi filebeat-1.2.3-x86_64.rpm
+/etc/filebeat/filebeat.yml
 

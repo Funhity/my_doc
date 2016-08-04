@@ -1,14 +1,317 @@
+万网公网域名    用户名:34591958 密码：xxdai_2014_YX
+堡垒：super/YXauth!@#xxd001
+安全宝：www.anquanbao.com  chenjianming@xinxindai.com/!qaz@wsxXXDAQB
+
+``````cisico IDC```VPN section```
+windows8.1：要关闭internet connection sharing 服务
+address:xinxindai.com
+IDC:YXYWG/xxdyx
+cisco VPN:wujunrong/WJR@Es9i
+`````````````````````
+
+堡垒：super/YXauth!@#xxd001
+super：   username wujunrong password WJR@qwexxxd  vpn组：YXVPN/YXvpnasa@*
+
+存储：
+NAS 192.168.60.3 master/Master@storage 选N8000
+使用方法：  浏览器：https://192.168.60.1/   
+ip地址选： 192.168.60.3  
+设备选：N8000  
+账号：  master/Master@storage
+
+
+````````````zabbix section``````````````````````````````````
+http://192.168.110.60/zabbix
+服务器监控：admin/zabbix 
+http://192.168.31.114/zabbix
+sa/xinxindai!QAZ
+办公室：
+http://192.168.38.169/zabbix
+
+
+`````生产OA配置及启动```````
+
+1.oa-app1 ,oa-app2两台机器都要重启OA服务
+killall java
+/opt/Webserver/Resin-3.1.8/bin/startresin.sh
+/opt/Webserver/EMobile/start.sh
+
+2.view /opt/Webserver/ecology/WEB-INF/prop/HrmWebserviceIP.properties
+
+ipaddress=192.168.50.70,192.168.110.40
+192.168.110.40表示接受某台webservice的请求
+
+
+`````redis section```````````````
+查询注册用户数量
+pubsub channels *
+pubsub numsub "trade_transfer_result_topic"
+
+redis配置文件
+/usr/local/redis/redis-server /usr/local/redis/redis.conf
+
+重启redis相关的keepalive服务
+salt 'stage_v6_redis01'  cmd.run "/etc/init.d/keepalived stop"
+salt 'stage_v6_redis01'  cmd.run "/etc/init.d/keepalived start"
+
+
+清缓存：
+
+
+
+通过salt清除缓存
+办公室：
+       salt 'test_v6_redis01' cmd.run "/usr/local/redis/redis-cli    flushall"
+       salt 'stage_v6_redis01' cmd.run "/usr/local/redis/redis-cli    flushall"
+       salt 'test_v6_redis01' cmd.run "/usr/local/redis/redis-cli    flushall"
+生产： salt 'v6_redis01' cmd.run '/usr/local/redis/redis-cli    flushall'
+
+
+通过命令行shell清缓存：
+例一：
+[root@v6_redis01 ~]# cd /usr/local/redis/
+[root@v6_redis01 redis]# ./redis-cli 
+127.0.0.1:6379> get sys_cofing_FUIOUPAY_ONOFF;
+(nil)
+127.0.0.1:6379> 
+
+例二：
+[root@v6_redis01 ~]# /usr/local/redis/redis-cli 
+127.0.0.1:6379> FLUSHALL
+OK
+127.0.0.1:6379> 
+redis清一台即可
+
+例三：
+删除key值：
+127.0.0.1:6379> del "\"dic_common_OPERATETYPE\""
+
+
+
+测试环境，测试部专用账号，用户名/密码：test/test* 
+
+登入stage环境的redis
+[root@stage_v6_redis01 ~]# /usr/local/redis/redis-cli keys *dic_common_BORROW_TYPE*
+  768  1) "\"dic_common_BORROW_TYPE_9\""
+  769  2) "\"dic_common_BORROW_TYPE_10\""
+  770  3) "\"dic_common_BORROW_TYPE_13\""
+  771  4) "\"dic_common_BORROW_TYPE_16\""
+  772  5) "\"dic_common_BORROW_TYPE\""
+  773  6) "\"dic_common_BORROW_TYPE_14\""
+用这个命令查询要删除的key
+最后用/usr/local/redis/redis-cli del   "\"dic_common_BORROW_TYPE_13\""
+来删除key对应的值
+
+
+
+
+````````````办公室中心机器nginx配置````````````
+/sa/configure/stage-v6-nginx
+./push.sh
+./pull.sh
+./nginx_check.sh
+./nginx_reload.sh
+
+生产中心机器：/sa/configure/prod-v6-nginx
+```````论坛生产环境`````````````````````
+
+uc_server
+创始人密码：Aaron19870605/QW7KEgY8HS268GljulSOSMfIl
+
+uc_server
+创始人密码：QW7KEgY8HS268GljulSOSMfIl
+huangchao(黄超（高级系统工程师）) 01-20 10:22:28
+
+
+测试人员使用账号
+test 123456
+`````````````````````````
+
+··············公司内部环境 address····························
+修复环境  192.168.31.203
+ http://192.168.31.203:8080/    data_test/
+ http://192.168.31.205:8080/xxdai_sys_admin/    data_test_admin
+
+stage：
+
+   http://192.168.31.25/                         v6stage/
+   http://192.168.31.25/xxdai_sys_admin   v6stage/xxdai_sys_admin/
+   stage/opt/webserver/v6_tomcat/webapps/xxdai_sys_admin
+
+test：
+
+    http://192.168.38.175/             v6test/
+    http://192.168.38.175/v6_admin     v6test/v6_admin/
+    test部署路径：/opt/webserver/v6_tomcat/webapps/v6_admin
+
+test2：
+    http://192.168.31.104  http://192.168.31.103/
+    http://192.168.31.104/xxdai_sys_admin
+
+短信平台：
+http://192.168.38.209:8080/employee/adminLogin.do
+有问题把日志交给研发
+
+
+`````````日志服务器```````
+生产  ： 192.168.110.105
+         yxlog/yxlog
+办公室： \\192.168.129.99\real_log\tomcat\stage
+
+````````````zookeeper 清缓存方法````````````
+步骤一：先停tomcat
+        /usr/local/zookeeper/bin/zkServer.sh stop
+步骤二：zookeeper清缓存：rm -fr /tmp/zookeeper/version-2/*
+步骤三：/usr/local/zookeeper/bin/zkServer.sh status
+         三台中有一台是主，其他两台是followers
+```````````````````````
+老的生产环境salt部署方法：
+
+
+cd /srv/salt/scripts
+./install_stage.sh batch && \
+./install_stage.sh tradews && \
+./install_stage.sh webservice && \
+./install_stage.sh admin && \
+./install_stage.sh front && \
+./install_stage.sh static &&  \
+./install_stage.sh seo
+   
+
+生产salt服务器配置文件所在  目录  ：/srv/salt/xinxindai_tomcat/files/v6_mobile目录
+mobile服务器配置文件所在    目录  ：/opt/webserver/v6_tomcat/webapps/v5_mobile/WEB-INF/classes
+
+ 
+生产tomcat重启单个模块的方法：
+sudo /usr/bin/salt  'v6_admin0?'  state.sls tomcat.start_tomcat
+sudo /usr/bin/salt  'v6_admin01'  state.sls tomcat.stop_tomcat
+重启所有tomcat
+salt -N 'v6tomcat'   state.sls tomcat.start_tomca
+
+
+
+基于salt生产下发配置文件：            ： 
+cd /srv/salt/scripts
+./add_file.sh 
+生产跑批：/opt/webserver/v6_tomcat/webapps/xxdai_batch/bin/batchup.sh  （先chomd +x batchup.sh)
+生产webservice 配置文件  /opt/webserver/v6_tomcat/webapps/xxdai_batch/WEB-INF/classes/application.properties
+生产parterner: 配置文件  /opt/webserver/tomcat/webapps/v6_partener/WEB-INF/classes/
+
+基于salt 办公室环境配置文件
+办公室环境salt配置文件 ：   /opt/saltstack/salt/ci/files/stage_v6_webservice
+办公室环境                  /opt/saltstack/salt/nginx_conf/files
+生产  环境软件包存放路径  ：  /srv/salt/xinxindai_tomcat/files/v6_packages
+办公室环境软件包存放路径：    /opt/ci/packages
+
+
+``````````````````````````````
+基于ansible的配置文件管理
+
+1、改配置文件要在jenkins上192.168.31.81上改，生产110.109机器的上是只读的
+    cd /opt/ci/ansible_deploy 必须在这个路径
+2、package所在路径：/opt/ci/packages/stage/v6/webapp/current
+3、ansible命令
+刷新webservice配置文件：ansible-playbook ./playbook/test/deploy-v6-webservice.yml   --tags=configure
+部署测试环境v6项目 ：   ansible-playbook ./playbook/test/deploy-v6-www.yml
+
+`````生产风控````
+升级方法：
+把YX.war  放在root下 
+cd /root ;sudo 
+install.sh	
+
+文件共享目录（生产上对于存储）		
+/home/fkftp/data/
+···········salt下邮箱配置方法·······················
+smtp.from: wujunrong@xinxindai.com
+smtp.to: wujunrong@xinxindai.com
+smtp.host: smtp.exmail.qq.com
+smtp.port: 465
+smtp.username: wujunrong@xinxindai.com
+smtp.password: 123456
+smtp.tls: true
+smtp.subject: salttest
+#smtp.gpgowner (optional)
+#smtp.fields (optional)
+
+
+
+`````````大数据````````
+大数据生产环境  admin/xxdai2016
+
+cloudera5.5版本公司内私有源地址
+chd5.5：
+http://192.168.38.119/cdh5.5.0-parcels
+cm5.5
+http://192.168.38.119/centos6-cm5.5.0
+
+dashboard地址： http://192.168.32.21:8080/dashboard/a/
+
+
+
+``````````````公司邮箱``````````````
+邮箱
+xin123456
+OA
+1
+
+http://oa.xinxindai.com/
+
+
+················修改时间相关命令·················
+
+sudo salt     stage_v6_webapp0?     cmd.run  'date -s "20160725 00:00"'
+salt   -N     'stage_v6tomcat'      cmd.run  'date' 
+salt   -N     'stage_v6tomcat'      cmd.run  'ntpdate 192.168.38.190'
+salt   -N     'test_v6tomcat'       cmd.run  'ntpdate 192.168.38.190'
+salt    -C  'test_v6_tomcat* or test_v6_webapp_front01'  cmd.run  'ntpdate 192.168.38.190'
+
+
+````````审计监控对文件的操作```````````
+auditctl -w /root/fk.log  -p wa -k gif_moniter_wujunrong
+ausearch -i -k  gif_moniter_wujunrong
+auditctl -D
+审计日志：/var/log/audit/audit.log 
+ausearch --start yesterday --end now  -i -if /var/log/audit/audit.log
+
+`````乌云``````
+
+    请各位登入看具体详情：
+    http://www.wooyun.org/ 
+    账户：huangchao@xinxindai.com   
+    密码：mjW6Oxv6wK015VJ9kTQf
+
+
+````其他``````
+
+nexus库文件:            http://192.168.38.240:8080/nexus-2.8.1-01/#welcome
+ELK 地址                http://192.168.33.31:5601/
+共享服务器：            \\192.168.39.23\
+stage环境共享存储（nas）
+
+                         192.168.31.250	admin:a123456	http://192.168.31.250:5000/webman/index.cgi	
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
  ===========================    发布  ========================================
 
 huangchao(黄超（高级系统工程师）) 11-26 10:31:43
-万网公网域名    用户名:34591958 密码：xxdai_2014_YX
 
 万网
 
 官网切换ip完成，切换后ip：103.20.248.5
 
-堡垒：super/YXauth!@#xxd001
-安全宝：www.anquanbao.com  chenjianming@xinxindai.com/!qaz@wsxXXDAQB
 1、checkout_ok.sh 
 本次部署代码svn版本号为r19734，svn目录：http://192.168.38.230/YXCOD/01DEV/v6_branches/dev_v6.2.4_20150518
 请更新代码并运行打包命令得到部署包
@@ -41,25 +344,13 @@ stage_v6_nginx03:
 stage_v6_nginx01:
     /usr/local/nginx/html/xa/static/js/utils/track.js
 
-堡垒：super/YXauth!@#xxd001
+
 安全宝：www.anquanbao.com  chenjianming@xinxindai.com/!qaz@wsxXXDAQB
-``````cisico IDC```VPN```
-address:xinxindai.com
-IDC:YXYWG/xxdyx
-cisco VPN:wujunrong/WJR@Es9i
 ```
-super：   username wujunrong password WJR@qwexxxd  vpn组：YXVPN/YXvpnasa@*
-huangchao(黄超（高级系统工程师）) 03-07 01:28:13
-拨入地址：oa.xinxindai.com
-NAS 192.168.60.3 master/Master@storage
-Master@storage
+
+拨入地址：103.20.248.3   
+
 https://192.168.60.3:8088
-````````````zabbix section``````````````````````````````````
-http://192.168.110.60/zabbix
-服务器监控：admin/zabbix
-flzx3qcysyhl9tYX
-办公室：
-http://192.168.38.169/zabbix
 
 ````````````风控生产``````````````````````````````````````````
 
@@ -68,22 +359,9 @@ yxaccount  YXxxd7361^@#
 general product ：root flzx3qcysyhl9tYX
 
 
-`````生产OA`````
 
-1.oa-app1 ,oa-app2两台机器都要重启OA服务
-killall java
-/opt/Webserver/Resin-3.1.8/bin/startresin.sh
-/opt/Webserver/EMobile/start.sh
-
-2.view /opt/Webserver/ecology/WEB-INF/prop/HrmWebserviceIP.properties
-
-ipaddress=192.168.50.70,192.168.110.40
-192.168.110.40表示接受某台webservice的请求
-`````redis section```````````````
 帮忙看一下生产redis这两个命令的返回结果，考虑以后每次上线后做个验证： 
-pubsub channels *
-pubsub numsub "trade_transfer_result_topic"
-``````````````````
+
 上述包为生产专用软件包，
 
 对风控软件来说，同一版本号，生产用的软件包和测试用的软件包不同，
@@ -97,70 +375,23 @@ pubsub numsub "trade_transfer_result_topic"
 http://fk.xinxindai.com/
 
 ·················配置文件更新··························
-生产salt服务器配置文件所在  目录：/srv/salt/xinxindai_tomcat/files/v6_mobile目录
-mobile服务器配置文件所在目录  ：/opt/webserver/v6_tomcat/webapps/v5_mobile/WEB-INF/classes
+git库：http://192.168.38.12/?p=ci;a=tree;f=configure_files;h=ea898e8eff8ef98cf0e2176a75088b204ac255bc;hb=HEAD
 
-生产tomcat：salt -N 'v6tomcat' 
-/srv/salt/scprits/updown_group_tomcat.sh v6tomcat stop_tomcat
-
-生产下发配置文件：            ： ./add_file.sh 
-生产跑批：/opt/webserver/v6_tomcat/webapps/xxdai_batch/bin/batchup.sh  （先chomd +x batchup.sh)
-生产webservice 配置文件  /opt/webserver/v6_tomcat/webapps/xxdai_batch/WEB-INF/classes/application.properties
-生产parterner: 配置文件  /opt/webserver/tomcat/webapps/v6_partener/WEB-INF/classes/
-
-办公室环境配置文件 ： /opt/saltstack/salt/ci/files/stage_v6_webservice
-办公室环境                   /opt/saltstack/salt/nginx_conf/files
-生产环境软件包     ：/srv/salt/xinxindai_tomcat/files/v6_packages
-办公室环境包版本    /opt/ci/packages
 生产大数据：  /var/log/nginx/bigdata_pv.log
+
+
 ngnix /opt/webserver/v6_tomcat/webapps/v6_webservice/WEB-INF/classes/validateConfig.properties 
 
 /usr/bin/salt "v6_tradew*" state.sls xinxindai_tomcat
 
-论坛生产环境：
 
-uc_server
-创始人密码：Aaron19870605/QW7KEgY8HS268GljulSOSMfIl
-
-uc_server
-创始人密码：QW7KEgY8HS268GljulSOSMfIl
-huangchao(黄超（高级系统工程师）) 01-20 10:22:28
-
-
-测试人员使用账号
-test 123456
-`````````````````````````
-大数据生产
-http://192.168.32.21:8080/dashboard/a/
 [root@cloudera-flume01 nginx_hdfs]# pwd
 /var/flume/nginx_hdfs
-admin/xxdai2016
+
 
 公网ip：103.20.248.5
 服务器位置：上海呼兰数据中心
 
-··············公司内部环境 address····························
-修复环境  192.168.31.203
- http://192.168.31.203:8080/    data_test
- http://192.168.31.205:8080/xxdai_sys_admin/    data_test_admin
-
-stage：
-
-   http://192.168.31.25/v6stage
-   http://192.168.31.25/xxdai_sys_admin   v6stage/xxdai_sys_admin/
-   stage/opt/webserver/v6_tomcat/webapps/xxdai_sys_admin
-
-test：
-
-    http://192.168.38.175/v6test
-    http://192.168.38.175/v6_admin   v6test/v6_admin/
-    test/opt/webserver/v6_tomcat/webapps/v6_admin
-
-test2：
-    http://192.168.31.104  http://192.168.31.103/
-    http://192.168.31.104/xxdai_sys_admin
-
-短信：http://192.168.38.209:8080/employee/adminLogin.do
 
 salt -N 'v6data_tomcat' cmd.run 'service tomcat stop'
  dig stage.yongxindai.com
@@ -173,16 +404,11 @@ http://172.16.15.29:8080/			Remove
 4:	v6 parterner	15 sec	http://172.16.15.29:8080/v6_partener/service			Remove
 5:	v6_admin	15 sec	http://172.16.15.29:8080/v6_admin/employee/toLogin.do	
  
-`````````日志服务器````````````````````````````````````````````````````````````````````````````````
-192.168.110.105
-yxlog/yxlog
+
 office 环境日志：http://192.168.31.155/user_manager/
-·········zookeeper····················
-步骤一：先停tomcat
-        /usr/local/zookeeper/bin/zkServer.sh stop
-步骤二：zookeeper清缓存：rm -fr /tmp/zookeeper/version-2/*
-步骤三：/usr/local/zookeeper/bin/zkServer.sh status
-         三台中有一台是主，其他两台是followers
+
+localhost.2016-06-20.log
+····················
   
 启动tomcat，不要忘了起webapp和mobile的tomcat
 ```````````````````````````````````````````````````````````````````````
@@ -218,18 +444,7 @@ http://v6test/
 
 ``````````````````````````````````````````````````````````````````````````` 
 更新partner配置文件：salt  "ct-test-tomcat-partener*" state.sls ci.conf_file
-/srv/salt/scripts
 
-
-./install_stage.sh batch && \
-./install_stage.sh tradews && \
-./install_stage.sh webservice && \
-./install_stage.sh admin && \
-./install_stage.sh front && \
-./install_stage.sh static &&  \
-./install_stage.sh seo
-   
-   
 ./install_test.sh batch && \
 ./install_test.sh tradews && \
 ./install_test.sh webservice && \
@@ -251,8 +466,9 @@ sudo ./install.sh webapp_static
 
  192.168.38.10 root testing
  192.168.38.155 root testing
- 
- 风控环球：YX.war  放在root下 运行install.sh
+
+```````````````````
+
 
 
 webservice地址：http://192.168.38.142:8080/v6_webservice/service
@@ -263,31 +479,9 @@ cloudera:   http://192.168.32.250:7180/cmf/login
 
 failed:     [0-9]
 Errors: [0-9]
-================================软件使用=====================
-/usr/local/redis/redis-server /usr/local/redis/redis.conf
-salt 'stage_v6_redis01'  cmd.run "/etc/init.d/keepalived stop"
-salt 'stage_v6_redis01'  cmd.run "/etc/init.d/keepalived start"
-
-127.0.0.1:6379> del "\"dic_common_OPERATETYPE\""
+================================redis section=====================
 
 
-[root@v6_redis01 ~]# /usr/local/redis/redis-cli 
-127.0.0.1:6379> FLUSHALL
-OK
-127.0.0.1:6379> 
-redis清一台即可
-
-salt 'test_v6_redis01' cmd.run "/usr/local/redis/redis-cli    flushall"
-salt 'stage_v6_redis01' cmd.run "/usr/local/redis/redis-cli    flushall"
-
-salt 'test_v6_redis01' cmd.run "/usr/local/redis/redis-cli    flushall"
-生产： salt 'v6_redis01' cmd.run '/usr/local/redis/redis-cli    flushall'
-
-[root@v6_redis01 ~]# cd /usr/local/redis/
-[root@v6_redis01 redis]# ./redis-cli 
-127.0.0.1:6379> get sys_cofing_FUIOUPAY_ONOFF;
-(nil)
-127.0.0.1:6379> 
 ···························································
 
 
@@ -341,13 +535,7 @@ ssid:xxd_admin
 http://zyslovely.iteye.com/blog/1329802
 http://wenku.baidu.com/link?url=TjIMpfsPCAAi0We0dStqpCUUdSOO8YzXQ_Os9x6kxEovj8FA4eH_Yel6lBUwOyHekRAEHlmDUxipsu9vKhRc0REm_NLHqxGErxBB-2Gb-wW
 SVN:http://192.168.38.230/YXITD/
-=================公司例行================
-邮箱
-xin123456
-OA
-1
 
-http://oa.xinxindai.com/login/Login.jsp?logintype=1
 ````mail section````
 smtp.exmail.qq.com ssl 465
 yum install mail
@@ -377,17 +565,6 @@ admin/huangchao
 
 =================公司相关设置和命令===========================
 
-
-smtp.from: wujunrong@xinxindai.com
-smtp.to: wujunrong@xinxindai.com
-smtp.host: smtp.exmail.qq.com
-smtp.port: 465
-smtp.username: wujunrong@xinxindai.com
-smtp.password: E431e431
-smtp.tls: true
-smtp.subject: salttest
-#smtp.gpgowner (optional)
-#smtp.fields (optional)
 
 
 docker build -t webloginwu/reviewboard:v10  .
@@ -570,11 +747,7 @@ ETL (Extract, Transform and Load)
   /etc/systemd/system/syslog.service -> /lib/systemd/system/rsyslog.service
   /lib/systemd/system/syslog.socket
 
-auditctl -w /root/fk.log  -p wa -k gif_moniter_wujunrong
-ausearch -i -k  gif_moniter_wujunrong
-auditctl -D
 
-  
 =========启动test-redis01============
   
 /etc/keepalived/keepalived.conf
@@ -690,24 +863,20 @@ salt  -C  'test_v6_tomcat* or test_v6_webapp_front01' cmd.run 'date +%T     -s "
 salt  -C  'test_v6_tomcat* or test_v6_webapp_front01' cmd.run 'date +%Y%m%d -s "20150919" && date +%T     -s "0:00" && date'
 salt  -C  'test_v6_tomcat* or test_v6_webapp_front01' cmd.run 'date'
 
+
+
 salt    'test_v6_tomcat_webservice0?' cmd.run 'date +%Y%m%d -s "20150925" && date +%T     -s "01:00" && date'
 salt    'test_v6_tomcat_webservice0?' cmd.run 'date'
 
  L@test_v6_tomcat_front01,test_v6_tomcat_front02,test_v6_tomcat_admin01,test_v6_tomcat_admin02,test_v6_tomcat_webservice01,test_v6_tomcat_webservice02,test_v6_tomcat_tradew01,test_v6_tomcat_tradew02,test_v6_tomcat_batch01,test_v6_tomcat_batch02,test_v6_tomcat_mobile01,test_v6_tomcat_mobile02,test_v6_seo,test_v6_webapp_front01 
 
 salt    'stage_v6_*' cmd.run 'date +%Y%m%d -s "20150916" && date +%T     -s "10:00" && date' 
-salt    'stage_v6_*' cmd.run 'date' 
 
-salt   -N     'test_v6tomcat'      cmd.run  'date +%Y%m%d -s "20151013" && date +%T     -s "01:00" && date'
-salt   -N     'stage_v6tomcat'     cmd.run  'date +%Y%m%d -s "20150923" && date +%T     -s "10:00" && date'
-
-salt   -N     'stage_v6tomcat'    cmd.run 'ntpdate 192.168.38.190'
-salt   -N     'test_v6tomcat'      cmd.run  'ntpdate 192.168.38.190'
 
  salt      'test_v6_tomcat_batch0?'      cmd.run  'date +%Y%m%d -s "20151031" && date +%T     -s "01:00" && date'
 
+sudo salt  -N     'stage_v6tomcat'     cmd.run 'date -s "20160722 23:59"'
 
-salt    -C  'test_v6_tomcat* or test_v6_webapp_front01'  cmd.run  'ntpdate 192.168.38.190'
 
 Cloudera recommends setting /proc/sys/vm/swappiness to at most 10. Current setting is 60. Use the sysctl command to change this setting at runtime and edit /etc/sysctl.conf for this setting to be saved after a reboot. You may continue with installation, but you may run into issues with Cloudera Manager reporting that your hosts are unhealthy because they are swapping. The following hosts are affected: 
 Transparent Huge Pages is enabled and can cause significant performance problems. Kernel with release 'CentOS release 6.4 (Final)' and version '2.6.32-358.el6.x86_64' has enabled set to '[always] never' and defrag set to '[always] never'. Run "echo never > /sys/kernel/mm/redhat_transparent_hugepage/defrag" to disable this, then add the same command to an init script such as /etc/rc.local so it will be set upon system reboot. Alternatively,
@@ -727,7 +896,7 @@ Transparent Huge Pages is enabled and can cause significant performance problems
  reviewboard:  http://rb/
  
  /opt/svn/YXCOD/hooks/pre-commit
-
+fktest:qwop78nm
 zhaowei/opqwop78nm
 把/opt/svn/YXCOD/hooks/pre-commit文件的文件名称换成其他的即可 
 password :qw78opbn
@@ -757,22 +926,9 @@ huangchao(黄超（高级系统工程师）) 11-30 17:32:50
 windows8.1:unarywu@outlook.com/E431e431
 ·······················
 \\192.168.31.155\Anonymous
+
 大数据：http://192.168.38.230/YXPRJ/08BIGDATA/15_Config
 
-cloudera5.5版本公司内私有源地址
-chd5.5：
-http://192.168.38.119/cdh5.5.0-parcels
-cm5.5
-http://192.168.38.119/centos6-cm5.5.0
-
-共享：\\192.168.39.23\
-
-``````
-
-    请各位登入看具体详情：
-    http://www.wooyun.org/ 
-    账户：huangchao@xinxindai.com   
-    密码：mjW6Oxv6wK015VJ9kTQf
 	
 ```tomcat section`
 tomcat 6.0
@@ -799,5 +955,40 @@ cat /proc/mounts | grep -E "\b(btrfs|ext2|ext3|ext4|jfs|reiser|xfs|ffs|ufs|jfs|j
 Esxi
 xinxindai/xinxindai  root/xinxindai
 
+sunyupan(孙玉攀（系统工程师）) 05-16 16:08:43
+400-886-8616
+sunyupan(孙玉攀（系统工程师）) 05-16 16:08:51
+金牌戴尔服务器    400-886-8616
+````````````walle````
+http://shangxian.xxd.com
+admin  xinxindai!QAZ
+````````````
+
+sudo /usr/bin/salt  'v6_admin0?'  state.sls tomcat.start_tomcat
+sudo /usr/bin/salt  'v6_admin01'  state.sls tomcat.stop_tomcat
+
+
+mobile 验证方法：  http://192.168.129.65:8080/v5_mobile/mobile/xplan/newPlanListandFund2.html mkdir /home/v6_mobile_data/
+ mkdir /home/credit_app_data/
+ 
+ dell:默认的用户名“root”和默认的密码“calvin”
+ 生产 v5_sc_mysql 老的数据      
+
+waf:
+https://192.168.129.250
+
+
+Dear 杨哲：
+    环境已准备完成，应用名 finance_app ：
+          test： 192.168.38.166
+          stage：192.168.31.166
+          test2： 192.168.31.167
+admin/nsfocus1234 
+
+
+`````````````````
+\\192.168.39.23\运维部\新新贷文档\新新贷资产信息\linux ip地址清单
+
+生产服务器改配置文件后恢复：git checkout --  configure_files/test/v6/webservice/sms.properties
 
 

@@ -1,3 +1,12 @@
+
+
+
+$Template tpl,"%msg:R,ERE,2,ZERO:([^@]+@){10}([^@]+)@.*--end%\n"
+*.*      /path/to/file;tpl
+
+
+
+
 http://www.cloudera.com/content/www/en-us/documentation/enterprise/latest/topics/install_upgrade_to_cdh55_parcels.html
 http://www.cloudera.com/content/www/en-us/documentation/enterprise/latest/topics/cm_ag_upgrade_cm5.html
 
@@ -137,3 +146,10 @@ ansible cloudera_redis -m shell -a "echo nameserver 192.168.38.118>>/etc/resolv.
 sudo sed -i 's/^ServerActive=127.0.0.1/ServerActive=/g' /etc/zabbix/zabbix_agentd.conf
 sudo sed -i 's/^ServerActive=127.0.0.1/ServerActive=/g' /etc/zabbix/zabbix_agentd.conf
 (! cat /etc/zabbix/zabbix_agentd.conf |  grep 'EnableRemoteCommands=1' )&&  sed -i.bak 's/# EnableRemoteCommands=0/# EnableRemoteCommands=0\nEnableRemoteCommands=1/g'  /etc/zabbix/zabbix_agentd.conf
+
+
+
+========= ansible section ==============
+cat ./ansible-svn.sh 
+#!/bin/bash
+svn list  http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/    --username wujunrong| grep  ansible |xargs -I {} svn export  http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/{} --force  /etc/ansible/hosts
