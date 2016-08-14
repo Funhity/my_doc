@@ -445,12 +445,35 @@ docker commit --change='CMD ["/root/start.sh"]'   --change='ENTRYPOINT ["/tini",
 docker images
 docker rmi training/sinatra
 
+````````docker systemd section```````````
+Dockerfile for systemd base image
 
+FROM centos:7
+MAINTAINER "wu" <publicwu@163.com>
+ENV container docker
+RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
+rm -f /lib/systemd/system/multi-user.target.wants/*;\
+rm -f /etc/systemd/system/*.wants/*;\
+rm -f /lib/systemd/system/local-fs.target.wants/*; \
+rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
+rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
+rm -f /lib/systemd/system/basic.target.wants/*;\
+rm -f /lib/systemd/system/anaconda.target.wants/*;
+VOLUME [ "/sys/fs/cgroup" ]
+CMD ["/usr/sbin/init"]
+
+
+
+This Dockerfile deletes a number of unit files which might cause issues. From here, you are ready to build your base image.
+
+$ docker build --rm -t local/c7-systemd .
+docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro -p 80:80 local/centos7:yum-repository  
+```````````
 
 sudo docker run -i -t ubuntu /bin/bash
      docker run -it  --name java-test2  centos:6.6 bash
      #启动带systemd的操作系统
-	 docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro -p 80:80 local/centos7:yum-repository   
+ 
 #To start a container in detached mode, you use -d=true or just -d option
      docker run -d -p 80:80 my_image service nginx start
 	 docker run -a stdin -a stdout -i -t ubuntu /bin/bash
@@ -780,6 +803,10 @@ wjr@ramnode.com * jY89634_HIB *
 
 
 ===virtualbox section=========
+先appstore装DisplayMenu修改mac的分辨率，再修改virtualbox的分辨率
+VBoxManage controlvm Frank-Windows10 setvideomodehint 2048  1280  32
+                     虚拟机名称
+
 "%programfiles%\Oracle\VirtualBox\VBoxHeadless" --startvm "Debian"
 "%programfiles%\Oracle\VirtualBox\VBoxHeadless" --startvm "CentOS7 副本2"
 
@@ -5401,6 +5428,8 @@ You can use following command to check all the modules installed globally:
 $ npm ls -g
 ``````
 ========elasticsearch section=====
+
+
 31.160和31.162 上有fluem服务，在lib目录 /opt/cloudera/parcels/CDH-5.5.0-1.cdh5.5.0.p0.8/lib/flume-ng/lib中增加 elasticsearch-1.7.1.jar 文件
 
 view the mapping :  GET /gb/_mapping/tweet
