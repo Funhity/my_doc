@@ -4439,7 +4439,9 @@ ssh-keygen -t rsa
 cat ~/.ssh/id_rsa.pub
 git remote set-url origin git+ssh://git@github.com/webloginwu
 git clone git+ssh://git@github.com/webloginwu/my_doc.git
-git clone git+ssh://git@github.com/webloginwu/my_doc.git
+git clone git+ssh://git@github.com/webloginwu/code_example
+git commit -a -m "about github"
+
 ============git section=====
 /etc/gitconfig                                git config  --system 
 ~/.gitconfig or ~/.config/git/config          git config  --global 
