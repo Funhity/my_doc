@@ -4971,7 +4971,7 @@ openssl passwd -1
 vi /etc/cobbler/settings
    server: 192.168.122.156
    next_server: 192.168.122.156
-   manage_dhcp: 0
+   manage_dhcp: 1
    default_password_crypted: "$1$U.Svb2gw$MNHrAmG.axVHYQaQRySR5/"
 
 vi /etc/xinetd.d/tftp
@@ -4981,8 +4981,7 @@ vi /etc/xinetd.d/rsync
     disable = no
 
 vi /etc/cobbler/dhcp.template
-   next-server                192.168.122.156;
-
+   make sure you do not modify the "next-server $next_server;" line
 配置web界面
 vi /etc/cobbler/modules.conf
    [authentication]
