@@ -59,11 +59,11 @@ systemctl restart network
 /etc/sysconfig/network-scripts/ifcfg-eth0
 
 DEVICE=eth0
-HWADDR=52:54:00:3B:AC:C3
+#HWADDR=52:54:00:3B:AC:C3
 TYPE=Ethernet
-UUID=48f965ce-54b4-4155-ba5e-fefad5a703b5
+#UUID=48f965ce-54b4-4155-ba5e-fefad5a703b5
 ONBOOT=yes
-NM_CONTROLLED=yes
+NM_CONTROLLED=no
 BOOTPROTO=static
 IPADDR=192.168.38.146
 MASK=255.255.255.0
