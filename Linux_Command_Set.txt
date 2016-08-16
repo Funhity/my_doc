@@ -22,7 +22,7 @@ chkconfig --list glassfish4
 
 ````hostname section```host section``
 centos7:   /etc/hostname
-           /etc/hosts
+           /etc/hosts #经测试有效
 centos6:   /etc/sysconfig/network
            修改主机名命令：hostname yh_zabbix_server;sed -i.bak  s/HOSTNAME=.*/HOSTNAME=yh_zabbix_server/g   /etc/sysconfig/network ;hostname
     
@@ -4937,6 +4937,7 @@ rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 yum install cobbler cobbler-web pykickstart wget fence-agents -y 
 yum -y install xinetd -y
 yum install dhcp -y
+sed -i.bak "s/SELINUX=enforcing/SELINUX=permissive/"   /etc/selinux/config
 cobbler version
 有问题看日志：less /var/log/cobbler/cobbler.log
                    /var/log/httpd/error_log  
