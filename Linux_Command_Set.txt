@@ -1,3 +1,5 @@
+git 账号：webloginwu
+登入方法：unarywu@gmail.com/Rubbish1!
 ===kernel version section ====
 uname -r
 2.6.32-431.11.2.el6.x86_64
