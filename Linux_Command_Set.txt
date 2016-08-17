@@ -1,3 +1,5 @@
+git 账号：webloginwu
+登入方法：unarywu@gmail.com/Rubbish1!
 ===kernel version section ====
 uname -r
 2.6.32-431.11.2.el6.x86_64
@@ -22,7 +24,7 @@ chkconfig --list glassfish4
 
 ````hostname section```host section``
 centos7:   /etc/hostname
-           /etc/hosts
+           /etc/hosts #经测试有效
 centos6:   /etc/sysconfig/network
            修改主机名命令：hostname yh_zabbix_server;sed -i.bak  s/HOSTNAME=.*/HOSTNAME=yh_zabbix_server/g   /etc/sysconfig/network ;hostname
     
@@ -59,11 +61,11 @@ systemctl restart network
 /etc/sysconfig/network-scripts/ifcfg-eth0
 
 DEVICE=eth0
-HWADDR=52:54:00:3B:AC:C3
+#HWADDR=52:54:00:3B:AC:C3
 TYPE=Ethernet
-UUID=48f965ce-54b4-4155-ba5e-fefad5a703b5
+#UUID=48f965ce-54b4-4155-ba5e-fefad5a703b5
 ONBOOT=yes
-NM_CONTROLLED=yes
+NM_CONTROLLED=no
 BOOTPROTO=static
 IPADDR=192.168.38.146
 MASK=255.255.255.0
@@ -4937,6 +4939,7 @@ rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 yum install cobbler cobbler-web pykickstart wget fence-agents -y 
 yum -y install xinetd -y
 yum install dhcp -y
+sed -i.bak "s/SELINUX=enforcing/SELINUX=permissive/"   /etc/selinux/config
 cobbler version
 有问题看日志：less /var/log/cobbler/cobbler.log
                    /var/log/httpd/error_log  
@@ -4970,7 +4973,7 @@ openssl passwd -1
 vi /etc/cobbler/settings
    server: 192.168.122.156
    next_server: 192.168.122.156
-   manage_dhcp: 0
+   manage_dhcp: 1
    default_password_crypted: "$1$U.Svb2gw$MNHrAmG.axVHYQaQRySR5/"
 
 vi /etc/xinetd.d/tftp
@@ -4980,8 +4983,7 @@ vi /etc/xinetd.d/rsync
     disable = no
 
 vi /etc/cobbler/dhcp.template
-   next-server                192.168.122.156;
-
+   make sure you do not modify the "next-server $next_server;" line
 配置web界面
 vi /etc/cobbler/modules.conf
    [authentication]
