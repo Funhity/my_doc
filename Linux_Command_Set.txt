@@ -5476,3 +5476,14 @@ curl -L -O https://download.elastic.co/beats/filebeat/filebeat-1.2.3-x86_64.rpm
 sudo rpm -vi filebeat-1.2.3-x86_64.rpm
 /etc/filebeat/filebeat.yml
 
+
+=====smartos section========
+zonename
+/usbkey/config - system configuration options
+/usbkey/config.inc/ - a directory where certain files referenced by /usbkey/config will reside (not present by default)
+/usbkey/shadow - the shadow password file that will be put in /etc/shadow (read-only) on system boot
+/usbkey/ssh/                - a directory containing the SSH client and server configuration (deployed to /etc/ssh/ on system boot)
+/usbkey/ssh/sshd_config is in here so if you want to do things like require MFA or refuse Password login, you change it here and reboo
+
+dladm show-phys -m
+============================
