@@ -5117,7 +5117,75 @@ racadm config -g cfgLanNetworking -o cfgNicUseDHCP 1 #从dhcp获取IP地址
 #ln    -s /opt/dell/srvadmin/bin/omreport /sbin/omreport
 #chmod +s /opt/dell/srvadmin/bin/omreport
 ==========ipmi section========================================
+yum install ipmitool
+yum install OpenIPMI OpenIPMI-tools
 ipmitool sdr type 'Power Supply'
+
+`````````````smartos ipmi`````````````
+yum install openssl*  
+yum install compat-readline5 
+
+yum -y install readline.i686
+yum -y install openssl.i686
+
+cd  解包目录/DCMI/dcmi
+make install
+cd  解包目录/DCMI/mei
+
+make  install
+`````````````````
+下面重启后必须运行一下
+modprobe -r ipmi_si
+modprobe -r ipmi_devintf
+modprobe -r ipmi_msghandler
+depmod
+modprobe mei
+modprobe dcmi
+``````````````````````````
+安装完成后，执行如下命令，设置BMC：
+
+./dcmitool lan set 1 ipsrc static
+./dcmitool lan set 1 ipaddr $IP
+./dcmitool lan set 1 netmask  $NETMASK
+./dcmitool lan set 1 defgw ipaddr $gw
+./dcmitool lan set 1 access on
+./dcmitool lan print 1
+./dcmitool user set name ID 用户名
+./dcmitool user set password  用户ID  密码
+然后，在客户端上，使用ipmitool即可控制远端机器。
+尹伟 
+````````````````````````
+ipmi近端：
+/DCMI/dcmitool/Dcmitool/Linux/x64/dcmitool sdr list
+/DCMI/dcmitool/Dcmitool/Linux/x64/dcmitool lan print 1
+/DCMI/dcmitool/Dcmitool/Linux/x64/dcmitool lan set 1 ipsrc static
+/DCMI/dcmitool/Dcmitool/Linux/x64/dcmitool lan set 1 defgw 10.20.0.1
+/DCMI/dcmitool/Dcmitool/Linux/x64/dcmitool lan set 1 access on
+
+/DCMI/dcmitool/Dcmitool/Linux/x64/dcmitool user list 1
+/DCMI/dcmitool/Dcmitool/Linux/x64/dcmitool user set name     5 zhixiang
+/DCMI/dcmitool/Dcmitool/Linux/x64/dcmitool user set password 5  123456
+/DCMI/dcmitool/Dcmitool/Linux/x64/dcmitool user set name     2  root
+/DCMI/dcmitool/Dcmitool/Linux/x64/dcmitool user set password 2  123456
+#Get User Access (channel 1 id 2) 
+/DCMI/dcmitool/Dcmitool/Linux/x64/dcmitool  channel setaccess 1 2 link=on ipmi=on callin=on privilege=4
+/DCMI/dcmitool/Dcmitool/Linux/x64/dcmitool  channel setaccess 1 5 link=on ipmi=on callin=on privilege=4
+
+
+# Display/reset password for default root user (userid '2')
+ipmitool user list 1 
+ipmitool user set password 2 <new_password>
+
+ipmitool -I lan -U zhixiang -H  10.20.0.6  chassis status
+echo "123456" >~/.racpasswd
+chmod 600 ~/.racpasswd
+ipmitool -I lan -U zhixiang -f ~/.racpasswd -H  10.20.0.6  chassis status
+
+
+
+```````````````````````````
+ipmi远端
+ipmitool -I lan -U root -H  10.20.0.6  chassis status
 
 
 
@@ -5488,4 +5556,16 @@ zonename
 /usbkey/ssh/sshd_config is in here so if you want to do things like require MFA or refuse Password login, you change it here and reboo
 
 dladm show-phys -m
+
+
+
+
+
+
+
+
+
+
+
+
 ============================
