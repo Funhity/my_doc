@@ -2756,6 +2756,7 @@ yum -y install acpid
 chkconfig acpid on
 service acpid start
 
+yum -y install acpid
 systemctl enable acpid.service
 systemctl start  acpid.service
 
@@ -5119,8 +5120,8 @@ racadm config -g cfgLanNetworking -o cfgNicUseDHCP 1 #从dhcp获取IP地址
 ==========ipmi section========================================
 yum install ipmitool
 yum install OpenIPMI OpenIPMI-tools
-ipmitool sdr type 'Power Supply'
 
+/opt/custom/smf
 `````````````smartos ipmi`````````````
 yum install openssl*  
 yum install compat-readline5 
@@ -5175,19 +5176,22 @@ ipmi近端：
 # Display/reset password for default root user (userid '2')
 ipmitool user list 1 
 ipmitool user set password 2 <new_password>
-
+```````````````````````````
+ipmi远端
+ipmitool -I lan -U root -H  10.20.0.6  chassis status
 ipmitool -I lan -U zhixiang -H  10.20.0.6  chassis status
 echo "123456" >~/.racpasswd
 chmod 600 ~/.racpasswd
 ipmitool -I lan -U zhixiang -f ~/.racpasswd -H  10.20.0.6  chassis status
+ipmitool -I lan -U zhixiang -f ~/.racpasswd -H  10.20.0.6  chassis power soft
+ipmitool -I lan -U zhixiang -f ~/.racpasswd -H  10.20.0.6  chassis power on
+ipmitool -I lan -U zhixiang -f ~/.racpasswd -H  10.20.0.6  chassis power off
+ipmitool -I lanplus -U zhixiang -f ~/.racpasswd -H 10.20.0.6    sol activate
+ipmitool sdr type 'Power Supply'
 
 
-
-```````````````````````````
-ipmi远端
-ipmitool -I lan -U root -H  10.20.0.6  chassis status
-
-
+```````````````
+curl -k http://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2013Q3-x86_64.tar.gz | gzcat | tar -xf -
 
 =======cx_Oracle section===========
 yum install -y libxml2 libxslt libxslt-devel python-setuptools python-pip
