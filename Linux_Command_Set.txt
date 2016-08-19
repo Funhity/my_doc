@@ -5558,10 +5558,12 @@ zonename
 /usbkey/shadow - the shadow password file that will be put in /etc/shadow (read-only) on system boot
 /usbkey/ssh/                - a directory containing the SSH client and server configuration (deployed to /etc/ssh/ on system boot)
 /usbkey/ssh/sshd_config is in here so if you want to do things like require MFA or refuse Password login, you change it here and reboo
-
+列出所有网卡
 dladm show-phys -m
 
-
+#The following example will set an environment variable for the specified FMRI with the value you specify.
+svccfg -s FMRI setenv ENV_VARIABLE value
+#You can invoke svccfg directly with individual subcommands or by specifying a script file.
 
 
 
