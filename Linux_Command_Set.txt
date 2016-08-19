@@ -5566,12 +5566,13 @@ svccfg -s FMRI setenv ENV_VARIABLE value
 #You can invoke svccfg directly with individual subcommands or by specifying a script file.
 
 
-
-
-
-
-
-
+`````````````````
+Installing pkgin
+cd /
+curl -k http://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2013Q3-x86_64.tar.gz | gzcat | tar -xf -
+pkg_admin rebuild
+pkgin -y up
+``````````````````
 
 
 ============================
