@@ -5160,6 +5160,7 @@ ipmi近端：
 /DCMI/dcmitool/Dcmitool/Linux/x64/dcmitool sdr list
 /DCMI/dcmitool/Dcmitool/Linux/x64/dcmitool lan print 1
 /DCMI/dcmitool/Dcmitool/Linux/x64/dcmitool lan set 1 ipsrc static
+/DCMI/dcmitool/Dcmitool/Linux/x64/dcmitool lan set 1 ipaddr 10.75.1.210
 /DCMI/dcmitool/Dcmitool/Linux/x64/dcmitool lan set 1 defgw 10.20.0.1
 /DCMI/dcmitool/Dcmitool/Linux/x64/dcmitool lan set 1 access on
 
