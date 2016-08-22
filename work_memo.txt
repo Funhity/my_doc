@@ -905,3 +905,7 @@ rsync  -avh   ./tradews/        192.168.110.102:/srv/salt/xinxindai_tomcat/files
 rsync  -avh   ./webservice/     192.168.110.102:/srv/salt/xinxindai_tomcat/files/v6_webservice/   
 
 
+硬件信息：
+ansible qinghua -m raw -a " psrinfo -pv| grep  2200|head -n 1 | tr -d  '\n' ; prtconf | grep Memory"  | grep -v facebook | grep -v ^$
+ansible qinghua -f 1 -m raw -a " psrinfo -pv| grep  2200|head -n 1 "  | grep -v face|   grep -v ^$
+ansible qinghua -f 1 -m raw -a " prtconf | grep Memory "  | grep -v face|   grep -v ^$

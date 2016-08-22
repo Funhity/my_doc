@@ -3475,7 +3475,7 @@ File -> Properties -> Terminal -> Keyboard
 echo $?  ##see exit status of cal command type following command:
 >/dev/null 2>&1
 ```````网安````````````````````
-cat *.csv    | grep -v '^$'  | awk  -F,   -f ./china_network.awk  | grep 关键词名称 | grep -v 动词 |awk '{ $1=""; $2=""; print $0 }'| tr -d '\n'| sed -e 's/\s\+/\n/g'| grep -v '^$' | awk '{ print "关键词," $0}' | grep -v 关键词名称| grep -v 专属词语   > bbs_key_word_filter.txt
+cat *.csv    | grep -v '^$'  | awk  -F,   -f ./china_network.awk  | grep 关键词名称 | grep -v 动词 |awk '{ $1=""; $2=""; print $0 }'|| sed -e 's/\s\+/\n/g'| grep -v '^$' | awk '{ print "关键词," $0}' | grep -v 关键词名称| grep -v 专属词语   > bbs_key_word_filter.txt
 
 
 # cat china_network.awk
@@ -5123,11 +5123,10 @@ yum install OpenIPMI OpenIPMI-tools
 
 /opt/custom/smf
 `````````````smartos ipmi`````````````
-yum install openssl*  
-yum install compat-readline5 
-
-yum -y install readline.i686
-yum -y install openssl.i686
+yum -y install openssl*  
+yum -y install compat-readline5 
+yum -y update kernel
+yum -y groupinstall "Development Tools"
 
 cd  解包目录/DCMI/dcmi
 make install
@@ -5573,7 +5572,69 @@ cd /
 curl -k http://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2013Q3-x86_64.tar.gz | gzcat | tar -xf -
 pkg_admin rebuild
 pkgin -y up
-``````````````````
 
 
+===========zpool section=========
+zpool list
+zpool destroy  geekpool
+zpool status
+zpool list zones
+                    zpool create geekpool  c1t1d0
+Using files:        mkfile 100m file1
+                    zpool create geekpool /file1
+Using disk slices   zpool create geekpool c1t1d0s0
+Dynamic strip:      zpool create geekpool c1t1d0   c1t2d0
+                    once a disk is added in this fashion to a zfs pool may not be removed from the pool again. Only way to free the disk is to destroy entire pool. This happens due to the dynamic striping nature of the pool which uses both disk to store the data.
+                    
+Mirrored pool:      zpool create geekpool mirror   c1t1d0 c1t2d0
+                    zpool create geekpool mirror   c1t1d0 c1t2d0 c1t3d0
+
+					zpool create geekpool raidz  c1t1d0 c1t2d0 c1t3d0
+					zpool create geekpool raidz2 c1t1d0 c1t2d0 c1t3d0
+					zpool create geekpool raidz3 c1t1d0 c1t2d0 c1t3d0 c1t4d0
+					
+Adding spare device to zpool:
+                    zpool add geekpool spare c1t3d0
+                    zpool autoreplace=on mpool
+					
+Creating a ZFS Storage Pool With Cache Devices:					
+                    zpool create tank mirror c2t0d0 c2t1d0 c2t3d0 cache c2t5d0 c2t8d0
+					
+Dry run on zpool creation:
+					zpool create -n geekpool raidz2 c1t1d0 c1t2d0 c1t3d0	
+
+zfs create geekpool/fs1
+zfs set quota=500m geekpool/fs1
+zfs set reservation=200m geekpool/fs1
+zfs list			
+
+By default a mount point (/poolname/fs_name) will be created for the file system if you don’t specify. In our case it was /geekpool/fs1
+zfs set mountpoint=/test geekpool/fs1
+
+zpool clear tank
+zpool clear tank c1t0d0
+zpool replace tank c1t1d0
+zpool replace tank c1t1d0 c1t2d0  #replacing a device in a storage pool with a disk in a different physical location, you will need to specify both devices.		
+
+zpool scrub  tank
+zpool scrub -s tank  #You can stop a scrubbing operation that is in progress by using the -s option
+zpool status tank    #To view the resilvering process
+zpool status -v tank #display a list of file names with persistent errors
+
+1.Offline the disk, if necessary, with the zpool offline command.
+2.Remove the disk to be replaced.
+3.Insert the replacement disk.
+4.Run the zpool replace command. For example:
+5.zpool replace tank c1t1d0
+6.Bring the disk online with the zpool online command.
+
+
+Repairing ZFS Storage Pool-Wide Damage
+zpool status
+zpool clear -F tpool
+zpool import -o readonly=on tpool
+zpool destroy -f 
+
+
+svcs -a | grep vol
 ============================
