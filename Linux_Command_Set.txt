@@ -3349,6 +3349,11 @@ ct-stage-tomcat-partener02   ansible_ssh_host=192.168.31.91  ansible_connection=
 #Let’s run a playbook using a parallelism level of 10:
 ansible-playbook playbook.yml -f 10
 
+按照hosts文件中的服务器顺序一个个执行，列出smartos上的硬盘
+ansible qinghua -f 1 -m raw -a " format < /dev/null | sed -n 's/.*\(<.*>\).*/\1/p' "
+
+
+
 ``````````````````
 从svn中取出ansible配置文件
 cat ./ansible-svn.sh 
@@ -4404,6 +4409,11 @@ end1
 
 
 ====sed section awk section========
+
+#Only return the matched string in sed
+echo "atestb" | sed -n 's/.*\(test\).*/\1/p'
+echo "atestb" | sed 's/.*\(test\).*/\1/'
+
 sed -e "s/stage_/\/stage/g" -e "s/v6_webservice/\/webservice\//g"
 删除第四行
 sed   -i.bak   '4d' /etc/hosts  
@@ -5552,7 +5562,7 @@ sudo rpm -vi filebeat-1.2.3-x86_64.rpm
 
 
 =====smartos section========
-zonename
+当前在哪个zone： zonename
 /usbkey/config - system configuration options
 /usbkey/config.inc/ - a directory where certain files referenced by /usbkey/config will reside (not present by default)
 /usbkey/shadow - the shadow password file that will be put in /etc/shadow (read-only) on system boot
@@ -5565,7 +5575,7 @@ dladm show-phys -m
 svccfg -s FMRI setenv ENV_VARIABLE value
 #You can invoke svccfg directly with individual subcommands or by specifying a script file.
 
-
+/opt/custom/smf
 `````````````````
 Installing pkgin
 cd /
@@ -5575,11 +5585,15 @@ pkgin -y up
 
 
 ===========zpool section=========
+
 zpool list
 zpool destroy  geekpool
 zpool status
 zpool list zones
 zpool get all zones
+
+format             #查看硬盘情况
+format < /dev/null
 
 导出zpool：                zpool export stripedpool
                            # zpool create dozer mirror /file/a /file/b
@@ -5654,7 +5668,7 @@ zfs list -t snapshot
 svcs -a | grep vol
 iostat -xnc 2
 
-````````smartos vm````````````
+````````smartos vm`````````imgadm section```
 imgadm sources -d  https://images.joyent.com
 imgadm sources -a  http://images.briphant.com
 ``````````
@@ -5712,7 +5726,7 @@ vi web01.json
 }
 
 
-````````````
+``````````imgadm section``
 
 smartos类型的：imgadm avail | grep base-64 | tail
 kvm类型的    ：imgadm avail -o uuid,name,version,os,type,published | grep zvol
@@ -5720,6 +5734,8 @@ kvm类型的    ：imgadm avail -o uuid,name,version,os,type,published | grep zv
 imgadm import 088b97b0-e1a1-11e5-b895-9baa2086eb33
 imgadm list  #已经下载的映像
 
+
+```````vmadm section````````
 vmadm create -f ./myvmspec.json
 vmadm info  677fd345-2719-e219-e81c-96e36468ebaf  vnc
 
@@ -5744,4 +5760,5 @@ vmadm lookup -j 128  alias=~^[ab]
  vmadm start  54f1cc77-68f1-42ab-acac-5c4f64f5d6e0
  vmadm reboot 54f1cc77-68f1-42ab-acac-5c4f64f5d6e0
  vmadm delete 54f1cc77-68f1-42ab-acac-5c4f64f5d6e0
+ zlogin 1df6c1a6-7b51-635e-af61-a387f5fa3f45
 ============================
