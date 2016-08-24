@@ -976,6 +976,9 @@ gpgkey=https://repo.saltstack.com/yum/rhel7/SALTSTACK-GPG-KEY.pub
 
 CentOS 6:/etc/yum.repos.d/saltstack.repo:
 sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el6.noarch.rpm
+centos 7
+sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el7.noarch.rpm
+
   
   ``````install minion````
   yum update python  -y
@@ -5568,9 +5571,11 @@ sudo rpm -vi filebeat-1.2.3-x86_64.rpm
 /usbkey/shadow - the shadow password file that will be put in /etc/shadow (read-only) on system boot
 /usbkey/ssh/                - a directory containing the SSH client and server configuration (deployed to /etc/ssh/ on system boot)
 /usbkey/ssh/sshd_config is in here so if you want to do things like require MFA or refuse Password login, you change it here and reboo
+
+`````smartos network``````````
 列出所有网卡
 dladm show-phys -m
-
+`````````````
 #The following example will set an environment variable for the specified FMRI with the value you specify.
 svccfg -s FMRI setenv ENV_VARIABLE value
 #You can invoke svccfg directly with individual subcommands or by specifying a script file.
@@ -5631,6 +5636,7 @@ Dry run on zpool creation:
 
 zfs create geekpool/fs1
 zfs set quota=500m geekpool/fs1
+zfs get quota zones/677fd345-2719-e219-e81c-96e36468ebaf
 zfs set reservation=200m geekpool/fs1
 zfs list			
 
@@ -5668,7 +5674,7 @@ zfs list -t snapshot
 svcs -a | grep vol
 iostat -xnc 2
 
-````````smartos vm`````````imgadm section```
+````````smartos vm section`````````imgadm section```
 imgadm sources -d  https://images.joyent.com
 imgadm sources -a  http://images.briphant.com
 ``````````
@@ -5703,6 +5709,35 @@ vi kvm_myvmspec.json
     }
   ]
 }
+
+vmadm  create  -f ./myvmspec.json
+vmadm  info   677fd345-2719-e219-e81c-96e36468ebaf  vnc             #RealVNC设置：RealVNC VNC Viewer will crash when connecting unless you set FullColour to True in the options.  On Windows make sure to go to Options, click Advanced, go to the Expert tab and set FullColour to True.
+vmadm  get    677fd345-2719-e219-e81c-96e36468ebaf
+vmadm  get    677fd345-2719-e219-e81c-96e36468ebaf        | json quota
+vmadm  get    677fd345-2719-e219-e81c-96e36468ebaf        | json disks
+
+kvm虚拟机磁盘扩容
+zfs get volsize      zones/677fd345-2719-e219-e81c-96e36468ebaf-disk0
+zfs set volsize=65g  zones/677fd345-2719-e219-e81c-96e36468ebaf-disk0
+vmadm reboot 677fd345-2719-e219-e81c-96e36468ebaf
+`````````````````
+kvm虚拟机增加磁盘
+cat add_disk.json
+ 
+{
+  "add_disks": [
+    {
+      "boot": false,
+      "model": "virtio",
+      "block_size": 8192,
+      "size": 40960
+   }
+ ]
+}
+ 
+vmadm update 54f1cc77-68f1-42ab-acac-5c4f64f5d6e0 -f add_disk.json
+
+
 ``````````````
 vi web01.json 
 {
@@ -5725,7 +5760,9 @@ vi web01.json
   }
 }
 
+vmadm  create -f web01.json
 
+zlogin 1df6c1a6-7b51-635e-af61-a387f5fa3f45
 ``````````imgadm section``
 
 smartos类型的：imgadm avail | grep base-64 | tail
