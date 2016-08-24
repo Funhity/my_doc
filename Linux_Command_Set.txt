@@ -5720,6 +5720,15 @@ kvm虚拟机磁盘扩容
 zfs get volsize      zones/677fd345-2719-e219-e81c-96e36468ebaf-disk0
 zfs set volsize=65g  zones/677fd345-2719-e219-e81c-96e36468ebaf-disk0
 vmadm reboot 677fd345-2719-e219-e81c-96e36468ebaf
+
+```````smartos snapshot````````````
+zfs snapshot zones/677fd345-2719-e219-e81c-96e36468ebaf-disk0@kvm_backup_by_wujunrong
+zfs list -t    snapshot
+zfs list -r -t snapshot -o name,creation zones
+zfs list -r -t snapshot -o name,creation tank/home/ahrens
+zfs list -o space
+zfs rollback tank/home/ahrens@tuesday
+zfs rollback -r tank/home/ahrens@tuesday
 `````````````````
 kvm虚拟机增加磁盘
 cat add_disk.json
