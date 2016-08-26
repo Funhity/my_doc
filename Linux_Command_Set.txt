@@ -660,6 +660,8 @@ scp -r root@192.168.38.10:/tmp/wujunrong2     .
 ssh ops@magpie.example.com sudo puppet agent --test
 
 yum -y install openssh-clients
+允许root用户远程登入：
+sed 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config   | grep PermitRootLogin
 `````````````````````````````````````
 debian:
 #Note: We recommend not to leave the passphrase empty. An attacker who gets hold of your private key can otherwise connect to the hosts where you deposited you public key since the passphrase is empty. Choose a long and complex passphrase.
@@ -5670,9 +5672,21 @@ zpool destroy -f
 ````````zpool snapshot``````
 zfs list -t snapshot
 
+````ZFS Volume````````
+zfs create -V 1g zones/volumes_wujunrong
+zfs set shareiscsi=on zones/volumes_wujunrong
+iscsitadm list target
+
 `````````smartos command section````````````
 svcs -a | grep vol
+svcs -a | grep leofs
+svcadm clear   svc:/leofs/storage:default
+svcadm enable  svc:/leofs/storage:default
+svcs -x
+svcs -p leofs/manager:default
+svcadm restart cswmysql5
 iostat -xnc 2
+pkgin list | grep leo_storag
 
 ````````smartos vm section`````````imgadm section```
 imgadm sources -d  https://images.joyent.com
@@ -5716,6 +5730,10 @@ vmadm  get    677fd345-2719-e219-e81c-96e36468ebaf
 vmadm  get    677fd345-2719-e219-e81c-96e36468ebaf        | json quota
 vmadm  get    677fd345-2719-e219-e81c-96e36468ebaf        | json disks
 
+vmadm update <zone id> vcpus=4
+vmadm update <zone id> ram=4096
+
+
 kvm虚拟机磁盘扩容
 zfs get volsize      zones/677fd345-2719-e219-e81c-96e36468ebaf-disk0
 zfs set volsize=65g  zones/677fd345-2719-e219-e81c-96e36468ebaf-disk0
@@ -5726,7 +5744,7 @@ zfs snapshot zones/677fd345-2719-e219-e81c-96e36468ebaf-disk0@kvm_backup_by_wuju
 zfs list -t    snapshot
 zfs list -r -t snapshot -o name,creation zones
 zfs list -r -t snapshot -o name,creation tank/home/ahrens
-zfs list -o space
+zfs list -o space   #snapshot size
 zfs rollback tank/home/ahrens@tuesday
 zfs rollback -r tank/home/ahrens@tuesday
 `````````````````
@@ -5770,7 +5788,6 @@ vi web01.json
 }
 
 vmadm  create -f web01.json
-
 zlogin 1df6c1a6-7b51-635e-af61-a387f5fa3f45
 ``````````imgadm section``
 
@@ -5807,4 +5824,8 @@ vmadm lookup -j 128  alias=~^[ab]
  vmadm reboot 54f1cc77-68f1-42ab-acac-5c4f64f5d6e0
  vmadm delete 54f1cc77-68f1-42ab-acac-5c4f64f5d6e0
  zlogin 1df6c1a6-7b51-635e-af61-a387f5fa3f45
-============================
+===========leofs section=================
+pkgin list | grep leo
+leo_gateway-1.2.21p1 LeoFS gateway.
+leo_manager-1.2.21p1 LeoFS manager.
+leo_storage-1.2.21p1 LeoFS storage server.

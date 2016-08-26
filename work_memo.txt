@@ -908,5 +908,139 @@ rsync  -avh   ./webservice/     192.168.110.102:/srv/salt/xinxindai_tomcat/files
 硬件信息：
 ansible qinghua -m raw -a " psrinfo -pv| grep  2200|head -n 1 | tr -d  '\n' ; prtconf | grep Memory"  | grep -v facebook | grep -v ^$
 ansible qinghua -f 1 -m raw -a " psrinfo -pv| grep  2200|head -n 1 "  | grep -v face|   grep -v ^$
-ansible qinghua -f 1 -m raw -a " prtconf | grep Memory "  | grep -v face|   grep -v ^$
+内存：ansible qinghua -f 1 -m raw -a " prtconf | grep Memory "  | grep -v face|   grep -v ^$
 ansible qinghua -f 1 -m raw -a " format < /dev/null"
+
+
+zfs list
+NAME                                               USED  AVAIL  REFER  MOUNTPOINT
+zones                                              217G  10.2T   585K  /zones
+zones/677fd345-2719-e219-e81c-96e36468ebaf        60.8K  10.0G  60.8K  /zones/677fd345-2719-e219-e81c-96e36468ebaf
+zones/677fd345-2719-e219-e81c-96e36468ebaf-disk0    10G  10.3T  1.71G  -
+
+
+===========smartos section leofs section==========
+imgadm sources -d  https://images.joyent.com
+imgadm sources -a  http://images.briphant.com
+imgadm update
+imgadm import 1bd84670-055a-11e5-aaa2-0346bb21d5a1
+imgadm list | grep 1bd84670-055a-11e5-aaa2-0346bb21d5a1
+
+
+```````````````````````````
+cd /opt
+vi leo-zone1.json
+vi leo-zone2.json
+vmadm create -f leo-zone1.json
+vmadm create -f leo-zone2.json
+
+```````````````````
+zlogin <leo-zone1-uuid>
+
+curl -O https://project-fifo.net/fifo.gpg
+gpg --primary-keyring /opt/local/etc/gnupg/pkgsrc.gpg --import < fifo.gpg
+gpg --keyring /opt/local/etc/gnupg/pkgsrc.gpg --fingerprint
+
+VERSION=rel
+cp /opt/local/etc/pkgin/repositories.conf /opt/local/etc/pkgin/repositories.conf.original
+`````````
+用官方的源：
+echo "http://release.project-fifo.net/pkg/${VERSION}" >> /opt/local/etc/pkgin/repositories.conf
+用公司内部源：
+步骤一：
+vi /opt/local/etc/pkgin/repositories.conf
+#http://pkgsrc.joyent.com/packages/SmartOS/2014Q4/x86_64/All
+
+步骤二：
+echo "http://pkgs.briphant.com/pkgsrc-fifo/pkg/rel"                      >>/opt/local/etc/pkgin/repositories.conf
+echo "http://pkgs.briphant.com/pkgsrc-joyent/SmartOS/2014Q4/x86_64/All"  >>/opt/local/etc/pkgin/repositories.conf
+
+
+
+pkgin -fy up
+pkgin install coreutils sudo gawk gsed
+pkgin install leo_manager leo_gateway leo_storage
+```````
+配置软件源
+vi /opt/local/etc/pkgin/repositories.conf
+#http://pkgsrc.joyent.com/packages/SmartOS/2014Q4/x86_64/All
+#http://release.project-fifo.net/pkg/rel
+http://pkgs.briphant.com/pkgsrc-joyent/SmartOS/2014Q4/x86_64/All
+http://pkgs.briphant.com/pkgsrc-fifo/pkg/rel
+
+`````````````````
+
+Start Manager A: 
+svcadm enable epmd
+svcadm enable leofs/manager
+
+```
+Start Manager B: 
+svcadm enable epmd
+svcadm enable leofs/manager
+
+`````
+Start Storage :
+Zlogin to Zone 1:
+
+svcadm enable leofs/storage
+leofs-adm status
+leofs-adm start
+`````````````
+Start the Gateway:
+svcadm enable leofs/gateway
+leofs-adm status
+`````
+Starting the LeoFS Cluster:
+sniffle-admin init-leofs 10.1.1.21.xip.io
+======fifo section============================
+imgadm sources -d  https://images.joyent.com
+imgadm sources -a  http://images.briphant.com
+cd /opt/
+vi setupfifo.json
+vmadm create -f setupfifo.json
+
+zlogin 92d63038-6fdf-c957-f161-ae22fbd9600c
+zfs set mountpoint=/data zones/$(zonename)/data
+
+cd /data
+curl -O https://project-fifo.net/fifo.gpg
+gpg --primary-keyring /opt/local/etc/gnupg/pkgsrc.gpg --import < fifo.gpg
+gpg --keyring /opt/local/etc/gnupg/pkgsrc.gpg --fingerprint
+
+
+```````
+配置软件源
+vi /opt/local/etc/pkgin/repositories.conf
+#http://pkgsrc.joyent.com/packages/SmartOS/2014Q4/x86_64/All
+#http://release.project-fifo.net/pkg/rel
+http://pkgs.briphant.com/pkgsrc-joyent/SmartOS/2014Q4/x86_64/All
+http://pkgs.briphant.com/pkgsrc-fifo/pkg/rel
+
+`````````````````
+
+pkgin -fy up
+pkgin install fifo-snarl fifo-sniffle fifo-howl fifo-cerberus
+
+svcadm enable epmd
+svcadm enable snarl
+svcadm enable sniffle
+svcadm enable howl
+svcs epmd snarl sniffle howl
+
+`````````````````````
+snarl-admin init default MyOrg Users admin admin
+   Created user 'admin' with id 0135d508-3b19-4b15-8827-8d14cea5af21.
+   Granted full permissions to admin.
+   Set password for to admin.
+   Created org 'MyOrg' with id 03500be5-f49a-42b4-be8d-86382e6c02c1.
+   Granted permission on org MyOrg to admin.
+   Joined admin to MyOrg.
+   Selected MyOrg as active org for admin.
+   Added default role Users (02b5176f-ddca-408f-8806-3434b440a66b).
+   Added 'Everything' scope and set it default.
+``````````````````
+sniffle-admin init-leofs 10.75.1.202.xip.io
+
+
+
