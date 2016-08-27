@@ -969,12 +969,13 @@ http://pkgs.briphant.com/pkgsrc-joyent/SmartOS/2014Q4/x86_64/All
 http://pkgs.briphant.com/pkgsrc-fifo/pkg/rel
 
 `````````````````
-
+vi /opt/local/leo_manager/etc/leo_manager.conf
 Start Manager A: 
 svcadm enable epmd
 svcadm enable leofs/manager
 
 ```
+vi /opt/local/leo_storage/etc/leo_storage.conf
 Start Manager B: 
 svcadm enable epmd
 svcadm enable leofs/manager
@@ -1040,7 +1041,53 @@ snarl-admin init default MyOrg Users admin admin
    Added default role Users (02b5176f-ddca-408f-8806-3434b440a66b).
    Added 'Everything' scope and set it default.
 ``````````````````
-sniffle-admin init-leofs 10.75.1.202.xip.io
+                leofs-adm status
+在fifo服务器上：sniffle-admin init-leofs 10.75.1.202.xip.io
+
+[root@fifo-wu ~]# sniffle-admin init-leofs 10.75.1.208.xip.io
+Created user fifo:
+Access Key: 5265c1c9d6fb400c0a2f
+Secret Key: 8dab3a24d909da8a152d5e5a212a39d9d0b7ea24
+Created bucket general bucket: fifo
+Created bucket image bucket: fifo-images
+Created bucket snapshot bucket: fifo-backups
+Configuring endpoint as: https://10.75.1.208.xip.io:10020
 
 
 
+
+=====Chunter section============
+
+VERSION=rel
+cd /opt
+curl -O http://release.project-fifo.net/gz/${VERSION}/fifo_zlogin-latest.gz
+gunzip fifo_zlogin-latest.gz
+sh fifo_zlogin-latest
+
+
+VERSION=rel
+cd /opt
+curl -O http://release.project-fifo.net/gz/${VERSION}/chunter-latest.gz
+gunzip chunter-latest.gz
+sh chunter-latest
+```````````
+
+虚拟机迁移：
+vmadm list
+vmadm stop 03d08f22-b1a0-6494-a58c-f1b769db8cee
+vmadm stop 0b9bccdf-7b8f-e01e-bd92-cc59e651357e
+zfs snapshot zones/03d08f22-b1a0-6494-a58c-f1b769db8cee@sending
+zfs snapshot zones/0b9bccdf-7b8f-e01e-bd92-cc59e651357e@sending
+
+vmadm get 03d08f22-b1a0-6494-a58c-f1b769db8cee > wujunrong-leofs01.json
+vmadm get 0b9bccdf-7b8f-e01e-bd92-cc59e651357e > wujunrong-leofs02.json
+
+zfs send -p  zones/03d08f22-b1a0-6494-a58c-f1b769db8cee@sending> wujunrong-leofs01.zfs
+zfs send -p  zones/0b9bccdf-7b8f-e01e-bd92-cc59e651357e@sending> wujunrong-leofs02.zfs
+
+
+zfs receive zones/03d08f22-b1a0-6494-a58c-f1b769db8cee  < ./wujunrong-leofs01.zfs 
+zfs receive zones/0b9bccdf-7b8f-e01e-bd92-cc59e651357e  < ./wujunrong-leofs02.zfs
+
+scp *.zfs root@10.75.1.109:/opt/  scp *.json  root@10.75.1.109:/opt/
+```````````````````````
