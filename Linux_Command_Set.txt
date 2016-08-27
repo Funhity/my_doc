@@ -5635,13 +5635,15 @@ Creating a ZFS Storage Pool With Cache Devices:
 					
 Dry run on zpool creation:
 					zpool create -n geekpool raidz2 c1t1d0 c1t2d0 c1t3d0	
-
+``````````zfs section````````
 zfs create geekpool/fs1
+zfs destroy -f -r zones/0b9bccdf-7b8f-e01e-bd92-cc59e651357e
 zfs set quota=500m geekpool/fs1
 zfs get quota zones/677fd345-2719-e219-e81c-96e36468ebaf
 zfs set reservation=200m geekpool/fs1
-zfs list			
-
+zfs list
+			
+`````````````````````
 By default a mount point (/poolname/fs_name) will be created for the file system if you don’t specify. In our case it was /geekpool/fs1
 zfs set mountpoint=/test geekpool/fs1
 
@@ -5843,6 +5845,10 @@ vmadm lookup -j 128  alias=~^[ab]
  vmadm reboot 54f1cc77-68f1-42ab-acac-5c4f64f5d6e0
  vmadm delete 54f1cc77-68f1-42ab-acac-5c4f64f5d6e0
  zlogin 1df6c1a6-7b51-635e-af61-a387f5fa3f45
+ 
+ 
+ vmadm  send 03d08f22-b1a0-6494-a58c-f1b769db8cee  |ssh 10.75.1.109 vmadm receive
+ vmadm  send 0b9bccdf-7b8f-e01e-bd92-cc59e651357e  |ssh 10.75.1.109 vmadm receive
 ===========leofs section=================
 cat /var/svc/log/leofs-manager:default.log
 less /var/log/leo_storage/app/error
