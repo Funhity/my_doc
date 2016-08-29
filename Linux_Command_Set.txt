@@ -661,7 +661,7 @@ ssh ops@magpie.example.com sudo puppet agent --test
 
 yum -y install openssh-clients
 允许root用户远程登入：
-sed 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config   | grep PermitRootLogin
+sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config   | grep PermitRootLogin
 `````````````````````````````````````
 debian:
 #Note: We recommend not to leave the passphrase empty. An attacker who gets hold of your private key can otherwise connect to the hosts where you deposited you public key since the passphrase is empty. Choose a long and complex passphrase.
@@ -5710,7 +5710,7 @@ pkgin list | grep leo_storag
 ````````smartos vm section`````````imgadm section```
 imgadm sources -d  https://images.joyent.com
 imgadm sources -a  http://images.briphant.com
-``````````
+`````````smartos kvm`````````````
 vi kvm_myvmspec.json 
 
 {
@@ -5752,7 +5752,7 @@ vmadm  get    677fd345-2719-e219-e81c-96e36468ebaf        | json disks
 vmadm update <zone id> vcpus=4
 vmadm update <zone id> ram=4096
 
-
+vmadm console 677fd345-2719-e219-e81c-96e36468ebaf
 kvm虚拟机磁盘扩容
 zfs get volsize      zones/677fd345-2719-e219-e81c-96e36468ebaf-disk0
 zfs set volsize=65g  zones/677fd345-2719-e219-e81c-96e36468ebaf-disk0
@@ -5855,16 +5855,37 @@ less /var/log/leo_storage/app/error
 less /var/log/leo_manager/app/error
 
 leofs-adm status
-
+leofs-adm start
 
 ```````````chunter section`````
 /opt/chunter/etc/chunter.conf
 /opt/chunter/etc/chunter.conf.example
 /opt/chunter/etc/hostid
 
-
+cd /var/log/chunter/
+ 
+ 
 svcadm enable  chunter
 svcadm disable chunter
 svcadm restart chunter
 
 `````````````````````
+
+==========fifo seciton============
+pkgin list  fifo-snarl fifo-sniffle fifo-howl fifo-cerberus | grep fifo
+svcs sniffle snarl howl
+
+
+vi  /opt/local/fifo-cerberus/config/config.js
+    http://images.briphant.com/images
+
+ls -Fd /data/*/log
+/data/{sniffle,snarl,howl}/log
+fifoadm vm list
+fifoadm hypervisors list
+
+
+
+fifoadm hypervisors list
+fifoadm vms         list
+fifoadm vms get -j 92d63038-6fdf-c957-f161-ae22fbd9600c

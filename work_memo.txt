@@ -1053,7 +1053,7 @@ Created bucket image bucket: fifo-images
 Created bucket snapshot bucket: fifo-backups
 Configuring endpoint as: https://10.75.1.208.xip.io:10020
 
-
+leofs-adm start
 
 
 =====Chunter section============
