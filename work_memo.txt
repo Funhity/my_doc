@@ -911,6 +911,9 @@ ansible qinghua -f 1 -m raw -a " psrinfo -pv| grep  2200|head -n 1 "  | grep -v 
 内存：ansible qinghua -f 1 -m raw -a " prtconf | grep Memory "  | grep -v face|   grep -v ^$
 ansible qinghua -f 1 -m raw -a " format < /dev/null"
 
+ipmitool -I lan -H 10.75.1.210 -U USERID -P admin power status
+
+
 
 zfs list
 NAME                                               USED  AVAIL  REFER  MOUNTPOINT
@@ -941,10 +944,11 @@ curl -O https://project-fifo.net/fifo.gpg
 gpg --primary-keyring /opt/local/etc/gnupg/pkgsrc.gpg --import < fifo.gpg
 gpg --keyring /opt/local/etc/gnupg/pkgsrc.gpg --fingerprint
 
-VERSION=rel
-cp /opt/local/etc/pkgin/repositories.conf /opt/local/etc/pkgin/repositories.conf.original
+
 `````````
 用官方的源：
+VERSION=rel
+cp /opt/local/etc/pkgin/repositories.conf /opt/local/etc/pkgin/repositories.conf.original
 echo "http://release.project-fifo.net/pkg/${VERSION}" >> /opt/local/etc/pkgin/repositories.conf
 用公司内部源：
 步骤一：
@@ -1090,4 +1094,20 @@ zfs receive zones/03d08f22-b1a0-6494-a58c-f1b769db8cee  < ./wujunrong-leofs01.zf
 zfs receive zones/0b9bccdf-7b8f-e01e-bd92-cc59e651357e  < ./wujunrong-leofs02.zfs
 
 scp *.zfs root@10.75.1.109:/opt/  scp *.json  root@10.75.1.109:/opt/
-```````````````````````
+``````````pxe section`````````````
+
+curl https://us-east.manta.joyent.com/Joyent_Dev/public/SmartOS/platform-latest.tgz > /tftpboot/tmp/platform-latest.tgz   --insecure
+cat /tftpboot/tmp/platform-latest.tgz | tar xz
+
+cat smartos.ipxe
+#!ipxe
+# /var/lib/tftpboot/smartos.ipxe.tpl
+kernel /smartos/20160818T234814Z/platform/i86pc/kernel/amd64/unix -B smartos=true
+initrd /smartos/20160818T234814Z/platform/i86pc/amd64/boot_archive
+boot
+
+
+`````````pxelinux section`````````
+scp ./bios/com32/mboot/mboot.c32 ./bios/com32/lib/libcom32.c32 ./bios/com32/elflink/ldlinux/ldlinux.c32  root@172.16.15.3:/tftpboot/smartos
+
+``````````````````````````````````````

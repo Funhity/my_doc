@@ -5192,7 +5192,8 @@ ipmi近端：
 ipmitool user list 1 
 ipmitool user set password 2 <new_password>
 ```````````````````````````
-ipmi远端
+ipmi远端:
+ipmitool -I lan -H 10.75.100.210 -U USERID -P admin power status
 ipmitool -I lan -U root -H  10.20.0.6  chassis status
 ipmitool -I lan -U zhixiang -H  10.20.0.6  chassis status
 echo "123456" >~/.racpasswd
@@ -5583,6 +5584,25 @@ svccfg -s FMRI setenv ENV_VARIABLE value
 #You can invoke svccfg directly with individual subcommands or by specifying a script file.
 
 /opt/custom/smf
+
+
+
+`````````
+用官方的源：
+VERSION=rel
+cp /opt/local/etc/pkgin/repositories.conf /opt/local/etc/pkgin/repositories.conf.original
+echo "http://release.project-fifo.net/pkg/${VERSION}" >> /opt/local/etc/pkgin/repositories.conf
+用公司内部源：
+步骤一：注释掉共有源
+vi /opt/local/etc/pkgin/repositories.conf
+#http://pkgsrc.joyent.com/packages/SmartOS/2014Q4/x86_64/All
+
+步骤二：
+echo "http://pkgs.briphant.com/pkgsrc-fifo/pkg/rel"                      >>/opt/local/etc/pkgin/repositories.conf
+echo "http://pkgs.briphant.com/pkgsrc-joyent/SmartOS/2014Q4/x86_64/All"  >>/opt/local/etc/pkgin/repositories.conf
+
+
+
 `````````````````
 Installing pkgin
 cd /
@@ -5643,10 +5663,10 @@ zfs get quota zones/677fd345-2719-e219-e81c-96e36468ebaf
 zfs set reservation=200m geekpool/fs1
 zfs list
 			
-`````````````````````
+
 By default a mount point (/poolname/fs_name) will be created for the file system if you don’t specify. In our case it was /geekpool/fs1
 zfs set mountpoint=/test geekpool/fs1
-
+`````````````````````
 zpool clear tank
 zpool clear tank c1t0d0
 zpool replace tank c1t1d0
@@ -5751,6 +5771,8 @@ vmadm  get    677fd345-2719-e219-e81c-96e36468ebaf        | json disks
 
 vmadm update <zone id> vcpus=4
 vmadm update <zone id> ram=4096
+vmadm update 1df6c1a6-7b51-635e-af61-a387f5fa3f45  resolvers=114.114.114.114,8.8.8.8
+
 
 vmadm console 677fd345-2719-e219-e81c-96e36468ebaf
 kvm虚拟机磁盘扩容
