@@ -2601,6 +2601,9 @@ $ tar -jxvf filename.tar.bz2
 
 tar -zcvf /tmp/webservice-trade.tar.gz   ./{*webservice*11-11*,*webser*.out,*tra*11-11*,*tra*.out}
 
+yum   -y install bzip2
+bzip2 -d ./zsync-0.6.2.tar.bz2 
+
 ``````````tomcat section``````
 安装tomcat解压安装包即可
 wget http://apache.fayea.com/tomcat/tomcat-6/v6.0.45/bin/apache-tomcat-6.0.45.tar.gz
@@ -5587,8 +5590,18 @@ svccfg -s FMRI setenv ENV_VARIABLE value
 
 
 
-`````````
-用官方的源：
+```````pkgin section``
+
+Installing pkgin
+cd /
+curl -k http://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2013Q3-x86_64.tar.gz | gzcat | tar -xf -
+pkg_admin rebuild
+pkgin -y up
+
+
+=========smartos repository========
+
+用官方的源安装软件：
 VERSION=rel
 cp /opt/local/etc/pkgin/repositories.conf /opt/local/etc/pkgin/repositories.conf.original
 echo "http://release.project-fifo.net/pkg/${VERSION}" >> /opt/local/etc/pkgin/repositories.conf
@@ -5600,17 +5613,18 @@ vi /opt/local/etc/pkgin/repositories.conf
 步骤二：
 echo "http://pkgs.briphant.com/pkgsrc-fifo/pkg/rel"                      >>/opt/local/etc/pkgin/repositories.conf
 echo "http://pkgs.briphant.com/pkgsrc-joyent/SmartOS/2014Q4/x86_64/All"  >>/opt/local/etc/pkgin/repositories.conf
+pkgin -fy up
 
 
+````````smartos private repository`````````
+私有源制作方法：
+方法一：
+从cache中提取软件             ：/var/db/pkgin/cache
+私有源中必须要有如下总结性文件：
+wget https://pkgsrc.joyent.com/packages/SmartOS/2015Q4/x86_64/All/pkg_summary.gz
 
-`````````````````
-Installing pkgin
-cd /
-curl -k http://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2013Q3-x86_64.tar.gz | gzcat | tar -xf -
-pkg_admin rebuild
-pkgin -y up
-
-
+方法二：从官方提取全部软件：
+全部pkg软件                   ：wget --mirror pkgsrc.joyent.com/packages/SmartOS/2016Q1/x86_64/All/
 ===========zpool section=========
 
 zpool list
@@ -5741,6 +5755,7 @@ vi kvm_myvmspec.json
   ],
   "ram": "2048",
   "vcpus": "2",
+  "hostname": "web01",
   "nics": [
     {
       "nic_tag": "admin",
@@ -5806,7 +5821,7 @@ cat add_disk.json
 vmadm update 54f1cc77-68f1-42ab-acac-5c4f64f5d6e0 -f add_disk.json
 
 
-``````````````
+````````smartos zone``````
 vi web01.json 
 {
  "brand": "joyent",
@@ -5815,7 +5830,7 @@ vi web01.json
  "hostname": "web01",
  "max_physical_memory": 512,
  "quota": 20,
- "resolvers": ["8.8.8.8", "208.67.220.220"],
+ "resolvers": ["114.114.114.114", "8.8.4.4"],
  "nics": [
     {
       "nic_tag": "admin",
@@ -5911,3 +5926,18 @@ fifoadm hypervisors list
 fifoadm hypervisors list
 fifoadm vms         list
 fifoadm vms get -j 92d63038-6fdf-c957-f161-ae22fbd9600c
+
+===========smartos salt========
+vi 
+http://pkgsrc.joyent.com/packages/SmartOS/2016Q1/x86_64/All
+pkgin -y up
+pkgin -y install salt  
+
+	/usr/sbin/svcadm enable -r svc:/pkgsrc/salt:master
+	/usr/sbin/svcadm enable -r svc:/pkgsrc/salt:minion
+
+pkgin install mc vim scmgit python2.7 py27-pip py27-expat py27-sqlite2 py27-mysqldb gcc47 gnu-binutils libxslt	
+
+
+
+===================================
