@@ -469,6 +469,7 @@ CMD ["/usr/sbin/init"]
 This Dockerfile deletes a number of unit files which might cause issues. From here, you are ready to build your base image.
 
 $ docker build --rm -t local/c7-systemd .
+  docker build --rm -t centos7:systemd  .
 docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro -p 80:80 local/centos7:yum-repository  
 ```````````
 
@@ -1845,6 +1846,10 @@ ansible perf_ngi*  -m shell -a "nginx -v"
 ``````````````
 vi /etc/nginx/nginx.conf
 mv  /etc/nginx/conf.d/default.conf /tmp/
+
+/etc/nginx/nginx.conf
+/run/nginx.pid
+
 ````````````
 
 #Where level is one of the following values: debug, info, notice, warn, error, and crit
@@ -5737,14 +5742,24 @@ find . -type f -newer ./auth.log
 iostat -xnc 2
 pkgin list | grep leo_storag
 
+``````smartos dns````````
+cat /etc/resolv.conf
+dig @192.168.137.1
 
 
 
-
-````````smartos vm section`````````imgadm section```
+``````````imgadm section````````
+imgadm sources 
 imgadm sources -d  https://images.joyent.com
 imgadm sources -a  http://images.briphant.com
-`````````smartos kvm`````````````
+
+smartos类型的：imgadm avail | grep base-64 | tail
+kvm类型的    ：imgadm avail -o uuid,name,version,os,type,published | grep zvol
+
+imgadm import 088b97b0-e1a1-11e5-b895-9baa2086eb33
+imgadm list  #已经下载的映像
+
+`````````````smartos vm section```````````````
 vi kvm_myvmspec.json 
 
 {
@@ -5845,13 +5860,7 @@ vi web01.json
 
 vmadm  create -f web01.json
 zlogin 1df6c1a6-7b51-635e-af61-a387f5fa3f45
-``````````imgadm section``
 
-smartos类型的：imgadm avail | grep base-64 | tail
-kvm类型的    ：imgadm avail -o uuid,name,version,os,type,published | grep zvol
-
-imgadm import 088b97b0-e1a1-11e5-b895-9baa2086eb33
-imgadm list  #已经下载的映像
 
 
 ```````vmadm section````````
