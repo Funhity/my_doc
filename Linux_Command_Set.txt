@@ -31,7 +31,7 @@ centos6:   /etc/sysconfig/network
 Debian:    /etc/hostname
 
 windows:   C:\Windows\System32\drivers\etc
-=====================  DNS section ====================
+=====================  DNS section ==============dig section======
 /etc/sysconfig/network
 cat /etc/resolv.conf 
 host -v -t a cyberciti.biz
@@ -44,7 +44,8 @@ nslookup <ip>
 ipconfig /registerdns
 ipconfig /flushdns
 ````````````
-dig command :yum -y install bind-utils 
+yum install -y  bind-utils  #dig command :
+
 dig +noall +answer xinxindai.com any
 dig @<resolve-ip> www.google.com
 
@@ -470,7 +471,9 @@ This Dockerfile deletes a number of unit files which might cause issues. From he
 
 $ docker build --rm -t local/c7-systemd .
   docker build --rm -t centos7:systemd  .
-docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro -p 80:80 local/centos7:yum-repository  
+docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro                                       -p 80:80 local/centos7:yum-repository 
+docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /home/frank/docker-share:/root:rw  -p 80:80 centos7:systemd
+ 
 ```````````
 
 sudo docker run -i -t ubuntu /bin/bash
@@ -5752,6 +5755,9 @@ dig @192.168.137.1
 imgadm sources 
 imgadm sources -d  https://images.joyent.com
 imgadm sources -a  http://images.briphant.com
+imgadm sources -a  http://datasets.at
+
+
 
 smartos类型的：imgadm avail | grep base-64 | tail
 kvm类型的    ：imgadm avail -o uuid,name,version,os,type,published | grep zvol
@@ -5949,4 +5955,20 @@ pkgin install mc vim scmgit python2.7 py27-pip py27-expat py27-sqlite2 py27-mysq
 
 
 
-===================================
+===========smartos dataset section========================
+http://datasets.at/api/datasets/?name=base-64&amp;version=16.2.0
+http://10.20.101.21/api/datasets/?name=base-64&amp;version=16.2.0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
