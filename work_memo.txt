@@ -1110,4 +1110,63 @@ boot
 `````````pxelinux section`````````
 scp ./bios/com32/mboot/mboot.c32 ./bios/com32/lib/libcom32.c32 ./bios/com32/elflink/ldlinux/ldlinux.c32  root@172.16.15.3:/tftpboot/smartos
 
-``````````````````````````````````````
+===============smartos dsapid section============
+imgadm sources -a  http://datasets.at
+imgadm sources -d  https://images.joyent.com
+imgadm import a0e719d6-4e21-11e4-92eb-2bf6399552e7
+vi dsapid.json
+{ "brand": "joyent", "image_uuid": "a0e719d6-4e21-11e4-92eb-2bf6399552e7", "autoboot": true, "alias": "dsapid-server", "hostname": "datasets.dsapid", "resolvers": [ "114.114.114.114", "8.8.4.4" ], "max_physical_memory": 1024, "max_swap": 1024, "tmpfs": 1024, "quota": 120, "nics": [ { "nic_tag": "admin", "ips": ["dhcp"], "primary": true } ]}
+
+vmadm create -f dsapid.json
+`````````
+vi /data/config.json
+{
+    "log_level": "info",
+    "base_url": "http://10.20.1.4/",
+    "mount_ui": "/opt/dsapid/ui",
+    "listen": {
+        "http": {
+            "address": "0.0.0.0:80",
+            "ssl": false
+        }
+    },
+    "datadir": "/data/files",
+    "users": "/data/users.json",
+    "sync": [
+        {
+            "name": "official joyent dsapi",
+            "active": false,
+            "type": "dsapi",
+            "provider": "joyent",
+            "source": "https://datasets.joyent.com/datasets",
+            "delay": "24h"
+        },
+        {
+            "name": "official joyent imgapi",
+            "active": false,
+            "type": "imgapi",
+            "provider": "joyent",
+            "source": "https://images.joyent.com/images",
+            "delay": "24h"
+        },
+        {
+            "name": "datasets.at repository",
+            "active": true,
+            "type": "dsapi",
+            "provider": "community",
+            "source": "http://datasets.at/datasets",
+            "delay": "12h"
+        }
+    ]
+}
+
+``````````````
+svcadm disable dsapid
+svcadm enable dsapid
+svcs -p dsapid
+/opt/dsapid/server   -config /data/config.json -log_level debug 
+curl -v -X PUT http://127.0.0.1:8000/api/users -d '{ "name": "admin", "token": "admintoken", "type": "user", "roles": [ "s_dataset.upload", "s_dataset.manage", "s_dataset.admin" ] }'
+`````````````
+
+
+

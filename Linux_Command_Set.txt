@@ -5585,7 +5585,15 @@ sudo rpm -vi filebeat-1.2.3-x86_64.rpm
 /usbkey/shadow - the shadow password file that will be put in /etc/shadow (read-only) on system boot
 /usbkey/ssh/                - a directory containing the SSH client and server configuration (deployed to /etc/ssh/ on system boot)
 /usbkey/ssh/sshd_config is in here so if you want to do things like require MFA or refuse Password login, you change it here and reboo
+`````smartos virtualbox``````````````
 
+bunzip2 smartos-20130808T195337Z-USB.img.bz2
+"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" convertfromraw C:\Users\aaa\Downloads\smartos-latest-USB.img smartos.vmdk --format VMDK
+
+Disable Audio
+Disable "Enable absolute pointing device"
+Enable PAE/NX
+Ensure Network is enable on Adapter 1 is of Type "Intel PRO/1000 MT Desktop"..
 `````smartos network``````````
 列出所有网卡
 dladm show-phys -m
@@ -5756,8 +5764,8 @@ imgadm sources
 imgadm sources -d  https://images.joyent.com
 imgadm sources -a  http://images.briphant.com
 imgadm sources -a  http://datasets.at
-
-
+imgadm sources -f -a http://192.168.137.178
+imgadm install -m smartos-1.3.12.dsmanifest -f smartos-1.3.12.zfs.bz2
 
 smartos类型的：imgadm avail | grep base-64 | tail
 kvm类型的    ：imgadm avail -o uuid,name,version,os,type,published | grep zvol
@@ -5959,6 +5967,11 @@ pkgin install mc vim scmgit python2.7 py27-pip py27-expat py27-sqlite2 py27-mysq
 http://datasets.at/api/datasets/?name=base-64&amp;version=16.2.0
 http://10.20.101.21/api/datasets/?name=base-64&amp;version=16.2.0
 
+
+
+/data/files/
+
+curl -v -u admintoken: http://192.168.137.112:80/api/upload -Fmanifest=@../index.html  -Ffile=@./base-64-lts-15.4.1.zfs.gz -v
 
 
 
