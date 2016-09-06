@@ -972,14 +972,43 @@ vi /opt/local/etc/pkgin/repositories.conf
 http://pkgs.briphant.com/pkgsrc-joyent/SmartOS/2014Q4/x86_64/All
 http://pkgs.briphant.com/pkgsrc-fifo/pkg/rel
 
-`````````````````
+````````leofs manager`````````
 vi /opt/local/leo_manager/etc/leo_manager.conf
+nodename = manager0@10.1.1.21
+manager.mode = master
+distributed_cookie = QvTnSK0vrCohKMkw
+manager.partner = manager1@10.1.1.22
+consistency.num_of_replicas = 1
+consistency.write = 1
+consistency.read = 1
+consistency.delete = 1
+
+
+
 Start Manager A: 
 svcadm enable epmd
 svcadm enable leofs/manager
 
-```
+````````leofs gateway`````
+
+vi /opt/local/leo_gateway/etc/leo_gateway.conf
+
+distributed_cookie = QvTnSK0vrCohKMkw
+managers = [manager0@10.1.1.21, manager1@10.1.1.22]
+http.port = 80
+http.ssl_port     = 443
+
+
+Start the Gateway:
+svcadm enable leofs/gateway
+leofs-adm status
+
+
+```leofs storage```````
 vi /opt/local/leo_storage/etc/leo_storage.conf
+distributed_cookie = QvTnSK0vrCohKMkw
+managers = [manager0@10.1.1.21, manager1@10.1.1.22]
+
 Start Manager B: 
 svcadm enable epmd
 svcadm enable leofs/manager
@@ -991,13 +1020,27 @@ Zlogin to Zone 1:
 svcadm enable leofs/storage
 leofs-adm status
 leofs-adm start
-`````````````
-Start the Gateway:
-svcadm enable leofs/gateway
-leofs-adm status
+
 `````
 Starting the LeoFS Cluster:
 sniffle-admin init-leofs 10.1.1.21.xip.io
+
+
+svcadm clear svc:/leofs/gateway:default
+svcadm clear svc:/leofs/storage:default
+svcadm clear svc:/leofs/manager:default
+
+svcadm enable svc:/leofs/manager:default
+svcadm enable svc:/leofs/gateway:default
+svcadm enable svc:/leofs/storage:default
+
+svcadm restart svc:/leofs/manager:default
+svcadm restart svc:/leofs/storage:default
+svcadm restart svc:/leofs/gateway:default
+
+svcs -p leofs/manager:default
+svcs -p leofs/storage:default
+
 ======fifo section============================
 imgadm sources -d  https://images.joyent.com
 imgadm sources -a  http://images.briphant.com
@@ -1160,13 +1203,47 @@ vi /data/config.json
     ]
 }
 
-``````````````
+``````````dsapi section````
 svcadm disable dsapid
 svcadm enable dsapid
 svcs -p dsapid
 /opt/dsapid/server   -config /data/config.json -log_level debug 
+curl -v -X PUT http://127.0.0.1:80/api/users -d '{ "name": "admin", "token": "user", "roles": [ "s_dataset.upload", "s_dataset.manage", "s_dataset.admin" ] }'
 curl -v -X PUT http://127.0.0.1:8000/api/users -d '{ "name": "admin", "token": "admintoken", "type": "user", "roles": [ "s_dataset.upload", "s_dataset.manage", "s_dataset.admin" ] }'
+curl -v -u admintoken: http://10.0.2.6:80/api/upload -Fmanifest=@./manifest.json  -Ffile=@./base-64-lts-15.4.1.zfs.gz -v
+
 `````````````
 
+git config --global http.sslVerify false
+git clone https://github.com/joyent/mibe
 
 
+
+
+==========vmadm section=======
+
+tee /opt/ansible.jason <<-'EOF'
+
+{
+ "brand": "joyent",
+ "image_uuid": "13f711f4-499f-11e6-8ea6-2b9fb858a619",
+ "alias": "config-management-server",
+ "hostname": "ansible-master",
+ "max_physical_memory": 1024,
+ "quota": 50,
+ "resolvers": ["114.114.114.114", "8.8.4.4"],
+ "nics": [
+    {
+      "nic_tag": "admin",
+      "ips": ["dhcp"]
+    }
+ ],
+ "internal_metadata": {
+  "root_pw": "root",
+  "admin_pw": "admin"
+  }
+}
+
+EOF
+vmadm  create -f /opt/ansible.jason
+================================
