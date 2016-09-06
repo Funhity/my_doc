@@ -5988,14 +5988,27 @@ pkgin install mc vim scmgit python2.7 py27-pip py27-expat py27-sqlite2 py27-mysq
 
 
 
-===========smartos dataset section========================
+===========smartos dataset section====dsapi section====================
 http://datasets.at/api/datasets/?name=base-64&amp;version=16.2.0
 http://10.20.101.21/api/datasets/?name=base-64&amp;version=16.2.0
 
 
+配置文件：/data/config.json
+
+方法一：
+svcadm disable dsapid
+svcadm enable dsapid
+svcs -p dsapid
+方法二：
+/opt/dsapid/server   -config /data/config.json -log_level debug 
+
+
 /data/files/
 
-curl -v -u admintoken: http://192.168.137.112:80/api/upload -Fmanifest=@../index.html  -Ffile=@./base-64-lts-15.4.1.zfs.gz -v
+在本地添加用户
+curl -v -X PUT http://127.0.0.1:80/api/users -d '{ "name": "admin", "token": "admintoken", "type": "user", "roles": [ "s_dataset.upload", "s_dataset.manage", "s_dataset.admin" ] }'
+从远程上传dataset
+curl -v -u admintoken: http://10.75.1.202:80/api/upload -F manifest=@./manifest.json  -Ffile=@./base-64-lts-15.4.1.zfs.gz -v
 
 
 ====smartos usb===
