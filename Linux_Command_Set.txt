@@ -5588,6 +5588,8 @@ sudo rpm -vi filebeat-1.2.3-x86_64.rpm
 /usbkey/shadow - the shadow password file that will be put in /etc/shadow (read-only) on system boot
 /usbkey/ssh/                - a directory containing the SSH client and server configuration (deployed to /etc/ssh/ on system boot)
 /usbkey/ssh/sshd_config is in here so if you want to do things like require MFA or refuse Password login, you change it here and reboo
+
+pkgin install lrzsz-0.12.20nb1
 `````smartos virtualbox``````````````
 
 bunzip2 smartos-20130808T195337Z-USB.img.bz2
@@ -5739,7 +5741,7 @@ pkgin list | grep leo
 leo_gateway-1.2.21p1 LeoFS gateway.
 leo_manager-1.2.21p1 LeoFS manager.
 leo_storage-1.2.21p1 LeoFS storage server.
-```````````````
+`````````svc section``````
 
 svcs -a | grep vol
 svcs -a | grep leofs
@@ -5748,9 +5750,18 @@ svcadm enable  svc:/leofs/storage:default
 svcadm restart cswmysql5
 svcs -x
 svcs -p leofs/manager:default
+svcprop -p start/exec dsapid
 ps -ef | grep svc
-
-
+``````
+svcprop -p start/exec   svc:/application/dsapid:default
+svccfg
+首先：
+svc:>                    select application/dsapid
+svc:/application/dsapid> listprop
+svc:/application/dsapid> setprop start/exec = "/opt/dsapid/server -config=/data/config.json -log_level debug"
+svc:/application/dsapid> quit
+最后：svcadm refresh  dsapid
+      svcadm restart  dsapid
 ``````````````````
 find . -type f -newer ./auth.log
 iostat -xnc 2
@@ -5989,21 +6000,27 @@ pkgin install mc vim scmgit python2.7 py27-pip py27-expat py27-sqlite2 py27-mysq
 
 
 ===========smartos dataset section====dsapi section====================
-http://datasets.at/api/datasets/?name=base-64&amp;version=16.2.0
-http://10.20.101.21/api/datasets/?name=base-64&amp;version=16.2.0
 
+http://10.20.101.21/api/datasets/?name=base-64&amp;version=16.2.0
+http://datasets.at/api/datasets/?name=jenkins;version=0.1.3
 
 配置文件：/data/config.json
-
+          "source": "http://datasets.at/api/datasets/?name=base-64&amp;version=16.2.0",
 方法一：
 svcadm disable dsapid
 svcadm enable dsapid
 svcs -p dsapid
+
+
+
 方法二：
 /opt/dsapid/server   -config /data/config.json -log_level debug 
 
 
 /data/files/
+less /var/svc/log/application-dsapid:default.log
+
+
 
 在本地添加用户
 curl -v -X PUT http://127.0.0.1:80/api/users -d '{ "name": "admin", "token": "admintoken", "type": "user", "roles": [ "s_dataset.upload", "s_dataset.manage", "s_dataset.admin" ] }'
