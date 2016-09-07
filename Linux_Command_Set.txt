@@ -668,7 +668,12 @@ ssh ops@magpie.example.com sudo puppet agent --test
 
 yum -y install openssh-clients
 允许root用户远程登入：
-sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config   | grep PermitRootLogin
+
+``````
+vi /etc/ssh/sshd_config
+PasswordAuthentication yes
+sed 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config   | grep PermitRootLogin
+/bin/systemctl restart  sshd.service
 `````````````````````````````````````
 debian:
 #Note: We recommend not to leave the passphrase empty. An attacker who gets hold of your private key can otherwise connect to the hosts where you deposited you public key since the passphrase is empty. Choose a long and complex passphrase.
@@ -4094,8 +4099,10 @@ ansible cloudera_redis          -m shell  -a   "yum -y install make gcc tcl"
 ubuntu:   sudo apt-get install  aria2
 centos6:  wget http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el7.rf.x86_64.rpm
           rpm -ivh rpmforge-release-0.5.3-1.el7.rf.x86_64.rpm
+          或 sudo yum -y install epel-release
 centos7:  https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
           rpm -ivh epel-release-latest-7.noarch.rpm
+		  或 sudo yum -y install epel-release
 yum -y install  aria2
 aria2c  https://github.com/antirez/redis/archive/2.8.23.tar.gz  --check-certificate=false -x10
 
@@ -5611,7 +5618,13 @@ svccfg -s FMRI setenv ENV_VARIABLE value
 
 
 
-```````pkgin section``
+=========pkgin section smartos repository========
+on centos:
+   aria2c https://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2016Q2-x86_64.tar.gz -x 10
+on smartos:
+   cd /
+   gzcat /opt/bootstrap-2016Q2-x86_64.tar.gz | tar -xf -
+
 
 Installing pkgin
 cd /
@@ -5620,7 +5633,7 @@ pkg_admin rebuild
 pkgin -y up
 
 
-=========smartos repository========
+
 
 用官方的源安装软件：
 VERSION=rel
@@ -5886,9 +5899,35 @@ vi web01.json
 
 vmadm  create -f web01.json
 zlogin 1df6c1a6-7b51-635e-af61-a387f5fa3f45
+`````````smartos docker ```
+imgadm avail -o uuid,name,version,os,published,type | grep lx-dataset   # See available images
 
-
-
+tee /opt/centos7-docker.json <<-'EOF'
+{
+  "alias": "docker-centos7-wujunrong",
+  "brand": "lx",
+  "hostname": "docker-centos7",
+  "kernel_version": "3.13.0",
+  "max_physical_memory": 2048,
+  "quota": 10,
+  "image_uuid": "07b33b7a-27a3-11e6-816f-df7d94eea009",
+  "resolvers": ["114.114.114.114","8.8.4.4"],
+  "nics": [
+    {
+      "nic_tag": "admin",
+      "ip": "172.50.50.27",
+      "netmask": "255.255.255.224",
+      "gateway": "172.50.50.1",
+      "primary": true
+    }
+  ]
+}
+EOF
+vmadm  create -f /opt/centos7-docker.json
+`````````````````
+imgadm sources --add-docker-hub
+imgadm import jenkinsci/jenkins
+imgadm list   --docker
 ```````vmadm section````````
 vmadm create -f ./myvmspec.json
 vmadm info  677fd345-2719-e219-e81c-96e36468ebaf  vnc
@@ -5912,6 +5951,7 @@ vmadm lookup -j 128  alias=~^[ab]
 
 vmadm update <zone id> vcpus=4
 vmadm update <zone id> ram=4096
+vmadm update 677fd345-2719-e219-e81c-96e36468ebaf alias=wujunrong_centos7
 vmadm update 1df6c1a6-7b51-635e-af61-a387f5fa3f45  resolvers=114.114.114.114,8.8.8.8
 vmadm update 677fd345-2719-e219-e81c-96e36468ebaf <<EOF
      {
