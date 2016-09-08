@@ -5619,14 +5619,18 @@ svccfg -s FMRI setenv ENV_VARIABLE value
 
 
 =========pkgin section smartos repository========
+Installing pkgin
+方法一
 on centos:
    aria2c https://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2016Q2-x86_64.tar.gz -x 10
 on smartos:
+
    cd /
    gzcat /opt/bootstrap-2016Q2-x86_64.tar.gz | tar -xf -
+pkg_admin rebuild
+pkgin -y up 
+方法二：
 
-
-Installing pkgin
 cd /
 curl -k http://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2013Q3-x86_64.tar.gz | gzcat | tar -xf -
 pkg_admin rebuild
