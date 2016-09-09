@@ -1028,6 +1028,9 @@ sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el7
   pillar_safe_render_error: True
   
   echo 192.168.38.10 salt>>/etc/hosts
+`````
+salt --versions-report  
+salt -l debug "*" cmd.run "uptime"  
 `````````````
   nodegroups:
   group1: 'L@foo.domain.com,bar.domain.com,baz.domain.com or bl*.domain.com'
@@ -1281,7 +1284,7 @@ apache:
   
   salt-ssh  -i    'cloudera-agent3'        archive.unzip    template=jinja    /tmp/v6_webservice.war  /tmp/root/{{grains.id}}
   
-  ``````````salt pillar````
+  ``````````salt pillar section````
   salt    -I         'somekey:specialvalue' test.ping  //Pillar data can be used when targeting minions.
   salt    --pillar   'webserver_role:dev' state.sls webserver.foobarcom
   salt    --pillar   'webserver_role:qa'  state.sls webserver.foobarcom
@@ -5627,8 +5630,8 @@ on smartos:
 
    cd /
    gzcat /opt/bootstrap-2016Q2-x86_64.tar.gz | tar -xf -
-pkg_admin rebuild
-pkgin -y up 
+   pkg_admin rebuild
+   pkgin -y up 
 方法二：
 
 cd /
@@ -5805,7 +5808,7 @@ kvm类型的    ：imgadm avail -o uuid,name,version,os,type,published | grep zv
 imgadm import 088b97b0-e1a1-11e5-b895-9baa2086eb33
 imgadm list  #已经下载的映像
 
-`````````````smartos vm section```````````````
+`````````````smartos kvm section```````````````
 vi kvm_myvmspec.json 
 
 {
@@ -6089,4 +6092,22 @@ vi /opt/local/etc/ansible/ansible.cfg
 [defaults]
 host_key_checking=false
 =====smartos salt section=====
+步骤1：从 http://pkg.blackdot.be/extras/ 上下载salt-2016.3.3-esky-smartos.tar.gz 
+步骤2：
+scp salt-2016.3.3-esky-smartos.tar.gz   10.75.1.109:/opt/
+cd /opt; tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz
+/opt/salt/install/install.sh
+svcadm enable salt-minion
+
+```````````
+
 /opt/local/etc/salt/states
+=========smartos ssh section================
+sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config
+svcadm restart svc:/network/ssh:default
+`````````
+zlogin bf540e13-56df-cac7-819e-c82185d58209  sed 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config   | grep PermitRootLogin
+zlogin bf540e13-56df-cac7-819e-c82185d58209  sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config  
+zlogin bf540e13-56df-cac7-819e-c82185d58209  svcadm restart svc:/network/ssh:default
+=================
+
