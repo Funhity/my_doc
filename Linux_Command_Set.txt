@@ -1285,6 +1285,7 @@ apache:
   salt-ssh  -i    'cloudera-agent3'        archive.unzip    template=jinja    /tmp/v6_webservice.war  /tmp/root/{{grains.id}}
   
   ``````````salt pillar section````
+  salt '*' saltutil.refresh_pillar
   salt    -I         'somekey:specialvalue' test.ping  //Pillar data can be used when targeting minions.
   salt    --pillar   'webserver_role:dev' state.sls webserver.foobarcom
   salt    --pillar   'webserver_role:qa'  state.sls webserver.foobarcom
@@ -5622,6 +5623,10 @@ svccfg -s FMRI setenv ENV_VARIABLE value
 
 
 =========pkgin section smartos repository========
+pkgin avail | more
+rm -fr /var/db/pkgin/*    #This directory can be completely emptied if pkgin's database gets corrupted, pkgin will rebuild its database based on pkg_install's PKG_DB next time it is called.
+
+
 Installing pkgin
 方法一
 on centos:
