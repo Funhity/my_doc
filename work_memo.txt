@@ -1208,9 +1208,11 @@ svcadm disable dsapid
 svcadm enable dsapid
 svcs -p dsapid
 /opt/dsapid/server   -config /data/config.json -log_level debug 
-curl -v -X PUT http://127.0.0.1:80/api/users -d '{ "name": "admin", "token": "user", "roles": [ "s_dataset.upload", "s_dataset.manage", "s_dataset.admin" ] }'
-curl -v -X PUT http://127.0.0.1:8000/api/users -d '{ "name": "admin", "token": "admintoken", "type": "user", "roles": [ "s_dataset.upload", "s_dataset.manage", "s_dataset.admin" ] }'
-curl -v -u admintoken: http://10.0.2.6:80/api/upload -Fmanifest=@./manifest.json  -Ffile=@./base-64-lts-15.4.1.zfs.gz -v
+
+在本地添加用户
+curl -v -X PUT http://127.0.0.1:80/api/users -d '{ "name": "admin", "token": "admintoken", "type": "user", "roles": [ "s_dataset.upload", "s_dataset.manage", "s_dataset.admin" ] }'
+从远程上传dataset
+curl -v -u admintoken: http://10.75.1.202:80/api/upload -F manifest=@./manifest.json  -Ffile=@./base-64-lts-15.4.1.zfs.gz -v
 
 `````````````
 
@@ -1247,3 +1249,5 @@ tee /opt/ansible.jason <<-'EOF'
 EOF
 vmadm  create -f /opt/ansible.jason
 ================================
+vmadm list  | grep wujunrong-leofs | awk '{print $1 }' |xargs -I {} vmadm delete {}
+vmadm list  | grep wujunrong-leofs | awk '{print $1 }' |xargs -I {} vmadm reboot {}

@@ -672,7 +672,10 @@ yum -y install openssh-clients
 ``````
 vi /etc/ssh/sshd_config
 PasswordAuthentication yes
+
+
 sed 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config   | grep PermitRootLogin
+sed 's/PasswordAuthentication no/PasswordAuthentication yes/g'   /etc/ssh/sshd_config   | grep "PasswordAuthentication.*yes"
 /bin/systemctl restart  sshd.service
 `````````````````````````````````````
 debian:
@@ -4555,6 +4558,7 @@ git config user.name
    git fetch
    git checkout -t origin/master #-t will set the upstream branch for you
    git commit -a -m "change command text"
+   git commit --dry-run -a
    git push
    git pull  -s  resolve #pull的时候你这边已经被svn update改了，pull的时候需要指定merge策略
 `````````
@@ -6098,6 +6102,9 @@ vi /opt/local/etc/ansible/ansible.cfg
 [defaults]
 host_key_checking=false
 =====smartos salt section=====
+/opt/local/var/cache/salt/master/minions/qinghua-leofs1/files/root/fifo.gpg
+
+
 步骤1：从 http://pkg.blackdot.be/extras/ 上下载salt-2016.3.3-esky-smartos.tar.gz 
 步骤2：
 scp salt-2016.3.3-esky-smartos.tar.gz   10.75.1.109:/opt/
@@ -6110,6 +6117,7 @@ svcadm enable salt-minion
 /opt/local/etc/salt/states
 =========smartos ssh section================
 sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config
+sed -i.bak 's/PasswordAuthentication no/PasswordAuthentication yes/g'   /etc/ssh/sshd_config  
 svcadm restart svc:/network/ssh:default
 `````````
 zlogin bf540e13-56df-cac7-819e-c82185d58209  sed 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config   | grep PermitRootLogin
