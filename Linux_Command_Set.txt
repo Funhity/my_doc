@@ -3568,7 +3568,7 @@ help pwd
 ntpdate 192.168.38.190
 df -hT  #disk section
 autoreconf -i /root/strongswan
-curl -o  /home/frank/kvm/images/windows8-office.img   FILE:///run/media/frank/MyData/windows8.img
+
 runuser -l tomcat  -c "/opt/webserver/v6_tomcat/bin/startup.sh"
 ip route  add 192.168.38.0/255.255.255.0  via 172.16.15.253  dev eth1
 ````````````````
@@ -6117,5 +6117,6 @@ zlogin bf540e13-56df-cac7-819e-c82185d58209  sed -i.bak 's/PermitRootLogin witho
 zlogin bf540e13-56df-cac7-819e-c82185d58209  svcadm restart svc:/network/ssh:default
 zlogin bf540e13-56df-cac7-819e-c82185d58209  cp /opt/local/etc/pkgin/repositories.conf /opt/local/etc/pkgin/repositories.conf.original
 
-=================
-
+=======curl section==========
+curl -o  /home/frank/kvm/images/windows8-office.img   FILE:///run/media/frank/MyData/windows8.img
+curl -L scrum.briphant.cn:3002 -v
