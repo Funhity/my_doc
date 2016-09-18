@@ -5879,6 +5879,9 @@ zfs list -t    snapshot
 zfs list -r -t snapshot -o name,creation zones
 zfs list -r -t snapshot -o name,creation tank/home/ahrens
 zfs list -o space   #snapshot size
+
+zfs list -t snapshot -r zones/298985b5-4b35-cba0-a67f-d99360defcea
+
 zfs rollback tank/home/ahrens@tuesday
 zfs rollback -r tank/home/ahrens@tuesday
 `````````````````
