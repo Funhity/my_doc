@@ -6119,9 +6119,9 @@ host_key_checking=false
 步骤1：从 http://pkg.blackdot.be/extras/ 上下载salt-2016.3.3-esky-smartos.tar.gz 
 步骤2：
 scp salt-2016.3.3-esky-smartos.tar.gz   10.75.1.109:/opt/
-cd /opt; tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz
-/opt/salt/install/install.sh
-svcadm enable salt-minion
+cd /opt && tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz && /opt/salt/install/install.sh && svcadm enable salt-minion
+
+
 
 ```````````
 

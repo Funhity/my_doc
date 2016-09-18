@@ -1277,3 +1277,11 @@ vmadm  create -f /opt/ansible.jason
 ================================
 vmadm list  | grep wujunrong-leofs | awk '{print $1 }' |xargs -I {} vmadm delete {}
 vmadm list  | grep wujunrong-leofs | awk '{print $1 }' |xargs -I {} vmadm reboot {}
+
+========smartos salt========================
+ansible facebook_machine10 -m raw -a "cd /opt/ && wget http://192.168.1.232/file-share/salt-2016.3.3-esky-smartos.tar.gz"
+ansible facebook_machine10 -m raw -a "cd /opt && tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz && /opt/salt/install/install.sh && svcadm enable salt-minion"
+
+
+
+
