@@ -1139,8 +1139,16 @@ zfs receive zones/0b9bccdf-7b8f-e01e-bd92-cc59e651357e  < ./wujunrong-leofs02.zf
 scp *.zfs root@10.75.1.109:/opt/  scp *.json  root@10.75.1.109:/opt/
 ``````````pxe section`````````````
 
-curl https://us-east.manta.joyent.com/Joyent_Dev/public/SmartOS/platform-latest.tgz > /tftpboot/tmp/platform-latest.tgz   --insecure
-cat /tftpboot/tmp/platform-latest.tgz | tar xz
+pkgin -y install tftp-hpa
+mkdir /tftpboot
+echo "tftp dgram udp wait root /opt/local/sbin/in.tftpd in.tftpd -s /tftpboot" > /tmp/tftp.inetd
+svcadm enable inetd
+inetconv -i /tmp/tftp.inetd -o /tmp
+svccfg import /tmp/tftp-udp.xml
+svcadm restart tftp/udp
+
+
+
 
 cat smartos.ipxe
 #!ipxe
@@ -1148,6 +1156,24 @@ cat smartos.ipxe
 kernel /smartos/20160818T234814Z/platform/i86pc/kernel/amd64/unix -B smartos=true
 initrd /smartos/20160818T234814Z/platform/i86pc/amd64/boot_archive
 boot
+
+
+
+
+cd /tftpboot/smartos
+curl https://us-east.manta.joyent.com/Joyent_Dev/public/SmartOS/platform-latest.tgz > /var/tmp/platform-latest.tgz
+(Just now URL https://download.joyent.com/pub/iso/platform-latest.tgz is invalid, 404… )
+cat /var/tmp/platform-latest.tgz | tar xz
+directory=`ls | grep platform- | sort | tail -n1`
+release=${directory:9}
+mv $directory $release
+cd $release
+mkdir platform
+mv i86pc platform
+cd /tftpboot
+cat smartos.ipxe.tpl | sed -e"s/\$release/$release/g" > smartos.ipxe
+
+
 
 
 `````````pxelinux section`````````
