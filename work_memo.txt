@@ -1138,7 +1138,9 @@ zfs receive zones/0b9bccdf-7b8f-e01e-bd92-cc59e651357e  < ./wujunrong-leofs02.zf
 
 scp *.zfs root@10.75.1.109:/opt/  scp *.json  root@10.75.1.109:/opt/
 ``````````pxe section`````````````
+#tftp
 
+pkgin -fy up
 pkgin -y install tftp-hpa
 mkdir /tftpboot
 echo "tftp dgram udp wait root /opt/local/sbin/in.tftpd in.tftpd -s /tftpboot" > /tmp/tftp.inetd
@@ -1146,6 +1148,42 @@ svcadm enable inetd
 inetconv -i /tmp/tftp.inetd -o /tmp
 svccfg import /tmp/tftp-udp.xml
 svcadm restart tftp/udp
+
+#dnsmasq
+pkgin -y install dnsmasq
+mv /opt/local/etc/dnsmasq.conf /opt/local/etc/dnsmasq.conf.bak
+tee /opt/local/etc/dnsmasq.conf <<-'EOF'
+   #Lease File to track leases
+   dhcp-leasefile=/etc/dnsmasq.leases
+   # Give out addresses in the 172.16.0.1/24 subnet
+   dhcp-range=10.75.1.200,10.75.1.209,255.255.255.0,2h
+   # The name of the boot file is pxegrub
+   dhcp-boot=pxegrub
+EOF
+svcadm enable dnsmasq
+
+
+
+pkgin -y install wget
+wget  -O  /tftpboot/latest.iso http://192.168.1.232/file-share/smartos-20160721T174418Z.iso
+wget  -O  /tftpboot/pxegrub    http://192.168.1.232/file-share/pxelinux/pxegrub
+hash -r
+cd /tftpboot
+mkdir /mnt
+LOFI=$(lofiadm -a latest.iso)
+mount -F hsfs $LOFI /mnt
+rsync -av /mnt/ .
+umount /mnt
+lofiadm -d $LOFI
+
+
+
+mkdir -p /tftpboot/smartos
+cd /tftpboot/smartos
+wget http://192.168.1.232/file-share/pxelinux/ldlinux.c32
+wget http://192.168.1.232/file-share/pxelinux/libcom32.c32
+wget http://192.168.1.232/file-share/pxelinux/mboot.c32
+
 
 
 
@@ -1280,7 +1318,7 @@ vmadm list  | grep wujunrong-leofs | awk '{print $1 }' |xargs -I {} vmadm reboot
 
 ========smartos salt========================
 ansible facebook_machine10 -m raw -a "cd /opt/ && wget http://192.168.1.232/file-share/salt-2016.3.3-esky-smartos.tar.gz"
-ansible facebook_machine10 -m raw -a "cd /opt && tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz && /opt/salt/install/install.sh && svcadm enable salt-minion"
+ansible facebook_machine10 -m raw -a "echo '10.75.1.70 salt'>>/etc/hosts;cd /opt && tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz && /opt/salt/install/install.sh && svcadm enable salt-minion"
 
 
 
