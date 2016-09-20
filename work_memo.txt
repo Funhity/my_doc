@@ -1280,18 +1280,27 @@ vi /data/config.json
     ]
 }
 
-``````````dsapi section````
+```````````````
 svcadm disable dsapid
 svcadm enable dsapid
 svcs -p dsapid
 /opt/dsapid/server   -config /data/config.json -log_level debug 
+
+
+sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config
+sed -i.bak 's/PasswordAuthentication no/PasswordAuthentication yes/g'   /etc/ssh/sshd_config
+svcadm restart svc:/network/ssh:default
+
+ssh-keygen -t rsa 
+scp ~/.ssh/id_rsa.pub    10.75.1.109:/root/.ssh/authorized_keys
+
 
 在本地添加用户
 curl -v -X PUT http://127.0.0.1:80/api/users -d '{ "name": "admin", "token": "admintoken", "type": "user", "roles": [ "s_dataset.upload", "s_dataset.manage", "s_dataset.admin" ] }'
 从远程上传dataset
 curl -v -u admintoken: http://10.75.1.202:80/api/upload -F manifest=@./manifest.json  -Ffile=@./base-64-lts-15.4.1.zfs.gz -v
 
-`````````````
+=============
 
 git config --global http.sslVerify false
 git clone https://github.com/joyent/mibe
