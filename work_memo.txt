@@ -1161,7 +1161,7 @@ tee /opt/local/etc/dnsmasq.conf <<-'EOF'
    dhcp-boot=pxegrub
 EOF
 svcadm enable dnsmasq
-
+或/opt/local/sbin/dnsmasq -C /opt/local/etc/dnsmasq.conf -d
 
 
 pkgin -y install wget
@@ -1186,7 +1186,7 @@ wget http://192.168.1.232/file-share/pxelinux/mboot.c32
 
 
 
-
+``````````````````
 
 cat smartos.ipxe
 #!ipxe
@@ -1221,10 +1221,23 @@ scp ./bios/com32/mboot/mboot.c32 ./bios/com32/lib/libcom32.c32 ./bios/com32/elfl
 imgadm sources -a  http://datasets.at
 imgadm sources -d  https://images.joyent.com
 imgadm import a0e719d6-4e21-11e4-92eb-2bf6399552e7
-vi dsapid.json
-{ "brand": "joyent", "image_uuid": "a0e719d6-4e21-11e4-92eb-2bf6399552e7", "autoboot": true, "alias": "dsapid-server", "hostname": "datasets.dsapid", "resolvers": [ "114.114.114.114", "8.8.4.4" ], "max_physical_memory": 1024, "max_swap": 1024, "tmpfs": 1024, "quota": 120, "nics": [ { "nic_tag": "admin", "ips": ["dhcp"], "primary": true } ]}
+tee /opt/dsapid.json <<-'EOF'
+    { 
+      "brand": "joyent", 
+      "image_uuid": "a0e719d6-4e21-11e4-92eb-2bf6399552e7", 
+      "autoboot": true, 
+      "alias": "dsapid-server",
+      "hostname": "datasets.dsapid", 
+      "resolvers": [ "114.114.114.114", "8.8.4.4" ], 
+      "max_physical_memory": 1024, 
+      "max_swap": 1024,
+      "tmpfs": 1024, 
+      "quota": 120, 
+      "nics": [ { "nic_tag": "admin", "ip": "10.75.1.75", "netmask": "255.255.255.0", "gateway": "10.75.1.1","primary": true } ]
+    }
+EOF
+ vmadm create -f /opt/dsapid.json
 
-vmadm create -f dsapid.json
 `````````
 vi /data/config.json
 {

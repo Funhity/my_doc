@@ -6086,13 +6086,13 @@ pkgin install mc vim scmgit python2.7 py27-pip py27-expat py27-sqlite2 py27-mysq
 http://10.20.101.21/api/datasets/?name=base-64&amp;version=16.2.0
 http://datasets.at/api/datasets/?name=jenkins;version=0.1.3
 
-配置文件：/data/config.json
+配置文件：vi /data/config.json
           "source": "http://datasets.at/api/datasets/?name=base-64&amp;version=16.2.0",
 方法一：
 svcadm disable dsapid
 svcadm enable dsapid
 svcs -p dsapid
-
+svcadm restart dsapid
 
 
 方法二：
