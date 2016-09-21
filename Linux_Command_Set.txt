@@ -5607,8 +5607,8 @@ sudo rpm -vi filebeat-1.2.3-x86_64.rpm
 =====smartos section========
 uname -a
 cat /etc/release
-
-
+虚拟机启动日志：
+view /zones/54dee8bd-5179-4978-aed9-8c9483f4b23b/root/var/svc/log/system-zoneinit\:default.log
 
 当前在哪个zone： zonename
 /usbkey/config - system configuration options
@@ -6159,7 +6159,8 @@ curl -o  /home/frank/kvm/images/windows8-office.img   FILE:///run/media/frank/My
 curl -L scrum.briphant.cn:3002 -v
 用curl下载
 while ! curl -C - -LJO http://us-east.manta.joyent.com/Joyent_Dev/public/SmartOS/20160527T033529Z/smartos-20160527T033529Z....; do done
-
+=======smartos memory section =========
+echo ::memstat | mdb -k
 ============ ipv6 section =============
 
 To disable ip v6 in the running system:

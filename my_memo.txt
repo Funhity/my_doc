@@ -154,3 +154,19 @@ cat ./ansible-svn.sh
 #!/bin/bash
 svn list  http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/    --username wujunrong| grep  ansible |xargs -I {} svn export  http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/{} --force  /etc/ansible/hosts
 
+#sleep_for_{{ module }}_vm_generation:       
+#  module.run:
+#    - name: test.sleep
+#    - length: '60'
+#    - require:
+#       - create_{{ module }}_vm
+#
+#       
+#set_{{ module }}_vm_uuid:
+#  environ.setenv:
+#    - name: "{{ module }}"
+#    - value: "{{ salt['cmd.run']('vmadm list | grep '~ module ~' | awk "{print \$1}"  ') }}"
+#    - update_minion: True
+#    - require:
+#       - sleep_for_{{ module }}_vm_generation:   
+{% set vm_uuid_for_dataset     =  salt['environ.get'](''~ module ~'') %}
