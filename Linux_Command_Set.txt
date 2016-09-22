@@ -690,7 +690,13 @@ TO:
 PermitRootLogin yes
 
 invoke-rc.d ssh restart
-`````````````````````````````````````
+```````````````cp section``````````````````````
+
+方法一：
+unalias cp will abolish that for the current session, otherwise you can just remove it from your shell profile.
+
+方法二：
+yes | cp /home/share/cache/*
 
 ======================= mysql section======================================
 centos7: rpm -ivh http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
@@ -1571,6 +1577,7 @@ server:  yum -y install mod_dav_svn
 systemctl start  svnserve
 
 ```````
+步骤1：
 1、服务端创建仓库
 cd /srv/svn
 $ svnadmin create repos
@@ -1578,7 +1585,8 @@ $ svnadmin create repos
 svn import  /tmp/xxd_code_repo/dev_v6.5.4_20160628/   file:///srv/svnrepos/xxd-v6 -m "initial import" 
 
 ``````````````````
-/etc/httpd/conf/httpd.conf
+步骤2：
+vi /etc/httpd/conf/httpd.conf
 LoadModule dav_module modules/mod_dav.so
 LoadModule dav_svn_module modules/mod_dav_svn.so
 <Location /svn>
@@ -5682,12 +5690,14 @@ pkgin -fy up
 ````````smartos private repository`````````
 私有源制作方法：
 方法一：
-从cache中提取软件             ：/var/db/pkgin/cache
-私有源中必须要有如下总结性文件：
-wget https://pkgsrc.joyent.com/packages/SmartOS/2015Q4/x86_64/All/pkg_summary.gz
-
+    从cache中提取软件             ：/var/db/pkgin/cache
+    制作总结性文件：pkg_info -X  * | gzip -9 >pkg_summary.gz
 方法二：从官方提取全部软件：
-全部pkg软件                   ：wget --mirror pkgsrc.joyent.com/packages/SmartOS/2016Q1/x86_64/All/
+    全部pkg软件                   ：wget --mirror pkgsrc.joyent.com/packages/SmartOS/2016Q1/x86_64/All/
+    私有源中必须要有如下总结性文件：
+    wget https://pkgsrc.joyent.com/packages/SmartOS/2015Q4/x86_64/All/pkg_summary.gz
+
+
 ===========zpool section=========
 
 zpool list
@@ -6135,7 +6145,9 @@ host_key_checking=false
 scp salt-2016.3.3-esky-smartos.tar.gz   10.75.1.109:/opt/
 cd /opt && tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz && /opt/salt/install/install.sh && svcadm enable salt-minion
 
-
+```````````
+/usr/bin/hostname>/opt/local/etc/salt/minion_id
+svcadm restart svc:/pkgsrc/salt:minion
 
 ```````````
 
