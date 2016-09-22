@@ -4464,6 +4464,8 @@ echo "atestb" | sed -n 's/.*\(test\).*/\1/p'
 echo "atestb" | sed 's/.*\(test\).*/\1/'
 
 sed -e "s/stage_/\/stage/g" -e "s/v6_webservice/\/webservice\//g"
+删除最后一行：
+sed -i.bak  '$d' file
 删除第四行
 sed   -i.bak   '4d' /etc/hosts  
 cat /proc/mounts | grep -E "\b(btrfs|ext2|ext3|ext4|jfs|reiser|xfs|ffs|ufs|jfs|jfs2|vxfs|hfs|ntfs|fat32|zfs)\b" |awk 'BEGIN{printf "{\n\"data\":[\n"} {printf "{\"{#DEV_NAME}\" : \"%s\",\"{#FS_NAME}\" : \"%s\",\"{#SEC_SIZE}\" : ",$1,$2;system("blockdev --getss " $1 " |tr -d \"\n\"  ") ;printf "},\n"}   END{printf "  ]\n}\n"} '   | tac | sed  '3s/\({.*}\),/\1/g'|tac
@@ -5617,6 +5619,7 @@ uname -a
 cat /etc/release
 虚拟机启动日志：
 view /zones/54dee8bd-5179-4978-aed9-8c9483f4b23b/root/var/svc/log/system-zoneinit\:default.log
+less /var/svc/log/smartdc-mdata:execute.log
 
 当前在哪个zone： zonename
 /usbkey/config - system configuration options
@@ -5625,7 +5628,7 @@ view /zones/54dee8bd-5179-4978-aed9-8c9483f4b23b/root/var/svc/log/system-zoneini
 /usbkey/ssh/                - a directory containing the SSH client and server configuration (deployed to /etc/ssh/ on system boot)
 /usbkey/ssh/sshd_config is in here so if you want to do things like require MFA or refuse Password login, you change it here and reboo
 
-pkgin install lrzsz-0.12.20nb1
+
 `````smartos virtualbox``````````````
 
 bunzip2 smartos-20130808T195337Z-USB.img.bz2
@@ -6138,7 +6141,7 @@ vi /opt/local/etc/ansible/ansible.cfg
 host_key_checking=false
 =====smartos salt section=====
 /opt/local/var/cache/salt/master/minions/qinghua-leofs1/files/root/fifo.gpg
-
+less /var/svc/log/pkgsrc-salt:minion.log
 
 步骤1：从 http://pkg.blackdot.be/extras/ 上下载salt-2016.3.3-esky-smartos.tar.gz 
 步骤2：
