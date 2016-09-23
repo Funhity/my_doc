@@ -1167,15 +1167,19 @@ svcadm enable dnsmasq
 pkgin -y install wget
 wget  -O  /tftpboot/latest.iso http://192.168.1.232/file-share/smartos-20160721T174418Z.iso
 wget  -O  /tftpboot/pxegrub    http://192.168.1.232/file-share/pxelinux/pxegrub
+
+``````````````````
+#rsync -av /mnt/ .  会生成boot/目录和platform/目录，其中boot/包含 boot/grub/menu.lst，menu.lst使用/tftpboot目录
+
 hash -r
 cd /tftpboot
 mkdir /mnt
 LOFI=$(lofiadm -a latest.iso)
 mount -F hsfs $LOFI /mnt
-rsync -av /mnt/ .
+rsync -av /mnt/ .     
 umount /mnt
 lofiadm -d $LOFI
-
+``````````````````````````````
 
 
 mkdir -p /tftpboot/smartos
