@@ -1345,7 +1345,25 @@ vmadm list  | grep wujunrong-leofs | awk '{print $1 }' |xargs -I {} vmadm reboot
 ========smartos salt========================
 ansible facebook_machine10 -m raw -a "cd /opt/ && wget http://192.168.1.232/file-share/salt-2016.3.3-esky-smartos.tar.gz"
 ansible facebook_machine10 -m raw -a "echo '10.75.1.70 salt'>>/etc/hosts;cd /opt && tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz && /opt/salt/install/install.sh && svcadm enable salt-minion"
+====ssh section======
+/home/deployer/.ssh/id_rsa:
+  file.managed:
+    - user: deployer
+    - group: deployer
+    - mode: 600
+    - contents_pillar: userdata:deployer:id_rsa
+    
+This would populate /home/deployer/.ssh/id_rsa with the contents of pillar['userdata']['deployer']['id_rsa']. An example of this pillar setup would be like so:
 
-
+userdata:
+  deployer:
+    id_rsa: |
+        -----BEGIN RSA PRIVATE KEY-----
+        MIIEowIBAAKCAQEAoQiwO3JhBquPAalQF9qP1lLZNXVjYMIswrMe2HcWUVBgh+vY
+        U7sCwx/dH6+VvNwmCoqmNnP+8gTPKGl1vgAObJAnMT623dMXjVKwnEagZPRJIxDy
+        B/HaAre9euNiY3LvIzBTWRSeMfT+rWvIKVBpvwlgGrfgz70m0pqxu+UyFbAGLin+
+        GpxzZAMaFpZw4sSbIlRuissXZj/sHpQb8p9M5IeO4Z3rjkCP1cxI
+        -----END RSA PRIVATE KEY-----
+===============
 
 

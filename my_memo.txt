@@ -228,3 +228,21 @@ base-package:
     - name: salt:minion
     - enable: True
 ===============
+/etc/http/conf/http.conf:
+  file.managed:
+    - source: salt://apache/http.conf
+    - user: root
+    - group: root
+    - mode: 644
+    - template: jinja
+    - defaults:
+        custom_var: "default value"
+        other_var: 123
+{% if grains['os'] == 'Ubuntu' %}
+    - context:
+        custom_var: "override"
+{% endif %}
+
+If using a template, any user-defined template variables in the file defined in source must be passed in using the defaults and/or context arguments. The general best practice is to place default values in defaults, with conditional overrides going into context, as seen above.
+The template will receive a variable custom_var, which would be accessed in the template using {{ custom_var }}. If the operating system is Ubuntu, the value of the variable custom_var would be override, otherwise it is the default default value
+==========================
