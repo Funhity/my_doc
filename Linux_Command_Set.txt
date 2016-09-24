@@ -828,7 +828,8 @@ wjr@ramnode.com * jY89634_HIB *
 
 
 ===virtualbox section=========
-先appstore装DisplayMenu修改mac的分辨率，再修改virtualbox的分辨率
+高分辨率支持：mac osx上先appstore装Display Menu修改mac的分辨率，再修改virtualbox的分辨率
+
 VBoxManage controlvm Frank-Windows10 setvideomodehint 2048  1280  32
                      虚拟机名称
 
@@ -1020,7 +1021,7 @@ sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el7
 
   /var/cache/salt/master/minions/minion-id/files
   /var/cache/salt/master/minions/kbclient3.example.com/files/root/test_hour.sh
-
+``配置文件中的配置项目`````````````````
   /var/log/salt/master
   /var/log/salt/minion
  
@@ -1030,6 +1031,10 @@ sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el7
   root_dir:
   file_roots:
   pillar_roots:
+  
+  auto_accept: True
+  set file_recv to True 
+`````````````````````  
   
   /srv/pillar/top.sls
   /srv/salt/top.sls
@@ -1056,7 +1061,7 @@ salt -l debug "*" cmd.run "uptime"
     - 'G@foo:baz'
   
   
-  ``````清除salt-minion名字方法clear not wanted and invalid minion id```
+  ``````清除更新salt-minion名字方法clear not wanted and invalid minion id```
   on master: rm -fr /etc/salt/pki/master/minions_denied/vm-template
   on minion: ansible minions  -m shell -a  '>/etc/salt/minion_id' #清空id文件
   #When the minion is started, it will generate an id value, unless it has been generated on a previous run and cached in the configuration directory, which is /etc/salt by default
@@ -1204,7 +1209,7 @@ apache:
    
    salt '*'                  file.blockreplace        /etc/hosts       '#-- start managed zone foobar : DO NOT EDIT --' '#-- end managed zone foobar --' '10.0.1.1 foo.foobar\n10.0.1.2 bar.foobar' True
    salt bbs-wu  state.single file.blockreplace  name='/etc/hosts'  marker_start='#wujunrong' marker_end='#end wujunrong' content='salt 172.16.15.79'  append_if_not_found='True' backup='.bak'  show_changes='True' 
-  ``````````````````````````````````
+  ```````````````salt push section```````````````````
   salt 'source-minion'          cp.push /absolute/path/file                   # Push the file to the master
   salt 'kbclient3.example.com'  cp.push /root/test_hour.sh
   salt 'destination-minion'     cp.list_master_dirs                           # Return a list of all directories on the master
@@ -1213,6 +1218,7 @@ apache:
   #/etc/salt/master 
   set file_recv to True 
 
+  /var/cache/salt/master/
   ``````````````salt network`````````````
   
   salt-run mine.get '*'       network.interfaces
@@ -1248,7 +1254,7 @@ apache:
   #The repos will be searched in order to find the file requested by a client and the first repo to have the file will return it. The trunk, branches, and tags become environments, with the trunk being the base environment.
   
   salt    'stage_v6_webapp01'           cmd.script salt://svn/wujunrong/run_before_starting_rsyslog.sh   reset_system_locale=False
-  `````````````````````````````salt cmd```````````````````````````````
+  `````````````````````````````salt cmd.run section```````````````````````````````
   salt    '*'                           cmd.shell "ls -l | awk '/foo/{print \$2}'"
   salt    '*'                           cmd.run   "ls -l | awk '/foo/{print \$2}'"
   salt    '*'                           cmd.run   "Get-ChildItem C:\ " shell='powershell'  //Specify an alternate shell with the shell parameter
@@ -1256,10 +1262,21 @@ apache:
   salt    '*'                           cmd.run   "grep f" stdin='one\ntwo\nthree\nfour\nfive\n
   salt    'debian'                      cmd.run   "touch /home/frank/wujunrong"   cwd=/home/frank   runas=frank
   salt    '*'                           cmd.shell cmd='sed -e s/=/:/g'
+
+            install_mustang:
+              cmd.run:
+                - name: |
+                   #sleep 240
+                   #pkgin -fy up
+                   sed -i.bak "s/VERIFIED_INSTALLATION=.*/VERIFIED_INSTALLATION=never/" /opt/local/etc/pkg_install.conf
+                   /root/mustang.sh  /root/mustang-Main.tar.gz
+                   /root/taurus.sh
+                - timeout: 1200  
+  
   
   salt-ssh -i    cloudera-agent3   state.single cmd.run  name='hostname'  template=jinja
   salt-ssh -i    cloudera-agent3   state.single cmd.run   template=jinja   name="unzip -o /root/v6_webservice.war  -d  /tmp/root{{grains.location}}"
-  
+`````````````````````
   salt    '*'        saltutil.refresh_pillar //To ensure that the minions have the new pillar data, issue a command to them asking that they fetch their pillars from the master:  
   salt    '*'        pillar.items
   
@@ -1290,7 +1307,7 @@ apache:
   salt-cp   'debian'              Dockerfile.V1   /tmp/
   sudo salt-cp  v6_front001.xxdaid.com   /home/wujunrong/office.ip.list  /tmp/
   sudo salt-cp  v6_front001.xxdaid.com   /home/wujunrong/office.ip.list  /tmp/office2.ip.list
-  ``````````salt ssh````````````
+  ``````````salt-ssh section````````````
   salt-ssh  -i test_fk test.ping
   salt-ssh  -i test_fk cp.get_file  salt://YX.war   /tmp/
   salt-ssh  -i test_fk   -r   'cd /root/ && chkconfig --list'
@@ -1398,6 +1415,8 @@ apache:
   salt-run jobs.list_jobs
   salt-run jobs.active
   salt-run jobs.lookup_jid 20150709225941807683
+  salt-run manage.down removekeys=True  #自动删除连不上的minion
+  
   salt    '*'                      saltutil.runner jobs.list_jobs
   salt    '*'                      state.running 
   salt    'test_v6_tomcat_admin*'  saltutil.kill_job 20150709225941807683
@@ -1566,7 +1585,36 @@ rsyslog-restart-blockreplace:
     - show_changes: True
     - append_if_not_found: True
     - backup: '.bak'
-			
+`````salt mine``````salt jinja``
+在minion上获取其它minion上的信息
+例如：
+    {% for server, addrs in salt['mine.get']('roles:web', 'network.ip_addrs', expr_form='grain') | dictsort() %}
+        server {{ server }} {{ addrs[0] }}:80 check
+    {% endfor %}
+
+1.mine_functions option can be applied via the Minion's configuration file, or the Minion's Pillar
+在pillar中配置
+/srv/pillar/top.sls:
+  base:
+    'G@roles:web':
+      - web
+
+/srv/pillar/web.sls:
+  mine_functions:
+     network.ip_addrs: [eth0]
+/etc/salt/minion.d/mine.conf:
+  mine_interval: 5
+
+2.mine_functions option for salt-ssh
+test: 
+  host: 104.237.131.248 
+  user: root 
+  mine_functions:
+     cmd.run: ['echo "hello!"'] 
+     network.ip_addrs: 
+       interface: eth0	
+
+       
 ======================= svn section========================  
 #a new caret (^) notation, Note that this URL syntax works only when your current working directory is a 
 working copy—the command-line client knows the repository's root URL by looking at the working copy's metadata
