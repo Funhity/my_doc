@@ -1594,7 +1594,12 @@ rsyslog-restart-blockreplace:
     - show_changes: True
     - append_if_not_found: True
     - backup: '.bak'
+    
+`````     salt file.accumulated  ````````
+
+the blockreplace content attribute will be filled with all the lines contained on this accumulator
 `````salt mine``````salt jinja``
+注释方法：{# Include dependencies #}
 在minion上获取其它minion上的信息
 例如：
     {% for server, addrs in salt['mine.get']('roles:web', 'network.ip_addrs', expr_form='grain') | dictsort() %}
@@ -6138,19 +6143,6 @@ fifoadm hypervisors list
 fifoadm vms         list
 fifoadm vms get -j 92d63038-6fdf-c957-f161-ae22fbd9600c
 
-===========smartos salt========
-vi 
-http://pkgsrc.joyent.com/packages/SmartOS/2016Q1/x86_64/All
-pkgin -y up
-pkgin -y install salt  
-
-	/usr/sbin/svcadm enable -r svc:/pkgsrc/salt:master
-	/usr/sbin/svcadm enable -r svc:/pkgsrc/salt:minion
-
-pkgin install mc vim scmgit python2.7 py27-pip py27-expat py27-sqlite2 py27-mysqldb gcc47 gnu-binutils libxslt	
-
-
-
 ===========smartos dataset section====dsapi section====================
 
 http://10.20.101.21/api/datasets/?name=base-64&amp;version=16.2.0
@@ -6197,8 +6189,34 @@ vi /opt/local/etc/ansible/ansible.cfg
 [defaults]
 host_key_checking=false
 =====smartos salt section=====
-/opt/local/var/cache/salt/master/minions/qinghua-leofs1/files/root/fifo.gpg
-less /var/svc/log/pkgsrc-salt:minion.log
+vi 
+http://pkgsrc.joyent.com/packages/SmartOS/2016Q1/x86_64/All
+pkgin -y up
+pkgin -y install salt  
+
+	/usr/sbin/svcadm enable -r svc:/pkgsrc/salt:master
+	/usr/sbin/svcadm enable -r svc:/pkgsrc/salt:minion
+    或salt-minion -d  
+pkgin install mc vim scmgit python2.7 py27-pip py27-expat py27-sqlite2 py27-mysqldb gcc47 gnu-binutils libxslt	
+
+```````在native zone安装salt````
+/opt/local/bin/sed -i.bak '$d' /opt/local/etc/pkgin/repositories.conf;
+/opt/local/bin/echo 'http://192.168.1.232/smartos/pkgin2016Q2/' >> /opt/local/etc/pkgin/repositories.conf;
+/opt/local/bin/pkgin -fy up;
+/opt/local/bin/pkgin -y install salt;
+hostname>/opt/local/etc/salt/minion_id;
+echo 10.75.1.70 salt>>/etc/hosts
+/usr/sbin/svcadm enable svc:/pkgsrc/salt:minion"
+或salt-minion -d  
+             创建虚拟机jason文件
+             "customer_metadata": {
+                 "user-script" : "/opt/local/bin/sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config; /usr/sbin/svcadm restart svc:/network/ssh:default;/opt/local/bin/echo '10.75.1.70 salt'>>/etc/hosts;/opt/local/bin/echo 'http://10.75.1.50/pkgin2016Q1' >> /opt/local/etc/pkgin/repositories.conf;/opt/local/bin/pkgin -fy up;/opt/local/bin/pkgin -y install salt;/usr/sbin/svcadm enable svc:/pkgsrc/salt:minion"
+              }
+
+```````````
+/usr/bin/hostname>/opt/local/etc/salt/minion_id
+svcadm restart svc:/pkgsrc/salt:minion
+
 ```````在global zone安装salt```````````
 相关讨论：                   https://github.com/saltstack/salt/issues/31446
 自己编译global zone包的步骤：https://github.com/saltstack/salt/blob/develop/pkg/smartos/esky/BUILD_ENVIRONMENT.md
@@ -6207,18 +6225,8 @@ less /var/svc/log/pkgsrc-salt:minion.log
 步骤2：
 scp salt-2016.3.3-esky-smartos.tar.gz   10.75.1.109:/opt/
 cd /opt && tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz && /opt/salt/install/install.sh && svcadm enable salt-minion
-
-```````在native zone安装salt````
-/opt/local/bin/sed -i.bak '$d' /opt/local/etc/pkgin/repositories.conf;
-/opt/local/bin/echo 'http://192.168.1.232/smartos/pkgin2016Q2/' >> /opt/local/etc/pkgin/repositories.conf;
-/opt/local/bin/pkgin -fy up;
-/opt/local/bin/pkgin -y install salt;
-/usr/bin/hostname>/opt/local/etc/salt/minion_id;
-/opt/local/bin/sleep 10;
-/usr/sbin/svcadm enable svc:/pkgsrc/salt:minion"
-```````````
-/usr/bin/hostname>/opt/local/etc/salt/minion_id
-svcadm restart svc:/pkgsrc/salt:minion
+````````/opt/local/var/cache/salt/master/minions/qinghua-leofs1/files/root/fifo.gpg
+less /var/svc/log/pkgsrc-salt:minion.log
 
 ```````````
 
