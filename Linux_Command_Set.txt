@@ -5756,7 +5756,7 @@ pkgin -fy up
 私有源制作方法：
 方法一：
     从cache中提取软件             ：/var/db/pkgin/cache
-    制作总结性文件：pkg_info -X  * | gzip -9 >pkg_summary.gz
+    制作总结性文件：pkg_info -X  *.tgz | gzip -9 >pkg_summary.gz
 方法二：从官方提取全部软件：
     全部pkg软件                   ：wget --mirror pkgsrc.joyent.com/packages/SmartOS/2016Q1/x86_64/All/
     私有源中必须要有如下总结性文件：
