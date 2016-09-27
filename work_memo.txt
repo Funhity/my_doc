@@ -1365,5 +1365,10 @@ userdata:
         GpxzZAMaFpZw4sSbIlRuissXZj/sHpQb8p9M5IeO4Z3rjkCP1cxI
         -----END RSA PRIVATE KEY-----
 ===============
-
+#base-package:
+#  service.running:
+#    - name: salt:minion
+#    - enable: True
+#    - require:
+#       - cmd: install_mustang
 

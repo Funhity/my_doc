@@ -3491,6 +3491,7 @@ ssh-agent bash
 ssh-add ~/.ssh/id_rsa
 #the private key is used for the opposite operation, in these examples to decrypt ciphertext or to create a digital signature. 
 ssh root@10.0.1.120 -p 2222
+curl  -s http://192.168.10.56:5000/devops/megatron/raw/master/RabbitMQ/install.sh | openssl sha1
 ``````````````````````
 ansible cloudera-agent1  -m shell -a "ip a" --ask-pass
 ansible all              -m ping
