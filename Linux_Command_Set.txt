@@ -1496,6 +1496,16 @@ apache:
       - django
       - core
     - saltenv: prod     #saltenv : None  Specify a file_roots environment.If none is found, base will be used
+
+    
+salt-run state.orchestrate_high '{
+    stage_one:
+        {salt.state: [{tgt: "db*"}, {sls: postgres_setup}]},
+    stage_two:
+        {salt.state: [{tgt: "web*"}, {sls: apache_setup}, {
+            require: [{salt: stage_one}],
+        }]},
+    }'    
 ``````````salt grains``````  
 vi /ETC/SALT/GRAINS
 roles:
