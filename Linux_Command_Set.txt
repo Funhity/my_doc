@@ -5732,6 +5732,7 @@ Installing pkgin
 方法一
 on centos:
    aria2c https://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2016Q2-x86_64.tar.gz -x 10
+   aria2c https://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2014Q4-x86_64.tar.gz
 on smartos:
 
    cd /
