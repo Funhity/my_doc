@@ -5725,8 +5725,11 @@ svccfg -s FMRI setenv ENV_VARIABLE value
 
 =========pkgin section smartos repository========
 pkgin avail | more
+pkg库失效，找不到安装包时：
 rm -fr /var/db/pkgin/*    #This directory can be completely emptied if pkgin's database gets corrupted, pkgin will rebuild its database based on pkg_install's PKG_DB next time it is called.
 
+安装错误日志：
+/var/db/pkgin/pkg_install-err.log
 
 Installing pkgin
 方法一
