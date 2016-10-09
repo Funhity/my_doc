@@ -1309,8 +1309,11 @@ curl -v -u admintoken: http://10.75.1.202:80/api/upload -F manifest=@./manifest.
 git config --global http.sslVerify false
 git clone https://github.com/joyent/mibe
 
-
-
+=====pkgin section=======
+cd /
+curl -k http://192.168.1.128/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat | tar -xf -
+pkg_admin rebuild
+pkgin -y up
 
 ==========vmadm section=======
 

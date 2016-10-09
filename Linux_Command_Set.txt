@@ -6211,12 +6211,7 @@ host_key_checking=false
 =====smartos salt section=====
 vi 
 http://pkgsrc.joyent.com/packages/SmartOS/2016Q1/x86_64/All
-pkgin -y up
-pkgin -y install salt  
 
-	/usr/sbin/svcadm enable -r svc:/pkgsrc/salt:master
-	/usr/sbin/svcadm enable -r svc:/pkgsrc/salt:minion
-    或salt-minion -d  
 pkgin install mc vim scmgit python2.7 py27-pip py27-expat py27-sqlite2 py27-mysqldb gcc47 gnu-binutils libxslt	
 
 ```````在native zone安装salt````
@@ -6226,7 +6221,8 @@ pkgin -fy up;
 pkgin -y install salt;
 hostname>/opt/local/etc/salt/minion_id;
 echo 10.75.1.70 salt>>/etc/hosts
-svcadm enable svc:/pkgsrc/salt:minion"
+	/usr/sbin/svcadm enable -r svc:/pkgsrc/salt:master
+	/usr/sbin/svcadm enable -r svc:/pkgsrc/salt:minion
 或salt-minion -d  
              创建虚拟机jason文件
              "customer_metadata": {
@@ -6268,6 +6264,14 @@ zlogin bf540e13-56df-cac7-819e-c82185d58209  sed 's/PermitRootLogin without-pass
 zlogin bf540e13-56df-cac7-819e-c82185d58209  sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config  
 zlogin bf540e13-56df-cac7-819e-c82185d58209  svcadm restart svc:/network/ssh:default
 zlogin bf540e13-56df-cac7-819e-c82185d58209  cp /opt/local/etc/pkgin/repositories.conf /opt/local/etc/pkgin/repositories.conf.original
+===smartos python section=====
+SmartOS install python 2.7 in global zone
+
+cd /
+curl -k http://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2015Q2-x86_64.tar.gz | gzcat | tar -xf -
+pkg_admin rebuild
+pkgin -y up
+pkgin in python27
 
 =======curl section==========
 curl -o  /home/frank/kvm/images/windows8-office.img   FILE:///run/media/frank/MyData/windows8.img
