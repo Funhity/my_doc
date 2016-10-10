@@ -1608,7 +1608,7 @@ rsyslog-restart-blockreplace:
 `````     salt file.accumulated  ````````
 
 the blockreplace content attribute will be filled with all the lines contained on this accumulator
-`````salt mine``````salt jinja``
+`````salt mine section``````salt jinja``
 注释方法：{# Include dependencies #}
 在minion上获取其它minion上的信息
 例如：
@@ -1626,8 +1626,12 @@ the blockreplace content attribute will be filled with all the lines contained o
 /srv/pillar/web.sls:
   mine_functions:
      network.ip_addrs: [eth0]
+
+smartos:/opt/salt/etc/minion.d/mine.conf
 /etc/salt/minion.d/mine.conf:
   mine_interval: 5
+
+
 
 2.mine_functions option for salt-ssh
 test: 
@@ -6286,4 +6290,47 @@ To disable ip v6 in the running system:
 echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6
 echo 1 > /proc/sys/net/ipv6/conf/default/disable_ipv6
 
-=======================================
+============smartos disk===========================
+zpool replace zones c0t5000C5006349E003d0 <new disk>
+获取硬盘槽位号
+步骤1
+zpool status
+
+c0t5000C500626E601Bd0  FAULTED      1   628     0  too many errors
+5000c500626e601b  is the target ID of the physical disk.
+································
+        NAME                       STATE     READ WRITE CKSUM
+        zones                      DEGRADED     0     0     0
+          mirror-0                 ONLINE       0     0     0
+            c0t5000C500626DD6A7d0  ONLINE       0     0     0
+            c0t5000C500626DA9FFd0  ONLINE       0     0     0
+          mirror-1                 DEGRADED     0     0     0
+            c0t5000C500626E601Bd0  FAULTED      1   628     0  too many errors
+            c0t5000C500626DE48Fd0  ONLINE       0     0     0
+        logs
+          c0t55CD2E404B735D0Cd0    ONLINE       0     0     0
+··························
+步骤2
+prtconf -v   搜索关键字 name='wwn' 和 5000c500626e601b
+                mpt_sas#2 (online)
+                        name='wwn' type=string items=1
+                            value='5000c500626e601b'
+                        name='lun' type=int items=1
+                            value=00000000
+                        name='lun64' type=int64 items=1
+                            value=0000000000000000
+                        name='target-port' type=string items=1
+                            value='w5000c500626e6019'
+                        name='attached-port' type=string items=1
+                            value='w500605b001bdd518'
+                        name='obp-path' type=string items=1
+                            value='/pci@0,0/pci8086,e04@2/pci1000,3020@0/disk@w5000c500626e6019,0'
+                        name='phy-num' type=int items=1
+                            value=00000001
+                        name='path-class' type=string items=1
+                            value='primary'
+phy-num 槽位号是1号
+===============
+
+
+

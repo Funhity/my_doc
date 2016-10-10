@@ -1374,4 +1374,6 @@ userdata:
 #    - enable: True
 #    - require:
 #       - cmd: install_mustang
-
+=====salt section====
+{% if module_property.type == 'zone-dataset' and module_property.salt_target == salt['grains.get']('fqdn', '') %}
+======
