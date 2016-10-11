@@ -1358,6 +1358,14 @@ apache:
   ``````
   
   salt '*' saltutil.refresh_pillar
+  `````contents_pillar```
+  /root/.ssh/authorized_keys:
+  file.managed:
+    - user: root
+    - group: root
+    - mode: 644
+    - makedirs: True
+    - contents_pillar: userdata:root:authorized_keys
   ``````````salt grains````````
   salt '*' cmd.run template=jinja "ls -l /tmp/{{grains.id}} | awk '/foo/{print \$2}'"
   salt '*'  
@@ -1609,6 +1617,11 @@ rsyslog-restart-blockreplace:
 
 the blockreplace content attribute will be filled with all the lines contained on this accumulator
 `````salt mine section``````salt jinja``
+mine数据存储在master上
+smartos:
+cat /opt/local/var/cache/salt/master/minions/smartos_thinkpad.zhixiang/mine.p
+
+
 注释方法：{# Include dependencies #}
 在minion上获取其它minion上的信息
 例如：
