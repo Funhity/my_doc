@@ -1006,7 +1006,8 @@ sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el7
   
   ``````install minion````
   yum update python  -y
-  yum install salt-minion
+  yum install salt-minion -y
+  systemctl start  salt-minion.service
   `````````
   salt --versions-report
   `````````````
