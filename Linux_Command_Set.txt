@@ -1293,6 +1293,7 @@ apache:
   
  
   salt   '*'                              state.sls tomcat.manager
+  salt   'ocp09'                          state.sls_id state_id  create_smartos_vm -t 120  #创建虚拟机时间较长，-t表示响应超时
   salt   'test_v6_webapp_front01'         state.apply   wujunrong.start_logcenter
   salt   '*'         state.show_sls apache   //TESTING FORMULAS
   salt   '*'         state.highstate
