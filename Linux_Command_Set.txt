@@ -1518,6 +1518,8 @@ salt-run state.orchestrate_high '{
             require: [{salt: stage_one}],
         }]},
     }'    
+
+dry-run:salt-run state.orchestrate  mustang test=True
 ``````````salt grains``````  
 vi /ETC/SALT/GRAINS
 roles:
