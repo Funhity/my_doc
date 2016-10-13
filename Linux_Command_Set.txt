@@ -666,6 +666,9 @@ scp -r -C -o CompressionLevel=6   ./Linux-Test/    root@192.168.0.6:/vmfs/volume
 scp -r root@192.168.38.10:/tmp/wujunrong2     .
 ssh ops@magpie.example.com sudo puppet agent --test
 
+fingerprint:
+ssh-keygen -lf /etc/ssh/ssh_host_ecdsa_key.pub
+
 yum -y install openssh-clients
 允许root用户远程登入：
 
@@ -1655,7 +1658,25 @@ test:
      cmd.run: ['echo "hello!"'] 
      network.ip_addrs: 
        interface: eth0	
-
+3. mine_functions in pillar
+mine_functions:
+  test.ping: []
+  network.ip_addrs: [e1000g0]
+  networkplus.internal_ip_addrs: []
+  cmd.run:
+    cmd: cat /root/.ssh/id_rsa.pub
+    python_shell: True
+  grains.get:
+    key: id
+  say_hello:
+    - mine_function: cmd.run 
+    - echo hello   
+  public_ssh_host_keys:
+    - mine_function: cmd.run
+    - cat /root/.ssh/id_rsa.pub
+  public_ssh_hostname:
+    - mine_function: grains.get
+    - id
        
 ======================= svn section========================  
 #a new caret (^) notation, Note that this URL syntax works only when your current working directory is a 
