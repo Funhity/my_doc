@@ -6279,7 +6279,7 @@ svcadm restart svc:/pkgsrc/salt:minion
 步骤1：从 http://pkg.blackdot.be/extras/ 上下载salt-2016.3.3-esky-smartos.tar.gz 
 步骤2：
 cd /opt/
-wget http://192.168.1.232/file-share/salt-2016.3.3-esky-smartos.tar.gz   
+wget http://192.168.1.128/file-share/salt-2016.3.3-esky-smartos.tar.gz   
 echo 10.75.1.70 salt>>/etc/hosts&&cd /opt && tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz && /opt/salt/install/install.sh && svcadm enable salt-minion
 svcadm restart salt-minion
 ````````
@@ -6296,6 +6296,8 @@ sed -i.bak 's/PasswordAuthentication no/PasswordAuthentication yes/g'   /etc/ssh
 svcadm restart svc:/network/ssh:default
 ````````````````````````
 ssh-keygen -t rsa 
+或：
+ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
 scp ~/.ssh/id_rsa.pub    10.75.1.109:/root/.ssh/authorized_keys
 
 `````````
