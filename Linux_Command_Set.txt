@@ -5755,6 +5755,10 @@ Disable Audio
 Disable "Enable absolute pointing device"
 Enable PAE/NX
 Ensure Network is enable on Adapter 1 is of Type "Intel PRO/1000 MT Desktop"..
+``````````````
+
+zoneadm -z lx-zone reboot
+zoneadm list -v
 `````smartos network``````````
 列出所有网卡
 dladm show-phys -m

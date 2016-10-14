@@ -1376,4 +1376,5 @@ userdata:
 #       - cmd: install_mustang
 =====salt section====
 {% if module_property.type == 'zone-dataset' and module_property.salt_target == salt['grains.get']('fqdn', '') %}
+salt  smartos_thinkpad.zhixiang    state.sls_id    upload_repository_dataset_test_mustang    generate_dataset   -t 3600
 ======
