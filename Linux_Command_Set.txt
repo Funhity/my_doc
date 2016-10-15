@@ -1627,7 +1627,15 @@ the blockreplace content attribute will be filled with all the lines contained o
 mine数据存储在master上
 smartos:
 cat /opt/local/var/cache/salt/master/minions/smartos_thinkpad.zhixiang/mine.p
+{%- set host_keys = salt['mine.get']('L@centos7-qinghua or L@datasets.dsapid', 'cmd.run', expr_form='compound') -%}
 
+glob
+pcre
+grain
+grain_pcre
+compound
+pillar
+pillar_pcre
 
 注释方法：{# Include dependencies #}
 在minion上获取其它minion上的信息
@@ -5640,9 +5648,14 @@ docker pull jenkinsci/jenkins
 6.parameterized-trigger：free-style-project开始由一个项目job触发另一个在folder中的项目，When using the "Trigger/Call builds on another project" item.
 ``````````````
 To reset it without disabling security if you're using matrix permissions (probably easily adaptable to other login methods):
+步骤一：
 In config.xml , set disableSignup to false .
+sed -i.bak 's/<disableSignup>true<\/disableSignup>/<disableSignup>false<\/disableSignup>/g'   /var/jenkins_home/config.xml
+步骤二：
 Restart Jenkins.
+步骤三：
 Go to the Jenkins web page and sign up with a new user.
+
 ````````````````
 curl -u wujunrong:wujunrong http://192.168.31.178:8080/job/wu/build?token=abc
 
