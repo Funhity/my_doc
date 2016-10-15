@@ -5745,7 +5745,19 @@ less /var/svc/log/smartdc-mdata:execute.log
 /usbkey/ssh/                - a directory containing the SSH client and server configuration (deployed to /etc/ssh/ on system boot)
 /usbkey/ssh/sshd_config is in here so if you want to do things like require MFA or refuse Password login, you change it here and reboo
 
+`````smartos command section`````````
 
+zoneadm -z lx-zone reboot
+zoneadm list -v
+
+To reboot a zone :                 # zoneadm -z  reboot
+To halt a zone :                   # zoneadm -z zone halt
+To uninstalling a zone :           # zoneadm -z zone uninstall -F
+To delete an uninstalled zone :    # zonecfg -z zone delete -F
+Get all configuration info :       # zonecfg -z zone info
+login into a zone in safe mode :   # zlogin -S zone
+prstat on all zones :              # prstat -Z
+prstat on a single zone :          # prstat -z zone
 `````smartos virtualbox``````````````
 
 bunzip2 smartos-20130808T195337Z-USB.img.bz2
@@ -5755,10 +5767,7 @@ Disable Audio
 Disable "Enable absolute pointing device"
 Enable PAE/NX
 Ensure Network is enable on Adapter 1 is of Type "Intel PRO/1000 MT Desktop"..
-``````````````
 
-zoneadm -z lx-zone reboot
-zoneadm list -v
 `````smartos network``````````
 列出所有网卡
 dladm show-phys -m
@@ -6081,7 +6090,7 @@ zlogin 1df6c1a6-7b51-635e-af61-a387f5fa3f45
 less /var/svc/log/smartdc-mdata:execute.log
 
 
-`````````smartos docker ```
+`````````smartos lx section docker ```
 imgadm avail -o uuid,name,version,os,published,type | grep lx-dataset   # See available images
 
 tee /opt/centos7-docker.json <<-'EOF'
@@ -6210,10 +6219,39 @@ fifoadm vms         list
 fifoadm vms get -j 92d63038-6fdf-c957-f161-ae22fbd9600c
 
 ===========smartos dataset section====dsapi section====================
+imgadm sources -a  http://datasets.at
+imgadm sources -d  https://images.joyent.com
+imgadm import a0e719d6-4e21-11e4-92eb-2bf6399552e7
+tee /opt/dsapid.json <<-'EOF'
+    { 
+      "brand": "joyent", 
+      "image_uuid": "a0e719d6-4e21-11e4-92eb-2bf6399552e7", 
+      "autoboot": true, 
+      "alias": "dsapid-server",
+      "hostname": "datasets.dsapid", 
+      "resolvers": [ "114.114.114.114", "8.8.4.4" ], 
+      "max_physical_memory": 1024, 
+      "max_swap": 1024,
+      "tmpfs": 1024, 
+      "quota": 120, 
+      "nics": [ { "nic_tag": "admin", "ip": "10.75.1.75", "netmask": "255.255.255.0", "gateway": "10.75.1.1","primary": true } ]
+    }
+EOF
+ vmadm create -f /opt/dsapid.json
 
+
+````````
+查看所有dataset
+https://datasets.joyent.com/datasets
+https://images.joyent.com/images
+http://datasets.at/api/datasets/
+过滤出某个dataset
 http://10.20.101.21/api/datasets/?name=base-64&amp;version=16.2.0
 http://datasets.at/api/datasets/?name=jenkins;version=0.1.3
 http://datasets.at/api/datasets/?name=minimal-64;version=16.2.0
+
+
+
 配置文件：vi /data/config.json
           "source": "http://datasets.at/api/datasets/?name=base-64&amp;version=16.2.0",
 方法一：
@@ -6289,6 +6327,8 @@ cd /opt/
 wget http://192.168.1.128/file-share/salt-2016.3.3-esky-smartos.tar.gz   
 echo 10.75.1.70 salt>>/etc/hosts&&cd /opt && tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz && /opt/salt/install/install.sh && svcadm enable salt-minion
 svcadm restart salt-minion
+global zone 重启后/etc/hosts内容会消失做如下操作
+echo 10.75.1.70 salt>>/etc/hosts;svcadm restart salt-minion
 ````````
 /opt/local/var/cache/salt/master/minions/qinghua-leofs1/files/root/fifo.gpg
 less /var/svc/log/pkgsrc-salt:minion.log
