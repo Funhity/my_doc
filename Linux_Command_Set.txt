@@ -5639,6 +5639,7 @@ cut -f 3- -d \|
 
 ==========jenkins section==============
 docker pull jenkinsci/jenkins
+docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home jenkins
 我用过的插件
 1.folder
 2.pipeline
