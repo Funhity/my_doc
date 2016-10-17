@@ -498,6 +498,8 @@ sudo docker start reverent_hopper
 docker port sharp_tesla
 docker attach 0cfbc636ba81
 
+docker inspect angry_leakey | less
+
 more /var/log/docker 
 To detach the tty without exiting the shell, use the escape sequence Ctrl+p + Ctrl+q.
 ```````````
@@ -5639,7 +5641,7 @@ cut -f 3- -d \|
 
 ==========jenkins section==============
 docker pull jenkinsci/jenkins
-docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home jenkins
+docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home  -v /etc/resolv.conf:/etc/resolv.conf jenkins
 我用过的插件
 1.folder
 2.pipeline
@@ -6288,8 +6290,11 @@ less /var/svc/log/application-dsapid:default.log
 curl -v -X PUT http://127.0.0.1:80/api/users -d '{ "name": "admin", "token": "admintoken", "type": "user", "roles": [ "s_dataset.upload", "s_dataset.manage", "s_dataset.admin" ] }'
 从远程上传dataset
 curl -v -u admintoken: http://10.75.1.202:80/api/upload -F manifest=@./manifest.json  -Ffile=@./base-64-lts-15.4.1.zfs.gz -v
+```lx zone dataset``````````
 
-
+./install -d /home/frank/data/chroot -m http://mirror.centos.org/centos/7/os/x86_64/Packages/  -r centos-release-7-2.1511.el7.centos.2.10.x86_64.rpm  -i test-lx-centos-7.2 -p "CentOS 7.2 LX Brand" -D "CentOS 7.2 64-bit lx-brand image." -u https://docs.joyent.com/images/container-native-linux
+./create-lx-image -t  /opt/centos-lx-brand-image-builder/test-lx-centos-7.2-20161011.tar.gz  -k 3.13.0 -m 20161017T201601Z -i test-lx-centos-7.2 -d "CentOS 7.2 64-bit lx-brand image." -u ttps://docs.joyent.com/images/container-native-linux
+./create-manifest  -f /opt/centos-lx-brand-image-builder/test-lx-centos-7.2-20161011.tar.gz -k 3.13.0 -m 20150316T201553Z -n lx-ubuntu-14.04 -v 20171017   >manifest.json
 ====smartos usb===
 rmformat
 
