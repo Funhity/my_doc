@@ -6291,10 +6291,16 @@ curl -v -X PUT http://127.0.0.1:80/api/users -d '{ "name": "admin", "token": "ad
 从远程上传dataset
 curl -v -u admintoken: http://10.75.1.202:80/api/upload -F manifest=@./manifest.json  -Ffile=@./base-64-lts-15.4.1.zfs.gz -v
 ```lx zone dataset``````````
-
+LX zone dataset制作：
+zfs destroy -f -r zones/test-lx-centos-7.2-20161018
+git clone https://github.com/joyent/centos-lx-brand-image-builder
+Change to the repo directoru: cd centos-lx-brand-image-builder
 ./install -d /home/frank/data/chroot -m http://mirror.centos.org/centos/7/os/x86_64/Packages/  -r centos-release-7-2.1511.el7.centos.2.10.x86_64.rpm  -i test-lx-centos-7.2 -p "CentOS 7.2 LX Brand" -D "CentOS 7.2 64-bit lx-brand image." -u https://docs.joyent.com/images/container-native-linux
 ./create-lx-image -t  /opt/centos-lx-brand-image-builder/test-lx-centos-7.2-20161011.tar.gz  -k 3.13.0 -m 20161017T201601Z -i test-lx-centos-7.2 -d "CentOS 7.2 64-bit lx-brand image." -u ttps://docs.joyent.com/images/container-native-linux
 ./create-manifest  -f /opt/centos-lx-brand-image-builder/test-lx-centos-7.2-20161011.tar.gz -k 3.13.0 -m 20150316T201553Z -n lx-ubuntu-14.04 -v 20171017   >manifest.json
+
+./install -d /data/chroot -m http://mirror.centos.org/centos/6/os/x86_64/Packages -r centos-release-6-8.el6.centos.12.3.x86_64.rpm   -i test-lx-centos-6.8 -p "CentOS 6.8 LX Brand" -D "CentOS 6.7 64-bit lx-brand image." -u https://docs.joyent.com/images/container-native-linux
+./create-lx-image -t /opt/centos-lx-brand-image-builder/test-lx-centos-6.8-20161018.tar.gz -k 3.13.0 -m 20160418T201601Z -i test-lx-centos-6.8 -d "CentOS 6.7 64-bit lx-brand image." -u ttps://docs.joyent.com/images/container-native-linux
 ====smartos usb===
 rmformat
 
