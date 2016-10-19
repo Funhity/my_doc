@@ -5944,6 +5944,7 @@ iscsitadm list target
 
 `````````smartos command section````````````
 uname -a
+/usr/sbin/svcadm enable -r svc:/pkgsrc/rsyncd:default
 ````````````````
 pkgin list | grep leo
 leo_gateway-1.2.21p1 LeoFS gateway.
@@ -6039,6 +6040,7 @@ vmadm  get    677fd345-2719-e219-e81c-96e36468ebaf        | json disks
 
 
 vmadm console 677fd345-2719-e219-e81c-96e36468ebaf
+根据alias名称登入到kvm机器:
 vm_name=`vmadm list | grep dataset_test_kvm | awk '{ print $1 } '` ;vmadm console  $vm_name
 kvm虚拟机磁盘扩容
 zfs get volsize      zones/677fd345-2719-e219-e81c-96e36468ebaf-disk0
@@ -6291,15 +6293,22 @@ less /var/svc/log/application-dsapid:default.log
 curl -v -X PUT http://127.0.0.1:80/api/users -d '{ "name": "admin", "token": "admintoken", "type": "user", "roles": [ "s_dataset.upload", "s_dataset.manage", "s_dataset.admin" ] }'
 从远程上传dataset
 curl -v -u admintoken: http://10.75.1.202:80/api/upload -F manifest=@./manifest.json  -Ffile=@./base-64-lts-15.4.1.zfs.gz -v
-```lx zone dataset``````````
+```lx zone dataset section``````````
 LX zone dataset制作：
 zfs destroy -f -r zones/test-lx-centos-7.2-20161018
 git clone https://github.com/joyent/centos-lx-brand-image-builder
 Change to the repo directoru: cd centos-lx-brand-image-builder
-./install -d /home/frank/data/chroot -m http://mirror.centos.org/centos/7/os/x86_64/Packages/  -r centos-release-7-2.1511.el7.centos.2.10.x86_64.rpm  -i test-lx-centos-7.2 -p "CentOS 7.2 LX Brand" -D "CentOS 7.2 64-bit lx-brand image." -u https://docs.joyent.com/images/container-native-linux
+
+`````
+centos7:
+mkdir -p /data/chroot
+cd /root/centos-lx-brand-image-builder
+./install -d /data/chroot -m http://mirror.centos.org/centos/7/os/x86_64/Packages/  -r centos-release-7-2.1511.el7.centos.2.10.x86_64.rpm  -i test-lx-centos-7.2 -p "CentOS 7.2 LX Brand" -D "CentOS 7.2 64-bit lx-brand image." -u https://docs.joyent.com/images/container-native-linux
 ./create-lx-image -t  /opt/centos-lx-brand-image-builder/test-lx-centos-7.2-20161011.tar.gz  -k 3.13.0 -m 20161017T201601Z -i test-lx-centos-7.2 -d "CentOS 7.2 64-bit lx-brand image." -u ttps://docs.joyent.com/images/container-native-linux
 ./create-manifest  -f /opt/centos-lx-brand-image-builder/test-lx-centos-7.2-20161011.tar.gz -k 3.13.0 -m 20150316T201553Z -n lx-ubuntu-14.04 -v 20171017   >manifest.json
+
 ````````````
+centos6:
 ./install -d /data/chroot -m http://mirror.centos.org/centos/6/os/x86_64/Packages -r centos-release-6-8.el6.centos.12.3.x86_64.rpm   -i test-lx-centos-6.8 -p "CentOS 6.8 LX Brand" -D "CentOS 6.7 64-bit lx-brand image." -u https://docs.joyent.com/images/container-native-linux
 ./create-lx-image -t /opt/centos-lx-brand-image-builder/test-lx-centos-6.8-20161018.tar.gz -k 3.13.0 -m 20160418T201601Z -i test-lx-centos-6.8 -d "CentOS 6.7 64-bit lx-brand image." -u ttps://docs.joyent.com/images/container-native-linux
 ====smartos usb===
