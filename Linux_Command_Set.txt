@@ -6038,10 +6038,11 @@ vmadm  get    677fd345-2719-e219-e81c-96e36468ebaf        | json quota
 vmadm  get    677fd345-2719-e219-e81c-96e36468ebaf        | json disks
 
 
-
+````````````
 vmadm console 677fd345-2719-e219-e81c-96e36468ebaf
 根据alias名称登入到kvm机器:
 vm_name=`vmadm list | grep dataset_test_kvm | awk '{ print $1 } '` ;vmadm console  $vm_name
+`````
 kvm虚拟机磁盘扩容
 zfs get volsize      zones/677fd345-2719-e219-e81c-96e36468ebaf-disk0
 zfs set volsize=65g  zones/677fd345-2719-e219-e81c-96e36468ebaf-disk0
@@ -6363,7 +6364,8 @@ wget http://192.168.1.128/file-share/salt-2016.3.3-esky-smartos.tar.gz
 echo 10.75.1.70 salt>>/etc/hosts&&cd /opt && tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz && /opt/salt/install/install.sh && svcadm enable salt-minion
 svcadm restart salt-minion
 
-global zone 重启后/etc/hosts内容会消失做如下操作
+````global zone 重启后``````
+/etc/hosts内容会消失做如下操作
 echo 10.75.1.70 salt>>/etc/hosts;svcadm restart salt-minion;ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
 ````````
 /opt/local/var/cache/salt/master/minions/qinghua-leofs1/files/root/fifo.gpg
