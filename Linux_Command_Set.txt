@@ -1295,6 +1295,7 @@ apache:
   
  
   salt   '*'                              state.sls tomcat.manager
+  salt   dataset_test_kvm                 state.sls  set_ssh_authorized_keys concurrent=true
   salt   'ocp09'                          state.sls_id state_id  create_smartos_vm -t 120  #创建虚拟机时间较长，-t表示响应超时
   salt   'test_v6_webapp_front01'         state.apply   wujunrong.start_logcenter
   salt   '*'         state.show_sls apache   //TESTING FORMULAS
@@ -6305,6 +6306,7 @@ centos7:
 mkdir -p /data/chroot
 cd /root/centos-lx-brand-image-builder
 ./install -d /data/chroot -m http://mirror.centos.org/centos/7/os/x86_64/Packages/  -r centos-release-7-2.1511.el7.centos.2.10.x86_64.rpm  -i test-lx-centos-7.2 -p "CentOS 7.2 LX Brand" -D "CentOS 7.2 64-bit lx-brand image." -u https://docs.joyent.com/images/container-native-linux
+on global zone:
 ./create-lx-image -t  /opt/centos-lx-brand-image-builder/test-lx-centos-7.2-20161011.tar.gz  -k 3.13.0 -m 20160117T201601Z -i test-lx-centos-7.2 -d "CentOS 7.2 64-bit lx-brand image." -u ttps://docs.joyent.com/images/container-native-linux
 
 ./create-manifest  -f /opt/centos-lx-brand-image-builder/test-lx-centos-7.2-20161011.tar.gz -k 3.13.0 -m 20150316T201553Z -n lx-ubuntu-14.04 -v 20171017   >manifest.json
