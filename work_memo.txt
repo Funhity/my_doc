@@ -930,6 +930,11 @@ imgadm import 1bd84670-055a-11e5-aaa2-0346bb21d5a1
 imgadm list | grep 1bd84670-055a-11e5-aaa2-0346bb21d5a1
 
 
+
+/opt/centos-lx-brand-image-builder/create-lx-image -t  `ls /opt/centos-lx-brand-image-builder/*.gz`  -k 3.13.0 -m 20160117T201601Z -i test-lx-centos-7.2 -d "CentOS 7.2 64-bit lx-brand image." -u https://docs.joyent.com/images/container-native-linux
+
+
+./install -d /data/chroot -m http://mirror.centos.org/centos/7/os/x86_64/Packages/ -r centos-release-7-2.1511.el7.centos.2.10.x86_64.rpm  -i test-lx-centos-7.2 -p "CentOS 7.2 LX Brand" -D "CentOS 7.2 64-bit lx-brand image." -u https://docs.joyent.com/images/container-native-linux
 ```````````````````````````
 cd /opt
 vi leo-zone1.json
