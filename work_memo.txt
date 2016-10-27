@@ -923,6 +923,38 @@ zones/677fd345-2719-e219-e81c-96e36468ebaf-disk0    10G  10.3T  1.71G  -
 
 
 ===========smartos section leofs section==========
+
+
+            tee /opt/smartos_vm.json <<-'EOF'            
+            {
+             "brand": "joyent",
+             "image_uuid": "13f711f4-499f-11e6-8ea6-2b9fb858a619",
+             "alias": "pxe",
+             "hostname": "pxe",
+             "max_physical_memory": 1024,
+             "quota": 50,
+             "resolvers": ["172.17.1.10", "114.114.114.114"],
+             "nics": [
+                {
+                     "nic_tag": "admin",
+                     "ips": ["dhcp"]
+                }
+             ],
+             "internal_metadata": {
+              "root_pw": "root",
+              "admin_pw": "admin"
+              },
+             "customer_metadata": {
+                 "user-script" : "/opt/local/bin/sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config; /usr/sbin/svcadm restart svc:/network/ssh:default"
+
+              }
+            }			
+EOF
+            vmadm  create -f /opt/smartos_vm.json
+            
+````````````````````````````
+
+
 imgadm sources -d  https://images.joyent.com
 imgadm sources -a  http://images.briphant.com
 imgadm update
@@ -1143,6 +1175,54 @@ zfs receive zones/0b9bccdf-7b8f-e01e-bd92-cc59e651357e  < ./wujunrong-leofs02.zf
 
 scp *.zfs root@10.75.1.109:/opt/  scp *.json  root@10.75.1.109:/opt/
 ``````````pxe section`````````````
+#先创建虚拟机
+            tee /opt/smartos_vm.json <<-'EOF'            
+            {
+             "brand": "joyent",
+             "image_uuid": "1bd84670-055a-11e5-aaa2-0346bb21d5a1",
+             "alias": "pxe",
+             "hostname": "pxe",
+             "max_physical_memory": 1024,
+             "quota": 50,
+             "resolvers": ["172.17.1.10", "114.114.114.114"],
+             "nics": [
+                {
+                        "nic_tag": "admin",
+                        "ip": "172.16.0.2",
+                        "netmask": "255.255.255.0",
+                        "dhcp_server": "1"，
+                        "primary": true
+                }
+             ],
+             "internal_metadata": {
+              "root_pw": "root",
+              "admin_pw": "admin"
+              },
+             "customer_metadata": {
+                 "user-script" : "/opt/local/bin/sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config; /usr/sbin/svcadm restart svc:/network/ssh:default"
+
+              }
+            }			
+EOF
+            vmadm  create -f /opt/smartos_vm.json
+            
+#vmadm update 4aa92153-f816-465a-f590-a23e0e01994e <<EOF
+#     {
+#       "update_nics": [
+#         {
+#           "mac": "12:1d:2d:8e:9f:60",
+#           "nic_tag": "storage",
+#           "ip": "172.16.0.2",
+#           "netmask": "255.255.255.0",
+#           "gateway": "172.16.0.1",
+#           "dhcp_server": "1"
+#
+#         }
+#       ]
+#     }
+#EOF
+
+````````
 #tftp
 
 pkgin -fy up
@@ -1161,25 +1241,31 @@ tee /opt/local/etc/dnsmasq.conf <<-'EOF'
    #Lease File to track leases
    dhcp-leasefile=/etc/dnsmasq.leases
    # Give out addresses in the 172.16.0.1/24 subnet
-   dhcp-range=10.75.1.200,10.75.1.209,255.255.255.0,2h
+   dhcp-range=192.168.1.100,192.168.1.115,255.255.255.0,2h
    # The name of the boot file is pxegrub
    dhcp-boot=pxegrub
 EOF
 svcadm enable dnsmasq
-或/opt/local/sbin/dnsmasq -C /opt/local/etc/dnsmasq.conf -d
+
 
 
 pkgin -y install wget
-wget  -O  /tftpboot/latest.iso http://192.168.1.232/file-share/smartos-20160721T174418Z.iso
-wget  -O  /tftpboot/pxegrub    http://192.168.1.232/file-share/pxelinux/pxegrub
+wget  -O  /tftpboot/latest.iso http://192.168.1.128/file-share/smartos-20160721T174418Z.iso
+wget  -O  /tftpboot/pxegrub    http://192.168.1.128/file-share/pxelinux/pxegrub
 
+#在centos上 执行mount -o loop  smartos-20160721T174418Z.iso    /root/mnt/
+#scp -r  xx.xx.xx.xx:/root/mnt/*    /tftpboot/
+
+
+`````````````````
+或/opt/local/sbin/dnsmasq -C /opt/local/etc/dnsmasq.conf -d
 ``````````````````
 #rsync -av /mnt/ .  会生成boot/目录和platform/目录，其中boot/包含 boot/grub/menu.lst，menu.lst使用/tftpboot目录
 
 hash -r
 cd /tftpboot
 mkdir /mnt
-LOFI=$(lofiadm -a latest.iso)
+LOFI=$(lofiadm -a /tftpboot/latest.iso)
 mount -F hsfs $LOFI /mnt
 rsync -av /mnt/ .     
 umount /mnt

@@ -806,7 +806,8 @@ sudo tail -f /var/log/syslog
  #add -w file to tell it to save the packets to the file file,
  #add -s 0 to capture all of each packet,
  #and add tcp port 1723 or proto 47 to keep only the PPTP packets, if the client is performing other network traffic at the time.
- 
+ 探测网卡：
+ sudo tcpdump  -n -i en4 -w 01-wu.cap
 ````````````````````````
 cat  /etc/ppp/ip-up.local 
 #!/bin/bash
@@ -5786,9 +5787,23 @@ Enable PAE/NX
 Ensure Network is enable on Adapter 1 is of Type "Intel PRO/1000 MT Desktop"..
 
 `````smartos network``````````
+admin_nic=3c:97:0e:52:6b:18
+admin_ip=192.168.1.99
+admin_netmask=255.255.0.0
+admin_network=
+admin_gateway=10.75.1.109
+
+
+
 列出所有网卡
 dladm show-phys -m
 
+
+vmware:
+ipadm create-if e1000g0
+ifconfig e1000g0 10.20.2.100 netmask 255.255.255.0
+ifconfig e1000g0 up
+route add -net 0.0.0.0/0 10.20.2.1
 
 
 `````````````
