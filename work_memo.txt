@@ -1250,15 +1250,17 @@ svcadm enable dnsmasq
 
 
 pkgin -y install wget
-wget  -O  /tftpboot/latest.iso http://192.168.1.128/file-share/smartos-20160721T174418Z.iso
+
 wget  -O  /tftpboot/pxegrub    http://192.168.1.128/file-share/pxelinux/pxegrub
 
-#在centos上 执行mount -o loop  smartos-20160721T174418Z.iso    /root/mnt/
-#scp -r  xx.xx.xx.xx:/root/mnt/*    /tftpboot/
+   #在centos上 执行
+   #wget  -O  /root/latest.iso http://192.168.1.128/file-share/smartos-20160721T174418Z.iso
+   #mount -o loop  /root//latest.iso    /root/mnt/
 
+scp -r  xx.xx.xx.xx:/root/mnt/*    /tftpboot/
+＃说明：xx.xx.xx.xx是centos的ip 地址
+#问题定位，关闭dnsmaq服务，用dnsmasq调试模式：svcadm disable dnsmasq ;/opt/local/sbin/dnsmasq -C /opt/local/etc/dnsmasq.conf -d
 
-`````````````````
-或/opt/local/sbin/dnsmasq -C /opt/local/etc/dnsmasq.conf -d
 ``````````````````
 #rsync -av /mnt/ .  会生成boot/目录和platform/目录，其中boot/包含 boot/grub/menu.lst，menu.lst使用/tftpboot目录
 

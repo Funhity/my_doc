@@ -41,8 +41,14 @@ host -v -t a i.hexindia.net
 nslookup
 nslookup xinxindai.com
 nslookup <ip>
+
+
 ipconfig /registerdns
 ipconfig /flushdns
+
+
+ipconfig /release
+ipconfig /renew 
 ````````````
 yum install -y  bind-utils  #dig command :
 
