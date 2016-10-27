@@ -1205,7 +1205,7 @@ scp *.zfs root@10.75.1.109:/opt/  scp *.json  root@10.75.1.109:/opt/
             }			
 EOF
             vmadm  create -f /opt/smartos_vm.json
-            
+#vmadm get  4aa92153-f816-465a-f590-a23e0e01994e |json nics
 #vmadm update 4aa92153-f816-465a-f590-a23e0e01994e <<EOF
 #     {
 #       "update_nics": [
