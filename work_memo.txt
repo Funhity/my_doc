@@ -1252,7 +1252,7 @@ svcadm enable dnsmasq
 pkgin -y install wget
 
 wget  -O  /tftpboot/pxegrub    http://192.168.1.128/file-share/pxelinux/pxegrub
-
+#或wget  -O  /tftpboot/pxegrub     http://aszeszo.googlepages.com/pxegrub
    #在centos上 执行
    #wget  -O  /root/latest.iso http://192.168.1.128/file-share/smartos-20160721T174418Z.iso
    #mount -o loop  /root//latest.iso    /root/mnt/

@@ -3744,7 +3744,7 @@ sudo apt-get install build-essential
   #If you want the same number of lines before and after you can use -C num. #This will show 3 lines before and 3 lines after.
   grep -C 3 foo README.txt
   
-  grep -v 'adoring_dubinsky\|NAMES'
+  
   
   grep -r --exclude-dir={packages,rsync,workspace} xinxindai  *
   
@@ -3752,7 +3752,9 @@ sudo apt-get install build-essential
   
   cat v6_nginx01-tomcat_access-2016-06-07-14_05_01.log |   gawk -F@  '{print $1 $5  $9}' |  grep -E "[[:space:]]+/[[:space:]]*$" |  gawk -F@  '{print $1 $5 $9 $17}'
 
+  grep -v 'adoring_dubinsky\|NAMES'
   grep -E -v "^[[:space:]]*$"  #去空行    
+  ls |  /usr/xpg4/bin/grep  -v -E 'wujunrong_9d58adc6-499b-11e6-9ea7-437c859dc16b.*|ffed9526-999d-11e6-93ae-bfa56012d3b9'
 ``````````````````````````````
 
 
@@ -6478,5 +6480,102 @@ prtconf -v   搜索关键字 name='wwn' 和 5000c500626e601b
 phy-num 槽位号是1号
 ===============
 
+
+
+``````````pxe section`````````````
+
+1、dnsmasq根据 /opt/local/etc/dnsmasq.conf配置，获得ip地址
+2、dnsmasq根据 dhcp-boot=pxegrub配置项，/tftpboot中下载pxegrub程序
+3、pxegrub程序 从boot/grub/menu.lst启动smartos，boot/grub/menu.lst位于/tftpboot中
+4、boot目录是从smartos-20160721T174418Z.iso解压出来的，smartos-20160721T174418Z.iso出来的内容放在/tftpboot中
+
+
+#先创建虚拟机
+            tee /opt/smartos_vm.json <<-'EOF'            
+            {
+             "brand": "joyent",
+             "image_uuid": "1bd84670-055a-11e5-aaa2-0346bb21d5a1",
+             "alias": "pxe",
+             "hostname": "pxe",
+             "max_physical_memory": 1024,
+             "quota": 50,
+             "resolvers": ["172.17.1.10", "114.114.114.114"],
+             "nics": [
+                {
+                        "nic_tag": "admin",
+                        "ip": "172.16.0.2",
+                        "netmask": "255.255.255.0",
+                        "dhcp_server": "1"，
+                        "primary": true
+                }
+             ],
+             "internal_metadata": {
+              "root_pw": "root",
+              "admin_pw": "admin"
+              },
+             "customer_metadata": {
+                 "user-script" : "/opt/local/bin/sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config; /usr/sbin/svcadm restart svc:/network/ssh:default"
+
+              }
+            }			
+EOF
+            vmadm  create -f /opt/smartos_vm.json
+#vmadm get  4aa92153-f816-465a-f590-a23e0e01994e |json nics
+#vmadm update 4aa92153-f816-465a-f590-a23e0e01994e <<EOF
+#     {
+#       "update_nics": [
+#         {
+#           "mac": "12:1d:2d:8e:9f:60",
+#           "nic_tag": "storage",
+#           "ip": "172.16.0.2",
+#           "netmask": "255.255.255.0",
+#           "gateway": "172.16.0.1",
+#           "dhcp_server": "1"
+#
+#         }
+#       ]
+#     }
+#EOF
+
+````````
+#tftp
+
+pkgin -fy up
+pkgin -y install tftp-hpa
+mkdir /tftpboot
+echo "tftp dgram udp wait root /opt/local/sbin/in.tftpd in.tftpd -s /tftpboot" > /tmp/tftp.inetd
+svcadm enable inetd
+inetconv -i /tmp/tftp.inetd -o /tmp
+svccfg import /tmp/tftp-udp.xml
+svcadm restart tftp/udp
+
+#dnsmasq
+pkgin -y install dnsmasq
+mv /opt/local/etc/dnsmasq.conf /opt/local/etc/dnsmasq.conf.bak
+tee /opt/local/etc/dnsmasq.conf <<-'EOF'
+   #Lease File to track leases
+   dhcp-leasefile=/etc/dnsmasq.leases
+   # Give out addresses in the 172.16.0.1/24 subnet
+   dhcp-range=192.168.1.100,192.168.1.115,255.255.255.0,2h
+   # The name of the boot file is pxegrub
+   dhcp-boot=pxegrub
+EOF
+svcadm enable dnsmasq
+
+
+
+pkgin -y install wget
+
+wget  -O  /tftpboot/pxegrub    http://192.168.1.128/file-share/pxelinux/pxegrub
+#或wget  -O  /tftpboot/pxegrub     http://aszeszo.googlepages.com/pxegrub
+   #在centos上 执行
+   #wget  -O  /root/latest.iso http://192.168.1.128/file-share/smartos-20160721T174418Z.iso
+   #mount -o loop  /root/latest.iso    /root/mnt/
+
+scp -r  xx.xx.xx.xx:/root/mnt/*    /tftpboot/
+＃说明：xx.xx.xx.xx是centos的ip 地址
+#问题定位，关闭dnsmaq服务，用dnsmasq调试模式：svcadm disable dnsmasq ;/opt/local/sbin/dnsmasq -C /opt/local/etc/dnsmasq.conf -d
+
+============
 
 
