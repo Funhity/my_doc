@@ -6367,6 +6367,8 @@ http://pkgsrc.joyent.com/packages/SmartOS/2016Q1/x86_64/All
 pkgin install mc vim scmgit python2.7 py27-pip py27-expat py27-sqlite2 py27-mysqldb gcc47 gnu-binutils libxslt	
 
 ```````在native zone安装salt````
+
+
 sed -i.bak '$d' /opt/local/etc/pkgin/repositories.conf;
 echo 'http://192.168.1.232/smartos/pkgin2016Q2/' >> /opt/local/etc/pkgin/repositories.conf;
 pkgin -fy up;
@@ -6389,6 +6391,11 @@ svcadm restart svc:/pkgsrc/salt:minion
 相关讨论：                   https://github.com/saltstack/salt/issues/31446
 自己编译global zone包的步骤：https://github.com/saltstack/salt/blob/develop/pkg/smartos/esky/BUILD_ENVIRONMENT.md
 在global zone安装方法：
+步骤0：安装pkgin
+cd /
+curl -k http://192.168.1.128/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat | tar -xf -
+pkg_admin rebuild
+pkgin -y up
 步骤1：从 http://pkg.blackdot.be/extras/ 上下载salt-2016.3.3-esky-smartos.tar.gz 
 步骤2：
 cd /opt/
