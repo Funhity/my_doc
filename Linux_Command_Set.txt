@@ -5801,6 +5801,12 @@ admin_netmask=255.255.0.0
 admin_network=
 admin_gateway=10.75.1.109
 
+storage_nic=3c:97:0e:52:6b:18
+storage0_ip=10.77.77.7
+storage0_netmask=255.255.255.0
+storage0_gateway=10.77.77.1
+storage0_vlan_id=128
+
 
 
 列出所有网卡
