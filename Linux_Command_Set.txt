@@ -6395,7 +6395,7 @@ svcadm restart svc:/pkgsrc/salt:minion
 cd /
 curl -k http://192.168.1.128/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat | tar -xf -
 pkg_admin rebuild
-pkgin -y up
+#pkgin -y up
 步骤1：从 http://pkg.blackdot.be/extras/ 上下载salt-2016.3.3-esky-smartos.tar.gz 
 步骤2：
 cd /opt/
