@@ -1911,8 +1911,11 @@ yum -y install net-tools
 netstat --listen
 netstat  -nr
 netstat -antup 
+yum install lsof -y
+lsof -OnP | grep LISTEN
 netstat -anp |grep 2181   #查看谁 连到 2181
 netstat -anp --inet       #查看谁 连到 谁
+netstat -tulpn
 ss -napt | grep 3260 
 =======================  cygwin section  ========================     
   windows:  netstat -an
