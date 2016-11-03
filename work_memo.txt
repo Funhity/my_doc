@@ -1471,3 +1471,28 @@ userdata:
 {% if module_property.type == 'zone-dataset' and module_property.salt_target == salt['grains.get']('fqdn', '') %}
 salt  smartos_thinkpad.zhixiang    state.sls_id    upload_repository_dataset_test_mustang    generate_dataset   -t 3600
 ======
+nat，修改thinkpad上的网卡网关，指向centos nat
+vmadm update  d272317f-72c5-6ddb-e84d-c439b6de53ba<<EOF
+{
+         "update_nics": [
+             {
+               "interface": "net0",
+               "mac": "62:53:89:f4:61:94",
+               "nic_tag": "storage",
+               "gateway": "192.168.2.203",
+               "gateways": [
+                 "192.168.2.203"
+               ],
+               "netmask": "255.255.255.0",
+               "ip": "192.168.2.51",
+               "ips": [
+                 "192.168.2.51/24"
+               ],
+               "primary": true
+             }
+
+       ]
+  
+  
+}
+EOF

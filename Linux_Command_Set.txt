@@ -392,15 +392,27 @@ firewall-cmd --get-services
 ====nat section======
 
 yum -y install firewalld
-systemctl enable firewalld
-systemctl start  firewalld
+systemctl enable  firewalld
+systemctl start   firewalld
 systemctl status  firewalld
 
+````
+firewall-cmd --get-active-zone
+external
+  interfaces: enp0s3
+public
+  interfaces: enp0s8
+````
 
-
+external：enp0s3是NAT地址
+public：  enp0s8是内网地址 192.168.2.0/24
+在如下配置文件增加一行，ZONE=external，配置网卡所属的firewall zone（网卡默认ZONE=public）
+vi /etc/sysconfig/network-scripts/ifcfg-enp0s3
+ZONE=external
+````
 firewall-cmd  --zone=external --add-masquerade --permanent
-firewall-cmd --zone=internal --add-masquerade --permanent 
-firewall-cmd --reload 
+firewall-cmd  --zone=public   --add-masquerade --permanent 
+firewall-cmd  --reload 
 
 firewall-cmd --permanent --direct --passthrough ipv4 -t nat -I POSTROUTING -o enp0s3 -j MASQUERADE -s 192.168.2.0/24
 sudo firewall-cmd --zone=public --add-service=http
