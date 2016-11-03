@@ -1040,6 +1040,7 @@ sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el7
   yum update python  -y
   yum install salt-minion -y
   systemctl start  salt-minion.service
+  systemctl enable salt-minion.service
   `````````
   salt --versions-report
   `````````````
@@ -6425,7 +6426,7 @@ curl -k http://192.168.1.128/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat | ta
 pkg_admin rebuild
 #pkgin -y up
 步骤1：从 http://pkg.blackdot.be/extras/ 上下载salt-2016.3.3-esky-smartos.tar.gz 
-步骤2：
+或：
 cd /opt/
 wget http://192.168.1.128/file-share/salt-2016.3.3-esky-smartos.tar.gz   
 echo 10.75.1.70 salt>>/etc/hosts&&cd /opt && tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz && /opt/salt/install/install.sh && svcadm enable salt-minion
