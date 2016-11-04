@@ -6265,12 +6265,14 @@ EOF
 vi /opt/local/leo_manager/etc/leo_manager.conf
 vi /opt/local/leo_storage/etc/leo_storage.conf
 vi /opt/local/leo_manager/etc/leo_manager.conf
-
+注意：配置文件中 第一台机器用manager_0，第二台机器用manager_1
 
 less /var/svc/log/leofs-manager:default.log
 less /var/svc/log/leofs-storage:default.log
 less /var/log/leo_storage/app/error
 less /var/log/leo_manager/app/error
+
+
 
 leofs-adm status
 leofs-adm start
