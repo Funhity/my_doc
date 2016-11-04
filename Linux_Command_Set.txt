@@ -1998,7 +1998,7 @@ chmod -R g-s /var/mailman/
 chmod u-s /sbin/{pwdb_chkpwd,unix_chkpwd,cardctl}
 
 chmod -R 755 /home/frank
-======================   tee section      =========================
+======================   tee section   wget section   =========================
 
 wget -O - http://example.com/dvd.iso  | tee >(sha1sum > dvd.sha1) > dvd.iso
 wget -O - http://example.com/dvd.iso  | tee dvd.iso | sha1sum > dvd.sha1
@@ -6302,6 +6302,15 @@ vi  /opt/local/fifo-cerberus/config/config.js
 
 ls -Fd /data/*/log
 /data/{sniffle,snarl,howl}/log
+
+``````````````
+创建虚拟机时注意jason file 必须有如下属性
+autoboot=true
+delegate_dataset=true
+indestructible_delegated=true
+cpu_cap=100
+```````````````````````
+
 fifoadm vm list
 fifoadm hypervisors list
 
