@@ -2795,6 +2795,7 @@ rpm -qa| grep jdk
 rpm -qf `which scp`
 rpm -q jdk  #remove jdk
 ``````````tar section```````
+
 tar   zxvf jdk-8uversion-linux-x64.tar.gz
 tar   -cf config_file_credit.tar   ./test_v6_mobile/   ./stage_v6_mobile/ 
 zip   abc.zip *
@@ -2810,6 +2811,8 @@ tar -zcvf /tmp/webservice-trade.tar.gz   ./{*webservice*11-11*,*webser*.out,*tra
 
 yum   -y install bzip2
 bzip2 -d ./zsync-0.6.2.tar.bz2 
+解压缩：
+tar -xvzf /path/to/yourfile.tgz
 
 ``````````tomcat section``````
 安装tomcat解压安装包即可
