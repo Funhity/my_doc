@@ -6231,9 +6231,10 @@ vmadm lookup -j 128  alias=~^[ab]
 
 vmadm update <zone id> vcpus=4
 vmadm update <zone id> ram=4096
-vmadm update 677fd345-2719-e219-e81c-96e36468ebaf hostname=centos7-qinghua
-vmadm update 677fd345-2719-e219-e81c-96e36468ebaf alias=wujunrong_centos7
-vmadm update 1df6c1a6-7b51-635e-af61-a387f5fa3f45  resolvers=114.114.114.114,8.8.8.8
+vmadm update 677fd345-2719-e219-e81c-96e36468ebaf   hostname=centos7-qinghua
+vmadm update 677fd345-2719-e219-e81c-96e36468ebaf   alias=wujunrong_centos7
+vmadm update 1df6c1a6-7b51-635e-af61-a387f5fa3f45   resolvers=114.114.114.114,8.8.8.8
+vmadm update cafa7c1b-da23-498b-af60-8270a9f1304b   indestructible_delegated=false
 ````````
 vmadm get b5b07742-3040-636a-e3ea-dfad1a3a2af0 | json nics
 vmadm update 677fd345-2719-e219-e81c-96e36468ebaf <<EOF
