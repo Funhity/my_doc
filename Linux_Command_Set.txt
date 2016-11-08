@@ -5879,7 +5879,7 @@ rm -fr /var/db/pkgin/*    #This directory can be completely emptied if pkgin's d
 安装错误日志：
 /var/db/pkgin/pkg_install-err.log
 
-Installing pkgin
+在global zone 安装 pkgin
 方法一
 on centos:
    aria2c https://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2016Q2-x86_64.tar.gz -x 10
@@ -5925,7 +5925,9 @@ pkgin -fy up
     私有源中必须要有如下总结性文件：
     wget https://pkgsrc.joyent.com/packages/SmartOS/2015Q4/x86_64/All/pkg_summary.gz
 
-
+    
+更换私有源配置文件地址，会删除最后一行
+sed -i.bak '$d' /opt/local/etc/pkgin/repositories.conf;echo 'http://192.168.1.128/smartos/pkgin2014Q4/' >> /opt/local/etc/pkgin/repositories.conf;rm -fr /var/db/pkgin/*;/opt/local/bin/pkgin -fy up
 ===========zpool section=========
 
 zpool list
@@ -6645,6 +6647,23 @@ scp -r  xx.xx.xx.xx:/root/mnt/*    /tftpboot/
 ＃说明：xx.xx.xx.xx是centos的ip 地址
 #问题定位，关闭dnsmaq服务，用dnsmasq调试模式：svcadm disable dnsmasq ;/opt/local/sbin/dnsmasq -C /opt/local/etc/dnsmasq.conf -d
 
-============
+========fifo section====
 
+NSQ:
+http://10.75.1.90:4171/
+
+NSQ和aggregater装在一起
+/opt/local/fifo-sniffle/bin/sniffle-admin cluster join 'sniffle@10.75.1.86'
+/opt/local/fifo-sniffle/bin/sniffle-admin cluster plan
+/opt/local/fifo-sniffle/bin/sniffle-admin cluster commit
+
+
+
+/opt/local/fifo-howl/bin/howl-admin cluster join 'howl@10.75.1.86'
+/opt/local/fifo-howl/bin/howl-admin cluster plan
+/opt/local/fifo-howl/bin/howl-admin cluster commit
+
+/opt/local/fifo-snarl/bin/snarl-admin member-status
+/opt/local/fifo-sniffle/bin/sniffle-admin member-status
+/opt/local/fifo-howl/bin/howl-admin member-status
 
