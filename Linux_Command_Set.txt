@@ -1111,7 +1111,9 @@ salt -l debug "*" cmd.run "uptime"
     - 'G@foo:baz'
   
   
-  ``````清除更新salt-minion名字方法clear not wanted and invalid minion id```
+  ```salt-key section``````
+  salt-key命令可列出salt-minion的名字
+  清除更新salt-minion名字方法（clear not wanted and invalid minion id）
   on master: rm -fr /etc/salt/pki/master/minions_denied/vm-template
   on minion: ansible minions  -m shell -a  '>/etc/salt/minion_id' #清空id文件
   #When the minion is started, it will generate an id value, unless it has been generated on a previous run and cached in the configuration directory, which is /etc/salt by default
@@ -6486,7 +6488,7 @@ svcadm restart salt-minion
 ``````````
 global zone 重启后/etc/hosts内容和id_rsa消失，做如下操作来恢复：：
 echo 10.75.1.70 salt>>/etc/hosts;svcadm restart salt-minion;ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
-#注：10.75.1.70是salt master的地址
+#注：10.75.1.70是salt master的地址，salt默认把hostname当作minion id的名字
 
 ````````
 /opt/local/var/cache/salt/master/minions/qinghua-leofs1/files/root/fifo.gpg
