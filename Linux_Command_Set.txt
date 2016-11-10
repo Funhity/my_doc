@@ -1056,6 +1056,10 @@ sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el7
   `````````
   salt --versions-report
   `````````````
+  smartos: salt master上配置自动注册minion：
+  vi /opt/local/etc/salt/master
+  auto_accept: True
+  
   minion配置: /etc/salt/minion
   #master: salt
   /etc/salt/master
@@ -6432,6 +6436,10 @@ vi /opt/local/etc/ansible/ansible.cfg
 [defaults]
 host_key_checking=false
 =====smartos salt section=====
+  smartos: salt master上配置自动注册minion：
+  vi /opt/local/etc/salt/master
+  auto_accept: True
+```````````````````````````
 vi 
 http://pkgsrc.joyent.com/packages/SmartOS/2016Q1/x86_64/All
 
@@ -6449,7 +6457,7 @@ echo 10.75.1.70 salt>>/etc/hosts
 	/usr/sbin/svcadm enable -r svc:/pkgsrc/salt:master
 	/usr/sbin/svcadm enable -r svc:/pkgsrc/salt:minion
 或salt-minion -d  
-             创建虚拟机jason文件
+             创建虚拟机，若要同时安装salt minion，可在json文件中增加如下配置
              "customer_metadata": {
                  "user-script" : "/opt/local/bin/sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config; /usr/sbin/svcadm restart svc:/network/ssh:default;/opt/local/bin/echo '10.75.1.70 salt'>>/etc/hosts;/opt/local/bin/echo 'http://10.75.1.50/pkgin2016Q1' >> /opt/local/etc/pkgin/repositories.conf;/opt/local/bin/pkgin -fy up;/opt/local/bin/pkgin -y install salt;/usr/sbin/svcadm enable svc:/pkgsrc/salt:minion"
               }
@@ -6465,6 +6473,7 @@ svcadm restart svc:/pkgsrc/salt:minion
 步骤0：安装pkgin
 cd /
 curl -k http://192.168.1.128/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat | tar -xf -
+#或curl -k http://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2015Q2-x86_64.tar.gz | gzcat | tar -xf -
 pkg_admin rebuild
 #pkgin -y up
 步骤1：从 http://pkg.blackdot.be/extras/ 上下载salt-2016.3.3-esky-smartos.tar.gz 
@@ -6474,9 +6483,11 @@ wget http://192.168.1.128/file-share/salt-2016.3.3-esky-smartos.tar.gz
 echo 10.75.1.70 salt>>/etc/hosts&&cd /opt && tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz && /opt/salt/install/install.sh && svcadm enable salt-minion
 svcadm restart salt-minion
 
-````global zone 重启后``````
-/etc/hosts内容会消失做如下操作
+``````````
+global zone 重启后/etc/hosts内容和id_rsa消失，做如下操作来恢复：：
 echo 10.75.1.70 salt>>/etc/hosts;svcadm restart salt-minion;ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
+#注：10.75.1.70是salt master的地址
+
 ````````
 /opt/local/var/cache/salt/master/minions/qinghua-leofs1/files/root/fifo.gpg
 less /var/svc/log/pkgsrc-salt:minion.log
