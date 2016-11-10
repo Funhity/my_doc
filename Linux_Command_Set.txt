@@ -6460,10 +6460,17 @@ echo 10.75.1.70 salt>>/etc/hosts
 	/usr/sbin/svcadm enable -r svc:/pkgsrc/salt:minion
 或salt-minion -d  
              创建虚拟机，若要同时安装salt minion，可在json文件中增加如下配置
+             smartos：
              "customer_metadata": {
                  "user-script" : "/opt/local/bin/sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config; /usr/sbin/svcadm restart svc:/network/ssh:default;/opt/local/bin/echo '10.75.1.70 salt'>>/etc/hosts;/opt/local/bin/echo 'http://10.75.1.50/pkgin2016Q1' >> /opt/local/etc/pkgin/repositories.conf;/opt/local/bin/pkgin -fy up;/opt/local/bin/pkgin -y install salt;/usr/sbin/svcadm enable svc:/pkgsrc/salt:minion"
               }
-
+            kvm：
+            "customer_metadata" : {
+                "user-script" : "sed -i.bak  's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config; service sshd restart;  yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el7.noarch.rpm;echo 10.75.1.70 salt>>/etc/hosts;yum -y install salt-minion;service salt-minion start",            
+                "root_authorized_keys":
+                "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9vgaOMggb9WgG23YI7eHgx0H2MtI1jKfb1BfiLk5yXJpDVBJ+qH1f28YwIgzv9ig7Ul742NCXukOoAVaa4noiJmQhMQVMfE8P7jJm+gJ+zLP2MzxWetRGKAXx8NT+v34nSacvRlacoAoS/6AlHbsRvKWaO0XEGkFXSBciOl+28n8kmp9pAcblhHtJGKwRYgv7xN8KLWgrU2jD0s4vay3DpG4A8RbkTjosYgJRZzDHGqTEbjiFK7aS157pWcQlSANfDR2tH21DmYE5Pt2T4aGB9Mxo9sTUGytekk9BbssvnjZzoIO5FjtqX0/A5x8fvsfrLq2kh+rWUb8B5jdierRV root@frank"
+              },
+              
 ```````````
 /usr/bin/hostname>/opt/local/etc/salt/minion_id
 svcadm restart svc:/pkgsrc/salt:minion
