@@ -884,6 +884,7 @@ VBoxManage controlvm Frank-Windows10 setvideomodehint 2048  1280  32
 "%programfiles%\Oracle\VirtualBox\VBoxManage" clonehd "source.vmdk" "cloned.vdi" --format vdi
 "%programfiles%\Oracle\VirtualBox\VBoxManage" modifyhd "cloned.vdi" --resize 51200
 "%programfiles%\Oracle\VirtualBox\VBoxManage" clonehd "cloned.vdi" "resized.vmdk" --format vmdk
+"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe"  clonehd "C:\FrankVM\Frank_Win10_Cracked\Frank_Windows10 Clone-disk1.vdi"  d:\frank_windows10.vmdk --format  VMDK
 
 "%programfiles%\Oracle\VirtualBox\VBoxManage"  startvm "Debian"
 'C:\Program Files\Oracle\VirtualBox\VBoxManage.exe' internalcommands sethduuid .\MyVM.vdi 
