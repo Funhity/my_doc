@@ -4802,11 +4802,13 @@ git diff --staged
  
 #white space check
 git diff --check  
-
-$ git diff HEAD^^ HEAD main.c
-$ git diff HEAD^^..HEAD -- main.c
-$ git diff HEAD~2 HEAD -- main.c
-
+````````````
+版本区别：
+git diff HEAD^  HEAD  Linux_Command_Set.txt  当前版本和上一版本的区别
+git diff HEAD^^ HEAD main.c
+git diff HEAD^^..HEAD -- main.c
+git diff HEAD~2 HEAD -- main.c
+```````````````````````
 git remote add pb https://github.com/paulboone/ticgit
 git fetch  pb
 git push   origin   master
