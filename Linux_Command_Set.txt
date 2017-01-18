@@ -4772,6 +4772,11 @@ git config user.name
 		git archive   --format=tar --remote=/srv/git/xxd_code_repo.git            HEAD -- ansible.hosts     | tar -xf -
         git archive   --format=tar --remote=/srv/git/xxd_code_repo.git            HEAD -- ansible.hosts     | tar -xf - -C /etc/ansible
 
+`````````````
+The basic Git workflow goes something like this:
+1、You modify files in your working directory.
+2、git add:       You stage the files, adding snapshots of them to your staging area.  
+3、git commit -m: You do a commit, which takes the files as they are in the staging area and stores that snapshot permanently to your Git directory.
 
 ```````````
 #Git - List all files currently under source control?
