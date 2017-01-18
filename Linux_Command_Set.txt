@@ -1965,6 +1965,11 @@ G      go the end of the file
 gg     gets the cursor to the first character of the file
 ggVGy  copy all file
 
+vi command	description
+0	move to beginning of the current line
+$	move to end of line
+H	move to the top of the current window (high)
+M	move to the middle of the current window (middle)
 
 
 dw Delete word from cursor on
@@ -5182,10 +5187,14 @@ vim /etc/mail.rc
 
 ====cobbler section===
 rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+或 sudo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 yum install cobbler cobbler-web pykickstart wget fence-agents -y 
 yum -y install xinetd -y
 yum install dhcp -y
 sed -i.bak "s/SELINUX=enforcing/SELINUX=permissive/"   /etc/selinux/config
+ centos6: chkconfig iptables off
+          service   iptables stop
+ centos7:  systemctl status firewalld
 cobbler version
 有问题看日志：less /var/log/cobbler/cobbler.log
                    /var/log/httpd/error_log  
@@ -5219,10 +5228,10 @@ openssl passwd -1
 vi /etc/cobbler/settings
    server: 192.168.122.156
    next_server: 192.168.122.156
-   manage_dhcp: 1
+   manage_dhcp: 1                   #使cobbler通过/etc/cobbler/dhcp.template（cobbler sync）来管理dhcp配置文件
    default_password_crypted: "$1$U.Svb2gw$MNHrAmG.axVHYQaQRySR5/"
 
-vi /etc/xinetd.d/tftp
+	
    Change disable = yes to disable = no.
 
 vi /etc/xinetd.d/rsync
@@ -5244,9 +5253,29 @@ vi /etc/cobbler/modules.conf
    https://10.0.1.9/cobbler_web/
 
 ``````
+
+文档中描述要启动如下服务：
+第一步：
+systemctl start cobblerd.service
+systemctl enable cobblerd.service
+systemctl status cobblerd.service
+
+
+or
+
+
+ service cobblerd start
+ chkconfig cobblerd on
+ service cobblerd status
+第二步：
+cobbler check 
+第三步：
+service dhcpd  start
+service  httpd  start
+````````````````````
 systemctl enable  rsyncd.service
 systemctl enable xinetd
-
+	
 systemctl restart httpd
 systemctl restart cobblerd.service
 systemctl start   rsyncd.service
