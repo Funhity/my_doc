@@ -2938,8 +2938,8 @@ realvnc: press function key F8 and click "Options" Click "Load / Save" Click "Sa
 
 /sbin/runuser -l frank -c "/usr/bin/x0vncserver -display :0  -PasswordFile=/home/frank/.vnc/passwd"
 /usr/bin/x0vncserver -display :0  -PasswordFile=/home/frank/.vnc/passwd
-yum  -y   install tigervnc
-yum  -y   install tigervnc-server
+sudo yum  -y   install tigervnc
+sudo yum  -y   install tigervnc-server
 cp /lib/systemd/system/vncserver@.service /etc/systemd/system/vncserver@:1.service
 
 vi /etc/systemd/system/vncserver@:1.service
@@ -2949,10 +2949,10 @@ vi /etc/systemd/system/vncserver@:1.service
 su frank
 vncserver  #setpassword
 
-systemctl daemon-reload
-systemctl enable vncserver@:1.service
-reboot
-systemctl start vncserver@:1.service
+sudo systemctl daemon-reload
+sudo systemctl enable vncserver@:1.service
+#reboot
+sudo systemctl start vncserver@:1.service
 
 ``````
 su  frank
