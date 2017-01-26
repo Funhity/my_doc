@@ -5282,8 +5282,11 @@ or
 第二步：
 cobbler check 
 第三步：
+根据check的建议启动服务
 service dhcpd  start
 service  httpd  start
+chkconfig httpd on
+chkconfig dhcpd on
 ````````````````````
 systemctl enable  rsyncd.service
 systemctl enable xinetd
@@ -6747,5 +6750,30 @@ NSQ和aggregater装在一起
 
 =========== npm section ============
 npm install -g cnpm --registry=https://registry.npm.taobao.org
-
 npm install --registry  npm.briphant.cn
+
+====screen section====
+sudo yum install screen
+1. type screen command
+2. typing “CTRL + A”, followed by “?”
+   #By typing “CTRL + A” you state that the next signal is to be sent to the program “screen“, 
+   in stead of to the Shell (like you would in a normal shell). You’ll see a list of all bindings known to “screen“.
+   
+``````   
+screen -ls
+    List all screen terminals :the list will contain the following information :
+
+
+	* the state of the screen terminals ( Attached , Detached)
+	* the PID of of each screen terminal
+	* the name of each screen terminal
+	
+screen  -r  nnnn
+      Enable a session with screen terminal that has PID  “nnnn”  (see screen -ls)
+`````
+
+
+
+
+
+
