@@ -2956,9 +2956,19 @@ sudo systemctl daemon-reload
 sudo systemctl enable vncserver@:1.service
 #reboot
 sudo systemctl start vncserver@:1.service
+`````
+centos:
 #tightvnc viewer 客户端分辨率配置
  xrandr
  xrandr -s 5  #5表示第五个分辨率
+
+ubuntu:
+服务端：自带的desktop sharing程序
+客户端：xrandr --fb 1280x1024
+
+
+ 
+
 ``````
 su  frank
 export DISPLAY=:0
