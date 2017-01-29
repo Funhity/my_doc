@@ -583,10 +583,11 @@ priority=2
 aptitude search '~i'
 `````````list the contents of a package using YUM````````
 yum install yum-utils -y
-repoquery --list packagename  ,  repoquery --list  zabbix-server-mysql
+repoquery --list packagename: repoquery --list  zabbix-server-mysql
 yum repolist
 yum --disablerepo="*" --enablerepo="google" list available
-yum list installed| grep audit 
+sudo yum list installed| grep audit
+sudo yum info  minidlna 
 
 查询命令在哪个rpm包中
 rpm -q --whatprovides /opt/dell/srvadmin/bin/omreport
@@ -2965,7 +2966,7 @@ centos:
 ubuntu:
 服务端：自带的desktop sharing程序
 客户端：xrandr --fb 1280x1024
-
+http://www.x.org/archive/X11R7.5/doc/man/man1/xrandr.1.html
 
  
 
@@ -6780,10 +6781,15 @@ screen -ls
 	
 screen  -r  nnnn
       Enable a session with screen terminal that has PID  “nnnn”  (see screen -ls)
-`````
+````vlc section`
+rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm 
+rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
 
-
-
-
+sudo yum info  vlc
+sudo yum install  minidlna
+sudo vi  /etc/minidlna.conf
+media_dir=/opt
+http://10.0.1.99:8200/
+``````````````
 
 
