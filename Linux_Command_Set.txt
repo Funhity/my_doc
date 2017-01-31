@@ -6791,5 +6791,28 @@ sudo vi  /etc/minidlna.conf
 media_dir=/opt
 http://10.0.1.99:8200/
 ``````````````
+    如何使得命令进入后台
+	方法一： Appending an ampersand ( & ) to the command runs the job in the background.
+	  find / -ctime -1 > /tmp/changed-file-list.txt &
+	方法二： 
+	  步骤1： Press ‘CTRL+Z’ which will suspend the current foreground job.
+	  步骤2： Execute bg to make that command to execute in background.
+	  举例：
+	  # find / -ctime -1 > /tmp/changed-file-list.txt 
+	  # [CTRL-Z] [2]+ Stopped find / -ctime -1 > /tmp/changed-file-list.txt 
+	  # bg
+	管理后台正在执行的命令：
+	
+	1. jobs命令
+	   举例：
+	   [1] Running bash download-file.sh & 
+	   [2]- Running evolution & 
+	   [3]+ Done nautilus .
+	2. fg command. When executed without arguments, it will take the most recent background job to the foreground.
+	   # fg %1
+	   # kill %2
+	   
+	
+
 
 
