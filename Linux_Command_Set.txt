@@ -2957,6 +2957,10 @@ sudo systemctl daemon-reload
 sudo systemctl enable vncserver@:1.service
 #reboot
 sudo systemctl start vncserver@:1.service
+
+      vncserver -kill <X-display>
+      vncserver -list
+
 `````
 centos:
 #tightvnc viewer 客户端分辨率配置
