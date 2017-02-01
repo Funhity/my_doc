@@ -2941,12 +2941,13 @@ realvnc: press function key F8 and click "Options" Click "Load / Save" Click "Sa
 
 /sbin/runuser -l frank -c "/usr/bin/x0vncserver -display :0  -PasswordFile=/home/frank/.vnc/passwd"
 /usr/bin/x0vncserver -display :0  -PasswordFile=/home/frank/.vnc/passwd
+`````
 #tightervnc 安装方法
 sudo yum  -y   install tigervnc
 sudo yum  -y   install tigervnc-server
-cp /lib/systemd/system/vncserver@.service /etc/systemd/system/vncserver@:1.service
+cp /lib/systemd/system/vncserver@.service /etc/systemd/system/vncserver@.service
 
-vi /etc/systemd/system/vncserver@:1.service
+vi /etc/systemd/system/vncserver@.service
    #ExecStart=/sbin/runuser -l <USER> -c "/usr/bin/vncserver %i"
     #PIDFile=/home/<USER>/.vnc/%H%i.pid
 
