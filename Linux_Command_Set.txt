@@ -4510,6 +4510,10 @@ mount |column -t
  ll /dev | grep sr0
  mount -r -t iso9660 /dev/sr0 /root/mnt/
 ```````````hfsplus section``````````
+centos7:
+sudo rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm
+sudo yum install  kmod-hfsplus
+```
 sudo mount -v  -t hfsplus -o force,rw   /dev/sdc1  /home/frank/mac_mini_storage/
 sudo mount -v  -t hfsplus -o remount,force,ro,loop,offset=209735680,sizelimit=250140434432   /dev/sda2  /home/frank/mac_mini_storage/
 
