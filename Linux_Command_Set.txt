@@ -6799,7 +6799,7 @@ sudo yum install  minidlna
 sudo vi  /etc/minidlna.conf
 media_dir=/opt
 http://10.0.1.99:8200/
-``````````````
+========jobs section===========
     如何使得命令进入后台
 	方法一： Appending an ampersand ( & ) to the command runs the job in the background.
 	  find / -ctime -1 > /tmp/changed-file-list.txt &
@@ -6820,8 +6820,24 @@ http://10.0.1.99:8200/
 	2. fg command. When executed without arguments, it will take the most recent background job to the foreground.
 	   # fg %1
 	   # kill %2
-	   
-	
+==========================
+查询网卡状态
+# sudo ethtool eth25s0	   
+	          p   Wake on PHY activity
+              u   Wake on unicast messages
+              m   Wake on multicast messages
+              b   Wake on broadcast messages
+              a   Wake on ARP
+              g   Wake on MagicPacket™
+              s   Enable SecureOn™ password for MagicPacket™
+              d   Disable (wake on nothing).   This  option  clears  all
+                  previous options.
+设置网卡状态
+# sudo ethtool -s eth25s0 wol g		
+
+		  
+				  
+				  
 
 
 
