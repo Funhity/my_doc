@@ -3129,7 +3129,7 @@ virsh resume  mirror
 virt-clone  --connect qemu:///system --original  centos64-minimal --name centos64-minimal2 --file /home/frank/kvm/images/centos-minimal2.qcow2	 
 
 
-`````````virsh network````
+`````````virsh network section````
 ```ubuntu:
 Create the file /etc/libvirt/hooks/qemu  #In NAT network,used to Forwarding Incoming Connections
 virsh net-update  default add ip-dhcp-host "<host mac='52:54:00:ab:d3:72' name='windows7-for-office' ip='192.168.122.227'/>"  --live --config		   
@@ -3150,7 +3150,7 @@ iface br0 inet static
      broadcast 192.168.2.255
      gateway 192.168.2.1
      bridge_ports enp3s0f0
-     bridge_stp on
+     bridge_stp off
      bridge_fd 0
      bridge_maxwait 0
 	 
@@ -3780,11 +3780,16 @@ ps aux --sort -rss     # Sorting down processes by memory usage
 info coreutils 'cat invocation'
 mesg(1) permission set to yes
 system monitor: sudo iostat -x 10
-```````disk section``````````
+====disk section====
 sudo fdisk -l
 sudo yum install gparted
 parted -s /dev/sdb print #disk section
 sudo mount /dev/sdb1   /home/frank/kvm/images/my-wd-disk/
+sudo yum -y install iotop
+
+````usb section```
+sudo lsusb
+sudo lsusb -v | less
 ```````````````
 help export 
 help ls
