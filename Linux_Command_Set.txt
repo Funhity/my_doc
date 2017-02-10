@@ -3851,7 +3851,7 @@ du --max-depth  1 -h
 du -k --exclude /opt/webserver/v6_tomcat/webapps/m/static/image   | sort -nk1 
 ```````````ls section``````````````````````````
 ls -ltr
-
+# ls -ld /home/jerry
 ```file section````````
 stat ./v6_tomcat_webservice01-catalina.out
 file -bi [filename]  #utf-8
@@ -6839,7 +6839,11 @@ http://10.0.1.99:8200/
                   previous options.
 设置网卡状态
 # sudo ethtool -s eth25s0 wol g		
-
+========trim section===========
+centos7
+# sudo systemctl enable fstrim.timer
+# systemctl is-enabled  fstrim.service
+static
 		  
 				  
 				  
