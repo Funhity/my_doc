@@ -875,11 +875,19 @@ wjr@ramnode.com * jY89634_HIB *
 
 
 ===virtualbox section=========
+ubuntu:
+步骤一：Add the following line to your /etc/apt/sources.list:
+   deb http://download.virtualbox.org/virtualbox/debian xenial contrib
+步骤二：wget https://www.virtualbox.org/download/oracle_vbox_2016.asc
+步骤三：sudo apt-key add oracle_vbox_2016.asc
+步骤四：sudo apt-get install virtualbox-5.1
+````
+mac:
 高分辨率支持：mac osx上先appstore装Display Menu修改mac的分辨率，再修改virtualbox的分辨率
 
 VBoxManage controlvm Frank-Windows10 setvideomodehint 2048  1280  32
                      虚拟机名称
-
+``````
 "%programfiles%\Oracle\VirtualBox\VBoxHeadless" --startvm "Debian"
 "%programfiles%\Oracle\VirtualBox\VBoxHeadless" --startvm "CentOS7 副本2"
 
