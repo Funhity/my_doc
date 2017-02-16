@@ -31,7 +31,7 @@ centos6:   /etc/sysconfig/network
 Debian:    /etc/hostname
 
 windows:   C:\Windows\System32\drivers\etc
-=====================  DNS section ==============dig section======
+=====================  DNS section ====================
 /etc/sysconfig/network
 cat /etc/resolv.conf 
 host -v -t a cyberciti.biz
@@ -49,11 +49,12 @@ ipconfig /flushdns
 
 ipconfig /release
 ipconfig /renew 
-````````````
+`````dig section```````
 yum install -y  bind-utils  #dig command :
 
 dig +noall +answer xinxindai.com any
 dig @<resolve-ip> www.google.com
+dig youtube.com   @8.8.8.8
 
 ping -a w.x.y.z
 sudo discoveryutil mdnsflushcache
