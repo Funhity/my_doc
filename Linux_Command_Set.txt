@@ -4177,7 +4177,8 @@ password "ranbiao"
 
 ===========================  samba section  ==========================================
 yum install -y samba samba-client samba-common
-cat /etc/samba/smb.conf 
+sudo cp  /etc/samba/smb.conf   /etc/samba/smb.conf.bak
+sudo cat /etc/samba/smb.conf 
 
 [global]
 workgroup = WORKGROUP
@@ -4196,6 +4197,22 @@ browsable =yes
 writable = yes
 guest ok = yes
 read only = no
+
+[secure_share]
+        path = /home/frank/share
+        writable = yes
+        browsable = yes
+        guest ok = no
+        valid users = @frank
+````````````
+Test the samba configuration for any errors.
+testparm		
+
+sudo systemctl enable smb.service
+sudo systemctl enable nmb.service
+sudo systemctl restart smb.service
+sudo systemctl restart nmb.service
+
 
 
 ==============================Kerberos section========================================================
