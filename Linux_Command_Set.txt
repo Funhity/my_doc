@@ -582,6 +582,8 @@ priority=2
 
 ``````
 aptitude search '~i'
+apt list --installed | grep virtual
+sudo apt-get remove virtualbox-5.1
 `````````list the contents of a package using YUM````````
 yum install yum-utils -y
 repoquery --list packagename: repoquery --list  zabbix-server-mysql
@@ -6826,7 +6828,12 @@ rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarc
 rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
 
 sudo yum info  vlc
+`````
+
 sudo yum install  minidlna
+
+/var/cache/minidlna
+
 sudo vi  /etc/minidlna.conf
 media_dir=/opt
 http://10.0.1.99:8200/
