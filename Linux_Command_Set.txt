@@ -5914,8 +5914,6 @@ cat /etc/release
 虚拟机启动日志：
 view /zones/54dee8bd-5179-4978-aed9-8c9483f4b23b/root/var/svc/log/system-zoneinit\:default.log
 less /var/svc/log/smartdc-mdata:execute.log
-<<<<<<< HEAD
-=======
 
 ``````smartos python``````````
 在smartos global zone上装python
@@ -5925,7 +5923,6 @@ pkg_admin rebuild
 pkgin -y up
 pkgin in python27
 
->>>>>>> c5b2770eafb9fc60d6e50bb2f6ff9f44f95a7640
 `````````````````````````````````````
 当前在哪个zone： zonename
 /usbkey/config - system configuration options
@@ -6807,9 +6804,9 @@ NSQ和aggregater装在一起
 =========== npm section ============
 npm install -g cnpm --registry=https://registry.npm.taobao.org
 
-<<<<<<< HEAD
+
 npm install --registry  npm.briphant.cn
-=======
+
 
 
 
@@ -6893,6 +6890,3 @@ static
 				  
 				  
 
-
-
->>>>>>> c5b2770eafb9fc60d6e50bb2f6ff9f44f95a7640
