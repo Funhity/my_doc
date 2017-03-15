@@ -31,7 +31,7 @@ centos6:   /etc/sysconfig/network
 Debian:    /etc/hostname
 
 windows:   C:\Windows\System32\drivers\etc
-=====================  DNS section ==============dig section======
+=====================  DNS section ====================
 /etc/sysconfig/network
 cat /etc/resolv.conf 
 host -v -t a cyberciti.biz
@@ -49,11 +49,12 @@ ipconfig /flushdns
 
 ipconfig /release
 ipconfig /renew 
-````````````
+`````dig section```````
 yum install -y  bind-utils  #dig command :
 
 dig +noall +answer xinxindai.com any
 dig @<resolve-ip> www.google.com
+dig youtube.com   @8.8.8.8
 
 ping -a w.x.y.z
 sudo discoveryutil mdnsflushcache
@@ -579,12 +580,17 @@ rm -f /var/cache/yum/x86_64/6/timedhosts.txt
 yum install yum-plugin-priorities
 priority=2
 
+``````
+aptitude search '~i'
+apt list --installed | grep virtual
+sudo apt-get remove virtualbox-5.1
 `````````list the contents of a package using YUM````````
 yum install yum-utils -y
-repoquery --list packagename  ,  repoquery --list  zabbix-server-mysql
+repoquery --list packagename: repoquery --list  zabbix-server-mysql
 yum repolist
 yum --disablerepo="*" --enablerepo="google" list available
-yum list installed| grep audit 
+sudo yum list installed| grep audit
+sudo yum info  minidlna 
 
 查询命令在哪个rpm包中
 rpm -q --whatprovides /opt/dell/srvadmin/bin/omreport
@@ -872,11 +878,19 @@ wjr@ramnode.com * jY89634_HIB *
 
 
 ===virtualbox section=========
+ubuntu:
+步骤一：Add the following line to your /etc/apt/sources.list:
+   deb http://download.virtualbox.org/virtualbox/debian xenial contrib
+步骤二：wget https://www.virtualbox.org/download/oracle_vbox_2016.asc
+步骤三：sudo apt-key add oracle_vbox_2016.asc
+步骤四：sudo apt-get install virtualbox-5.1
+````
+mac:
 高分辨率支持：mac osx上先appstore装Display Menu修改mac的分辨率，再修改virtualbox的分辨率
 
 VBoxManage controlvm Frank-Windows10 setvideomodehint 2048  1280  32
                      虚拟机名称
-
+``````
 "%programfiles%\Oracle\VirtualBox\VBoxHeadless" --startvm "Debian"
 "%programfiles%\Oracle\VirtualBox\VBoxHeadless" --startvm "CentOS7 副本2"
 
@@ -884,6 +898,7 @@ VBoxManage controlvm Frank-Windows10 setvideomodehint 2048  1280  32
 "%programfiles%\Oracle\VirtualBox\VBoxManage" clonehd "source.vmdk" "cloned.vdi" --format vdi
 "%programfiles%\Oracle\VirtualBox\VBoxManage" modifyhd "cloned.vdi" --resize 51200
 "%programfiles%\Oracle\VirtualBox\VBoxManage" clonehd "cloned.vdi" "resized.vmdk" --format vmdk
+"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe"  clonehd "C:\FrankVM\Frank_Win10_Cracked\Frank_Windows10 Clone-disk1.vdi"  d:\frank_windows10.vmdk --format  VMDK
 
 "%programfiles%\Oracle\VirtualBox\VBoxManage"  startvm "Debian"
 'C:\Program Files\Oracle\VirtualBox\VBoxManage.exe' internalcommands sethduuid .\MyVM.vdi 
@@ -1056,6 +1071,10 @@ sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el7
   `````````
   salt --versions-report
   `````````````
+  smartos: salt master上配置自动注册minion：
+  vi /opt/local/etc/salt/master
+  auto_accept: True
+  
   minion配置: /etc/salt/minion
   #master: salt
   /etc/salt/master
@@ -1107,7 +1126,9 @@ salt -l debug "*" cmd.run "uptime"
     - 'G@foo:baz'
   
   
-  ``````清除更新salt-minion名字方法clear not wanted and invalid minion id```
+  ```salt-key section``````
+  salt-key命令可列出salt-minion的名字
+  清除更新salt-minion名字方法（clear not wanted and invalid minion id）
   on master: rm -fr /etc/salt/pki/master/minions_denied/vm-template
   on minion: ansible minions  -m shell -a  '>/etc/salt/minion_id' #清空id文件
   #When the minion is started, it will generate an id value, unless it has been generated on a previous run and cached in the configuration directory, which is /etc/salt by default
@@ -1958,6 +1979,11 @@ G      go the end of the file
 gg     gets the cursor to the first character of the file
 ggVGy  copy all file
 
+vi command	description
+0	move to beginning of the current line
+$	move to end of line
+H	move to the top of the current window (high)
+M	move to the middle of the current window (middle)
 
 
 dw Delete word from cursor on
@@ -2926,21 +2952,39 @@ realvnc: press function key F8 and click "Options" Click "Load / Save" Click "Sa
 
 /sbin/runuser -l frank -c "/usr/bin/x0vncserver -display :0  -PasswordFile=/home/frank/.vnc/passwd"
 /usr/bin/x0vncserver -display :0  -PasswordFile=/home/frank/.vnc/passwd
-yum  -y   install tigervnc
-yum  -y   install tigervnc-server
-cp /lib/systemd/system/vncserver@.service /etc/systemd/system/vncserver@:1.service
+`````
+#tightervnc 安装方法
+sudo yum  -y   install tigervnc
+sudo yum  -y   install tigervnc-server
+cp /lib/systemd/system/vncserver@.service /etc/systemd/system/vncserver@.service
 
-vi /etc/systemd/system/vncserver@:1.service
+vi /etc/systemd/system/vncserver@.service
    #ExecStart=/sbin/runuser -l <USER> -c "/usr/bin/vncserver %i"
     #PIDFile=/home/<USER>/.vnc/%H%i.pid
 
 su frank
 vncserver  #setpassword
 
-systemctl daemon-reload
-systemctl enable vncserver@:1.service
-reboot
-systemctl start vncserver@:1.service
+sudo systemctl daemon-reload
+sudo systemctl enable vncserver@:1.service
+#reboot
+sudo systemctl start vncserver@:1.service
+
+      vncserver -kill <X-display>
+      vncserver -list
+
+`````
+centos:
+#tightvnc viewer 客户端分辨率配置
+ xrandr
+ xrandr -s 5  #5表示第五个分辨率
+
+ubuntu:
+服务端：自带的desktop sharing程序
+客户端：xrandr --fb 1280x1024
+http://www.x.org/archive/X11R7.5/doc/man/man1/xrandr.1.html
+
+ 
 
 ``````
 su  frank
@@ -3096,7 +3140,7 @@ virsh resume  mirror
 virt-clone  --connect qemu:///system --original  centos64-minimal --name centos64-minimal2 --file /home/frank/kvm/images/centos-minimal2.qcow2	 
 
 
-`````````virsh network````
+`````````virsh network section````
 ```ubuntu:
 Create the file /etc/libvirt/hooks/qemu  #In NAT network,used to Forwarding Incoming Connections
 virsh net-update  default add ip-dhcp-host "<host mac='52:54:00:ab:d3:72' name='windows7-for-office' ip='192.168.122.227'/>"  --live --config		   
@@ -3117,7 +3161,7 @@ iface br0 inet static
      broadcast 192.168.2.255
      gateway 192.168.2.1
      bridge_ports enp3s0f0
-     bridge_stp on
+     bridge_stp off
      bridge_fd 0
      bridge_maxwait 0
 	 
@@ -3747,11 +3791,16 @@ ps aux --sort -rss     # Sorting down processes by memory usage
 info coreutils 'cat invocation'
 mesg(1) permission set to yes
 system monitor: sudo iostat -x 10
-```````disk section``````````
+====disk section====
 sudo fdisk -l
 sudo yum install gparted
 parted -s /dev/sdb print #disk section
 sudo mount /dev/sdb1   /home/frank/kvm/images/my-wd-disk/
+sudo yum -y install iotop
+
+````usb section```
+sudo lsusb
+sudo lsusb -v | less
 ```````````````
 help export 
 help ls
@@ -3813,7 +3862,7 @@ du --max-depth  1 -h
 du -k --exclude /opt/webserver/v6_tomcat/webapps/m/static/image   | sort -nk1 
 ```````````ls section``````````````````````````
 ls -ltr
-
+# ls -ld /home/jerry
 ```file section````````
 stat ./v6_tomcat_webservice01-catalina.out
 file -bi [filename]  #utf-8
@@ -4130,7 +4179,8 @@ password "ranbiao"
 
 ===========================  samba section  ==========================================
 yum install -y samba samba-client samba-common
-cat /etc/samba/smb.conf 
+sudo cp  /etc/samba/smb.conf   /etc/samba/smb.conf.bak
+sudo cat /etc/samba/smb.conf 
 
 [global]
 workgroup = WORKGROUP
@@ -4149,6 +4199,22 @@ browsable =yes
 writable = yes
 guest ok = yes
 read only = no
+
+[secure_share]
+        path = /home/frank/share
+        writable = yes
+        browsable = yes
+        guest ok = no
+        valid users = @frank
+````````````
+Test the samba configuration for any errors.
+testparm		
+
+sudo systemctl enable smb.service
+sudo systemctl enable nmb.service
+sudo systemctl restart smb.service
+sudo systemctl restart nmb.service
+
 
 
 ==============================Kerberos section========================================================
@@ -4477,6 +4543,10 @@ mount |column -t
  ll /dev | grep sr0
  mount -r -t iso9660 /dev/sr0 /root/mnt/
 ```````````hfsplus section``````````
+centos7:
+sudo rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm
+sudo yum install  kmod-hfsplus
+```
 sudo mount -v  -t hfsplus -o force,rw   /dev/sdc1  /home/frank/mac_mini_storage/
 sudo mount -v  -t hfsplus -o remount,force,ro,loop,offset=209735680,sizelimit=250140434432   /dev/sda2  /home/frank/mac_mini_storage/
 
@@ -4760,6 +4830,11 @@ git config user.name
 		git archive   --format=tar --remote=/srv/git/xxd_code_repo.git            HEAD -- ansible.hosts     | tar -xf -
         git archive   --format=tar --remote=/srv/git/xxd_code_repo.git            HEAD -- ansible.hosts     | tar -xf - -C /etc/ansible
 
+`````````````
+The basic Git workflow goes something like this:
+1、You modify files in your working directory.
+2、git add:       You stage the files, adding snapshots of them to your staging area.  
+3、git commit -m: You do a commit, which takes the files as they are in the staging area and stores that snapshot permanently to your Git directory.
 
 ```````````
 #Git - List all files currently under source control?
@@ -4786,12 +4861,15 @@ git diff --staged
 #white space check
 git diff --check  
 
-$ git diff HEAD^^ HEAD main.c
-$ git diff HEAD^^..HEAD -- main.c
-$ git diff HEAD~2 HEAD -- main.c
+````````````
+版本区别：
+git diff HEAD^  HEAD  Linux_Command_Set.txt  当前版本和上一版本的区别
+git diff HEAD^^ HEAD main.c
+git diff HEAD^^..HEAD -- main.c
+git diff HEAD~2 HEAD -- main.c
 #本地文件和本地master中的文件比较，显示修改内容
  git diff master:Linux_Command_Set.txt -- Linux_Command_Set.txt 
-
+```````````````````````
 
 git remote add pb https://github.com/paulboone/ticgit
 git fetch  pb
@@ -5178,10 +5256,14 @@ vim /etc/mail.rc
 
 ====cobbler section===
 rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+或 sudo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 yum install cobbler cobbler-web pykickstart wget fence-agents -y 
 yum -y install xinetd -y
 yum install dhcp -y
 sed -i.bak "s/SELINUX=enforcing/SELINUX=permissive/"   /etc/selinux/config
+ centos6: chkconfig iptables off
+          service   iptables stop
+ centos7:  systemctl status firewalld
 cobbler version
 有问题看日志：less /var/log/cobbler/cobbler.log
                    /var/log/httpd/error_log  
@@ -5215,10 +5297,10 @@ openssl passwd -1
 vi /etc/cobbler/settings
    server: 192.168.122.156
    next_server: 192.168.122.156
-   manage_dhcp: 1
+   manage_dhcp: 1                   #使cobbler通过/etc/cobbler/dhcp.template（cobbler sync）来管理dhcp配置文件
    default_password_crypted: "$1$U.Svb2gw$MNHrAmG.axVHYQaQRySR5/"
 
-vi /etc/xinetd.d/tftp
+	
    Change disable = yes to disable = no.
 
 vi /etc/xinetd.d/rsync
@@ -5240,9 +5322,32 @@ vi /etc/cobbler/modules.conf
    https://10.0.1.9/cobbler_web/
 
 ``````
+
+文档中描述要启动如下服务：
+第一步：
+systemctl start cobblerd.service
+systemctl enable cobblerd.service
+systemctl status cobblerd.service
+
+
+or
+
+
+ service cobblerd start
+ chkconfig cobblerd on
+ service cobblerd status
+第二步：
+cobbler check 
+第三步：
+根据check的建议启动服务
+service dhcpd  start
+service  httpd  start
+chkconfig httpd on
+chkconfig dhcpd on
+````````````````````
 systemctl enable  rsyncd.service
 systemctl enable xinetd
-
+	
 systemctl restart httpd
 systemctl restart cobblerd.service
 systemctl start   rsyncd.service
@@ -5809,6 +5914,18 @@ cat /etc/release
 虚拟机启动日志：
 view /zones/54dee8bd-5179-4978-aed9-8c9483f4b23b/root/var/svc/log/system-zoneinit\:default.log
 less /var/svc/log/smartdc-mdata:execute.log
+<<<<<<< HEAD
+=======
+
+``````smartos python``````````
+在smartos global zone上装python
+cd /
+curl -k http://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2015Q2-x86_64.tar.gz | gzcat | tar -xf -
+pkg_admin rebuild
+pkgin -y up
+pkgin in python27
+
+>>>>>>> c5b2770eafb9fc60d6e50bb2f6ff9f44f95a7640
 `````````````````````````````````````
 当前在哪个zone： zonename
 /usbkey/config - system configuration options
@@ -6426,6 +6543,10 @@ vi /opt/local/etc/ansible/ansible.cfg
 [defaults]
 host_key_checking=false
 =====smartos salt section=====
+  smartos: salt master上配置自动注册minion：
+  vi /opt/local/etc/salt/master
+  auto_accept: True
+```````````````````````````
 vi 
 http://pkgsrc.joyent.com/packages/SmartOS/2016Q1/x86_64/All
 
@@ -6443,11 +6564,18 @@ echo 10.75.1.70 salt>>/etc/hosts
 	/usr/sbin/svcadm enable -r svc:/pkgsrc/salt:master
 	/usr/sbin/svcadm enable -r svc:/pkgsrc/salt:minion
 或salt-minion -d  
-             创建虚拟机jason文件
+             创建虚拟机，若要同时安装salt minion，可在json文件中增加如下配置
+             smartos：
              "customer_metadata": {
                  "user-script" : "/opt/local/bin/sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config; /usr/sbin/svcadm restart svc:/network/ssh:default;/opt/local/bin/echo '10.75.1.70 salt'>>/etc/hosts;/opt/local/bin/echo 'http://10.75.1.50/pkgin2016Q1' >> /opt/local/etc/pkgin/repositories.conf;/opt/local/bin/pkgin -fy up;/opt/local/bin/pkgin -y install salt;/usr/sbin/svcadm enable svc:/pkgsrc/salt:minion"
               }
-
+            kvm：
+            "customer_metadata" : {
+                "user-script" : "sed -i.bak  's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config; service sshd restart;  yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el7.noarch.rpm;echo 10.75.1.70 salt>>/etc/hosts;yum -y install salt-minion;service salt-minion start",            
+                "root_authorized_keys":
+                "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9vgaOMggb9WgG23YI7eHgx0H2MtI1jKfb1BfiLk5yXJpDVBJ+qH1f28YwIgzv9ig7Ul742NCXukOoAVaa4noiJmQhMQVMfE8P7jJm+gJ+zLP2MzxWetRGKAXx8NT+v34nSacvRlacoAoS/6AlHbsRvKWaO0XEGkFXSBciOl+28n8kmp9pAcblhHtJGKwRYgv7xN8KLWgrU2jD0s4vay3DpG4A8RbkTjosYgJRZzDHGqTEbjiFK7aS157pWcQlSANfDR2tH21DmYE5Pt2T4aGB9Mxo9sTUGytekk9BbssvnjZzoIO5FjtqX0/A5x8fvsfrLq2kh+rWUb8B5jdierRV root@frank"
+              },
+              
 ```````````
 /usr/bin/hostname>/opt/local/etc/salt/minion_id
 svcadm restart svc:/pkgsrc/salt:minion
@@ -6459,6 +6587,7 @@ svcadm restart svc:/pkgsrc/salt:minion
 步骤0：安装pkgin
 cd /
 curl -k http://192.168.1.128/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat | tar -xf -
+#或curl -k http://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2015Q2-x86_64.tar.gz | gzcat | tar -xf -
 pkg_admin rebuild
 #pkgin -y up
 步骤1：从 http://pkg.blackdot.be/extras/ 上下载salt-2016.3.3-esky-smartos.tar.gz 
@@ -6468,9 +6597,11 @@ wget http://192.168.1.128/file-share/salt-2016.3.3-esky-smartos.tar.gz
 echo 10.75.1.70 salt>>/etc/hosts&&cd /opt && tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz && /opt/salt/install/install.sh && svcadm enable salt-minion
 svcadm restart salt-minion
 
-````global zone 重启后``````
-/etc/hosts内容会消失做如下操作
+``````````
+global zone 重启后/etc/hosts内容和id_rsa消失，做如下操作来恢复：：
 echo 10.75.1.70 salt>>/etc/hosts;svcadm restart salt-minion;ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
+#注：10.75.1.70是salt master的地址，salt默认把hostname当作minion id的名字
+
 ````````
 /opt/local/var/cache/salt/master/minions/qinghua-leofs1/files/root/fifo.gpg
 less /var/svc/log/pkgsrc-salt:minion.log
@@ -6676,4 +6807,92 @@ NSQ和aggregater装在一起
 =========== npm section ============
 npm install -g cnpm --registry=https://registry.npm.taobao.org
 
+<<<<<<< HEAD
 npm install --registry  npm.briphant.cn
+=======
+
+
+
+=========== npm section ============
+npm install -g cnpm --registry=https://registry.npm.taobao.org
+npm install --registry  npm.briphant.cn
+
+====screen section====
+sudo yum install screen
+1. type screen command
+2. typing “CTRL + A”, followed by “?”
+   #By typing “CTRL + A” you state that the next signal is to be sent to the program “screen“, 
+   in stead of to the Shell (like you would in a normal shell). You’ll see a list of all bindings known to “screen“.
+   
+``````   
+screen -ls
+    List all screen terminals :the list will contain the following information :
+
+
+	* the state of the screen terminals ( Attached , Detached)
+	* the PID of of each screen terminal
+	* the name of each screen terminal
+	
+screen  -r  nnnn
+      Enable a session with screen terminal that has PID  “nnnn”  (see screen -ls)
+````vlc section`
+rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm 
+rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
+
+sudo yum info  vlc
+`````
+
+sudo yum install  minidlna
+
+/var/cache/minidlna
+
+sudo vi  /etc/minidlna.conf
+media_dir=/opt
+http://10.0.1.99:8200/
+========jobs section===========
+    如何使得命令进入后台
+	方法一： Appending an ampersand ( & ) to the command runs the job in the background.
+	  find / -ctime -1 > /tmp/changed-file-list.txt &
+	方法二： 
+	  步骤1： Press ‘CTRL+Z’ which will suspend the current foreground job.
+	  步骤2： Execute bg to make that command to execute in background.
+	  举例：
+	  # find / -ctime -1 > /tmp/changed-file-list.txt 
+	  # [CTRL-Z] [2]+ Stopped find / -ctime -1 > /tmp/changed-file-list.txt 
+	  # bg
+	管理后台正在执行的命令：
+	
+	1. jobs命令
+	   举例：
+	   [1] Running bash download-file.sh & 
+	   [2]- Running evolution & 
+	   [3]+ Done nautilus .
+	2. fg command. When executed without arguments, it will take the most recent background job to the foreground.
+	   # fg %1
+	   # kill %2
+==========================
+查询网卡状态
+# sudo ethtool eth25s0	   
+	          p   Wake on PHY activity
+              u   Wake on unicast messages
+              m   Wake on multicast messages
+              b   Wake on broadcast messages
+              a   Wake on ARP
+              g   Wake on MagicPacket™
+              s   Enable SecureOn™ password for MagicPacket™
+              d   Disable (wake on nothing).   This  option  clears  all
+                  previous options.
+设置网卡状态
+# sudo ethtool -s eth25s0 wol g		
+========trim section===========
+centos7
+# sudo systemctl enable fstrim.timer
+# systemctl is-enabled  fstrim.service
+static
+		  
+				  
+				  
+
+
+
+>>>>>>> c5b2770eafb9fc60d6e50bb2f6ff9f44f95a7640
