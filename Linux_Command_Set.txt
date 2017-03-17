@@ -5915,6 +5915,7 @@ cat /etc/release
 view /zones/54dee8bd-5179-4978-aed9-8c9483f4b23b/root/var/svc/log/system-zoneinit\:default.log
 less /var/svc/log/smartdc-mdata:execute.log
 
+
 ``````smartos python``````````
 在smartos global zone上装python
 cd /
@@ -5922,6 +5923,7 @@ curl -k http://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2015Q2-x86
 pkg_admin rebuild
 pkgin -y up
 pkgin in python27
+
 
 `````````````````````````````````````
 当前在哪个zone： zonename
@@ -6526,7 +6528,9 @@ centos6:
 ./create-lx-image -t /opt/centos-lx-brand-image-builder/test-lx-centos-6.8-20161018.tar.gz -k 3.13.0 -m 20160418T201601Z -i test-lx-centos-6.8 -d "CentOS 6.7 64-bit lx-brand image." -u ttps://docs.joyent.com/images/container-native-linux
 ====smartos usb===
 rmformat
-
+创建 usb 启动盘
+sudo fdisk -l |less
+sudo dd if=smartos-20170216T015949Z-USB.img  of=/dev/sdb bs=1024
 
 =====smartos ansible section=====
 pkgin install ansible sshpass
@@ -6889,5 +6893,6 @@ centos7
 static
 		  
 				  
-				  
 
+
+npm install --registry  npm.briphant.cn
