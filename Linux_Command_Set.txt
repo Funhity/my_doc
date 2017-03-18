@@ -4304,6 +4304,11 @@ tcpdump -n net 192.168.1.0/24
 
 
 =================ubuntu section=====================
+boot: Not enough free disk space when upgrading
+方法一：sudo apt-get purge $(dpkg -l linux-{image,headers}-"[0-9]*" | awk '/ii/{print $2}' | grep -ve "$(uname -r | sed -r 's/-[a-z]+//')")
+方法二：A more concise command to purge all old kernels is: sudo apt-get autoremove --purge
+
+------
 
 cat  /etc/network/interfaces
 # interfaces(5) file used by ifup(8) and ifdown(8)
