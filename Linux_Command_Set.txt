@@ -6238,7 +6238,10 @@ vi kvm_myvmspec.json
 }
 
 vmadm  create  -f ./myvmspec.json
-vmadm  info   677fd345-2719-e219-e81c-96e36468ebaf  vnc             #RealVNC设置：RealVNC VNC Viewer will crash when connecting unless you set FullColour to True in the options.  On Windows make sure to go to Options, click Advanced, go to the Expert tab and set FullColour to True.
+vmadm  info   677fd345-2719-e219-e81c-96e36468ebaf  
+vnc             
+#RealVNC设置：RealVNC VNC Viewer will crash when connecting unless you set FullColour to True in the options.  On Windows make sure to go to Options, click Advanced, go to the Expert tab and set FullColour to True.
+
 vmadm  get    677fd345-2719-e219-e81c-96e36468ebaf
 vmadm  get    677fd345-2719-e219-e81c-96e36468ebaf        | json quota
 vmadm  get    677fd345-2719-e219-e81c-96e36468ebaf        | json disks
