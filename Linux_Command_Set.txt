@@ -461,6 +461,8 @@ standard_conforming_strings = off
 
 =====================  docker section  =========================================
 docker hub accout :weakfrankwu  wuj*rong**
+docker 基础软件
+yum -y install openssh-clients wget netstat lsof vi
 
 ```````````````````
 sudo tee /etc/yum.repos.d/docker.repo <<-'EOF'
