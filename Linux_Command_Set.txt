@@ -6898,6 +6898,9 @@ centos7
 static
 		  
 				  
-
-
 npm install --registry  npm.briphant.cn
+
+==route section==
+windows:tracert
+linux  :traceroute
+        yum -y install traceroute
