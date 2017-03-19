@@ -1945,8 +1945,10 @@ yum -y install net-tools
 netstat --listen
 netstat  -nr
 netstat -antup 
+查看端口和应用程序之间的关系:
 yum install lsof -y
 lsof -OnP | grep LISTEN
+
 netstat -anp |grep 2181   #查看谁 连到 2181
 netstat -anp --inet       #查看谁 连到 谁
 netstat -tulpn
