@@ -1044,13 +1044,15 @@ a change in the config file will also trigger a restart of the respective servic
 Jinja -> YAML -> Highstate -> low state -> execution
 
 非root用户运行：http://docs.saltstack.com/en/latest/ref/configuration/nonroot.html
-``````````````````````install ````````````````````````
+``````````````````````salt-master section ````````````````````````
   
   yum -y install salt-ssh
   yum -y install salt-master
   
-CentOS 7:/etc/yum.repos.d/saltstack.repo:
+
 ####################
+方法一：
+CentOS 7:/etc/yum.repos.d/saltstack.repo:
 # Enable SaltStack's package repository
 [saltstack-repo]
 name=SaltStack repo for RHEL/CentOS 7
@@ -1059,13 +1061,14 @@ enabled=1
 gpgcheck=1
 gpgkey=https://repo.saltstack.com/yum/rhel7/SALTSTACK-GPG-KEY.pub
 
-CentOS 6:/etc/yum.repos.d/saltstack.repo:
+方法二：
+CentOS 6:
 sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el6.noarch.rpm
 centos 7
 sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el7.noarch.rpm
 
   
-  ``````install minion````
+  ``````salt-minion section````
   yum update python  -y
   yum install salt-minion -y
   systemctl start  salt-minion.service
@@ -6252,11 +6255,20 @@ vmadm console 677fd345-2719-e219-e81c-96e36468ebaf
 根据alias名称登入到kvm机器:
 vm_name=`vmadm list | grep dataset_test_kvm | awk '{ print $1 } '` ;vmadm console  $vm_name
 `````
-kvm虚拟机磁盘扩容
+smartos 修改kvm磁盘大小
 zfs get volsize      zones/677fd345-2719-e219-e81c-96e36468ebaf-disk0
 zfs set volsize=65g  zones/677fd345-2719-e219-e81c-96e36468ebaf-disk0
 vmadm reboot 677fd345-2719-e219-e81c-96e36468ebaf
 
+具体操作步骤：
+zfs get volsize zones/873f7b84-d078-62ab-d069-ce5760072253-disk0 
+zfs set volsize=80g  zones/873f7b84-d078-62ab-d069-ce5760072253-disk0  
+vmadm stop 873f7b84-d078-62ab-d069-ce5760072253 
+vmadm boot 873f7b84-d078-62ab-d069-ce5760072253  order=cd,once=d cdrom=/opt/gparted-live-0.28.1-1-amd64.iso,ide
+cd /zones/873f7b84-d078-62ab-d069-ce5760072253/root
+cp /opt/gparted-live-0.28.1-1-amd64.iso   .
+vmadm boot 873f7b84-d078-62ab-d069-ce5760072253  order=cd,once=d cdrom=/gparted-live-0.28.1-1-amd64.iso,ide
+vmadm info 873f7b84-d078-62ab-d069-ce5760072253  vnc
 ```````smartos snapshot````````````
 zfs snapshot zones/677fd345-2719-e219-e81c-96e36468ebaf-disk0@kvm_backup_by_wujunrong
 zfs list -t    snapshot
@@ -6832,7 +6844,7 @@ npm install -g cnpm --registry=https://registry.npm.taobao.org
 npm install --registry  npm.briphant.cn
 
 ====screen section====
-sudo yum install screen
+sudo yum -y install screen
 1. type screen command
 2. typing “CTRL + A”, followed by “?”
    #By typing “CTRL + A” you state that the next signal is to be sent to the program “screen“, 

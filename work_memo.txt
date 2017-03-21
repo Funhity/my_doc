@@ -1501,7 +1501,7 @@ EOF
 
 
 
-
+smartos 修改kvm磁盘大小
 zfs get volsize zones/873f7b84-d078-62ab-d069-ce5760072253-disk0 
 zfs set volsize=80g  zones/873f7b84-d078-62ab-d069-ce5760072253-disk0 
 vmadm get 873f7b84-d078-62ab-d069-ce5760072253 
