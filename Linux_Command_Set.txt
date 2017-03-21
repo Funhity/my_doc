@@ -1046,8 +1046,8 @@ Jinja -> YAML -> Highstate -> low state -> execution
 非root用户运行：http://docs.saltstack.com/en/latest/ref/configuration/nonroot.html
 ``````````````````````install ````````````````````````
   
-  yum install salt-ssh
-  yum install salt-master
+  yum -y install salt-ssh
+  yum -y install salt-master
   
 CentOS 7:/etc/yum.repos.d/saltstack.repo:
 ####################

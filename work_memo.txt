@@ -1496,3 +1496,20 @@ vmadm update  d272317f-72c5-6ddb-e84d-c439b6de53ba<<EOF
   
 }
 EOF
+
+
+
+
+
+
+zfs get volsize zones/873f7b84-d078-62ab-d069-ce5760072253-disk0 
+zfs set volsize=80g  zones/873f7b84-d078-62ab-d069-ce5760072253-disk0 
+vmadm get 873f7b84-d078-62ab-d069-ce5760072253 
+vmadm list
+vmadm stop 873f7b84-d078-62ab-d069-ce5760072253 
+vmadm boot 873f7b84-d078-62ab-d069-ce5760072253  order=cd,once=d cdrom=/opt/gparted-live-0.28.1-1-amd64.iso,ide
+ls /opt/gparted-live-0.28.1-1-amd64.iso
+cd /zones/873f7b84-d078-62ab-d069-ce5760072253/root
+cp /opt/gparted-live-0.28.1-1-amd64.iso   .
+vmadm boot 873f7b84-d078-62ab-d069-ce5760072253  order=cd,once=d cdrom=/gparted-live-0.28.1-1-amd64.iso,ide
+vmadm info 873f7b84-d078-62ab-d069-ce5760072253  vnc
