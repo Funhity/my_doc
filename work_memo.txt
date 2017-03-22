@@ -1437,6 +1437,7 @@ vmadm  create -f /opt/ansible.jason
 ================================
 vmadm list  | grep wujunrong-leofs | awk '{print $1 }' |xargs -I {} vmadm delete {}
 vmadm list  | grep wujunrong-leofs | awk '{print $1 }' |xargs -I {} vmadm reboot {}
+vmadm list  | grep alpha_test_leofs | awk '{print $1 }' |xargs -I {} vmadm delete {}
 
 ========smartos salt========================
 ansible facebook_machine10 -m raw -a "cd /opt/ && wget http://192.168.1.232/file-share/salt-2016.3.3-esky-smartos.tar.gz"
@@ -1513,3 +1514,39 @@ cd /zones/873f7b84-d078-62ab-d069-ce5760072253/root
 cp /opt/gparted-live-0.28.1-1-amd64.iso   .
 vmadm boot 873f7b84-d078-62ab-d069-ce5760072253  order=cd,once=d cdrom=/gparted-live-0.28.1-1-amd64.iso,ide
 vmadm info 873f7b84-d078-62ab-d069-ce5760072253  vnc
+
+
+salt jinhao state.sls_id   create_alpha_test_leofs1_vm        create_smartos_vm  -t 600
+salt jinhao state.sls_id   create_alpha_test_leofs2_vm        create_smartos_vm  -t 600
+salt jinhao state.sls_id   dataset_install_alpha_test_leofs1    config_smartos_vm -t 3600
+salt jinhao state.sls_id   dataset_install_alpha_test_leofs2    config_smartos_vm -t 3600
+
+salt jinhao  state.sls_id    alpha_test_leofs1_config_master     config_leofs_vm
+salt jinhao  state.sls_id    alpha_test_leofs2_config_slave      config_leofs_vm
+
+#leofs1:
+svcadm enable epmd
+svcadm enable leofs/manager
+svcs   leofs/manager
+
+#leofs2:
+svcadm enable epmd
+svcadm enable leofs/manager
+svcs   leofs/manager
+
+#leofs1:
+svcadm enable leofs/storage
+svcs   leofs/storage
+
+leofs-adm status
+leofs-adm start
+
+svcadm enable leofs/gateway
+svcs   leofs/gateway
+leofs-adm status
+
+
+
+    
+    
+

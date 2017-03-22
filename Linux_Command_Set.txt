@@ -1077,7 +1077,7 @@ sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el7
   salt --versions-report
   `````````````
   smartos: salt master上配置自动注册minion：
-  vi /opt/local/etc/salt/master
+  vi /etc/salt/master
   auto_accept: True
   
   minion配置: /etc/salt/minion
@@ -1142,7 +1142,7 @@ salt -l debug "*" cmd.run "uptime"
   chkconfig salt-master on
   pkill salt-master
   salt-master -d   #background
-   
+   `````salt log``salt debug``
   salt-master --log-level=debug
   salt-master -l debug
   salt-minion -l debug
@@ -1164,7 +1164,7 @@ salt -l debug "*" cmd.run "uptime"
       - /srv/salt/dev
       - /srv/salt/qa
       - /srv/salt/prod
-  `````````````````````````````````````````` 
+  ```````salt pillar ``````````````````````````````````` 
    pillar_roots:
     base:
       - /srv/pillar
@@ -1364,7 +1364,7 @@ apache:
   salt   dataset_test_kvm                 state.sls  set_ssh_authorized_keys concurrent=true
   salt   'ocp09'                          state.sls_id state_id  create_smartos_vm -t 120  #创建虚拟机时间较长，-t表示响应超时
   salt   'test_v6_webapp_front01'         state.apply   wujunrong.start_logcenter
-  salt   '*'         state.show_sls apache   //TESTING FORMULAS
+  salt   '*'         state.show_sls apache   //TESTING FORMULAS  #salt debug
   salt   '*'         state.highstate
   
   salt   -L 'web1,web2,web3'                 test.ping
@@ -5985,7 +5985,11 @@ storage0_vlan_id=128
 
 列出所有网卡
 dladm show-phys -m
+----smartos netstat--
 
+路由：netstat -r
+端口：netstat -n -P tcp
+arp ：netstat -anp
 
 vmware:
 ipadm create-if e1000g0
@@ -6415,7 +6419,7 @@ EOF
  
  vmadm  send 03d08f22-b1a0-6494-a58c-f1b769db8cee  |ssh 10.75.1.109 vmadm receive
  vmadm  send 0b9bccdf-7b8f-e01e-bd92-cc59e651357e  |ssh 10.75.1.109 vmadm receive
-===========leofs section=================
+===========leofs section======leofs log===========
 vi /opt/local/leo_manager/etc/leo_manager.conf
 vi /opt/local/leo_storage/etc/leo_storage.conf
 vi /opt/local/leo_manager/etc/leo_manager.conf
@@ -6569,6 +6573,8 @@ vi /opt/local/etc/ansible/ansible.cfg
 [defaults]
 host_key_checking=false
 =====smartos salt section=====
+
+
   smartos: salt master上配置自动注册minion：
   vi /opt/local/etc/salt/master
   auto_accept: True
@@ -6585,11 +6591,12 @@ sed -i.bak '$d' /opt/local/etc/pkgin/repositories.conf;
 echo 'http://192.168.1.232/smartos/pkgin2016Q2/' >> /opt/local/etc/pkgin/repositories.conf;
 pkgin -fy up;
 pkgin -y install salt;
-hostname>/opt/local/etc/salt/minion_id;
+#hostname>/opt/local/etc/salt/minion_id;
+#echo jinhao> /opt/salt/etc/minion_id
 echo 10.75.1.70 salt>>/etc/hosts
 	/usr/sbin/svcadm enable -r svc:/pkgsrc/salt:master
 	/usr/sbin/svcadm enable -r svc:/pkgsrc/salt:minion
-或salt-minion -d  
+或salt-minion -d  (适用于老版本salt 例如pkgin2014Q4)
              创建虚拟机，若要同时安装salt minion，可在json文件中增加如下配置
              smartos：
              "customer_metadata": {
@@ -6605,7 +6612,7 @@ echo 10.75.1.70 salt>>/etc/hosts
 ```````````
 /usr/bin/hostname>/opt/local/etc/salt/minion_id
 svcadm restart svc:/pkgsrc/salt:minion
-
+#svcadm restart salt-minion
 ```````在global zone安装salt```````````
 相关讨论：                   https://github.com/saltstack/salt/issues/31446
 自己编译global zone包的步骤：https://github.com/saltstack/salt/blob/develop/pkg/smartos/esky/BUILD_ENVIRONMENT.md
@@ -6616,6 +6623,7 @@ curl -k http://192.168.1.128/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat | ta
 #或curl -k http://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2015Q2-x86_64.tar.gz | gzcat | tar -xf -
 pkg_admin rebuild
 #pkgin -y up
+pkgin install zeromq #最新版要独立安装zeromq
 步骤1：从 http://pkg.blackdot.be/extras/ 上下载salt-2016.3.3-esky-smartos.tar.gz 
 或：
 cd /opt/
