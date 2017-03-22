@@ -1525,25 +1525,26 @@ salt jinhao  state.sls_id    alpha_test_leofs1_config_master     config_leofs_vm
 salt jinhao  state.sls_id    alpha_test_leofs2_config_slave      config_leofs_vm
 
 #leofs1:
-svcadm enable epmd
-svcadm enable leofs/manager
-svcs   leofs/manager
+salt alpha_test_leofs1 cmd.run 'svcadm enable epmd'
+salt alpha_test_leofs1 cmd.run 'svcadm enable leofs/manager'
+salt alpha_test_leofs1 cmd.run 'svcs   leofs/manager'
 
 #leofs2:
-svcadm enable epmd
-svcadm enable leofs/manager
-svcs   leofs/manager
+salt alpha_test_leofs2 'svcadm enable epmd'
+salt alpha_test_leofs2 'svcadm enable leofs/manager'
+salt alpha_test_leofs2 'svcs   leofs/manager'
 
 #leofs1:
-svcadm enable leofs/storage
-svcs   leofs/storage
+salt alpha_test_leofs1 cmd.run 'svcadm enable leofs/storage'
+salt alpha_test_leofs1 cmd.run 'svcs   leofs/storage'
+sleep 10
+salt alpha_test_leofs1 cmd.run 'leofs-adm status'
+salt alpha_test_leofs1 cmd.run 'leofs-adm start'
 
-leofs-adm status
-leofs-adm start
-
-svcadm enable leofs/gateway
-svcs   leofs/gateway
-leofs-adm status
+salt alpha_test_leofs1 cmd.run 'svcadm enable leofs/gateway'
+salt alpha_test_leofs1 cmd.run 'svcs   leofs/gateway'
+sleep 10
+salt alpha_test_leofs1 cmd.run 'leofs-adm status'
 
 
 

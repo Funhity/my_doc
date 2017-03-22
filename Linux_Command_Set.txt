@@ -203,9 +203,15 @@ rm -f /etc/udev/rules.d/70-persistent-net.rules
   tail -f /var/log/foo | stdbuf -o0 sed
   tail -f /var/log/foo | mawk -Winteractive
   `````````find section``````````
+  我推荐的搜索方式，目录和文件名称一起搜索：
+  find /usr   -path   '*usr/bin*'
+  find -path "*leo*"
+
+
   find /  -type d -name 'httpdocs'
                   -iname pattern       #Like  -name, but the match is case insensitive.
-  find /usr   -path   '*usr/bin*'
+  
+
   find /opt/webserver/   -path  '*web*\intr*'
   find . -path \*content/docs/file.xml  
   find . -type f \( -name "*.java" -o -name "*.xml" -o -name "*.html" \)
