@@ -719,6 +719,9 @@ scp on esxi :
 scp -r -C -o CompressionLevel=6   ./Linux-Test/    root@192.168.0.6:/vmfs/volumes/datastore1/Linux-Test
 scp -r root@192.168.38.10:/tmp/wujunrong2     .
 ssh ops@magpie.example.com sudo puppet agent --test
+多文件拷贝：
+scp root@192.168.1.148:/srv/\{*,pillar/*,salt/*\}         /cygdrive/c/git/code_example/
+
 
 fingerprint:
 ssh-keygen -lf /etc/ssh/ssh_host_ecdsa_key.pub
@@ -3726,6 +3729,10 @@ rsync -avzh /var/www/html/cdh5/  root@192.168.38.119:/tmp/wujunrong
 /var/www/html/cdh5/ ,/tmp/wujunrong 必需存在，rsync只同步这两个目录中的内容
 如果参数最后不带反斜杠“/”，rsync会把cm5目录移动到wujunrong目录下，例如：
 rsync -avzh  /var/www/html/cm5   root@192.168.38.119:/var/www/html/centos6-cm5.5.0
+
+忽略两边文件时间上的不同，只检查大小，如果大小相同则检查checksum
+rsync -avzh 192.168.1.148:/home/frank/docker-share/  ./   --checksum
+--checksum also modifies the file-times-and-sizes heuristic, but here it ignores times and examines only sizes. Files on the source and destination sides that differ in size are transferred, since they are obviously different. Files with the same size are checksummed (with MD5 in rsync version 3.0.0+, or with MD4 in earlier versions), and those found to have differing sums are also transferred.
 
 
 备份样例
