@@ -3,7 +3,7 @@ find /opt/saltstack/    -path *test_v6_*/jdbc*| xargs -I {} sh -c ' sed -i s/rac
 获取svn主干下最新的分支：
 export svn_address=http://192.168.38.230/YXCOD/01DEV/v6webapp_branches/v6webapp_20151016;trunk_address=`echo $svn_address|cut -d "/" -f -6` ;echo $trunk_address | { svn ls $trunk_address  --verbose |sort -n  -k 1 | grep -v "\./"  | awk '{ print $6 }' | tail -3 |xargs -I {}  sh -c 'svn log --stop-on-copy  "$svn_address"   | tail -n  10  | grep  -E "r[0-9]{5}.*" | tail -n 1| awk "{print \$5 \" \"  \$6 }" | tr -d "\n" ;echo " " {}  '  ; }  | sort -n -k1,2 | tail -n 1 | awk '{ print $3}'
  
- 
+ {}
 ==========
 备份salt目录和salt服务器同步
     rsync -avz  wujunrong@192.168.38.10:/opt/     ~/salt_backup  --exclude ci/workspace --exclude walle   --exclude  ci/rsync/v6_static_rsync  --exclude  ci/rsync/webapp_static_rsync  --exclude ci/packages   --exclude ci/packages_jenkins   --exclude ci/rsync_jenkins  --exclude saltstack/salt/wujunrong/  --exclude test/  --delete-excluded   --delete
@@ -1438,7 +1438,7 @@ vmadm  create -f /opt/ansible.jason
 vmadm list  | grep wujunrong-leofs | awk '{print $1 }' |xargs -I {} vmadm delete {}
 vmadm list  | grep wujunrong-leofs | awk '{print $1 }' |xargs -I {} vmadm reboot {}
 vmadm list  | grep alpha_test_leofs | awk '{print $1 }' |xargs -I {} vmadm delete {}
-
+vmadm list  | grep bb50e0d0  | awk '{print $1 }' |xargs -I {} sh -c 'vmadm update {}   indestructible_delegated=false;vmadm delete {}'
 ========smartos salt========================
 ansible facebook_machine10 -m raw -a "cd /opt/ && wget http://192.168.1.232/file-share/salt-2016.3.3-esky-smartos.tar.gz"
 ansible facebook_machine10 -m raw -a "echo '10.75.1.70 salt'>>/etc/hosts;cd /opt && tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz && /opt/salt/install/install.sh && svcadm enable salt-minion"
@@ -1547,7 +1547,7 @@ sleep 10
 salt alpha_test_leofs1 cmd.run 'leofs-adm status'
 
 
-
+rsync -avzh 192.168.1.148:/home/frank/docker-share/  /home/frank/docker-share/  --checksum
     
     
 
