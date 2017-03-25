@@ -6649,7 +6649,7 @@ global zone 重启后/etc/hosts内容和id_rsa消失，做如下操作来恢复�
 echo 10.75.1.70 salt>>/etc/hosts;svcadm restart salt-minion;ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
 #注：10.75.1.70是salt master的地址，salt默认把hostname当作minion id的名字
 
-````````
+`````smartos log section```
 /opt/local/var/cache/salt/master/minions/qinghua-leofs1/files/root/fifo.gpg
 less /var/svc/log/pkgsrc-salt:minion.log
 less /var/svc/log/network-salt-minion:default.log
@@ -6833,6 +6833,15 @@ scp -r  xx.xx.xx.xx:/root/mnt/*    /tftpboot/
 #问题定位，关闭dnsmaq服务，用dnsmasq调试模式：svcadm disable dnsmasq ;/opt/local/sbin/dnsmasq -C /opt/local/etc/dnsmasq.conf -d
 
 ========fifo section====
+chunter：
+/opt/chunter/etc/chunter.conf
+/var/log/chunter
+
+howl：
+/data/howl/etc/howl.conf
+老版本配置文件
+/opt/local/fifo-howl/etc/howl.conf
+/opt/local/fifo-howl/etc/howl.conf.example.
 
 NSQ:
 http://10.75.1.90:4171/
