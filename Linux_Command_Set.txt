@@ -4862,7 +4862,7 @@ The basic Git workflow goes something like this:
 3、git commit -m: You do a commit, which takes the files as they are in the staging area and stores that snapshot permanently to your Git directory.
 
 ```````````
-#Git - List all files currently under source control?
+#Git - List all files currently under source control?列出被git管理的文件：
        git ls-tree -r master --name-only 
 ``````
 git status
