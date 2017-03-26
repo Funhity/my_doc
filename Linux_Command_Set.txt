@@ -1336,7 +1336,7 @@ apache:
   #See the documentation for each backend for a more detailed explanation of how environments are mapped.
   #When using the svn fileserver backend at least one subversion remote needs to be defined. The user running the salt master will need read access to the repo.
   #The repos will be searched in order to find the file requested by a client and the first repo to have the file will return it. The trunk, branches, and tags become environments, with the trunk being the base environment.
-  
+  ``salt script```
   salt    'stage_v6_webapp01'           cmd.script salt://svn/wujunrong/run_before_starting_rsyslog.sh   reset_system_locale=False
   `````````````````````````````salt cmd.run section```````````````````````````````
   salt    '*'                           cmd.shell "ls -l | awk '/foo/{print \$2}'"
@@ -6491,6 +6491,7 @@ fifoadm hypervisors list
 fifoadm vms         list
 fifoadm vms get -j 92d63038-6fdf-c957-f161-ae22fbd9600c
 
+sniffle-admin hypervisors list
 ===========smartos dataset section====dsapi section====================
 imgadm sources -a  http://datasets.at
 imgadm sources -d  https://images.joyent.com
@@ -6842,20 +6843,29 @@ howl：
 老版本配置文件
 /opt/local/fifo-howl/etc/howl.conf
 /opt/local/fifo-howl/etc/howl.conf.example.
+/data/howl/log
+
+snarl
+/data/snarl/etc/snarl.conf
+
+
 
 NSQ:
 http://10.75.1.90:4171/
 
 NSQ和aggregater装在一起
-/opt/local/fifo-sniffle/bin/sniffle-admin cluster join 'sniffle@10.75.1.86'
+/opt/local/fifo-sniffle/bin/sniffle-admin cluster join 'sniffle@10.0.1.85'
 /opt/local/fifo-sniffle/bin/sniffle-admin cluster plan
 /opt/local/fifo-sniffle/bin/sniffle-admin cluster commit
 
 
 
-/opt/local/fifo-howl/bin/howl-admin cluster join 'howl@10.75.1.86'
+/opt/local/fifo-howl/bin/howl-admin cluster join 'howl@10.0.1.85'
 /opt/local/fifo-howl/bin/howl-admin cluster plan
 /opt/local/fifo-howl/bin/howl-admin cluster commit
+
+
+
 
 /opt/local/fifo-snarl/bin/snarl-admin member-status
 /opt/local/fifo-sniffle/bin/sniffle-admin member-status
