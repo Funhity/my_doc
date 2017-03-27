@@ -1375,7 +1375,7 @@ apache:
   salt   'test_v6_webapp_front01'         state.apply   wujunrong.start_logcenter
   salt   '*'         state.show_sls apache   //TESTING FORMULAS  #salt debug
   salt   '*'         state.highstate
-  
+  ```salt -L```
   salt   -L 'web1,web2,web3'                 test.ping
   salt   '*'     -b 10                       test.ping
   salt   -G     'os:RedHat' --batch-size 25% apache.signal restart
@@ -2343,6 +2343,8 @@ cat /etc/logrotate.d/logrotate_tomcat
 }
 
 =====================   rsyslog section   =========================
+rsyslogd -v
+
 yum:http://www.rsyslog.com/rhelcentos-rpms/
 cd /etc/yum.repos.d/  && wget http://rpms.adiscon.com/v8-stable/rsyslog.repo
 yum install rsyslog -y
@@ -4864,6 +4866,8 @@ The basic Git workflow goes something like this:
 ```````````
 #Git - List all files currently under source control?列出被git管理的文件：
        git ls-tree -r master --name-only 
+git中的文件重命名       
+       git mv ci_fifo.sh fifo_install_salt_command_line.sh
 ``````
 git status
 git status -s                                       #Short Status
@@ -6003,6 +6007,7 @@ dladm show-phys -m
 路由：netstat -r
 端口：netstat -n -P tcp
 arp ：netstat -anp
+lsof -o 443 #直接打命令可查看帮助
 
 vmware:
 ipadm create-if e1000g0
@@ -6080,6 +6085,13 @@ pkgin -fy up
     
 更换私有源配置文件地址，会删除最后一行
 sed -i.bak '$d' /opt/local/etc/pkgin/repositories.conf;echo 'http://192.168.1.128/smartos/pkgin2014Q4/' >> /opt/local/etc/pkgin/repositories.conf;rm -fr /var/db/pkgin/*;/opt/local/bin/pkgin -fy up
+`````````````
+pkgin搜索已安装的软件：
+pkgin list | grep leo
+leo_gateway-1.2.21p1 LeoFS gateway.
+leo_manager-1.2.21p1 LeoFS manager.
+leo_storage-1.2.21p1 LeoFS storage server.
+
 ===========zpool section=========
 
 zpool list
@@ -6168,15 +6180,11 @@ zfs create -V 1g zones/volumes_wujunrong
 zfs set shareiscsi=on zones/volumes_wujunrong
 iscsitadm list target
 
-`````````smartos command section````````````
+`````````smartos command section``````smartos rsync``````
 uname -a
 /usr/sbin/svcadm enable -r svc:/pkgsrc/rsyncd:default
-````````````````
-pkgin list | grep leo
-leo_gateway-1.2.21p1 LeoFS gateway.
-leo_manager-1.2.21p1 LeoFS manager.
-leo_storage-1.2.21p1 LeoFS storage server.
-`````````svc section``````
+
+`````````svc section````svcadm section``
 
 svcs -a | grep vol
 svcs -a | grep leofs
@@ -6847,29 +6855,39 @@ howl：
 
 snarl
 /data/snarl/etc/snarl.conf
-
-
+显示leofs的配置参数：
+sniffle-admin config show
 
 NSQ:
 http://10.75.1.90:4171/
 
 NSQ和aggregater装在一起
-/opt/local/fifo-sniffle/bin/sniffle-admin cluster join 'sniffle@10.0.1.85'
-/opt/local/fifo-sniffle/bin/sniffle-admin cluster plan
-/opt/local/fifo-sniffle/bin/sniffle-admin cluster commit
-
-
-
-/opt/local/fifo-howl/bin/howl-admin cluster join 'howl@10.0.1.85'
-/opt/local/fifo-howl/bin/howl-admin cluster plan
-/opt/local/fifo-howl/bin/howl-admin cluster commit
-
-
-
-
-/opt/local/fifo-snarl/bin/snarl-admin member-status
-/opt/local/fifo-sniffle/bin/sniffle-admin member-status
-/opt/local/fifo-howl/bin/howl-admin member-status
+          
+          svcadm enable epmd
+          svcadm enable snarl
+          svcadm enable sniffle
+          svcadm enable howl
+          sleep 60
+          svcs epmd snarl sniffle howl
+          
+          /opt/local/fifo-sniffle/bin/sniffle-admin cluster join 'sniffle@10.0.1.85'
+          /opt/local/fifo-sniffle/bin/sniffle-admin cluster plan
+          /opt/local/fifo-sniffle/bin/sniffle-admin cluster commit
+          
+          /opt/local/fifo-howl/bin/howl-admin cluster join 'howl@10.0.1.85'
+          /opt/local/fifo-howl/bin/howl-admin cluster plan
+          /opt/local/fifo-howl/bin/howl-admin cluster commit
+          
+          /opt/local/fifo-snarl/bin/snarl-admin cluster join 'snarl@10.0.1.85'
+          /opt/local/fifo-snarl/bin/snarl-admin cluster plan
+          /opt/local/fifo-howl/bin/howl-admin   cluster commit
+          
+          /opt/local/fifo-snarl/bin/snarl-admin member-status
+          /opt/local/fifo-sniffle/bin/sniffle-admin member-status
+          /opt/local/fifo-howl/bin/howl-admin member-status
+          
+          #snarl-admin init default MyOrg Users admin admin
+          #sniffle-admin init-leofs 10.0.1.80.xip.io
 =========== npm section ============
 npm install -g cnpm --registry=https://registry.npm.taobao.org
 

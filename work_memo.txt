@@ -1554,9 +1554,13 @@ cd /
 curl -k http://salt/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat | tar -xf -
 
 pkg_admin rebuild
-pkgin -y up
+#pkgin -y up
 
 cd /opt/
 wget http://salt/file-share/salt-2016.3.3-esky-smartos.tar.gz   
 cd /opt && tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz && /opt/salt/install/install.sh && svcadm enable salt-minion
 svcadm restart salt-minion
+============
+salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart snarl '
+salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart sniffle '
+salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart howl'
