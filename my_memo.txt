@@ -247,3 +247,53 @@ If using a template, any user-defined template variables in the file defined in 
 The template will receive a variable custom_var, which would be accessed in the template using {{ custom_var }}. If the operating system is Ubuntu, the value of the variable custom_var would be override, otherwise it is the default default value
 ==========================
 {% for file_name, file_source in salt['pillar.get']('dataset_repository.'~ vm_hostname ~'.programm_files', {}).items() %} 
+
+=====ryslog section====
+服务端配置
+
+$umask 0000
+$DirCreateMode 0755
+$FileCreateMode 0644
+
+module(load="imudp")
+input(type="imudp" port="514" ruleset="remote")
+
+$template TmplAuth, "/var/log/xinxindai/%source%-%PROGRAMNAME:::secpath-replace%"
+$template DFile,"/opt/logs/%syslogtag%/%HOSTNAME%-%$year%%$month%%$day%_%$hour%.log"
+$template auditFormat, "%msg%\n"
+ruleset(name="remote"){
+	if $fromhost-ip == '192.168.34.10' then {
+		action(type="omfile" DynaFile="TmplAuth" template="auditFormat")
+		stop
+	}
+	action(type="omfile" DynaFile="DFile" template="auditFormat" dirCreateMode="0755" FileCreateMode="0644")
+        if $syslogtag contains_i 'real' then @@192.168.31.160:5144;auditFormat
+        if $syslogtag contains_i 'nginx' then @@192.168.31.160:5143;auditFormat
+}
+
+
+#:syslogtag,regex,".*realtime.*"   /tmp/wujunrong.log
+
+
+`````logrotate section````
+每小时切割日志，服务器端配置
+/var/log/xinxindai/*catalina.out
+/var/log/xinxindai/*tomcat_access.out
+{
+        dateext
+        dateformat -%Y-%m-%d-%s
+        extension .out 
+        nocompress
+        missingok
+        copytruncate
+        size 512k
+        sharedscripts
+        postrotate
+               find /var/log/xinxindai  -type f -exec sh -c 'second=$(echo {}|  sed  -r   -n  "s/.*-([0-9]+)\.out/\1/p") && \
+                             [ ! -z "$second" ] && my_second=$(date  -d @$second +"%H_%M_%S")  && \
+                             new_file_name=$(echo {}|sed  -r  "s/([0-9]+)\.out/$my_second.log/g") && \
+                             mv {}   $new_file_name '  \;
+               find /var/log/xinxindai  -mtime 1 -regex  '.*[0-9][0-9]\.log'   -print -exec /bin/rm -fr {} \; 
+        endscript
+
+}

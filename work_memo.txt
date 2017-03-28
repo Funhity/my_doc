@@ -1548,7 +1548,7 @@ salt alpha_test_leofs1 cmd.run 'leofs-adm status'
 
 
 rsync -avzh 192.168.1.148:/home/frank/docker-share/  /home/frank/docker-share/  --checksum
-==============    
+==========smartos salt section====    
 echo 10.0.1.38 salt>>/etc/hosts
 cd /
 curl -k http://salt/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat | tar -xf -
@@ -1560,7 +1560,35 @@ cd /opt/
 wget http://salt/file-share/salt-2016.3.3-esky-smartos.tar.gz   
 cd /opt && tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz && /opt/salt/install/install.sh && svcadm enable salt-minion
 svcadm restart salt-minion
-============
+==========fifo section==
 salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart snarl '
 salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart sniffle '
 salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart howl'
+=====ryslog section====
+
+`````logrotate section````
+每小时切割日志，服务器端配置
+/var/log/xinxindai/*catalina.out
+/var/log/xinxindai/*tomcat_access.out
+{
+        dateext
+        dateformat -%Y-%m-%d-%s
+        extension .out 
+        nocompress
+        missingok
+        copytruncate
+        size 512k
+        sharedscripts
+        postrotate
+               find /var/log/xinxindai  -type f -exec sh -c 'second=$(echo {}|  sed  -r   -n  "s/.*-([0-9]+)\.out/\1/p") && \
+                             [ ! -z "$second" ] && my_second=$(date  -d @$second +"%H_%M_%S")  && \
+                             new_file_name=$(echo {}|sed  -r  "s/([0-9]+)\.out/$my_second.log/g") && \
+                             mv {}   $new_file_name '  \;
+               find /var/log/xinxindai  -mtime 1 -regex  '.*[0-9][0-9]\.log'   -print -exec /bin/rm -fr {} \; 
+        endscript
+
+}
+
+
+
+

@@ -1954,7 +1954,7 @@ svn delete --force code/bar.c
 svn resolve --accept=working code/bar.c
 ```````````````````````````````````
 
-============netstat section===========
+============netstat section=======network section====
 yum -y install net-tools
 netstat --listen
 netstat  -nr
@@ -2351,6 +2351,8 @@ yum install rsyslog -y
 ````````
 /etc/rsyslog.conf
 systemctl start rsyslog
+systemctl restart rsyslog
+smartos: svcadm refresh svc:/system/system-log
 ``````facility``````
 if $syslogfacility-text == 'local0' and $msg startswith 'DEVNAME' and not ($msg contains 'error1' or $msg contains 'error0') then /var/log/somelog
 if $syslogfacility-text == 'local6' and $msg contains 'ERROR'  then   @192.168.31.155:514
@@ -3075,6 +3077,9 @@ guestfish --rw -a disk.img -i edit /boot/grub/grub.conf
  virt-cat  -d centos64 /etc/fstab
  
 `````virsh disk seciton````````````````
+
+
+
 sudo virt-df -h  --csv
 resize image
 1:virt-filesystems -a /home/frank/kvm/images/windows8-office.img  -l -h
@@ -6185,9 +6190,11 @@ uname -a
 /usr/sbin/svcadm enable -r svc:/pkgsrc/rsyncd:default
 
 `````````svc section````svcadm section``
-
+Service Management Facility (SMF)
+查找服务
 svcs -a | grep vol
 svcs -a | grep leofs
+```````
 svcadm clear   svc:/leofs/storage:default
 svcadm enable  svc:/leofs/storage:default
 svcadm restart cswmysql5
@@ -6663,6 +6670,7 @@ echo 10.75.1.70 salt>>/etc/hosts;svcadm restart salt-minion;ssh-keygen -f $HOME/
 less /var/svc/log/pkgsrc-salt:minion.log
 less /var/svc/log/network-salt-minion:default.log
 less /var/svc/log/pkgsrc-salt:master.log
+less /var/svc/log/system-system-log:default.log
 ```````````
 
 /opt/local/etc/salt/states
@@ -6888,6 +6896,11 @@ NSQ和aggregater装在一起
           
           #snarl-admin init default MyOrg Users admin admin
           #sniffle-admin init-leofs 10.0.1.80.xip.io
+=========smartos rsyslog=============
+svcadm refresh svc:/system/system-log
+svcs svc:/system/system-log
+               svc:/system/system-log:default
+svcadm disable svc:/pkgsrc/rsyslog:default
 =========== npm section ============
 npm install -g cnpm --registry=https://registry.npm.taobao.org
 
