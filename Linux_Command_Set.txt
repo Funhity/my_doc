@@ -1493,7 +1493,7 @@ apache:
   salt-run  survey.hash                'stage_v6_admin0?' test.ping
   salt-run  survey.hash                "stage_v6_admin0?" file.get_hash /etc/salt/minion survey_sort=up //find an "outlier" minion config file
 
-  ```````````````````````````````
+  ````````````salt file managed```````````````````
   /etc/ssh/sshd_config:
   file.managed:
     - source: salt://ssh/sshd_config
@@ -6897,19 +6897,14 @@ NSQ和aggregater装在一起
           #snarl-admin init default MyOrg Users admin admin
           #sniffle-admin init-leofs 10.0.1.80.xip.io
 =========smartos rsyslog=============
-svcadm refresh svc:/system/system-log
-svcs svc:/system/system-log
-               svc:/system/system-log:default
-svcadm disable svc:/pkgsrc/rsyslog:default
+global zone使用的日志服务:
+   svcadm refresh svc:/system/system-log
+   svcs           svc:/system/system-log:default
+native zone使用的日志服务:
+   svcadm disable svc:/pkgsrc/rsyslog:default
 =========== npm section ============
 npm install -g cnpm --registry=https://registry.npm.taobao.org
-
-
 npm install --registry  npm.briphant.cn
-
-
-
-
 =========== npm section ============
 npm install -g cnpm --registry=https://registry.npm.taobao.org
 npm install --registry  npm.briphant.cn
