@@ -3602,7 +3602,8 @@ crontab -l
 The goal of a play is to map a group of hosts to some well defined roles, represented by things ansible calls tasks. At a basic level, a task is nothing more than a call to an ansible module (see About Modules).
 ````````epel section````
 方法一：  
-  sudo yum -y install epel-release
+  sudo yum -y install epel-release  ansible openssh-clients libselinux-python sshpass
+
   ansible salt_perf*   -m shell -a "sudo yum -y install epel-release"
   ansible salt_perf*   -m shell -a "yum --disablerepo=epel -y update  ca-certificates"
 方法二：  
@@ -3618,6 +3619,9 @@ yum -y install sshpass
 /etc/ansible/ansible.cfg
 [defaults]
 host_key_checking=false
+
+或：
+echo host_key_checking=false>>/etc/ansible/ansible.cfg
 `````handbook```````
       wget  -O /root/epel-release-latest-6.noarch.rpm  https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm	 
       rpm -ivh /root/epel-release-latest-6.noarch.rpm 
@@ -6625,6 +6629,11 @@ ansible_python_interpreter=/opt/local/bin/python
 vi /opt/local/etc/ansible/ansible.cfg
 [defaults]
 host_key_checking=false
+或
+sed -i.bak2 's/#host_key_checking = False/host_key_checking = False/' /etc/ansible/ansible.cfg
+````````````````````
+按照hosts文件中的服务器顺序一个个执行，列出smartos上的硬盘
+ansible qinghua -f 1 -m raw -a " format < /dev/null | sed -n 's/.*\(<.*>\).*/\1/p' "
 =====smartos salt section=====
 
 
@@ -6683,6 +6692,9 @@ cd /opt/
 wget http://192.168.1.128/file-share/salt-2016.3.3-esky-smartos.tar.gz   
 echo 10.75.1.70 salt>>/etc/hosts&&cd /opt && tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz && /opt/salt/install/install.sh && svcadm enable salt-minion
 svcadm restart salt-minion
+
+用ansible安装：
+ ansible hp  -f 1 -m raw -a "echo 10.0.1.38 salt>>/etc/hosts;cd /;curl -k httts;cd /;curl -k http://salt/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat |/ tar -xf -;pkg_admin rebuild;cd /opt/;wget http://salt/file-share/salt-2016.3.3-esky-smartos.tar.gz   ;cd /opt ; tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz ;/opt/salt/install/install.sh && svcadm enable salt-minion;svcadm restart salt-minion"
 
 ``````````
 global zone 重启后/etc/hosts内容和id_rsa消失，做如下操作来恢复：：

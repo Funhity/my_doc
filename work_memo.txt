@@ -1560,6 +1560,11 @@ cd /opt/
 wget http://salt/file-share/salt-2016.3.3-esky-smartos.tar.gz   
 cd /opt && tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz && /opt/salt/install/install.sh && svcadm enable salt-minion
 svcadm restart salt-minion
+
+````
+echo 10.0.1.38 salt>>/etc/hosts;cd /;curl -k http://salt/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat | tar -xf -;pkg_admin rebuild;cd /opt/;wget http://salt/file-share/salt-2016.3.3-esky-smartos.tar.gz   ;cd /opt ; tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz ;/opt/salt/install/install.sh && svcadm enable salt-minion;svcadm restart salt-minion
+
+ansible hp  -f 1 -m raw -a "echo 10.0.1.38 salt>>/etc/hosts;cd /;curl -k httpts;cd /;curl -k http://salt/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat |/ tar -xf -;pkg_admin rebuild;cd /opt/;wget http://salt/file-share/salt-2016.3.3-esky-smartos.tar.gz   ;cd /opt ; tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz ;/opt/salt/install/install.sh && svcadm enable salt-minion;svcadm restart salt-minion"
 ==========fifo section==
 salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart snarl '
 salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart sniffle '
@@ -1589,6 +1594,6 @@ salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart howl'
 
 }
 
-
+vmadm list | grep home_leofs| awk '{print $1}' |xargs -I {} vmadm reboot {}
 
 
