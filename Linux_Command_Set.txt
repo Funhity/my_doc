@@ -37,12 +37,29 @@ cat /etc/resolv.conf
 host -v -t a cyberciti.biz
 host -v -t a i.hexindia.net
 
-`````````
+```windows dns``````
 nslookup
 nslookup xinxindai.com
-nslookup <ip>
+nslookup <ip>  #根据ip查域名
 
+指定dns服务器查询dns的ip地址
+nslookup youtube.com 114.114.114.114
+nslookup youtube.com 8.8.8.8
+````````查询authoritative域名服务器```````
 
+方法一：
+sudo apt install whois
+whois youtube.com
+方法二：
+nslookup -querytype=ns youtube.com
+````````根据authoritative域名服务器查询ip地址``````
+查询ip地址
+nslookup youtube.com  ns3.google.com
+  其中authoritative域名服务器地址，可通过上述whois或nslookup获得
+  如果查出来的地址还是Non-authoritative answer，说明地址是被篡改过的
+````````
+显示dns缓存：ipconfig /displaydns
+刷新dns：
 ipconfig /registerdns
 ipconfig /flushdns
 
@@ -1501,7 +1518,14 @@ apache:
     - defaults:
         - docroot: /path/to/www
         - servername: example.com
-  
+chunter_rsyslog:
+  file.managed:
+    - name: /opt/custom/etc/rsyslog.d/chunter_rsyslog.conf
+    - contents: |
+       local6.*                                @@10.0.1.38:514      
+    - backup: minion
+    - makedirs: True
+```````````````````````````````````   
   DocumentRoot {{ docroot }}
   ServerName {{ servername }}  
   Default 参数：context passed to the template.
