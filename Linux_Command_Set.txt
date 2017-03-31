@@ -6693,10 +6693,11 @@ wget http://192.168.1.128/file-share/salt-2016.3.3-esky-smartos.tar.gz
 echo 10.75.1.70 salt>>/etc/hosts&&cd /opt && tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz && /opt/salt/install/install.sh && svcadm enable salt-minion
 svcadm restart salt-minion
 
-用ansible安装：
+用ansible安装salt等：
  ansible hp  -f 1 -m raw -a "echo 10.0.1.38 salt>>/etc/hosts;cd /;curl -k httts;cd /;curl -k http://salt/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat |/ tar -xf -;pkg_admin rebuild;cd /opt/;wget http://salt/file-share/salt-2016.3.3-esky-smartos.tar.gz   ;cd /opt ; tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz ;/opt/salt/install/install.sh && svcadm enable salt-minion;svcadm restart salt-minion"
-
-``````````
+ansible hp  -f 1 -m raw -a "imgadm sources -a  http://images.briphant.com; imgadm sources -d  https://images.joyent.com"
+ansible hp  -f 1 -m raw -a "imgadm import 1bd84670-055a-11e5-aaa2-0346bb21d5a1"
+````global zone 重启``````
 global zone 重启后/etc/hosts内容和id_rsa消失，做如下操作来恢复：：
 echo 10.75.1.70 salt>>/etc/hosts;svcadm restart salt-minion;ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
 #注：10.75.1.70是salt master的地址，salt默认把hostname当作minion id的名字
