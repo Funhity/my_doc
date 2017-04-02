@@ -1048,7 +1048,9 @@ SysVStartPriority=99
 [Install]
 WantedBy=multi-user.target
   
-======================= salt section  ========================  
+======================= salt section  ======================== 
+salt '*'  test.versions_report
+salt '*'  test.versions
 When executing a command or script, the state (i.e., changed or not) of the command is unknown to Salt's state system. 
 Therefore, by default, the cmd state assumes that any command execution results in a changed state.
 This means that if a cmd state is watched by another state then the state 
@@ -7026,3 +7028,9 @@ npm install --registry  npm.briphant.cn
 windows:tracert
 linux  :traceroute
         yum -y install traceroute
+
+
+=========smartos timezone=========
+pkgin -y install smtools;sm-set-timezone Asia/Shanghai
+
+===
