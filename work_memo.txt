@@ -1620,5 +1620,16 @@ zfs snapshot zones/873f7b84-d078-62ab-d069-ce5760072253-disk0@sending
 zfs send -p  zones/873f7b84-d078-62ab-d069-ce5760072253-disk0@sending > /opt/salt-disk0.zfs
 zfs destroy zones/${UUID}-disk0@sending
 scp /opt/*.zfs  10.0.1.41:/opt/
+scp /opt/salt.json   10.0.1.41:/opt/
+zfs receive zones/873f7b84-d078-62ab-d069-ce5760072253-disk0 < salt-disk0.zfs
+zfs receive zones/873f7b84-d078-62ab-d069-ce5760072253-disk0 < /opt/salt-disk0.zfs
+``````
+First edit the *.json file to include “nocreate”: true, in the “disks” subset:
 
+Example:
 
+  "disks": [
+    {
+      "path": "/dev/zvol/rdsk/zones/47d84c19-2eae-48c6-a976-109a4c9b9db2-disk0",
+      "nocreate": true,  
+````````
