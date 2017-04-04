@@ -1606,3 +1606,19 @@ salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart howl'
 vmadm list | grep home_leofs| awk '{print $1}' |xargs -I {} vmadm reboot {}
 
 
+===sed section===
+curl -s  http://pkgs.briphant.com/pkgsrc-fifo.bak/pkg/rel/ |  sed -r -n 's/.*(fifo.*howl.*0.8.2.*.tgz).*/\1/p'
+
+===smartos kvm migration====
+vmadm get 873f7b84-d078-62ab-d069-ce5760072253 >/opt/salt.json
+vmadm get 873f7b84-d078-62ab-d069-ce5760072253 | json zfs_filesystem disks
+zfs snapshot zones/873f7b84-d078-62ab-d069-ce5760072253@sending
+zfs send -p zones/873f7b84-d078-62ab-d069-ce5760072253@sending > /opt/salt.zfs
+zfs destroy zones/${UUID}@sending
+
+zfs snapshot zones/873f7b84-d078-62ab-d069-ce5760072253-disk0@sending
+zfs send -p  zones/873f7b84-d078-62ab-d069-ce5760072253-disk0@sending > /opt/salt-disk0.zfs
+zfs destroy zones/${UUID}-disk0@sending
+scp /opt/*.zfs  10.0.1.41:/opt/
+
+

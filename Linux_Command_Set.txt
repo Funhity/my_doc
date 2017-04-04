@@ -4787,8 +4787,8 @@ find ./grains.test_* | xargs -I {} sed  -i  "s/ci\/files\/test_v6_mobile/wujunro
 
 echo "abc 123" | sed 's/[0-9]\+/& &/'  #the special character "&." It corresponds to the pattern found.
 
-curl -s  http://pkgs.briphant.com/pkgsrc-fifo.bak/pkg/rel/ | grep sniffle-0.7.0  | sed -r  's/.*(snif.*0.7.0.*.tgz).*/\1/' #curl section
-
+curl -s  http://pkgs.briphan.com/pkgsrc-fifo.bak/pkg/rel/ |  grep sniffle-0.7.0  | sed -r  's/.*(snif.*0.7.0.*.tgz).*/\1/' #curl section
+curl -s  http://pkgs.briphan.com/pkgsrc-fifo.bak/pkg/rel/ |  sed -r -n 's/.*(fifo.*howl.*0.7.0.*.tgz).*/\1/p'
 ====alternatives section=========
 sudo alternatives --install /usr/bin/genericcmd genericcmd /usr/bin/cmd-21.0
 alternatives --display genericcmd
