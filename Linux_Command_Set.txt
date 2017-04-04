@@ -7032,5 +7032,13 @@ linux  :traceroute
 
 =========smartos timezone=========
 pkgin -y install smtools;sm-set-timezone Asia/Shanghai
+salt 'jinhao'  cmd.run 'pkgin -y install smtools;sm-set-timezone Asia/Shanghai'  shell='/usr/bin/bash' -t 1200
+rtc -z Asia/Shanghai
 
+````````````````
+native zone修改时区，经验值有效
+salt home_fifo timezone.get_zone
+salt home_fifo cmd.run "sed -i.bak2 's/TZ=UTC/TZ=Asia\/Shanghai/' /etc/TIMEZONE"
+salt home_fifo cmd.run "diff /etc/TIMEZONE /etc/TIMEZONE.bak2"
+salt home_fifo cmd.run "reboot"
 ===
