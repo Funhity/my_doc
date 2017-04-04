@@ -1550,7 +1550,9 @@ salt alpha_test_leofs1 cmd.run 'leofs-adm status'
 
 
 rsync -avzh 192.168.1.148:/home/frank/docker-share/  /home/frank/docker-share/  --checksum
-==========smartos salt section====    
+==========smartos salt section====  
+gloable zone 装salt：
+方法一：  
 echo 10.0.1.38 salt>>/etc/hosts
 cd /
 curl -k http://salt/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat | tar -xf -
@@ -1564,9 +1566,14 @@ cd /opt && tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz && /opt/salt/install/i
 svcadm restart salt-minion
 
 ````
+方法二：
 echo 10.0.1.38 salt>>/etc/hosts;cd /;curl -k http://salt/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat | tar -xf -;pkg_admin rebuild;cd /opt/;wget http://salt/file-share/salt-2016.3.3-esky-smartos.tar.gz   ;cd /opt ; tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz ;/opt/salt/install/install.sh && svcadm enable salt-minion;svcadm restart salt-minion
 通过ansible安装salt
 ansible hp  -f 1 -m raw -a "echo 10.0.1.38 salt>>/etc/hosts;cd /;curl -k httpts;cd /;curl -k http://salt/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat |/ tar -xf -;pkg_admin rebuild;cd /opt/;wget http://salt/file-share/salt-2016.3.3-esky-smartos.tar.gz   ;cd /opt ; tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz ;/opt/salt/install/install.sh && svcadm enable salt-minion;svcadm restart salt-minion"
+
+``````
+gloable zone重启后
+ansible hp  -f 1 -m raw -a "echo 10.0.1.38 salt>>/etc/hosts;svcadm restart salt-minion"
 ==========fifo section==
 salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart snarl '
 salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart sniffle '

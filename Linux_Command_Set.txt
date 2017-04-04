@@ -1161,10 +1161,15 @@ salt -l debug "*" cmd.run "uptime"
   
   ```salt-key section``````
   salt-key命令可列出salt-minion的名字
+  
   清除更新salt-minion名字方法（clear not wanted and invalid minion id）
   on master: rm -fr /etc/salt/pki/master/minions_denied/vm-template
   on minion: ansible minions  -m shell -a  '>/etc/salt/minion_id' #清空id文件
   #When the minion is started, it will generate an id value, unless it has been generated on a previous run and cached in the configuration directory, which is /etc/salt by default
+  自动化：
+  ansible hp   -m raw -a  'echo hp> /opt/salt/etc/minion_id;cat /opt/salt/etc/minion_id;svcadm restart salt-minion'
+  
+  salt-run manage.down removekeys=True  #自动删除连不上的minion
 ``````````````````````````````````````
   systemctl start  salt-master
   chkconfig salt-master on
@@ -4782,6 +4787,8 @@ find ./grains.test_* | xargs -I {} sed  -i  "s/ci\/files\/test_v6_mobile/wujunro
 
 echo "abc 123" | sed 's/[0-9]\+/& &/'  #the special character "&." It corresponds to the pattern found.
 
+curl -s  http://pkgs.briphant.com/pkgsrc-fifo.bak/pkg/rel/ | grep sniffle-0.7.0  | sed -r  's/.*(snif.*0.7.0.*.tgz).*/\1/' #curl section
+
 ====alternatives section=========
 sudo alternatives --install /usr/bin/genericcmd genericcmd /usr/bin/cmd-21.0
 alternatives --display genericcmd
@@ -6019,7 +6026,11 @@ Disable Audio
 Disable "Enable absolute pointing device"
 Enable PAE/NX
 Ensure Network is enable on Adapter 1 is of Type "Intel PRO/1000 MT Desktop"..
+`````smartos vmware``````````````
+混杂模式只允许root用户，如果vmare程序使用非root用户启动的，则此非root用户需要有访问/dev/vmnet0的权限，
+宿主机重启后权限要重新设置
 
+chmod a+rw /dev/vmnet0
 `````smartos network``````````
 admin_nic=3c:97:0e:52:6b:18
 admin_ip=192.168.1.99
@@ -7034,6 +7045,8 @@ linux  :traceroute
 pkgin -y install smtools;sm-set-timezone Asia/Shanghai
 salt 'jinhao'  cmd.run 'pkgin -y install smtools;sm-set-timezone Asia/Shanghai'  shell='/usr/bin/bash' -t 1200
 rtc -z Asia/Shanghai
+salt home_fifo cmd.run "rtc -z Asia/Shanghai"
+salt home_fifo cmd.run "rtc -c"
 
 ````````````````
 native zone修改时区，经验值有效
