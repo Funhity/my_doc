@@ -1574,6 +1574,8 @@ ansible hp  -f 1 -m raw -a "echo 10.0.1.38 salt>>/etc/hosts;cd /;curl -k httpts;
 ``````
 gloable zone重启后
 ansible hp  -f 1 -m raw -a "echo 10.0.1.38 salt>>/etc/hosts;svcadm restart salt-minion"
+````salt-key section `````
+ansible hp   -m raw -a  'echo hp> /opt/salt/etc/minion_id;cat /opt/salt/etc/minion_id;svcadm restart salt-minion'
 ==========fifo section==
 salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart snarl '
 salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart sniffle '
@@ -1624,6 +1626,7 @@ scp /opt/salt.json   10.0.1.41:/opt/
 zfs receive zones/873f7b84-d078-62ab-d069-ce5760072253-disk0 < salt-disk0.zfs
 zfs receive zones/873f7b84-d078-62ab-d069-ce5760072253-disk0 < /opt/salt-disk0.zfs
 ``````
+修改一：
 First edit the *.json file to include “nocreate”: true, in the “disks” subset:
 
 Example:
@@ -1632,4 +1635,11 @@ Example:
     {
       "path": "/dev/zvol/rdsk/zones/47d84c19-2eae-48c6-a976-109a4c9b9db2-disk0",
       "nocreate": true,  
+修改二：
+diff /opt/salt.json /opt/salt.json.bak 
+40a41
+>       "block_size": 8192
+
 ````````
+vmadm create < /opt/salt.json
+vmadm start 873f7b84-d078-62ab-d069-ce5760072253 
