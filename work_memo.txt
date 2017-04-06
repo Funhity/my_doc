@@ -1505,17 +1505,17 @@ EOF
 
 
 smartos 修改kvm磁盘大小
-zfs get volsize zones/873f7b84-d078-62ab-d069-ce5760072253-disk0 
-zfs set volsize=80g  zones/873f7b84-d078-62ab-d069-ce5760072253-disk0 
-vmadm get 873f7b84-d078-62ab-d069-ce5760072253 
+zfs get volsize zones/${UUID}-disk0 
+zfs set volsize=80g  zones/${UUID}-disk0 
+vmadm get ${UUID} 
 vmadm list
-vmadm stop 873f7b84-d078-62ab-d069-ce5760072253 
-vmadm boot 873f7b84-d078-62ab-d069-ce5760072253  order=cd,once=d cdrom=/opt/gparted-live-0.28.1-1-amd64.iso,ide
+vmadm stop ${UUID} 
+vmadm boot ${UUID}  order=cd,once=d cdrom=/opt/gparted-live-0.28.1-1-amd64.iso,ide
 ls /opt/gparted-live-0.28.1-1-amd64.iso
-cd /zones/873f7b84-d078-62ab-d069-ce5760072253/root
+cd /zones/${UUID}/root
 cp /opt/gparted-live-0.28.1-1-amd64.iso   .
-vmadm boot 873f7b84-d078-62ab-d069-ce5760072253  order=cd,once=d cdrom=/gparted-live-0.28.1-1-amd64.iso,ide
-vmadm info 873f7b84-d078-62ab-d069-ce5760072253  vnc
+vmadm boot ${UUID}  order=cd,once=d cdrom=/gparted-live-0.28.1-1-amd64.iso,ide
+vmadm info ${UUID}  vnc
 
 
 salt jinhao state.sls_id   create_alpha_test_leofs1_vm        create_smartos_vm  -t 600
@@ -1612,19 +1612,20 @@ vmadm list | grep home_leofs| awk '{print $1}' |xargs -I {} vmadm reboot {}
 curl -s  http://pkgs.briphant.com/pkgsrc-fifo.bak/pkg/rel/ |  sed -r -n 's/.*(fifo.*howl.*0.8.2.*.tgz).*/\1/p'
 
 ===smartos kvm migration====
-vmadm get 873f7b84-d078-62ab-d069-ce5760072253 >/opt/salt.json
-vmadm get 873f7b84-d078-62ab-d069-ce5760072253 | json zfs_filesystem disks
-zfs snapshot zones/873f7b84-d078-62ab-d069-ce5760072253@sending
-zfs send -p zones/873f7b84-d078-62ab-d069-ce5760072253@sending > /opt/salt.zfs
+UUID=873f7b84-d078-62ab-d069-ce5760072253
+vmadm get ${UUID} >/opt/salt.json
+vmadm get ${UUID} | json zfs_filesystem disks
+zfs snapshot zones/${UUID}@sending
+zfs send -p zones/${UUID}@sending > /opt/salt.zfs
 zfs destroy zones/${UUID}@sending
 
-zfs snapshot zones/873f7b84-d078-62ab-d069-ce5760072253-disk0@sending
-zfs send -p  zones/873f7b84-d078-62ab-d069-ce5760072253-disk0@sending > /opt/salt-disk0.zfs
+zfs snapshot zones/${UUID}-disk0@sending
+zfs send -p  zones/${UUID}-disk0@sending > /opt/salt-disk0.zfs
 zfs destroy zones/${UUID}-disk0@sending
 scp /opt/*.zfs  10.0.1.41:/opt/
 scp /opt/salt.json   10.0.1.41:/opt/
-zfs receive zones/873f7b84-d078-62ab-d069-ce5760072253-disk0 < salt-disk0.zfs
-zfs receive zones/873f7b84-d078-62ab-d069-ce5760072253-disk0 < /opt/salt-disk0.zfs
+zfs receive zones/${UUID}-disk0 < salt-disk0.zfs
+zfs receive zones/${UUID}-disk0 < /opt/salt-disk0.zfs
 ``````
 修改一：
 First edit the *.json file to include “nocreate”: true, in the “disks” subset:
@@ -1642,4 +1643,4 @@ diff /opt/salt.json /opt/salt.json.bak
 
 ````````
 vmadm create < /opt/salt.json
-vmadm start 873f7b84-d078-62ab-d069-ce5760072253 
+vmadm start ${UUID} 

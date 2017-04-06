@@ -6351,6 +6351,9 @@ zfs list -o space   #snapshot size
 
 zfs list -t snapshot -r zones/298985b5-4b35-cba0-a67f-d99360defcea
 
+zfs destroy zones/873f7b84-d078-62ab-d069-ce5760072253@sending
+zfs destroy zones/873f7b84-d078-62ab-d069-ce5760072253-disk0@sending
+
 zfs rollback tank/home/ahrens@tuesday
 zfs rollback -r tank/home/ahrens@tuesday
 `````````````````
