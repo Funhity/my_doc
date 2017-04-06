@@ -689,7 +689,7 @@ dpkg -S /path/to/some/file      #to find out which package a file belongs to.
 sudo dpkg -i DEB_PACKAGE
 
 sudo apt-get purge linux-image-4.2.0-{16,30} #free up more space in /boot
-======================= ip_forward  ======================================
+======================= ip_forward section =========ip forward section=============================
 
 debian:
 vi /etc/sysctl.conf
@@ -698,7 +698,8 @@ Add (or modify) this line in the file:
 net.ipv4.ip_forward = 1
 Finally load the new settings:    sysctl -p /etc/sysctl.conf
 
-
+centos7:
+echo 1 > /proc/sys/net/ipv4/ip_forward
 
 
 ip route add default via 11.9.0.100    
@@ -6172,7 +6173,10 @@ Mirrored pool:      zpool create geekpool mirror   c1t1d0 c1t2d0
 					zpool create geekpool raidz  c1t1d0 c1t2d0 c1t3d0
 					zpool create geekpool raidz2 c1t1d0 c1t2d0 c1t3d0
 					zpool create geekpool raidz3 c1t1d0 c1t2d0 c1t3d0 c1t4d0
-					
+添加strip的硬盘：
+          zpool add zones  c1t2d0
+					dry run :  zpool  add -n  zones  c1t2d0
+
 Adding spare device to zpool:
                     zpool add geekpool spare c1t3d0
                     zpool autoreplace=on mpool
@@ -6523,6 +6527,9 @@ svcadm restart chunter
 `````````````````````
 
 ==========fifo seciton============
+fifo 组件版本：http://release.project-fifo.net/
+
+
 pkgin list  fifo-snarl fifo-sniffle fifo-howl fifo-cerberus | grep fifo
 svcs sniffle snarl howl
 

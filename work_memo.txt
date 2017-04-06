@@ -1572,7 +1572,7 @@ echo 10.0.1.38 salt>>/etc/hosts;cd /;curl -k http://salt/smartos/bootstrap-2016Q
 ansible hp  -f 1 -m raw -a "echo 10.0.1.38 salt>>/etc/hosts;cd /;curl -k httpts;cd /;curl -k http://salt/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat |/ tar -xf -;pkg_admin rebuild;cd /opt/;wget http://salt/file-share/salt-2016.3.3-esky-smartos.tar.gz   ;cd /opt ; tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz ;/opt/salt/install/install.sh && svcadm enable salt-minion;svcadm restart salt-minion"
 
 ``````
-gloable zone重启后
+after globle zone reboot 重启后
 ansible hp  -f 1 -m raw -a "echo 10.0.1.38 salt>>/etc/hosts;svcadm restart salt-minion"
 ````salt-key section `````
 ansible hp   -m raw -a  'echo hp> /opt/salt/etc/minion_id;cat /opt/salt/etc/minion_id;svcadm restart salt-minion'
@@ -1580,7 +1580,20 @@ ansible hp   -m raw -a  'echo hp> /opt/salt/etc/minion_id;cat /opt/salt/etc/mini
 salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart snarl '
 salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart sniffle '
 salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart howl'
-=====ryslog section====
+
+pkg_add: Can't process http://pkgsrc.joyent.com:80/packages/SmartOS/2014Q4/x86_64/All/perl*: Connection timed out
+pkg_add: no pkg found for 'perl>=5.0', sorry.
+pkg_add: Can't install dependency perl>=5.0
+pkg_add: 1 package addition failed
+pkg_add: Can't process http://pkgsrc.joyent.com:80/packages/SmartOS/2014Q4/x86_64/All/perl*: Connection timed out
+
+Running install with PRE-INSTALL for perl-5.20.1.
+Package perl-5.20.1 registered in /opt/local/pkg/perl-5.20.1
+pkg_add: Can't process http://pkgsrc.joyent.com:80/packages/SmartOS/2014Q4/x86_64/All/unixodbc*: Connection timed out
+pkg_add: no pkg found for 'unixodbc>=2.0.11nb3', sorry.
+pkg_add: Can't install dependency unixodbc>=2.0.11nb3
+pkg_add: 1 package addition failed
+
 
 `````logrotate section````
 每小时切割日志，服务器端配置
@@ -1608,7 +1621,7 @@ salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart howl'
 vmadm list | grep home_leofs| awk '{print $1}' |xargs -I {} vmadm reboot {}
 
 
-===sed section===
+===sed section==curl section=
 curl -s  http://pkgs.briphant.com/pkgsrc-fifo.bak/pkg/rel/ |  sed -r -n 's/.*(fifo.*howl.*0.8.2.*.tgz).*/\1/p'
 
 ===smartos kvm migration====
@@ -1622,10 +1635,15 @@ zfs destroy zones/${UUID}@sending
 zfs snapshot zones/${UUID}-disk0@sending
 zfs send -p  zones/${UUID}-disk0@sending > /opt/salt-disk0.zfs
 zfs destroy zones/${UUID}-disk0@sending
-scp /opt/*.zfs  10.0.1.41:/opt/
-scp /opt/salt.json   10.0.1.41:/opt/
-zfs receive zones/${UUID}-disk0 < salt-disk0.zfs
+scp /opt/{*.zfs,salt.json}  10.0.1.41:/opt/
+#scp /opt/salt.json   10.0.1.41:/opt/
+
+UUID=873f7b84-d078-62ab-d069-ce5760072253
+zfs receive zones/${UUID} < /opt/salt.zfs
 zfs receive zones/${UUID}-disk0 < /opt/salt-disk0.zfs
+
+zfs destroy zones/873f7b84-d078-62ab-d069-ce5760072253@sending
+zfs destroy zones/873f7b84-d078-62ab-d069-ce5760072253-disk0@sending
 ``````
 修改一：
 First edit the *.json file to include “nocreate”: true, in the “disks” subset:
