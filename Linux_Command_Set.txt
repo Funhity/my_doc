@@ -6517,9 +6517,16 @@ EOF
  vmadm delete 54f1cc77-68f1-42ab-acac-5c4f64f5d6e0
  zlogin 1df6c1a6-7b51-635e-af61-a387f5fa3f45
  
+ `````````
  
- vmadm  send 03d08f22-b1a0-6494-a58c-f1b769db8cee  |ssh 10.75.1.109 vmadm receive
- vmadm  send 0b9bccdf-7b8f-e01e-bd92-cc59e651357e  |ssh 10.75.1.109 vmadm receive
+ vmadm send 0b9bccdf-7b8f-e01e-bd92-cc59e651357e  |ssh 10.75.1.109 vmadm receive
+ 如果遇到：
+ vmunbundle exited with code 1
+ 则在目标主机：
+ vmadm delete  0b9bccdf-7b8f-e01e-bd92-cc59e651357e
+ zfs destroy zones/54f1cc77-68f1-42ab-acac-5c4f64f5d6e0
+ vmadm send 0b9bccdf-7b8f-e01e-bd92-cc59e651357e  |ssh 10.75.1.109 vmadm receive
+
 ===========leofs section======leofs log===========
 vi /opt/local/leo_manager/etc/leo_manager.conf
 vi /opt/local/leo_storage/etc/leo_storage.conf
