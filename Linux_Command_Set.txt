@@ -1415,6 +1415,7 @@ apache:
   salt-call         //The salt-call command is used to run module functions locally on a minion instead of executing them from the master.
   salt-run          //Salt runners are simple modules used to execute convenience functions on the master
   
+  `````salt cp section```
   salt-cp   'debian'              Dockerfile.V1   /tmp/
   sudo salt-cp  v6_front001.xxdaid.com   /home/wujunrong/office.ip.list  /tmp/
   sudo salt-cp  v6_front001.xxdaid.com   /home/wujunrong/office.ip.list  /tmp/office2.ip.list
@@ -4425,7 +4426,7 @@ ansible cloudera_redis          -m shell  -a   "yum -y install make gcc tcl"
 查询channel个数
  pubsub channels *
  pubsub numsub "trade_transfer_result_topic"
-`````aria2 section```download section``````
+`````aria2 section```download section````wget section``
 
 ubuntu:   sudo apt-get install  aria2
 centos6:  wget http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el7.rf.x86_64.rpm
@@ -6049,6 +6050,7 @@ storage0_vlan_id=128
 
 列出所有网卡
 dladm show-phys -m
+dladm show-link
 ----smartos netstat--
 
 路由：netstat -r
@@ -6696,6 +6698,7 @@ echo 10.75.1.70 salt>>/etc/hosts
               
 ```````````
 /usr/bin/hostname>/opt/local/etc/salt/minion_id
+或 echo lakala2  >/opt/salt/etc/minion_id
 svcadm restart svc:/pkgsrc/salt:minion
 #svcadm restart salt-minion
 ```````在global zone安装salt```````````
