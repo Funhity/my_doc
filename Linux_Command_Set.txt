@@ -4786,6 +4786,7 @@ cat /proc/mounts | grep -E "\b(btrfs|ext2|ext3|ext4|jfs|reiser|xfs|ffs|ufs|jfs|j
 sed '/^\s*$/d' 
 
 find ./grains.test_* | xargs -I {} sed  -i  "s/ci\/files\/test_v6_mobile/wujunrong\/xxd_configure\/test\/v6\/mobile/g;w /dev/stdout"   {}
+find / -path  "/opt/local/fifo-*/etc/*.conf" |xargs -I {} sed -i.bak 's/172.99.6.136/10.0.1.19/g'  {}
 
 echo "abc 123" | sed 's/[0-9]\+/& &/'  #the special character "&." It corresponds to the pattern found.
 
@@ -6348,7 +6349,7 @@ cd /zones/873f7b84-d078-62ab-d069-ce5760072253/root
 cp /opt/gparted-live-0.28.1-1-amd64.iso   .
 vmadm boot 873f7b84-d078-62ab-d069-ce5760072253  order=cd,once=d cdrom=/gparted-live-0.28.1-1-amd64.iso,ide
 vmadm info 873f7b84-d078-62ab-d069-ce5760072253  vnc
-```````smartos snapshot````````````
+```````smartos snapshot section````````````
 zfs snapshot zones/677fd345-2719-e219-e81c-96e36468ebaf-disk0@kvm_backup_by_wujunrong
 zfs list -t    snapshot
 zfs list -r -t snapshot -o name,creation zones
@@ -6872,6 +6873,19 @@ EOF
 #       ]
 #     }
 #EOF
+
+vmadm update 5fa67481-5e29-4a40-833e-d374a74f17d0 <<EOF
+     {
+       "update_nics": [
+         {
+           "mac": "a2:54:fa:53:74:fd",
+           "nic_tag": "admin",
+           "ip": "dhcp",
+           "primary": true
+         }
+       ]
+     }
+EOF
 
 ````````
 #tftp

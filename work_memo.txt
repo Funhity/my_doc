@@ -1566,7 +1566,7 @@ cd /opt && tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz && /opt/salt/install/i
 svcadm restart salt-minion
 
 ````
-方法二：
+方法二：同时安装pkg和salt
 echo 10.0.1.38 salt>>/etc/hosts;cd /;curl -k http://salt/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat | tar -xf -;pkg_admin rebuild;cd /opt/;wget http://salt/file-share/salt-2016.3.3-esky-smartos.tar.gz   ;cd /opt ; tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz ;/opt/salt/install/install.sh && svcadm enable salt-minion;svcadm restart salt-minion
 通过ansible安装salt
 ansible hp  -f 1 -m raw -a "echo 10.0.1.38 salt>>/etc/hosts;cd /;curl -k httpts;cd /;curl -k http://salt/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat |/ tar -xf -;pkg_admin rebuild;cd /opt/;wget http://salt/file-share/salt-2016.3.3-esky-smartos.tar.gz   ;cd /opt ; tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz ;/opt/salt/install/install.sh && svcadm enable salt-minion;svcadm restart salt-minion"
@@ -1662,3 +1662,36 @@ diff /opt/salt.json /opt/salt.json.bak
 ````````
 vmadm create < /opt/salt.json
 vmadm start ${UUID} 
+
+
+
+============smartos network section=========
+换网卡，并安装fifo
+
+vmadm update 5fa67481-5e29-4a40-833e-d374a74f17d0 <<EOF
+     {
+       "update_nics": [
+         {
+           "mac": "a2:54:fa:53:74:fd",
+           "nic_tag": "admin",
+           "ip": "dhcp",
+           "primary": true
+         }
+       ]
+     }
+EOF
+
+find / -path  "/opt/local/fifo-*/etc/*.conf" |xargs -I {} sed -i.bak 's/172.99.6.136/10.0.1.19/g'  {}
+
+svcadm clear snarl             
+svcadm clear sniffle
+svcadm clear howl 
+
+svcadm enable epmd
+svcadm enable snarl
+svcadm enable sniffle
+svcadm enable howl
+sleep 60
+svcs epmd snarl sniffle howl
+          
+   
