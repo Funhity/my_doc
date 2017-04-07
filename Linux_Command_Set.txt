@@ -4327,6 +4327,28 @@ bin/hadoop dfsadmin -refreshNodes
 sudo apt-get install dnsmasq
 service dnsmasq start
 
+centos7:
+systemctl start dnsmasq
+systemctl enable dnsmasq
+
+`````配置1``````
+所有域名都指向127.0.0.1
+address=/#/127.0.0.1  
+# would query the google public DNS server for the ajax.googleapis.com domain,
+similarly
+server=/ajax.googleapis.com/8.8.8.8  
+
+`````配置2```````
+#dnsmasq默认使用/etc/hosts和/etc/resolv.conf
+cat /etc/dnsmasq.d/wu.conf
+
+no-dhcp-interface=
+server=8.8.8.8
+#如果要不使用/etc/hosts而使用/etc/dnsmasq.hosts，则使用下面配置项
+#no-hosts
+#addn-hosts=/etc/dnsmasq.hosts
+
+
 ````````````````
 option-dhcp=3
 option-dhcp=6
@@ -6899,7 +6921,7 @@ inetconv -i /tmp/tftp.inetd -o /tmp
 svccfg import /tmp/tftp-udp.xml
 svcadm restart tftp/udp
 
-#dnsmasq
+#dnsmasq section``````
 pkgin -y install dnsmasq
 mv /opt/local/etc/dnsmasq.conf /opt/local/etc/dnsmasq.conf.bak
 tee /opt/local/etc/dnsmasq.conf <<-'EOF'
@@ -7068,7 +7090,7 @@ linux  :traceroute
         yum -y install traceroute
 
 
-=========smartos timezone=========
+=========smartos timezone section=========
 pkgin -y install smtools;sm-set-timezone Asia/Shanghai
 salt 'jinhao'  cmd.run 'pkgin -y install smtools;sm-set-timezone Asia/Shanghai'  shell='/usr/bin/bash' -t 1200
 rtc -z Asia/Shanghai
@@ -7081,4 +7103,12 @@ salt home_fifo timezone.get_zone
 salt home_fifo cmd.run "sed -i.bak2 's/TZ=UTC/TZ=Asia\/Shanghai/' /etc/TIMEZONE"
 salt home_fifo cmd.run "diff /etc/TIMEZONE /etc/TIMEZONE.bak2"
 salt home_fifo cmd.run "reboot"
-===
+==========set section===========================
+
+set -e 有错误就退出
+set -x 可以观察运行到哪一行
+===========openvpn section==============
+centos:
+yum -y install openvpn
+sudo openvpn --config ~/Documents/briphant_office_sh_new
+===================================
