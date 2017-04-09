@@ -3855,8 +3855,9 @@ ps aux --sort -rss     # Sorting down processes by memory usage
 info coreutils 'cat invocation'
 mesg(1) permission set to yes
 system monitor: sudo iostat -x 10
-====disk section====
+====disk section==fdisk section==
 sudo fdisk -l
+或   lsblk
 sudo yum install gparted
 parted -s /dev/sdb print #disk section
 sudo mount /dev/sdb1   /home/frank/kvm/images/my-wd-disk/
@@ -6670,6 +6671,7 @@ centos6:
 rmformat
 创建 usb 启动盘
 sudo fdisk -l |less
+bunzip2 smartos-20151029T053122Z-USB.img.bz2
 sudo dd if=smartos-20170216T015949Z-USB.img  of=/dev/sdb bs=1024
 
 =====smartos ansible section=====
