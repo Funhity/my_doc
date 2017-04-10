@@ -1222,6 +1222,28 @@ EOF
 #     }
 #EOF
 
+```````````````````vmadm update section ````````````````
+vmadm update 5fa67481-5e29-4a40-833e-d374a74f17d0 <<EOF
+     {
+       "update_nics": [
+         {
+           "mac": "a2:54:fa:53:74:fd",
+           "nic_tag": "admin",
+           "ip": "dhcp",
+           "primary": true
+         }
+       ]
+     }
+EOF
+
+vmadm update 5fa67481-5e29-4a40-833e-d374a74f17d0 <<EOF
+ {
+  "customer_metadata": {
+    "user-script": "/usr/bin/sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config; /usr/sbin/svcadm restart svc:/network/ssh:default"
+  }
+ }
+EOF
+
 ````````
 #tftp
 

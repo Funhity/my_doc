@@ -3025,6 +3025,9 @@ sudo systemctl start vncserver@:1.service
 
       vncserver -kill <X-display>
       vncserver -list
+      vncserver -kill :4
+      [frank@hp ~]$ vncserver :1
+
 
 `````
 centos:
@@ -4243,9 +4246,12 @@ password "ranbiao"
 
 
 ===========================  samba section  ==========================================
-yum install -y samba samba-client samba-common
+sudo yum install -y samba samba-client samba-common
 sudo cp  /etc/samba/smb.conf   /etc/samba/smb.conf.bak
+
+
 sudo cat /etc/samba/smb.conf 
+
 
 [global]
 workgroup = WORKGROUP
@@ -4257,6 +4263,8 @@ dns proxy = no
 printing = bsd
 printcap name = /dev/null
 #============================ Share Definitions ============================== 
+配置1
+
 [Anonymous]
 path = /opt/logs
 #path = /var/log/xinxindai
@@ -4264,6 +4272,9 @@ browsable =yes
 writable = yes
 guest ok = yes
 read only = no
+```````````````````
+配置2
+设置共享用户frank和目录
 
 [secure_share]
         path = /home/frank/share
