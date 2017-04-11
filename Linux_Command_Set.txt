@@ -4252,7 +4252,12 @@ sudo cp  /etc/samba/smb.conf   /etc/samba/smb.conf.bak
 
 sudo cat /etc/samba/smb.conf 
 
+```````log level````
 
+[global]
+log file = /usr/local/logs/samba.log.%m
+log level = 3
+``````````````
 [global]
 workgroup = WORKGROUP
 server string = Samba Server %v
@@ -4274,7 +4279,13 @@ guest ok = yes
 read only = no
 ```````````````````
 配置2
-设置共享用户frank和目录
+设置共享用户frank和目录,有的版本tdbsam数据库不会根据unix用户自动创建，需用smbpasswd来创建
+
+smbpasswd -a frank
+No builtin backend found, trying to load plugin
+Module 'tdbsam' loaded
+New SMB password:
+
 
 [secure_share]
         path = /home/frank/share
@@ -6823,6 +6834,18 @@ echo ::memstat | mdb -k
 To disable ip v6 in the running system:
 echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6
 echo 1 > /proc/sys/net/ipv6/conf/default/disable_ipv6
+
+centos:
+  diable ipv6:
+sysctl -w net.ipv6.conf.all.disable_ipv6=1
+sysctl -w net.ipv6.conf.default.disable_ipv6=1
+
+  enable ipv6
+sysctl -w net.ipv6.conf.all.disable_ipv6=0
+sysctl -w net.ipv6.conf.default.disable_ipv6=0
+
+debian:
+
 
 ============smartos disk===========================
 zpool replace zones c0t5000C5006349E003d0 <new disk>
