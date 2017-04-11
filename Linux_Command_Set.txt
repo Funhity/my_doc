@@ -6183,6 +6183,10 @@ zpool destroy  geekpool
 zpool status
 zpool list zones
 zpool get all zones
+``````````` smartos iostat section`````````````
+zpool iostat -v zones 10
+``````
+
 
 format             #查看硬盘情况
 format < /dev/null
@@ -6809,6 +6813,9 @@ curl -o  /home/frank/kvm/images/windows8-office.img   FILE:///run/media/frank/My
 curl -L scrum.briphant.cn:3002 -v
 用curl下载
 while ! curl -C - -LJO http://us-east.manta.joyent.com/Joyent_Dev/public/SmartOS/20160527T033529Z/smartos-20160527T033529Z....; do done
+
+下载http://pkgsrc.joyent.com/packages/SmartOS/2014Q4/x86_64/All/ 上面的所有tgz文件
+curl -s  http://pkgsrc.joyent.com/packages/SmartOS/2014Q4/x86_64/All/ | sed -r -n 's/.*=\"(.*.tgz)\".*/\1/p'| xargs -I {} wget http://pkgsrc.joyent.com/packages/SmartOS/2014Q4/x86_64/All/{}
 =======smartos memory section =========
 echo ::memstat | mdb -k
 ============ ipv6 section =============
