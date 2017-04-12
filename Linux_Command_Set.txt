@@ -2120,6 +2120,9 @@ ansible perf_ngi*  -m shell -a "nginx -v"
 
 systemctl status nginx.service
 
+```````检查配置文件语法````````````
+nginx -t -c /etc/nginx/nginx.conf
+
 ``````````````
 vi /etc/nginx/nginx.conf
 mv  /etc/nginx/conf.d/default.conf /tmp/
@@ -3697,6 +3700,9 @@ product-v6_pro01_v6_lvs01,192.168.110.20,ssh,22,yxaccount,YXxxd7361^@#
 product-v6_pro01_v6_nginx01,192.168.110.22,ssh,22,yxaccount,YXxxd7361^@#
 
 
+Shortcut: 
+Alt+1~9 or Ctrl+Tab or Shift+Tab
+fast point three times the mouse selects the current row
 
 
 ````````````````````ssh section```````````````````````````````````
@@ -6054,6 +6060,7 @@ pkgin in python27
 
 `````smartos command section`````````
 
+ping -a pkgsrc.joyent.com 显示ip地址
 zoneadm -z lx-zone reboot
 zoneadm list -v
 
@@ -6083,7 +6090,7 @@ chmod a+rw /dev/vmnet0
 admin_nic=3c:97:0e:52:6b:18
 admin_ip=192.168.1.99
 admin_netmask=255.255.0.0
-admin_network=
+admin_network=  
 admin_gateway=10.75.1.109
 
 storage_nic=3c:97:0e:52:6b:18
@@ -6097,6 +6104,9 @@ storage0_vlan_id=128
 列出所有网卡
 dladm show-phys -m
 dladm show-link
+
+
+snoop -s 300 101.227.82.94  #监听ip地址，收集300个字节
 ----smartos netstat--
 
 路由：netstat -r
@@ -6121,6 +6131,7 @@ svccfg -s FMRI setenv ENV_VARIABLE value
 
 
 =========pkgin section smartos repository========
+curl -s  http://pkgsrc.joyent.com/packages/SmartOS/2014Q4/x86_64/All/ | sed -r -n 's/.*=\"(.*.tgz)\".*/\1/p'| xargs -I {} wget http://pkgsrc.joyent.com/packages/SmartOS/2014Q4/x86_64/All/{}
 pkgin avail | more
 pkg库失效，找不到安装包时：
 rm -fr /var/db/pkgin/*    #This directory can be completely emptied if pkgin's database gets corrupted, pkgin will rebuild its database based on pkg_install's PKG_DB next time it is called.
@@ -6586,6 +6597,11 @@ svcadm restart chunter
 `````````````````````
 
 ==========fifo seciton============
+imgadm sources -a https://datasets.project-fifo.net
+imgadm avail | grep fifo
+
+
+
 fifo 组件版本：http://release.project-fifo.net/
 
 
@@ -6945,6 +6961,8 @@ EOF
 #       ]
 #     }
 #EOF
+
+echo '{"remove_nics": ["52:6a:68:66:a2:a0"]}' | vmadm update $(vmadm list | grep wujunrong_salt |awk '{print $1}')
 
 vmadm update 5fa67481-5e29-4a40-833e-d374a74f17d0 <<EOF
      {
