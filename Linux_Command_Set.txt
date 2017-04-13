@@ -439,8 +439,8 @@ vi /etc/sysconfig/network-scripts/ifcfg-enp0s3
 ZONE=external
 ````
 步骤三：
-firewall-cmd  --zone=external --add-masquerade --permanent #能翻墙的网段
-#firewall-cmd  --zone=public   --add-masquerade --permanent 
+firewall-cmd  --zone=external --add-masquerade --permanent  #能翻墙的网段
+#firewall-cmd  --zone=public   --add-masquerade --permanent #经测试，内部网段无需做add-masquerade
 firewall-cmd  --reload 
 echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.d/ip_forward.conf
 
