@@ -340,7 +340,7 @@ nmtui
   sudo yum remove  iptables-services
   lsmod|grep 'ipt'  #For most of the iptables related modules 
   
- ````````````````ufw section  firewall section``````````````````````````````
+ ````````````````ufw section  firewall section``````````firewalld section````````````````````
  sudo ufw disable     #firewall
  sudo ufw enable
  sudo ufw reload
@@ -396,7 +396,7 @@ sudo firewall-cmd --zone=public --permanent --add-port=4990-4999/udp
 sudo firewall-cmd --zone=public --permanent --list-ports
 
 firewall-cmd --zone=external --list-all
-
+firewall-cmd --zone=public   --list-all
 
 
  `````Defining a firewall Service`````
@@ -439,13 +439,26 @@ vi /etc/sysconfig/network-scripts/ifcfg-enp0s3
 ZONE=external
 ````
 步骤三：
-firewall-cmd  --zone=external --add-masquerade --permanent
-firewall-cmd  --zone=public   --add-masquerade --permanent 
+firewall-cmd  --zone=external --add-masquerade --permanent #能翻墙的网段
+#firewall-cmd  --zone=public   --add-masquerade --permanent 
 firewall-cmd  --reload 
+echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.d/ip_forward.conf
 
-firewall-cmd --permanent --direct --passthrough ipv4 -t nat -I POSTROUTING -o enp0s3 -j MASQUERADE -s 192.168.2.0/24
-cho "net.ipv4.ip_forward = 1" >> /etc/sysctl.d/ip_forward.conf
 
+#步骤三中的--add-masquerade和此条命令实现相同的功能
+#firewall-cmd --permanent --direct --passthrough ipv4 -t nat -I POSTROUTING -o enp0s3 -j MASQUERADE -s 192.168.2.0/24
+````
+查看设置：
+firewall-cmd --zone=external --list-all
+firewall-cmd --zone=public   --list-all
+
+firewall-cmd --permanent --direct --get-passthrough ipv4
+firewall-cmd --zone=external --query-masquerade && echo "enabled" || echo "Not enabled"
+firewall-cmd --direct --get-all-rules
+
+#firewall-cmd  --zone=external --remove-masquerade --permanent
+#firewall-cmd --permanent --direct --remove-passthrough ipv4 -t nat -I POSTROUTING -o eth1 -j MASQUERADE -s 10.0.99.0/24
+#firewall-cmd --direct --remove-rule ipv4 filter FORWARD 0 -i eth1 -o eth0 -m state --state RELATED,ESTABLISHED -j ACCEPT
 
 #开放端口 #dns section
 sudo firewall-cmd --zone=public --add-service=http
@@ -453,6 +466,7 @@ sudo firewall-cmd --zone=public --add-service=http
 firewall-cmd --permanent --add-port=53/tcp
 firewall-cmd --permanent --add-port=53/udp
 firewall-cmd --reload
+
 
 ======================  cloudera section =======================
 Impala-Hive 
@@ -716,6 +730,8 @@ echo 1 > /proc/sys/net/ipv4/ip_forward
 ip route add default via 11.9.0.100    
 ip route add default dev eth1          
 ip route del default 
+ip r del default via 10.0.1.1
+
 route del default gw gateway_IP                  
 route add default dev ${TUNNEL}        
 ip route delete 192.168.1.0/24 dev eth0
@@ -6118,6 +6134,10 @@ dladm show-link
 
 
 snoop -s 300 101.227.82.94  #监听ip地址，收集300个字节
+`````smartos route````````````
+route  add default 10.0.1.38
+route delete default 10.0.1.1 
+
 ----smartos netstat--
 
 路由：netstat -r
