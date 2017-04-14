@@ -6135,8 +6135,9 @@ dladm show-link
 
 snoop -s 300 101.227.82.94  #监听ip地址，收集300个字节
 `````smartos route````````````
-route  add default 10.0.1.38
+
 route delete default 10.0.1.1 
+route  add default 10.0.1.38
 
 ----smartos netstat--
 
