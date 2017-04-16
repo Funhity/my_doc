@@ -6137,7 +6137,7 @@ snoop -s 300 101.227.82.94  #监听ip地址，收集300个字节
 `````smartos route````````````
 
 route delete default 10.0.1.1 
-route  add default 10.0.1.38
+route  add default 10.0.1.101
 
 ----smartos netstat--
 
@@ -7211,4 +7211,10 @@ set -x 可以观察运行到哪一行
 centos:
 yum -y install openvpn
 sudo openvpn --config ~/Documents/briphant_office_sh_new
-===================================
+===========sublime section========================
+ 选中一行，包括换行符
+ ctrl+l
+ touchpad 按三下
+
+ 选中一行，包括换行符
+ ctl+shift+ -> 或 <-
