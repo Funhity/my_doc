@@ -1657,8 +1657,8 @@ zfs destroy zones/${UUID}@sending
 zfs snapshot zones/${UUID}-disk0@sending
 zfs send -p  zones/${UUID}-disk0@sending > /opt/salt-disk0.zfs
 zfs destroy zones/${UUID}-disk0@sending
-scp /opt/{*.zfs,salt.json}  10.0.1.41:/opt/
-#scp /opt/salt.json   10.0.1.41:/opt/
+scp /opt/{*.zfs,salt.json}  10.0.1.174:/opt/
+
 
 UUID=873f7b84-d078-62ab-d069-ce5760072253
 zfs receive zones/${UUID} < /opt/salt.zfs

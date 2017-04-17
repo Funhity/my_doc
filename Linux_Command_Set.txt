@@ -6444,6 +6444,8 @@ vmadm boot 873f7b84-d078-62ab-d069-ce5760072253  order=cd,once=d cdrom=/gparted-
 vmadm info 873f7b84-d078-62ab-d069-ce5760072253  vnc
 ```````smartos snapshot section````````````
 zfs snapshot zones/677fd345-2719-e219-e81c-96e36468ebaf-disk0@kvm_backup_by_wujunrong
+批量：vmadm  list | grep old_fifo_0_7_home  | awk '{print $1}' |xargs -I {} zfs snapshot zones/{}@fifo-upgrade-backup
+
 zfs list -t    snapshot
 zfs list -r -t snapshot -o name,creation zones
 zfs list -r -t snapshot -o name,creation tank/home/ahrens
@@ -6561,7 +6563,7 @@ vmadm update <zone id> vcpus=4
 vmadm update <zone id> ram=4096
 vmadm update 677fd345-2719-e219-e81c-96e36468ebaf   hostname=centos7-qinghua
 vmadm update 677fd345-2719-e219-e81c-96e36468ebaf   alias=wujunrong_centos7
-vmadm update 1df6c1a6-7b51-635e-af61-a387f5fa3f45   resolvers=114.114.114.114,8.8.8.8
+  
 vmadm update cafa7c1b-da23-498b-af60-8270a9f1304b   indestructible_delegated=false
 vmadm update cafa7c1b-da23-498b-af60-8270a9f1304b   autoboot=false
 ````````
@@ -6957,13 +6959,13 @@ phy-num 槽位号是1号
              "hostname": "pxe",
              "max_physical_memory": 1024,
              "quota": 50,
-             "resolvers": ["172.17.1.10", "114.114.114.114"],
+             "resolvers": ["10.0.1.1", "114.114.114.114"],
              "nics": [
                 {
                         "nic_tag": "admin",
-                        "ip": "172.16.0.2",
+                        "ip": "10.0.1.250",
                         "netmask": "255.255.255.0",
-                        "dhcp_server": "1"，
+                        "dhcp_server": "1",
                         "primary": true
                 }
              ],
@@ -6972,7 +6974,7 @@ phy-num 槽位号是1号
               "admin_pw": "admin"
               },
              "customer_metadata": {
-                 "user-script" : "/opt/local/bin/sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config; /usr/sbin/svcadm restart svc:/network/ssh:default"
+                 "user-script" : "/usr/bin/sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config; /usr/sbin/svcadm restart svc:/network/ssh:default"
 
               }
             }			
@@ -7029,7 +7031,7 @@ tee /opt/local/etc/dnsmasq.conf <<-'EOF'
    #Lease File to track leases
    dhcp-leasefile=/etc/dnsmasq.leases
    # Give out addresses in the 172.16.0.1/24 subnet
-   dhcp-range=192.168.1.100,192.168.1.115,255.255.255.0,2h
+   dhcp-range=10.0.1.210,10.0.1.215,255.255.255.0,2h
    # The name of the boot file is pxegrub
    dhcp-boot=pxegrub
 EOF
@@ -7039,7 +7041,7 @@ svcadm enable dnsmasq
 
 pkgin -y install wget
 
-wget  -O  /tftpboot/pxegrub    http://192.168.1.128/file-share/pxelinux/pxegrub
+wget  -O  /tftpboot/pxegrub    http://salt/file-share/pxelinux/pxegrub
 #或wget  -O  /tftpboot/pxegrub     http://aszeszo.googlepages.com/pxegrub
    #在centos上 执行
    #wget  -O  /root/latest.iso http://192.168.1.128/file-share/smartos-20160721T174418Z.iso
