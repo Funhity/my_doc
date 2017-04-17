@@ -6144,8 +6144,13 @@ route  add default 10.0.1.101
 
 路由：netstat -r
 端口：netstat -n -P tcp
+      netstat -n 
+      netstat -p 
+      lsof -o 443 #直接打命令可查看帮助
+      lsof -p     #显示程序和端口的对应关系
+
 arp ：netstat -anp
-lsof -o 443 #直接打命令可查看帮助
+
 
 vmware:
 ipadm create-if e1000g0
@@ -7050,6 +7055,13 @@ wget  -O  /tftpboot/pxegrub    http://salt/file-share/pxelinux/pxegrub
 scp -r  xx.xx.xx.xx:/root/mnt/*    /tftpboot/
 ＃说明：xx.xx.xx.xx是centos的ip 地址
 #问题定位，关闭dnsmaq服务，用dnsmasq调试模式：svcadm disable dnsmasq ;/opt/local/sbin/dnsmasq -C /opt/local/etc/dnsmasq.conf -d
+
+
+````````
+测试tftp
+yum -y install tftp
+tftp 10.0.1.250
+tftp> get /boot/grub/menu.lst
 
 ========fifo section====
 chunter：
