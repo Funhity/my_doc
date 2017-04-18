@@ -4863,7 +4863,12 @@ sed -e "s/stage_/\/stage/g" -e "s/v6_webservice/\/webservice\//g"
 删除最后一行：
 sed -i.bak  '$d' file
 删除第四行
-sed   -i.bak   '4d' /etc/hosts  
+sed   -i.bak   '4d' /etc/hosts 
+
+刪除倒數2行
+head -n -2 myfile.txt
+n=2;tac file.txt | sed "1,$n{d}" | tac
+
 cat /proc/mounts | grep -E "\b(btrfs|ext2|ext3|ext4|jfs|reiser|xfs|ffs|ufs|jfs|jfs2|vxfs|hfs|ntfs|fat32|zfs)\b" |awk 'BEGIN{printf "{\n\"data\":[\n"} {printf "{\"{#DEV_NAME}\" : \"%s\",\"{#FS_NAME}\" : \"%s\",\"{#SEC_SIZE}\" : ",$1,$2;system("blockdev --getss " $1 " |tr -d \"\n\"  ") ;printf "},\n"}   END{printf "  ]\n}\n"} '   | tac | sed  '3s/\({.*}\),/\1/g'|tac
 删除空行
 sed '/^\s*$/d' 
