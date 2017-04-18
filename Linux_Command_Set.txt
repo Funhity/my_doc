@@ -164,7 +164,7 @@ fi
 /etc/init.d/network restart
    sed -i.bak  's/HOSTNAME=.*/HOSTNAME=cloudera-manager/g' /etc/sysconfig/network
 
-=====nmap section==arp section==nc section===
+=====nmap section==arp section==nc section==address section=
   sudo yum install nmap -y 
   arping -c 1 -I br0      192.168.38.150
   arping      -I ens32 -b 192.168.31.123 测试是否有IP冲突
@@ -2106,9 +2106,13 @@ chmod -R 755 /home/frank
 wget -O - http://example.com/dvd.iso  | tee >(sha1sum > dvd.sha1) > dvd.iso
 wget -O - http://example.com/dvd.iso  | tee dvd.iso | sha1sum > dvd.sha1
 wget -O - http://example.com/dvd.iso  | tee >(sha1sum > dvd.sha1)   >(md5sum > dvd.md5)   > dvd.iso
+wget -O  /tftpboot/undionly.kpxe   http://cuddletech.com/IPXE-100612_undionly.kpxe      
+
+
 
 pgrep -a fk.sh| tee ./fk.log| wc -l
 crontab -l | tee crontab-backup.txt | sed 's/old/new/' | crontab –
+使用tee命令，在标准输出和日志文件中同时输出：
 exec &> >(tee "$log_file")
 # $log_file will contain the output of the script and any subprocesses, and the output will also be printed to the screen.
 #  >(...) starts the process ... and returns a file representing its standard input. exec &> ... redirects both standard output and standard error into ... for the remainder of the script (use just exec > ... for stdout only). tee -a appends its standard input to the file, and also prints it to the screen.
@@ -2913,7 +2917,7 @@ zip   abc.zip *
 tar -xzf rebol.tar.gz
 tar zxf file.tar.gz -C /root/Desktop/folder
 
-?$ tar -zxvf filename.tgz
+tar -zxvf filename.tgz
 $ tar -zxvf filename.tar.gz
 $ tar -jxvf filename.tar.bz2
 
@@ -5053,6 +5057,16 @@ git checkout master
 
 
 git archive --format zip --output /full/path master
+
+````````git tags ```git release````````````````
+方法一：
+git clone git://git.openssl.org/openssl.git
+cd openssl
+git tag -l                   # to list the tags
+git checkout tags/<name>     # to switch to the desired tag
+方法二：
+git ls-remote --tags git://git.openssl.org/openssl.git
+
 ===========zabbix section===========
 zabbix_server --version
 zabbix-server-mysql.x86_64 : Zabbix server compiled to use MySQL database

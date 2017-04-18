@@ -1305,22 +1305,34 @@ wget http://192.168.1.232/file-share/pxelinux/mboot.c32
 
 
 
-``````````````````
+```ipxe section```````````````
+yum -y install  xz-devel.x86_64
 
-cat smartos.ipxe
+svcadm restart  dnsmasq
+简单方案:
+wget -O  /tftpboot/undionly.kpxe   http://cuddletech.com/IPXE-100612_undionly.kpxe
+wget -O  /tftpboot/undionly.kpxe   http://boot.ipxe.org/undionly.kpxe
+wget -O  /tftpboot/smartos/platform-latest.tgz http://salt/iso/platform-20170216T015949Z.tgz
+tar zxvf  ./platform-latest.tgz 
+tee smartos.ipxe <<-'EOF' 
 #!ipxe
 # /var/lib/tftpboot/smartos.ipxe.tpl
-kernel /smartos/20160818T234814Z/platform/i86pc/kernel/amd64/unix -B smartos=true
-initrd /smartos/20160818T234814Z/platform/i86pc/amd64/boot_archive
+kernel /smartos/platform-20170216T015949Z/i86pc/kernel/amd64/unix -B smartos=true
+initrd /smartos/platform-20170216T015949Z/i86pc/amd64/boot_archive
 boot
+EOF
 
+复杂方案：
 
-
-
+tee /opt/smartos_pxe.sh <<-'EOF' 
+set -e
+mkdir -p  /tftpboot/smartos
 cd /tftpboot/smartos
-curl https://us-east.manta.joyent.com/Joyent_Dev/public/SmartOS/platform-latest.tgz > /var/tmp/platform-latest.tgz
-(Just now URL https://download.joyent.com/pub/iso/platform-latest.tgz is invalid, 404… )
-cat /var/tmp/platform-latest.tgz | tar xz
+#curl https://us-east.manta.joyent.com/Joyent_Dev/public/SmartOS/platform-latest.tgz > /var/tmp/platform-latest.tgz
+#(Just now URL https://download.joyent.com/pub/iso/platform-latest.tgz is invalid, 404… )
+wget -O /tftpboot/smartos/platform-latest.tgz http://salt/iso/platform-20170216T015949Z.tgz
+
+tar zxvf  ./platform-latest.tgz 
 directory=`ls | grep platform- | sort | tail -n1`
 release=${directory:9}
 mv $directory $release
@@ -1329,7 +1341,7 @@ mkdir platform
 mv i86pc platform
 cd /tftpboot
 cat smartos.ipxe.tpl | sed -e"s/\$release/$release/g" > smartos.ipxe
-
+EOF
 
 
 
