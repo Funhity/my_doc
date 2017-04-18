@@ -5066,6 +5066,14 @@ git tag -l                   # to list the tags
 git checkout tags/<name>     # to switch to the desired tag
 方法二：
 git ls-remote --tags git://git.openssl.org/openssl.git
+```
+工作区版本切换：
+git checkout -
+to switch back to wherever it was before the last checkout. 
+This was motivated by the analogy to the shell idiom cd - to go back to whatever working directory one was previously in.
+历史切换信息：
+git reflog
+
 
 ===========zabbix section===========
 zabbix_server --version
