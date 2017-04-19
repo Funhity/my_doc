@@ -4874,6 +4874,9 @@ cat /proc/mounts | grep -E "\b(btrfs|ext2|ext3|ext4|jfs|reiser|xfs|ffs|ufs|jfs|j
 删除空行
 sed '/^\s*$/d' 
 
+修改ip地址
+sed -i 's/127.0.0.1/{{ fifo_zone_ip }}/g' *.0.9.1
+
 find ./grains.test_* | xargs -I {} sed  -i  "s/ci\/files\/test_v6_mobile/wujunrong\/xxd_configure\/test\/v6\/mobile/g;w /dev/stdout"   {}
 find / -path  "/opt/local/fifo-*/etc/*.conf" |xargs -I {} sed -i.bak 's/172.99.6.136/10.0.1.19/g'  {}
 
@@ -7261,7 +7264,7 @@ sudo openvpn --config ~/Documents/briphant_office_sh_new
 
  选中一行，包括换行符
  ctl+shift+ -> 或 <-
-========string section===================
+========string section==========chenge file name=========
 
 ${string/pattern/replacement}
 ls *.new |xargs -I {} sh -c 'a={};b=${a/new/0.7};mv {}  $b'  #把.new文件改成.0.7文件
