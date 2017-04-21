@@ -3967,6 +3967,8 @@ du -ah /root
 du -ak /root
 du --max-depth  1 -h
 du -k --exclude /opt/webserver/v6_tomcat/webapps/m/static/image   | sort -nk1 
+查看当前目录大小，并排序：du --max-depth  1 2>&1  | sort -nk1
+查看当前目录中文件的大小：du -a --max-depth 1  -h
 ```````````ls section``````````````````````````
 ls -ltr
 # ls -ld /home/jerry
