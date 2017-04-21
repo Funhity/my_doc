@@ -6496,6 +6496,13 @@ zfs destroy zones/873f7b84-d078-62ab-d069-ce5760072253-disk0@sending
 
 zfs rollback tank/home/ahrens@tuesday
 zfs rollback -r tank/home/ahrens@tuesday
+
+
+把snapshot从一台机器移动到另一台机器
+zfs send -R zones/$UUID-disk0@last-snapshot | ssh destination-host zfs receive zones/$UUID-disk0
+#Then you need to send the VM's metadata and create the VM. The JSON command updates the metadata so that vmadm doesn't attempt to create the ZFS datasets.
+vmadm get $UUID | json -e "for(i in this.disks){this.disks[i].nocreate=true;}this.i=undefined;" | ssh destination-host vmadm create
+
 `````````````````
 kvm虚拟机增加磁盘
 cat add_disk.json
@@ -7270,3 +7277,21 @@ sudo openvpn --config ~/Documents/briphant_office_sh_new
 
 ${string/pattern/replacement}
 ls *.new |xargs -I {} sh -c 'a={};b=${a/new/0.7};mv {}  $b'  #把.new文件改成.0.7文件
+
+
+==========json section ==========
+
+
+Use the -e CODE option to execute code on the input JSON.
+
+           $ echo ´{"name":"trent","age":38}´ | json -e ´age++´
+           {
+             "name": "trent",
+             "age": 39
+           }
+
+Set a key to undefined to remove it
+           $ echo ´{"one": 1, "two": 2}´ | json -e ´this.one=undefined´
+           {"two":2}
+
+看 man json 获得更多帮助
