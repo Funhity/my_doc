@@ -7319,3 +7319,10 @@ Set a key to undefined to remove it
            {"two":2}
 
 看 man json 获得更多帮助
+``````````````````````````````````````
+在linux中使用json命令：
+docker pull node
+curl -L https://github.com/trentm/json/raw/master/lib/json.js > json.js
+echo '{"one": 1, "two": 2}'  | docker run -i --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest node json.js  -e 'this.one=undefined'
+echo '{"name":"trent","age":38}'   | docker run -i --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest node json.js    -e 'this.age++
+====================
