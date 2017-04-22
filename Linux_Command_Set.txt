@@ -23,8 +23,8 @@ chkconfig --add glassfish4
 chkconfig --list glassfish4
 
 ````hostname section```host section``
-centos7:   /etc/hostname
-           /etc/hosts #经测试有效
+centos7:   /etc/hostname  #经测试有效
+           /etc/hosts
 centos6:   /etc/sysconfig/network
            修改主机名命令：hostname yh_zabbix_server;sed -i.bak  s/HOSTNAME=.*/HOSTNAME=yh_zabbix_server/g   /etc/sysconfig/network ;hostname
     
@@ -6713,6 +6713,30 @@ fifoadm vms         list
 fifoadm vms get -j 92d63038-6fdf-c957-f161-ae22fbd9600c
 
 sniffle-admin hypervisors list
+
+
+
+
+          /opt/local/fifo-sniffle/bin/sniffle-admin cluster join 'sniffle@10.0.1.85'
+          /opt/local/fifo-sniffle/bin/sniffle-admin cluster plan
+          /opt/local/fifo-sniffle/bin/sniffle-admin cluster commit
+          
+          /opt/local/fifo-howl/bin/howl-admin cluster join 'howl@10.0.1.85'
+          /opt/local/fifo-howl/bin/howl-admin cluster plan
+          /opt/local/fifo-howl/bin/howl-admin cluster commit
+          
+          /opt/local/fifo-snarl/bin/snarl-admin cluster join 'snarl@10.0.1.85'
+          /opt/local/fifo-snarl/bin/snarl-admin cluster plan
+          /opt/local/fifo-snarl/bin/snarl-admin   cluster commit
+
+          
+          /opt/local/fifo-snarl/bin/snarl-admin member-status
+          /opt/local/fifo-sniffle/bin/sniffle-admin member-status
+          /opt/local/fifo-howl/bin/howl-admin member-status
+          
+          #snarl-admin init default MyOrg Users admin admin
+          #sniffle-admin init-leofs 10.0.1.80.xip.io
+          #svcadm restart sniffle
 ===========smartos dataset section====dsapi section====================
 imgadm sources -a  http://datasets.at
 imgadm sources -d  https://images.joyent.com
