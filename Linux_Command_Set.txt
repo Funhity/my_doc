@@ -6679,22 +6679,39 @@ svcadm restart chunter
 ==========fifo seciton============
 imgadm sources -a https://datasets.project-fifo.net
 imgadm avail | grep fifo
-
-
+``````````````````
+版本查询：
+Chunter Version
+cat /opt/chunter/etc/chunter.version
+pkgin list  fifo-snarl fifo-sniffle fifo-howl fifo-cerberus | grep fifo
+      Sniffle Version
+      pkgin list | grep sniffle
+      Howl Version
+      pkgin list | grep howl
+      Snarl Version
+      pkgin list | grep snarl
+`````````````````````````````
 
 fifo 组件版本：http://release.project-fifo.net/
 
-
-pkgin list  fifo-snarl fifo-sniffle fifo-howl fifo-cerberus | grep fifo
+检查服务和进程：
+svcs chunter fifo/zlogin
 svcs sniffle snarl howl
+ps -afe | grep run_erl | grep -v grep
 
-
+`````````````````````
+dataset配置：
 vi  /opt/local/fifo-cerberus/config/config.js
     http://images.briphant.com/images
-
+````````````
+日志：
 ls -Fd /data/*/log
 /data/{sniffle,snarl,howl}/log
-
+```````````````````
+检查内存占用：
+prstat
+howl-admin connections
+sniffle-admin connections
 ``````````````
 创建虚拟机时注意jason file 必须有如下属性
 autoboot=true
@@ -6710,6 +6727,7 @@ fifoadm hypervisors list
 
 fifoadm hypervisors list
 fifoadm vms         list
+fifoadm vms get -j <uuid>
 fifoadm vms get -j 92d63038-6fdf-c957-f161-ae22fbd9600c
 
 sniffle-admin hypervisors list
