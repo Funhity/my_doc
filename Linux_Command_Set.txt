@@ -1359,7 +1359,10 @@ apache:
   ``````````````salt network`````````````
   
   salt-run mine.get '*'       network.interfaces
+  
   salt    'stage_v6_front01'  network.ip_addrs
+  address=`/opt/salt/bin/appdata/salt-2016.3.3.solaris-2_11-i86pc_64bit/salt-call --out=json  network.ip_addrs 2>&1 | grep -v WAR | json local[0]`
+
   salt    '*'                 network.interfaces
   salt    '*'              test.ping 
   salt    '*'              test.ping --return syslog 
@@ -2050,7 +2053,11 @@ The * key will highlight all occurrences of the word that is under the cursor.
 
 :set number
 :set nonumber
-
+````````
+yy        : copy (yank, cut) the current line into the buffer
+Nyy or yNy:copy (yank, cut) the next N lines, including the current line, into the buffer 
+p         :put (paste) the line(s) in the buffer into the text after the current line
+``````````````
 
 G      go the end of the file
 gg     gets the cursor to the first character of the file

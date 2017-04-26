@@ -1470,13 +1470,17 @@ tee /opt/ansible.jason <<-'EOF'
 
 EOF
 vmadm  create -f /opt/ansible.jason
-================================
+=======smartos command========fifo command=================
 vmadm list  | grep wujunrong-leofs | awk '{print $1 }' |xargs -I {} vmadm delete {}
 vmadm list  | grep wujunrong-leofs | awk '{print $1 }' |xargs -I {} vmadm reboot {}
 vmadm list  | grep alpha_test_leofs | awk '{print $1 }' |xargs -I {} vmadm delete {}
 vmadm list  | grep bb50e0d0  | awk '{print $1 }' |xargs -I {} sh -c 'vmadm update {}   indestructible_delegated=false;vmadm delete {}'
+vmadm list | grep old |awk '{print $1}' |xargs -I{} vmadm stop {}
+address=`/opt/salt/bin/appdata/salt-2016.3.3.solaris-2_11-i86pc_64bit/salt-call --out=json  network.ip_addrs 2>&1 | grep -v WAR | json local[0]`
+
 ========smartos salt========================
 ansible facebook_machine10 -m raw -a "cd /opt/ && wget http://192.168.1.232/file-share/salt-2016.3.3-esky-smartos.tar.gz"
+
 ansible facebook_machine10 -m raw -a "echo '10.75.1.70 salt'>>/etc/hosts;cd /opt && tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz && /opt/salt/install/install.sh && svcadm enable salt-minion"
 ====ssh section======
 /home/deployer/.ssh/id_rsa:
