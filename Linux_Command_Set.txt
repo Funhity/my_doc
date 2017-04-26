@@ -1359,7 +1359,7 @@ apache:
   ``````````````salt network`````````````
   
   salt-run mine.get '*'       network.interfaces
-  
+
   salt    'stage_v6_front01'  network.ip_addrs
   address=`/opt/salt/bin/appdata/salt-2016.3.3.solaris-2_11-i86pc_64bit/salt-call --out=json  network.ip_addrs 2>&1 | grep -v WAR | json local[0]`
 
@@ -1830,7 +1830,58 @@ mine_functions:
   public_ssh_hostname:
     - mine_function: grains.get
     - id
-       
+
+````````````````
+jinja 变量，用字符串初始化时，必须告诉jinja这个字符串是什么格式
+方法一：
+   # doc1.sls
+   {% load_yaml as yaml_src %}
+       foo: it works
+   {% endload %}
+   {% load_json as json_src %}
+       {
+           "bar": "for real"
+       }
+   {% endload %}
+   Dude, {{ yaml_src.foo }} {{ json_src.bar }}!
+
+   will be rendered as:
+   Dude, it works for real!
+
+方法二：
+
+   {%- set yaml_src = "{foo: it works}"|load_yaml %}
+   {%- set json_src = "{'bar': 'for real'}"|load_json %}
+   Dude, {{ yaml_src.foo }} {{ json_src.bar }}!
+   
+   will be rendered as:
+   Dude, it works for real!
+
+方法三：
+   External files can be imported and made available as a Jinja variable.
+   
+   {% import_yaml "myfile.yml" as myfile %}
+   {% import_json "defaults.json" as defaults %}
+   {% import_text "completeworksofshakespeare.txt" as poems %}
+
+方法四：
+  # /srv/reactor/some_event.sls
+    invoke_orchestrate_file:
+      runner.state.orchestrate:
+        - mods: orch.do_complex_thing
+        - pillar:
+            event_tag: {{ tag }}
+            event_data: {{ data | json() }}
+=======python jinja section====
+>>> from jinja2 import Template
+>>> t = Template("Hello {{ something }}!")
+>>> t.render(something="World")
+u'Hello World!'
+>>>
+>>> t = Template("My favorite numbers: {% for n in range(1,10) %}{{n}} " "{% endfor %}")
+>>> t.render()
+u'My favorite numbers: 1 2 3 4 5 6 7 8 9 '
+
 ======================= svn section========================  
 #a new caret (^) notation, Note that this URL syntax works only when your current working directory is a 
 working copy—the command-line client knows the repository's root URL by looking at the working copy's metadata
