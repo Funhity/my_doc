@@ -1304,6 +1304,49 @@ wget http://192.168.1.232/file-share/pxelinux/libcom32.c32
 wget http://192.168.1.232/file-share/pxelinux/mboot.c32
 
 
+````````pxelinux section``````
+centos:
+yum -y install syslinux
+mkdir -p /var/lib/tftpboot/pxelinux/pxelinux.cfg
+mkdir -p /var/lib/tftpboot/pxelinux/smartos/
+
+sudo tee /etc/dnsmasq.d/smartos.conf<<-'EOF'
+interface=enp0s8
+dhcp-range=10.0.1.190,10.0.1.200,6h
+#dhcp-host=80:00:27:c6:a1:16,10.0.0.253,svr1,infinite
+dhcp-boot=pxelinux/pxelinux.0
+enable-tftp
+tftp-root=/var/lib/tftpboot
+EOF
+
+cp /usr/share/syslinux/pxelinux.0 /var/lib/tftpboot/pxelinux/pxelinux.0
+
+wget -O  /var/lib/tftpboot/pxelinux/smartos/ldlinux.c32   http://salt/file-share/pxelinux/ldlinux.c32
+wget -O  /var/lib/tftpboot/pxelinux/smartos/libcom32.c32  http://salt/file-share/pxelinux/libcom32.c32
+wget -O  /var/lib/tftpboot/pxelinux/smartos/mboot.c32     http://salt/file-share/pxelinux/mboot.c32
+
+scp -r ./platform/   10.0.1.101:/var/lib/tftpboot/pxelinux/
+
+sudo tee  /var/lib/tftpboot/pxelinux/pxelinux.cfg/default<<-'EOF'
+default smartos
+prompt 1
+timeout 50
+ 
+label smartos
+kernel smartos/mboot.c32
+append smartos/platform/i86pc/kernel/amd64/unix -B smartos=true,console=text,root_shadow='$5$2HOHRnK3$NvLlm.1KQBbB0WjoP7xcIwGnllhzp2HnT.mDO7DpxYA' --- smartos/platform/i86pc/amd64/boot_archive
+ 
+label smartosrescue
+kernel smartos/mboot.c32
+append smartos/platform/i86pc/kernel/amd64/unix -B smartos=true,console=text,standalone=true,noimport=true,root_shadow='$5$2HOHRnK3$NvLlm.1KQBbB0WjoP7xcIwGnllhzp2HnT.mDO7DpxYA' --- smartos/platform/i86pc/amd64/boot_archive
+EOF
+
+说明：/var/lib/tftpboot/pxelinux/pxelinux.cfg/default 配置文件中需要的mboot.c32文件，pxelinux.0文件的版本必须一致，都是从syslinux-4.05.tar.gz中取出。
+[root@NAT_Server ~]# sudo yum list installed| grep syslinux
+syslinux.x86_64                      4.05-13.el7                    @base       
+[root@NAT_Server ~]# wget https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-4.05.tar.gz
+[root@NAT_Server ~]# cp ./syslinux-4.05/com32/mboot/mboot.c32    /var/lib/tftpboot/pxelinux/smartos/
+[root@NAT_Server ~]# cp /usr/share/syslinux/pxelinux.0 /var/lib/tftpboot/pxelinux/pxelinux.0
 
 ```ipxe section```````````````
 yum -y install  xz-devel.x86_64
