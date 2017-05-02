@@ -256,6 +256,12 @@ rm -f /etc/udev/rules.d/70-persistent-net.rules
   备份/opt/saltstack/salt/ci/files目录下的所有文件，剔除隐藏文件、隐藏目录、可执行文件：
   find /opt/saltstack  -type d -path '*/\.*' -prune -o -not -name '.*' -type f | xargs file | awk -F: '$2 ~ /text/ { print $1 }' |   cut -d "/" -f 4- | rsync --files-from=- -av     /opt/saltstack/       /home/wujunrong/backup/xxd/saltstack/  --dry-run
   find /opt/           -type d  \( -path /opt/test -o -path  /opt/ci/packages -o -path /opt/ci/rsync  -o -path /opt/ci/workspace -o -path '*/\.*'  \) -prune -o -not -name '.*' -type f  -print | xargs file | awk -F: '$2 ~ /text/ { print $1 }' |   cut -d "/" -f 3- | rsync --files-from=- -av     /opt/                 /home/wujunrong/backup/xxd/            --dry-run   --exclude test  --exclude ci/packages --exclude ci/rsync   --exclude ci/workspace
+
+====== smartos find section =======
+/usr/xpg4/bin/find  ./ -path  *ntfstest*
+/usr/xpg4/bin/find  ./ -path  "*.0"
+/usr/xpg4/bin/find    ./   -iregex  .*ldlinux.c32
+find  -E   ./   -iregex  ".*(ldlinux.c32|Mboot.c32|libcom32.c32)"
 ====== xargs section =======
   You can force xargs to use at most max-args arguments per command line. For example following will use first two argument per command:
   $ echo 1 2 3 4 | xargs -n 2
@@ -1544,11 +1550,12 @@ apache:
      svnfs_env_blacklist: []
      
   salt-call --local           cmd.script salt://svn/wujunrong/fk_test.sh     cwd=/tmp
-`````````````````````````````````````````````````````````````````````````````````````````````````
+```````salt-run section``````````````````````````````````````````````````````````````````````````````````````````
   salt-run  survey.diff survey_sort=up 'stage_v6_admin0?' cp.get_file_str file:///etc/sysconfig/network-scripts/ifcfg-eth0
   salt-run  survey.diff survey_sort=up '*'                cmd.run 'cat /etc/hosts'
   salt-run  survey.hash                'stage_v6_admin0?' test.ping
   salt-run  survey.hash                "stage_v6_admin0?" file.get_hash /etc/salt/minion survey_sort=up //find an "outlier" minion config file
+  salt-run  salt.cmd network.ip_addrs  #获取master的ip地址
 
   ````````````salt file managed```````````````````
   /etc/ssh/sshd_config:
@@ -7175,7 +7182,7 @@ inetconv -i /tmp/tftp.inetd -o /tmp
 svccfg import /tmp/tftp-udp.xml
 svcadm restart tftp/udp
 
-#dnsmasq section``````
+#`````smartos dnsmasq section``````
 pkgin -y install dnsmasq
 mv /opt/local/etc/dnsmasq.conf /opt/local/etc/dnsmasq.conf.bak
 tee /opt/local/etc/dnsmasq.conf <<-'EOF'
@@ -7211,7 +7218,7 @@ tftp> get /boot/grub/menu.lst
 
 
 ````````pxelinux section``````
-centos:
+方法一：在centos上
 yum -y install syslinux
 mkdir -p /var/lib/tftpboot/pxelinux/pxelinux.cfg
 mkdir -p /var/lib/tftpboot/pxelinux/smartos/
@@ -7243,6 +7250,31 @@ EOF
 [root@NAT_Server ~]# cp ./syslinux-4.05/com32/mboot/mboot.c32    /var/lib/tftpboot/pxelinux/smartos/
 [root@NAT_Server ~]# cp /usr/share/syslinux/pxelinux.0 /var/lib/tftpboot/pxelinux/pxelinux.0
 
+·············
+方法二：在smartos上
+mkdir -p /tftpboot/pxelinux.cfg
+cp ./syslinux-4.05/core/pxelinux.0 /tftpboot/
+
+tee  /tftpboot/pxelinux.cfg/default<<-'EOF'
+
+EOF
+/usr/xpg4/bin/find  ./ -path  "*mboot.c32"
+/usr/xpg4/bin/find  ./ -path  "*ldlinux.c32"
+/usr/xpg4/bin/find  ./ -path  "*libcom32.c32"
+
+
+find  -E   ./   -iregex  ".*(ldlinux.c32|Mboot.c32|libcom32.c32)"
+cp /root/syslinux-4.05/com32/mboot/mboot.c32 /tftpboot/smartos
+
+
+sudo tee /opt/local/etc/dnsmasq.conf<<-'EOF'
+#Lease File to track leases
+dhcp-leasefile=/etc/dnsmasq.leases
+# Give out addresses in the 172.16.0.1/24 subnet
+dhcp-range=10.0.1.210,10.0.1.215,255.255.255.0,2h
+# The name of the boot file is pxegrub
+dhcp-boot=pxelinux.0
+EOF
 
 ========fifo section====
 chunter：
