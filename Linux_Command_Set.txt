@@ -261,7 +261,9 @@ rm -f /etc/udev/rules.d/70-persistent-net.rules
 /usr/xpg4/bin/find  ./ -path  *ntfstest*
 /usr/xpg4/bin/find  ./ -path  "*.0"
 /usr/xpg4/bin/find    ./   -iregex  .*ldlinux.c32
+#-iregex True if the full path of the file matches pattern using regular expressions. 正则表达式的操作对象是整个路径
 find  -E   ./   -iregex  ".*(ldlinux.c32|Mboot.c32|libcom32.c32)"
+find  -E   ./   -iregex  ".*(ldlinux.c32|bios.*Mboot.c32|bios.*libcom32.c32|/pxelinux.0)"|xargs -I{} cp {} /tftpboot/
 ====== xargs section =======
   You can force xargs to use at most max-args arguments per command line. For example following will use first two argument per command:
   $ echo 1 2 3 4 | xargs -n 2
