@@ -7262,10 +7262,8 @@ EOF
 /usr/xpg4/bin/find  ./ -path  "*ldlinux.c32"
 /usr/xpg4/bin/find  ./ -path  "*libcom32.c32"
 
-
-find  -E   ./   -iregex  ".*(ldlinux.c32|Mboot.c32|libcom32.c32)"
-cp /root/syslinux-4.05/com32/mboot/mboot.c32 /tftpboot/smartos
-
+find  -E   ./   -iregex  ".*(ldlinux.c32|bios.*Mboot.c32|bios.*libcom32.c32|/pxelinux.0)"|xargs -I{} cp {} /tftpboot/
+cp /root/syslinux-6.03/bios/com32/mboot/mboot.c32 /tftpboot/smartos
 
 sudo tee /opt/local/etc/dnsmasq.conf<<-'EOF'
 #Lease File to track leases
