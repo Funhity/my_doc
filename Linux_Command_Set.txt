@@ -7281,8 +7281,8 @@ EOF
 svcadm restart  dnsmasq
 简单方案:
 wget -O  /tftpboot/undionly.kpxe   http://cuddletech.com/IPXE-100612_undionly.kpxe
-wget -O  /tftpboot/undionly.kpxe   http://boot.ipxe.org/undionly.kpxe
-wget -O  /tftpboot/smartos/platform-latest.tgz http://salt/iso/platform-20170216T015949Z.tgz
+或 wget -O  /tftpboot/undionly.kpxe   http://boot.ipxe.org/undionly.kpxe
+或 wget -O  /tftpboot/smartos/platform-latest.tgz http://salt/iso/platform-20170216T015949Z.tgz
 tar zxvf  ./platform-latest.tgz 
 tee smartos.ipxe <<-'EOF' 
 #!ipxe
