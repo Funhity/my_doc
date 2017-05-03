@@ -7100,7 +7100,7 @@ phy-num 槽位号是1号
 
 
 
-``````````pxe section`````````````
+``````````smartos pxe section`````````````
 
 1、dnsmasq根据 /opt/local/etc/dnsmasq.conf配置，获得ip地址
 2、dnsmasq根据 dhcp-boot=pxegrub配置项，/tftpboot中下载pxegrub程序
@@ -7170,7 +7170,7 @@ vmadm update 5fa67481-5e29-4a40-833e-d374a74f17d0 <<EOF
      }
 EOF
 
-````````
+`````pxegrub section ```
 #tftp
 
 pkgin -fy up
@@ -7182,7 +7182,7 @@ inetconv -i /tmp/tftp.inetd -o /tmp
 svccfg import /tmp/tftp-udp.xml
 svcadm restart tftp/udp
 
-#`````smartos dnsmasq section``````
+`````smartos dnsmasq section``````
 pkgin -y install dnsmasq
 mv /opt/local/etc/dnsmasq.conf /opt/local/etc/dnsmasq.conf.bak
 tee /opt/local/etc/dnsmasq.conf <<-'EOF'
@@ -7258,20 +7258,38 @@ cp ./syslinux-4.05/core/pxelinux.0 /tftpboot/
 tee  /tftpboot/pxelinux.cfg/default<<-'EOF'
 
 EOF
-/usr/xpg4/bin/find  ./ -path  "*mboot.c32"
-/usr/xpg4/bin/find  ./ -path  "*ldlinux.c32"
-/usr/xpg4/bin/find  ./ -path  "*libcom32.c32"
+#/usr/xpg4/bin/find  ./ -path  "*mboot.c32"
+#/usr/xpg4/bin/find  ./ -path  "*ldlinux.c32"
+#/usr/xpg4/bin/find  ./ -path  "*libcom32.c32"
 
-find  -E   ./   -iregex  ".*(ldlinux.c32|bios.*Mboot.c32|bios.*libcom32.c32|/pxelinux.0)"|xargs -I{} cp {} /tftpboot/
-cp /root/syslinux-6.03/bios/com32/mboot/mboot.c32 /tftpboot/smartos
+#/tftpboot/ 目录是pxe获取文件的默认路径
+find  -E   ./   -iregex  ".*(ldlinux.c32|bios.*Mboot.c32|bios.*libcom32.c32|/pxelinux.0)"|xargs -I{} cp {} /tftpboot/  
+#/tftpboot/pxelinux.cfg/default文件中配置使用/tftpboot/smartos下的mboot.c32
+cp /root/syslinux-6.03/bios/com32/mboot/mboot.c32 /tftpboot/smartos    
 
 sudo tee /opt/local/etc/dnsmasq.conf<<-'EOF'
 #Lease File to track leases
 dhcp-leasefile=/etc/dnsmasq.leases
 # Give out addresses in the 172.16.0.1/24 subnet
 dhcp-range=10.0.1.210,10.0.1.215,255.255.255.0,2h
-# The name of the boot file is pxegrub
+# The name of the boot file is pxelinux.0
 dhcp-boot=pxelinux.0
+EOF
+
+
+````````ipxe section````````
+svcadm restart  dnsmasq
+简单方案:
+wget -O  /tftpboot/undionly.kpxe   http://cuddletech.com/IPXE-100612_undionly.kpxe
+wget -O  /tftpboot/undionly.kpxe   http://boot.ipxe.org/undionly.kpxe
+wget -O  /tftpboot/smartos/platform-latest.tgz http://salt/iso/platform-20170216T015949Z.tgz
+tar zxvf  ./platform-latest.tgz 
+tee smartos.ipxe <<-'EOF' 
+#!ipxe
+# /var/lib/tftpboot/smartos.ipxe.tpl
+kernel /smartos/platform-20170216T015949Z/i86pc/kernel/amd64/unix -B smartos=true
+initrd /smartos/platform-20170216T015949Z/i86pc/amd64/boot_archive
+boot
 EOF
 
 ========fifo section====

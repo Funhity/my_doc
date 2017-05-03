@@ -1174,7 +1174,7 @@ zfs receive zones/03d08f22-b1a0-6494-a58c-f1b769db8cee  < ./wujunrong-leofs01.zf
 zfs receive zones/0b9bccdf-7b8f-e01e-bd92-cc59e651357e  < ./wujunrong-leofs02.zfs
 
 scp *.zfs root@10.75.1.109:/opt/  scp *.json  root@10.75.1.109:/opt/
-``````````pxe section`````````````
+``````````smartos pxe section`````````````
 #先创建虚拟机
             tee /opt/smartos_vm.json <<-'EOF'            
             {
@@ -1341,7 +1341,7 @@ kernel smartos/mboot.c32
 append smartos/platform/i86pc/kernel/amd64/unix -B smartos=true,console=text,standalone=true,noimport=true,root_shadow='$5$2HOHRnK3$NvLlm.1KQBbB0WjoP7xcIwGnllhzp2HnT.mDO7DpxYA' --- smartos/platform/i86pc/amd64/boot_archive
 EOF
 
-说明：/var/lib/tftpboot/pxelinux/pxelinux.cfg/default 配置文件中需要的mboot.c32文件，pxelinux.0文件的版本必须一致，都是从syslinux-4.05.tar.gz中取出。
+说明：/var/lib/tftpboot/pxelinux/pxelinux.cfg/default 配置文件中需要的mboot.c32文件，此文件版本pxelinux.0的版本必须一致，都是从syslinux-4.05.tar.gz中取出。
 [root@NAT_Server ~]# sudo yum list installed| grep syslinux
 syslinux.x86_64                      4.05-13.el7                    @base       
 [root@NAT_Server ~]# wget https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-4.05.tar.gz
@@ -1349,7 +1349,12 @@ syslinux.x86_64                      4.05-13.el7                    @base
 [root@NAT_Server ~]# cp /usr/share/syslinux/pxelinux.0 /var/lib/tftpboot/pxelinux/pxelinux.0
 
 ```ipxe section```````````````
-yum -y install  xz-devel.x86_64
+
+iPXE> ifstat
+iPXE> dhcp
+iPXE> route
+iPXE> show dns
+iPXE> chain http://boot.ipxe.org/demo/boot.php
 
 svcadm restart  dnsmasq
 简单方案:
