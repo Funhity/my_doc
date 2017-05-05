@@ -3964,6 +3964,7 @@ ps aux --sort -rss     # Sorting down processes by memory usage
 info coreutils 'cat invocation'
 mesg(1) permission set to yes
 system monitor: sudo iostat -x 10
+                sudo iotop
 ====disk section==fdisk section==
 sudo fdisk -l
 或   lsblk
@@ -4015,7 +4016,8 @@ sudo apt-get install build-essential
   cat v6_nginx01-tomcat_access-2016-06-07-14_05_01.log |   gawk -F@  '{print $1 $5  $9}' |  grep -E "[[:space:]]+/[[:space:]]*$" |  gawk -F@  '{print $1 $5 $9 $17}'
 
   grep -v 'adoring_dubinsky\|NAMES'
-  grep -E -v "^[[:space:]]*$"  #去空行    
+  grep -E -v "^[[:space:]]*$"  #去空行
+··········smartos grep section········      
   ls |  /usr/xpg4/bin/grep  -v -E 'wujunrong_9d58adc6-499b-11e6-9ea7-437c859dc16b.*|ffed9526-999d-11e6-93ae-bfa56012d3b9'
 ``````````````````````````````
 

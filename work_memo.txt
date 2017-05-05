@@ -1784,3 +1784,6 @@ svcadm restart sniffle
 
 cp /opt/local/fifo-sniffle/etc/sniffle.conf /data/sniffle/etc/sniffle.conf
 把/data/sniffle/etc/sniffle.conf中的/data/sniffle/db的全部替换为/var/db/sniffle
+
+====lakala section=======
+ansible  hyper_server_for_zhixiang -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'dataset'| awk '{print \$1}'|xargs -I{} zlogin {} ifconfig "
