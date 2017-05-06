@@ -2097,7 +2097,57 @@ ss -napt | grep 3260
             net start sshd
 			用 cyg_server 用户 或 当前使用用户名登入ssh  有时候得在windows上重新设置一下priviledged server的密码才能登入
 install svn: package subversion
+=======================  cygwin ansible  ========================
+Ansible – Using Ansible on Windows via Cygwin
+步骤一：
+Install the following Cygwin components.
 
+  * binutils
+  * curl
+  * gmp
+  * libgmp-devel
+  * make
+  * python (2.7.x)
+  * python-crypto
+  * python-openssl
+  * python-setuptools
+  * git (2.5.x)
+  * nano
+  * openssh
+  * openssl
+  * openssl-devel
+
+  经测试，还需要python-devel模块
+````````````
+步骤二：
+cd ~
+nano .bashrc
+
+Paste the following at the bottom of the file and save.
+# Ansible settings
+ANSIBLE=/opt/ansible
+export PATH=$PATH:$ANSIBLE/bin
+export PYTHONPATH=$ANSIBLE/lib
+export ANSIBLE_LIBRARY=$ANSIBLE/library
+
+````
+步骤三：
+easy_install-2.7 pip
+CFLAGS="-g -O2 -D_BSD_SOURCE" pip install -U pycrypto
+pip install ansible
+mkdir ~/ansible-program-files
+cd ~/ansible-program-files
+git clone https://github.com/ansible/ansible /opt/ansible
+mkdir -p /etc/ansible
+cp /opt/ansible/examples/ansible.cfg  /etc/ansible
+#install sshpass
+curl -LO http://downloads.sourceforge.net/sshpass/sshpass-1.06.tar.gz
+tar xvf sshpass-1.06.tar.gz
+md5sum  sshpass-1.06.tar.gz
+cd sshpass-1.06
+./configure
+make
+make install
 ===============================================  
     
 which searches your $PATH for the binary name you give. No need for an index.
@@ -6042,7 +6092,12 @@ KEY getnum (msgtoid,folder,delstatus)
 去掉换行符
 tr -d \"\n\" 
 ====passwd section===
+centos:
 echo "root:xinxindai" |chpasswd
+
+```
+smartos:
+echo "root:Wujunrong1" |changepass
 ========= cut section ===========
 N          N’th byte, character or field, counted from 1
 N-         from N’th byte, character or field, to end of line
