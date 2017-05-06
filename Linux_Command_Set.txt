@@ -2193,6 +2193,13 @@ Select the columns and rows where you want to enter your text.
 Shift + i to go into insert mode in column mode.
 Type in the text you want to enter. Dont be discouraged by the fact that only the first row is changed.
 Esc to apply your change (or alternately Ctrl+c)
+````multiple file```
+:n
+:prev
+```visual mode```
+let's highlight a block of text starting with v command
+and then moving the cursor.
+We now delete it with the d command.
 ``````````````````````
 
 vim scp://root@cloudera-agent1///etc/yum.repos.d/my-cloudera-manager.repo
