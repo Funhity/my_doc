@@ -1781,16 +1781,34 @@ sleep 60
 svcs epmd snarl sniffle howl
 sniffle-admin init-leofs 10.0.1.130.xip.io
 svcadm restart sniffle
-
+````````
 cp /opt/local/fifo-sniffle/etc/sniffle.conf /data/sniffle/etc/sniffle.conf
 把/data/sniffle/etc/sniffle.conf中的/data/sniffle/db的全部替换为/var/db/sniffle
 
 ====lakala section=======
-ansible  hyper_server_for_zhixiang -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'dataset'| awk '{print \$1}'|xargs -I{} zlogin {} ifconfig "
-ansible  hyper_pxe_lakala   -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'booter'| awk '{print \$1}'|xargs -I{} zlogin {} grep PermitRootLogin /etc/ssh/sshd_config "
+ansible  hyper_server_for_zhixiang -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'abc'| awk '{print \$1}'|xargs -I{} zlogin {} ifconfig "
 /opt/local/bin/sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config; /usr/sbin/svcadm restart svc:/network/ssh:default
 
-ansible  hyper_pxe_lakala   -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'booter'| awk '{print \$1}'|xargs -I{} zlogin {} sed -n 's/PermitRootLogin without-password/PermitRootLogin yes/gp'   /etc/ssh/sshd_config "
-ansible  hyper_pxe_lakala   -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'booter'| awk '{print \$1}'|xargs -I{} zlogin {} sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config "
-ansible  hyper_pxe_lakala   -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'booter'| awk '{print \$1}'|xargs -I{} zlogin {} /usr/sbin/svcadm restart svc:/network/ssh:default"
-ansible  hyper_pxe_lakala   -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'booter'| awk '{print \$1}'|xargs -I{} zlogin {} sh -c 'echo \"root:456_lakala\"|changepass  '  "
+
+
+```lakala ssh````
+ansible  hyper_pxe_lakala   -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'abc'| awk '{print \$1}'|xargs -I{} zlogin {} grep PermitRootLogin /etc/ssh/sshd_config "
+ansible  hyper_pxe_lakala   -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'abc'| awk '{print \$1}'|xargs -I{} zlogin {} sed -n 's/PermitRootLogin without-password/PermitRootLogin yes/gp'   /etc/ssh/sshd_config "
+ansible  hyper_pxe_lakala   -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'abc'| awk '{print \$1}'|xargs -I{} zlogin {} sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config "
+
+ansible  hyper_pxe_lakala   -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'abc'| awk '{print \$1}'|xargs -I{} zlogin {} /usr/sbin/svcadm restart svc:/network/ssh:default"
+修改密码
+ansible *_fifo   -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'abc'| awk '{print \$1}'|xargs -I{} zlogin {} sh -c 'sed -i.bak \"s/PermitRootLogin without-password/PermitRootLogin yes/g\"   /etc/ssh/sshd_config;echo \"root:456_lakala\"|changepass;  /usr/sbin/svcadm restart svc:/network/ssh:default' "
+
+
+```lakala fifo````
+ansible *fifo  -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'briphant_orchestra'| awk '{print \$1}'|xargs -I{} zlogin {} svcs sniffle snarl howl"
+
+````````
+kstat -n sd3,err
+iostat -En
+
+last | grep boot
+who -b
+look at /var/adm/messages file
+fmdump

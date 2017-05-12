@@ -6100,11 +6100,11 @@ KEY getnum (msgtoid,folder,delstatus)
 tr -d \"\n\" 
 ====passwd section===
 centos:
-echo "root:xinxindai" |chpasswd
+  echo "root:xinxindai" |chpasswd
 
 ```
 smartos:
-echo "root:Wujunrong1" |changepass
+   echo "root:Wujunrong1" |changepass
 ========= cut section ===========
 N          N’th byte, character or field, counted from 1
 N-         from N’th byte, character or field, to end of line
@@ -6299,6 +6299,8 @@ dladm show-link
 
 
 snoop -s 300 101.227.82.94  #监听ip地址，收集300个字节
+snoop -d aggr0  -s 300 port 4505
+snoop -d aggr0  -s 300 port 4506
 `````smartos route````````````
 
 route delete default 10.0.1.1 
@@ -7104,6 +7106,9 @@ while ! curl -C - -LJO http://us-east.manta.joyent.com/Joyent_Dev/public/SmartOS
 curl -s  http://pkgsrc.joyent.com/packages/SmartOS/2014Q4/x86_64/All/ | sed -r -n 's/.*=\"(.*.tgz)\".*/\1/p'| xargs -I {} wget http://pkgsrc.joyent.com/packages/SmartOS/2014Q4/x86_64/All/{}
 =======smartos memory section =========
 echo ::memstat | mdb -k
+或
+prtconf | grep Memory
+prtdiag -v | grep Memory
 ============ ipv6 section =============
 
 To disable ip v6 in the running system:
@@ -7565,4 +7570,7 @@ docker bash方式：
 docker run -it --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest /bin/bash
 npm install -g json
 json --version
-====================
+=======windows section=============
+
+````screenshot section```
+“Windows + Shift + S”
