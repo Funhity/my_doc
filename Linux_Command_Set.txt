@@ -2097,6 +2097,9 @@ ss -napt | grep 3260
             net start sshd
 			用 cyg_server 用户 或 当前使用用户名登入ssh  有时候得在windows上重新设置一下priviledged server的密码才能登入
 install svn: package subversion
+
+`````cygwin telnet section````````````
+telnet: 装inetutils 模块
 =======================  cygwin ansible  ========================
 Ansible – Using Ansible on Windows via Cygwin
 步骤一：
@@ -3008,17 +3011,18 @@ lsof -i -a -p 234 #List all network files in use by a specific process
 lsof -i -a -c ssh
 
 lsof -i :2181
+lsof -U #listing of UNIX socket files,
 ``````````````````````````````
 #To list opne files for firefox process, enter
 ls -l /proc/7857/fd  
 pfile 3533
 lsof -p
 lsof  /home/frank/kvm/images/my-wd-disk
-`````````````````````````````````
+````````file process section`````````X section````````````````
 
 fuser -v test.txt 
-
-
+fuser file_name
+fuser /tmp/.X11-unix/X1
 ===================== java section jdk section =====================================
 
  
@@ -3172,7 +3176,7 @@ cp /lib/systemd/system/vncserver@.service /etc/systemd/system/vncserver@.service
 
 vi /etc/systemd/system/vncserver@.service
    #ExecStart=/sbin/runuser -l <USER> -c "/usr/bin/vncserver %i"
-    #PIDFile=/home/<USER>/.vnc/%H%i.pid
+   #PIDFile=/home/<USER>/.vnc/%H%i.pid 
 
 su frank
 vncserver  #setpassword
@@ -7518,6 +7522,14 @@ salt home_fifo timezone.get_zone
 salt home_fifo cmd.run "sed -i.bak2 's/TZ=UTC/TZ=Asia\/Shanghai/' /etc/TIMEZONE"
 salt home_fifo cmd.run "diff /etc/TIMEZONE /etc/TIMEZONE.bak2"
 salt home_fifo cmd.run "reboot"
+=====smartos troubleshooting section======
+kstat -n sd3,err
+iostat -En
+
+last | grep boot
+who -b
+look at /var/adm/messages file
+fmdump
 ==========set section===========================
 
 set -e 有错误就退出
