@@ -1731,6 +1731,7 @@ zfs receive zones/${UUID}-disk0 < /opt/salt-disk0.zfs
 zfs destroy zones/873f7b84-d078-62ab-d069-ce5760072253@sending
 zfs destroy zones/873f7b84-d078-62ab-d069-ce5760072253-disk0@sending
 ``````
+
 修改一：
 First edit the *.json file to include “nocreate”: true, in the “disks” subset:
 
@@ -1745,7 +1746,11 @@ diff /opt/salt.json /opt/salt.json.bak
 40a41
 >       "block_size": 8192
 
+自动化修改：
+cat /opt/salt.json |json -e "for(i in this.disks){this.disks[i].nocreate=true;this.disks[i].block_size=undefined;}this.i=undefined;"| vmadm create
 ````````
+#vmadm get $UUID | json -e "for(i in this.disks){this.disks[i].nocreate=true;}this.i=undefined;" | ssh destination-host vmadm create
+
 vmadm create < /opt/salt.json
 vmadm start ${UUID} 
 

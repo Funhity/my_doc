@@ -2100,6 +2100,9 @@ install svn: package subversion
 
 `````cygwin telnet section````````````
 telnet: 装inetutils 模块
+```````````````````````````````
+getclip putclip : 装cygutils-extra模块
+git ls-tree -r master --name-only |putclip.exe
 =======================  cygwin ansible  ========================
 Ansible – Using Ansible on Windows via Cygwin
 步骤一：
