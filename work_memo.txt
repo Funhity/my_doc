@@ -1479,11 +1479,11 @@ curl -v -X PUT http://127.0.0.1:80/api/users -d '{ "name": "admin", "token": "ad
 从远程上传dataset
 curl -v -u admintoken: http://10.75.1.202:80/api/upload -F manifest=@./manifest.json  -Ffile=@./base-64-lts-15.4.1.zfs.gz -v
 
-=============
+=======git section======
 
 git config --global http.sslVerify false
 git clone https://github.com/joyent/mibe
-
+cat sync_file_list.txt |xargs -I{} sh -c 'echo scp `basename {}` root@10.0.1.38:{}'  > sync_file.sh
 =====pkgin section=======
 cd /
 curl -k http://192.168.1.128/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat | tar -xf -

@@ -4010,7 +4010,7 @@ $ readlink -f /proc/20361/fd/1
 yum search ntfs
 grub2-mkconfig -o /boot/grub2/grub.cfg
 ````````````````````````````
-basename /usr/bin/perlscript    ##This will remove the prefix, /usr/bin/, and prints only the string 'perlscript'
+basename /usr/bin/perlscript    ##This will remove the prefix, /usr/bin/, and prints only the string 'perlscript'  #dir section
 filename=`basename $0` && echo $filename
 jps -l -v                #java section
 unset HISTFILE
