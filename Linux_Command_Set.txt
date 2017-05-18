@@ -4046,6 +4046,7 @@ help ls
 help pwd
 ntpdate 192.168.38.190
 df -hT  #disk section
+df -T   #列出磁盘类型
 autoreconf -i /root/strongswan
 
 runuser -l tomcat  -c "/opt/webserver/v6_tomcat/bin/startup.sh"
@@ -6854,9 +6855,10 @@ prstat
 howl-admin connections
 sniffle-admin connections
 
-
+````fifo debug``
 howl attach
 Llibsnarl:servers().
+
 
 ``````````````
 创建虚拟机时注意jason file 必须有如下属性
@@ -6864,11 +6866,17 @@ autoboot=true
 delegate_dataset=true
 indestructible_delegated=true
 cpu_cap=100
-```````````````````````
+
+`````fifo console````````
+cd /root/
+git clone https://github.com/project-fifo/pyfi
+/root/pyfi/bin/fifo --help
+/root/pyfi/bin/fifo datasets --help
+/root/pyfi/bin/fifo --host 10.0.1.21 --insecure  --verbose --user admin --password admin hypervisors list 
+/root/pyfi/bin/fifo --host 10.0.1.21 --insecure  --verbose --user admin --password admin datasets list
 
 fifoadm vm list
 fifoadm hypervisors list
-
 
 
 fifoadm hypervisors list
@@ -6878,8 +6886,10 @@ fifoadm vms get -j 92d63038-6fdf-c957-f161-ae22fbd9600c
 
 sniffle-admin hypervisors list
 
+howl-admin connections
+sniffle-admin connections
 
-
+``````````````````````
 
           /opt/local/fifo-sniffle/bin/sniffle-admin cluster join 'sniffle@10.0.1.85'
           /opt/local/fifo-sniffle/bin/sniffle-admin cluster plan
