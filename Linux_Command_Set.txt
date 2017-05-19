@@ -223,7 +223,8 @@ rm -f /etc/udev/rules.d/70-persistent-net.rules
   我推荐的搜索方式，目录和文件名称一起搜索：
   find /usr   -path   '*usr/bin*'
   find -path "*leo*"
-
+  下面正则表达式参数-iregex和-path功能一样，会搜索整个路径，而不是文件名称：
+  find    ./   -regextype posix-extended  -iregex  ".*(ldlinux.c32|bios.*Mboot.c32|bios.*libcom32.c32|/pxelinux.0)" 
 
   find /  -type d -name 'httpdocs'
                   -iname pattern       #Like  -name, but the match is case insensitive.
@@ -6857,8 +6858,6 @@ ls -Fd /data/*/log
 ```````````````````
 检查内存占用：
 prstat
-howl-admin connections
-sniffle-admin connections
 
 ````fifo debug``
 howl attach
@@ -6875,6 +6874,7 @@ cpu_cap=100
 `````fifo console````````
 cd /root/
 git clone https://github.com/project-fifo/pyfi
+cd /root/pyfi/; make
 /root/pyfi/bin/fifo --help
 /root/pyfi/bin/fifo datasets --help
 /root/pyfi/bin/fifo --host 10.0.1.21 --insecure  --verbose --user admin --password admin hypervisors list 
@@ -7371,7 +7371,13 @@ dhcp-range=10.0.1.210,10.0.1.215,255.255.255.0,2h
 dhcp-boot=pxelinux.0
 EOF
 
-
+方法三：
+在centos上获取pxelinux相关文件：
+  步骤一：
+  wget https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.03.tar.gz
+  find    ./   -regextype posix-extended  -iregex  ".*(ldlinux.c32|bios.*Mboot.c32|bios.*libcom32.c32|/pxelinux.0)"
+  步骤二：
+  把找出来的文件拷贝到smartos上
 ````````ipxe section````````
 svcadm restart  dnsmasq
 简单方案:
@@ -7606,3 +7612,7 @@ json --version
 
 ````screenshot section```
 “Windows + Shift + S”
+
+
+``````````wildcard section``````````
+ansible *pxe[1-4]_fifo -m raw -a "ifconfig"
