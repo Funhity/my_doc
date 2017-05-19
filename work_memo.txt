@@ -1809,7 +1809,14 @@ ansible *_fifo   -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'abc'| awk '{prin
 ```lakala fifo````
 ansible *fifo  -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'briphant_orchestra'| awk '{print \$1}'|xargs -I{} zlogin {} svcs sniffle snarl howl"
 
-````````
+`````lakala pxe`````
+查询pxe zone（alias 名称包含booter）有无做过snapshot
+ansible *pxe[1-4]_fifo -m raw -a "zfs list -t    snapshot | grep \`vmadm list| grep booter|awk '{print \$1}'\` "
+
+为pxe zone（alias 名称包含booter）做快照：
+ansible *pxe[1-4]_fifo -m raw -a " zfs snapshot zones/\`vmadm list| grep booter|awk '{print \$1}'\`@pxe_backup_20170519_by_zhixiang "
+
+```lakala troubleshotting`````
 kstat -n sd3,err
 iostat -En
 
