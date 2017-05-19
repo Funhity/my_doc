@@ -974,6 +974,15 @@ vboxmanage internalcommands sethduuid  '/media/frank/3172e678-9cfa-4781-9900-0d7
 "%programfiles%\Oracle\VirtualBox\VBoxHeadless" --startvm "Debian"
 "%programfiles%\Oracle\VirtualBox\VBoxHeadless" --startvm "CentOS7 副本2"
 
+====virtualbox usb section=============
+
+  1. Close virtualbox
+  2. Execute in bash: sudo adduser YOURUSERNAME vboxusers
+  3. Log out and log in again
+  4. Attach to your PC the USB devices you want to be automatically mounted in the VM (virtual machine).
+
+==================
+
 xrandr -s 1024x768
 X11Forwarding yes must specified in /etc/ssh/sshd_config
  nslookup redhat.com

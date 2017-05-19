@@ -1712,8 +1712,9 @@ curl -s  http://pkgs.briphant.com/pkgsrc-fifo.bak/pkg/rel/ |  sed -r -n 's/.*(fi
 
 ===smartos kvm migration====
 UUID=873f7b84-d078-62ab-d069-ce5760072253
-vmadm get ${UUID} >/opt/salt.json
 vmadm get ${UUID} | json zfs_filesystem disks
+
+vmadm get ${UUID} >/opt/salt.json
 zfs snapshot zones/${UUID}@sending
 zfs send -p zones/${UUID}@sending > /opt/salt.zfs
 zfs destroy zones/${UUID}@sending
