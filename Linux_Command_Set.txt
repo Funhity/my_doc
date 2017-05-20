@@ -7625,3 +7625,11 @@ json --version
 
 ``````````wildcard section``````````
 ansible *pxe[1-4]_fifo -m raw -a "ifconfig"
+
+
+
+====checksum section md5 section======
+smartos:
+sum --md5 salt-disk0.zfs 
+centos:
+md5sum  sshpass-1.06.tar.gz
