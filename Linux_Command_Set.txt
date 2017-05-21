@@ -6942,10 +6942,18 @@ tee /opt/dsapid.json <<-'EOF'
       "max_swap": 1024,
       "tmpfs": 1024, 
       "quota": 120, 
-      "nics": [ { "nic_tag": "admin", "ip": "10.75.1.75", "netmask": "255.255.255.0", "gateway": "10.75.1.1","primary": true } ]
+      "nics": [ { "nic_tag": "admin", "ip": "10.0.1.160", "netmask": "255.255.255.0", "gateway": "10.0.1.1","primary": true } ],
+      "internal_metadata": {
+              "root_pw": "root",
+              "admin_pw": "admin"
+              },
+      "customer_metadata": {
+                 "user-script" : "/usr/bin/sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config; /usr/bin/sed -i.bak2 's/PasswordAuthentication no/PasswordAuthentication yes/g'   /etc/ssh/sshd_config; /usr/sbin/svcadm restart svc:/network/ssh:default"
+
+              }
     }
 EOF
- vmadm create -f /opt/dsapid.json
+vmadm create -f /opt/dsapid.json
 
 
 ````````
@@ -7106,7 +7114,7 @@ less /var/svc/log/system-system-log:default.log
 /opt/local/etc/salt/states
 =========smartos ssh section================
 sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config
-sed -i.bak 's/PasswordAuthentication no/PasswordAuthentication yes/g'   /etc/ssh/sshd_config
+sed -i.bak2 's/PasswordAuthentication no/PasswordAuthentication yes/g'   /etc/ssh/sshd_config
 svcadm restart svc:/network/ssh:default
 ````````````````````````
 ssh-keygen -t rsa 
@@ -7450,11 +7458,19 @@ NSQ和aggregater装在一起
           #snarl-admin init default MyOrg Users admin admin
           #sniffle-admin init-leofs 10.0.1.80.xip.io
 =========smartos rsyslog=============
-global zone使用的日志服务:
+rsyslogd -v 3检查rsyslog版本号
+global zone使用 rsyslog 5.8 版本的日志服务:
+
+   /etc/rsyslog.conf
    svcadm refresh svc:/system/system-log
    svcs           svc:/system/system-log:default
-native zone使用的日志服务:
+
+
+native zone使用 rsyslog 7  版本的日志服务:
+
+   /opt/local/etc/rsyslog.conf
    svcadm disable svc:/pkgsrc/rsyslog:default
+
 =========== npm section ============
 npm install -g cnpm --registry=https://registry.npm.taobao.org
 npm install --registry  npm.briphant.cn
@@ -7574,6 +7590,8 @@ centos:
 yum -y install openvpn
 sudo openvpn --config ~/Documents/briphant_office_sh_new
 ===========sublime section========================
+选文件：ctrl+p
+
  选中一行，包括换行符
  ctrl+l
  touchpad 按三下
