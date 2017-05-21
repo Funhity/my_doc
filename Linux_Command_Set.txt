@@ -6954,7 +6954,7 @@ tee /opt/dsapid.json <<-'EOF'
     }
 EOF
 vmadm create -f /opt/dsapid.json
-
+#说明：经过测试internal_metadata设置的密码无效，需要手工passwd命令重新设置
 
 ````````
 查看所有dataset

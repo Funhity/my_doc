@@ -1809,6 +1809,7 @@ ansible *_fifo   -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'abc'| awk '{prin
 
 ```lakala fifo````
 ansible *fifo  -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'briphant_orchestra'| awk '{print \$1}'|xargs -I{} zlogin {} svcs sniffle snarl howl"
+ansible hyper_server_lakala -m raw -a "uname -a"  | grep lakala |dos2unix |wc -l
 
 `````lakala pxe`````
 查询pxe zone（alias 名称包含booter）有无做过snapshot
