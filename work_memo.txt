@@ -1826,3 +1826,6 @@ last | grep boot
 who -b
 look at /var/adm/messages file
 fmdump
+
+`````yibaba section````
+sudo virt-install  -n tomcat  -r 4096 --disk=path=/var/lib/libvirt/images/tomcat.qcow2   --location ~/CentOS-7-x86_64-Minimal-1611.iso   --nographics  -w bridge:br0  --initrd-inject=/root/anaconda-ks.cfg.centos7 --extra-args "ks=file:/anaconda-ks.cfg.centos7  console=ttyS0,115200"

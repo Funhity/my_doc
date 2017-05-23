@@ -3226,12 +3226,12 @@ firefox
 ============================  virsh section   kvm section==============================
 HOST:
 sudo wget http://www.kraxel.org/repos/firmware.repo -O /etc/yum.repos.d/firmware.repo
-yum groupinstall "Virtualization Tools"
+yum -y groupinstall "Virtualization Tools"
 yum -y groupinstall "Development Tools" # gcc section
-yum install qemu libvirt-client virt-manager  virt-viewer guestfish libguestfs-tools virt-top
+yum -y install qemu libvirt-client virt-manager  virt-viewer guestfish libguestfs-tools virt-top
 yum -y install virt-install
 yum -y install libvirt
-yum install spice-server spice-client spice-protocol
+yum -y install spice-server spice-client spice-protocol
 
 ````````virsh status section`````````
 virsh version
@@ -3418,7 +3418,7 @@ NM_CONTROLLED=no
 EOF
 
 
-# cat > ifcfg-br0 <<EOF
+# cat > /etc/sysconfig/network-scripts/ifcfg-br0 <<EOF
 DEVICE=br0
 TYPE=Bridge
 BOOTPROTO=dhcp
