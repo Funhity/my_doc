@@ -6123,7 +6123,7 @@ centos:
   echo "root:xinxindai" |chpasswd
 
 ```
-smartos:
+smartos:  #smartos passwd section
    echo "root:Wujunrong1" |changepass
 ========= cut section ===========
 N          N’th byte, character or field, counted from 1
@@ -6484,7 +6484,7 @@ zfs list
 
 By default a mount point (/poolname/fs_name) will be created for the file system if you don’t specify. In our case it was /geekpool/fs1
 zfs set mountpoint=/test geekpool/fs1
-`````````````````````
+``````````zpool disk```````````
 zpool clear tank
 zpool clear tank c1t0d0
 zpool replace tank c1t1d0
@@ -6500,6 +6500,10 @@ zpool status -v tank #display a list of file names with persistent errors
 3.Insert the replacement disk.
 4.Run the zpool replace command. For example:
   zpool replace tank c1t1d0
+  zpool replace zones c0t5000C50098985CA3d0  c0t5000CCA249D133C3d0
+                      旧盘                   新盘
+                      根据man手册，同槽位替换硬盘必须指定新盘
+
 6.Bring the disk online with the zpool online command.
 
 
@@ -7168,6 +7172,7 @@ debian:
 
 
 ============smartos disk===========================
+format < /dev/null | sed -n 's/.*\(<.*>\).*/\1/p' 
 zpool replace zones c0t5000C5006349E003d0 <new disk>
 获取硬盘槽位号
 步骤1
@@ -7376,6 +7381,8 @@ EOF
 
 #/tftpboot/ 目录是pxe获取文件的默认路径
 find  -E   ./   -iregex  ".*(ldlinux.c32|bios.*Mboot.c32|bios.*libcom32.c32|/pxelinux.0)"|xargs -I{} cp {} /tftpboot/  
+smaortos: find    ./  -regextype posix-extended   -iregex  ".*(ldlinux.c32|bios.*Mboot.c32|bios.*libcom32.c32|/pxelinux.0)"
+
 #/tftpboot/pxelinux.cfg/default文件中配置使用/tftpboot/smartos下的mboot.c32
 cp /root/syslinux-6.03/bios/com32/mboot/mboot.c32 /tftpboot/smartos    
 
