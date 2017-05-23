@@ -1814,6 +1814,7 @@ ansible hyper_server_lakala -m raw -a "uname -a"  | grep lakala |dos2unix |wc -l
 `````lakala pxe`````
 查询pxe zone（alias 名称包含booter）有无做过snapshot
 ansible *pxe[1-4]_fifo -m raw -a "zfs list -t    snapshot | grep \`vmadm list| grep booter|awk '{print \$1}'\` "
+ansible *pxe-briphant_booter[2-4]* -m raw -a "svcs dnsmasq"
 
 为pxe zone（alias 名称包含booter）做快照：
 ansible *pxe[1-4]_fifo -m raw -a " zfs snapshot zones/\`vmadm list| grep booter|awk '{print \$1}'\`@pxe_backup_20170519_by_zhixiang "
