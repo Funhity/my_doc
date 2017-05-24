@@ -24,13 +24,15 @@ chkconfig --list glassfish4
 
 ````hostname section```host section``
 centos7:   /etc/hostname  #经测试有效
-           /etc/hosts
+        
+           hostname tomcat8;echo tomcat8 > /etc/hostname;hostname
 centos6:   /etc/sysconfig/network
            修改主机名命令：hostname yh_zabbix_server;sed -i.bak  s/HOSTNAME=.*/HOSTNAME=yh_zabbix_server/g   /etc/sysconfig/network ;hostname
     
 Debian:    /etc/hostname
-
+``````````````
 windows:   C:\Windows\System32\drivers\etc
+           /etc/hosts
 =====================  DNS section ====================
 /etc/sysconfig/network
 cat /etc/resolv.conf 
@@ -3086,24 +3088,46 @@ Using JAVA_HOME provides access to certain additional startup options that
 are not allowed when JRE_HOME is used.
 If both JRE_HOME and JAVA_HOME are specified, JRE_HOME is use
 
-
-
+`````````
+tomcat6:
 安装java  :   执行/tmp/jdk-6u45-linux-x64-rpm.bin  
               此.bin文件是个自解压文件，解压到当前目录下，生成多个rpm包
               java -version
 安装tomcat:   tar zxvf /root/apache-tomcat-6.0.45.tar.gz
 ./apache-tomcat-6.0.45/bin/catalina.sh   stop 5  -force
+````````
+tomcat8:
+wget http://apache.claz.org/tomcat/tomcat-8/v8.0.44/bin/apache-tomcat-8.0.44.tar.gz
+rpm  -ivh jdk-8u131-linux-x64.rpm
+rpm -qa| grep jdk
+rpm -ql jdk1.8.0_131-1.8.0_131-fcs.x86_64
+tar zxvf  /root/apache-tomcat-8.0.44.tar.gz   -C /opt/
+
+``````````
+tomat6:
 cat /etc/profile.d/java.sh 
    export JAVA_HOME=/usr/java/default
    export CATALINA_HOME=/root/apache-tomcat-6.0.45
    export PATH=/root/apache-maven-3.2.5/bin:$PATH
-
-
-
+tomcat8:
+cat > /etc/profile.d/java.sh <<EOF
+   export JAVA_HOME=/usr/java/default
+   export CATALINA_HOME=/opt/apache-tomcat-8.0.44
+   export PATH=/root/apache-maven-3.2.5/bin:$PATH
+EOF
+········
+tomcat6:
 cat setenv.sh 
     #JAVA_HOME=/usr/java/latest
     CATALINA_PID="$CATALINA_BASE/tomcat.pid"
     CATALINA_OPTS="-server -Xms1024m -Xmx5120m -XX:PermSize=128m -XX:MaxPermSize=2048m -XX:NewSize=192m -XX:MaxNewSize=2048m -Dfile.encoding=UTF-8 -Dcom.sun.management.jmxremote  -Dcom.sun.management.jmxremote.port=1234  -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
+
+tomcat8:
+cat > $CATALINA_HOME/bin/setenv.sh<<EOF
+  #JRE_HOME=/usr/java/latest
+  CATALINA_PID="$CATALINA_BASE/tomcat.pid"
+EOF
+ $CATALINA_HOME/bin/startup.sh
 ``````````````````````
 自动化设置环境
 ansible perf*tomcat -m  script -a "/root/install_java_env.sh"
@@ -3233,6 +3257,10 @@ yum -y install virt-install
 yum -y install libvirt
 yum -y install spice-server spice-client spice-protocol
 
+
+systemctl stop libvirtd
+systemctl start libvirtd
+systemctl status libvirtd
 ````````virsh status section`````````
 virsh version
 virsh nodememstats
