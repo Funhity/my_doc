@@ -25,6 +25,7 @@ chkconfig --list glassfish4
 ````hostname section```host section``
 centos7:   /etc/hostname  #经测试有效
            /etc/hosts
+           hostname tomcat7;echo tomcat7 > /etc/hostname;hostname
 centos6:   /etc/sysconfig/network
            修改主机名命令：hostname yh_zabbix_server;sed -i.bak  s/HOSTNAME=.*/HOSTNAME=yh_zabbix_server/g   /etc/sysconfig/network ;hostname
     
@@ -3233,6 +3234,10 @@ yum -y install virt-install
 yum -y install libvirt
 yum -y install spice-server spice-client spice-protocol
 
+
+systemctl stop libvirtd
+systemctl start libvirtd
+systemctl status libvirtd
 ````````virsh status section`````````
 virsh version
 virsh nodememstats
