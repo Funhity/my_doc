@@ -6845,11 +6845,9 @@ Chunter Version:
 cat /opt/chunter/etc/chunter.version
 fifo各组件：
 pkgin list  fifo-snarl fifo-sniffle fifo-howl fifo-cerberus | grep fifo
-      Sniffle Version
+      Sniffle Howl Snarl Version:
       pkgin list | grep sniffle
-      Howl Version
       pkgin list | grep howl
-      Snarl Version
       pkgin list | grep snarl
 `````````````````````````````
 
