@@ -6854,6 +6854,9 @@ less /var/log/leo_manager/app/error
 
 leofs-adm status
 leofs-adm start
+`````````
+登入leofs所需配置参数：
+sniffle-admin config show
 
 ```````````chunter section`````
 /opt/chunter/etc/chunter.conf
