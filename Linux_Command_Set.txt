@@ -701,6 +701,11 @@ rpm -q bind
 Install a package : rpm  -ivh packagename 
 upgrade a package : rpm  -Uvh packagename 
 
+列出rpm包中的文件：
+Use following syntax to list the files for already INSTALLED package:
+rpm -ql package-name
+Use following syntax to list the files for RPM package:
+rpm -qlp package.rpm
 
 ````````````````````
 
@@ -1907,11 +1912,12 @@ u'My favorite numbers: 1 2 3 4 5 6 7 8 9 '
 #a new caret (^) notation, Note that this URL syntax works only when your current working directory is a 
 working copy—the command-line client knows the repository's root URL by looking at the working copy's metadata
 
-client and server
-client:  yum -y install subversion
-server:  yum -y install mod_dav_svn
-systemctl start  svnserve
+server:  
+yum -y install subversion mod_dav_sv
+mkdir /var/svn
 
+systemctl start  svnserve
+systemctl enable  svnserve
 ```````
 步骤1：
 1、服务端创建仓库
@@ -7684,3 +7690,15 @@ smartos:
 sum --md5 salt-disk0.zfs 
 centos:
 md5sum  sshpass-1.06.tar.gz
+
+
+=====yes section=====
+
+Do you want to continue [Y/n]?
+yes Y | command-that-asks-for-input
+
+`````
+gunzip chunter-0.7.0p3.gz
+yes 'yes' |sh chunter-0.7.0p3
+
+==============
