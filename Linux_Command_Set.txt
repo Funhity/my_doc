@@ -701,6 +701,11 @@ rpm -q bind
 Install a package : rpm  -ivh packagename 
 upgrade a package : rpm  -Uvh packagename 
 
+列出rpm包中的文件：
+Use following syntax to list the files for already INSTALLED package:
+rpm -ql package-name
+Use following syntax to list the files for RPM package:
+rpm -qlp package.rpm
 
 ````````````````````
 
@@ -1909,11 +1914,12 @@ u'My favorite numbers: 1 2 3 4 5 6 7 8 9 '
 #a new caret (^) notation, Note that this URL syntax works only when your current working directory is a 
 working copy—the command-line client knows the repository's root URL by looking at the working copy's metadata
 
-client and server
-client:  yum -y install subversion
-server:  yum -y install mod_dav_svn
-systemctl start  svnserve
+server:  
+yum -y install subversion mod_dav_sv
+mkdir /var/svn
 
+systemctl start  svnserve
+systemctl enable  svnserve
 ```````
 步骤1：
 1、服务端创建仓库
@@ -6348,10 +6354,14 @@ storage0_vlan_id=128
 dladm show-phys -m
 dladm show-link
 
-
+`````snoop section`````
 snoop -s 300 101.227.82.94  #监听ip地址，收集300个字节
 snoop -d aggr0  -s 300 port 4505
 snoop -d aggr0  -s 300 port 4506
+
+dhcp：
+/usr/sbin/snoop -d interface -o /tmp/snoop.output udp port 67 or udp port 68
+/usr/sbin/snoop -i /tmp/snoop.output -x0 -v
 `````smartos route````````````
 
 route delete default 10.0.1.1 
@@ -6851,6 +6861,9 @@ less /var/log/leo_manager/app/error
 
 leofs-adm status
 leofs-adm start
+`````````
+登入leofs所需配置参数：
+sniffle-admin config show
 
 ```````````chunter section`````
 /opt/chunter/etc/chunter.conf
@@ -6876,11 +6889,9 @@ Chunter Version:
 cat /opt/chunter/etc/chunter.version
 fifo各组件：
 pkgin list  fifo-snarl fifo-sniffle fifo-howl fifo-cerberus | grep fifo
-      Sniffle Version
+      Sniffle Howl Snarl Version:
       pkgin list | grep sniffle
-      Howl Version
       pkgin list | grep howl
-      Snarl Version
       pkgin list | grep snarl
 `````````````````````````````
 
@@ -6924,6 +6935,7 @@ cd /root/pyfi/; make
 /root/pyfi/bin/fifo --host 10.0.1.21 --insecure  --verbose --user admin --password admin hypervisors list 
 /root/pyfi/bin/fifo --host 10.0.1.21 --insecure  --verbose --user admin --password admin datasets list
 /root/pyfi/bin/fifo --host 10.0.1.21 --insecure  --verbose --user admin --password admin datasets import --manifest /root/manifest.json  --dataset /root/pxe-17.4.6.zfs.gz
+/root/pyfi/bin/fifo --host 10.0.1.21 --insecure  --verbose --user admin --password admin vms backups 2de67afe-02ab-c1bb-c8ea-ada3be7ff343   list
 
 fifoadm vm list
 fifoadm hypervisors list
@@ -6990,7 +7002,7 @@ tee /opt/dsapid.json <<-'EOF'
 EOF
 vmadm create -f /opt/dsapid.json
 #说明：经过测试internal_metadata设置的密码无效，需要手工passwd命令重新设置
-
+ echo "root:root" |changepass
 ````````
 查看所有dataset
 https://datasets.joyent.com/datasets
@@ -7469,7 +7481,11 @@ NSQ:
 http://10.75.1.90:4171/
 
 NSQ和aggregater装在一起
-          
+
+          svcadm disable snarl
+          svcadm disable sniffle
+          svcadm disable howl
+
           svcadm enable epmd
           svcadm enable snarl
           svcadm enable sniffle
@@ -7600,7 +7616,7 @@ linux  :traceroute
 
 =========smartos timezone section=========
 pkgin -y install smtools;sm-set-timezone Asia/Shanghai
-salt 'jinhao'  cmd.run 'pkgin -y install smtools;sm-set-timezone Asia/Shanghai'  shell='/usr/bin/bash' -t 1200
+salt 'jinhao'  cmd.run 'pkgin -y install smtools;sm-set-timezone Asia/Shanghai'  shell='/usr/bin/bash' -t 1200   #注意shell参数要带单引号
 rtc -z Asia/Shanghai
 salt home_fifo cmd.run "rtc -z Asia/Shanghai"
 salt home_fifo cmd.run "rtc -c"
@@ -7689,3 +7705,15 @@ smartos:
 sum --md5 salt-disk0.zfs 
 centos:
 md5sum  sshpass-1.06.tar.gz
+
+
+=====yes section=====
+
+Do you want to continue [Y/n]?
+yes Y | command-that-asks-for-input
+
+`````
+gunzip chunter-0.7.0p3.gz
+yes 'yes' |sh chunter-0.7.0p3
+
+==============
