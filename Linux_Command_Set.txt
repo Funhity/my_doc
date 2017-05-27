@@ -958,6 +958,8 @@ mac:
 
 VBoxManage controlvm Frank-Windows10 setvideomodehint 2048  1280  32
                      虚拟机名称
+windows:
+把显存扩大来调整分辨率
 ``````
 "%programfiles%\Oracle\VirtualBox\VBoxHeadless" --startvm "Debian"
 "%programfiles%\Oracle\VirtualBox\VBoxHeadless" --startvm "CentOS7 副本2"
@@ -985,7 +987,7 @@ vboxmanage internalcommands sethduuid  '/media/frank/3172e678-9cfa-4781-9900-0d7
 
 ==================
 
-xrandr -s 1024x768
+
 X11Forwarding yes must specified in /etc/ssh/sshd_config
  nslookup redhat.com
  
@@ -3234,6 +3236,7 @@ centos:
 #tightvnc viewer 客户端分辨率配置
  xrandr
  xrandr -s 5  #5表示第五个分辨率
+xrandr -s 1024x768
 
 ubuntu:
 服务端：自带的desktop sharing程序
@@ -3581,12 +3584,12 @@ virt-install      --name cloudera-agent4  --ram 2048 --vcpus 2 --disk path=/home
 
 `````````````
 
-virsh    -c qemu+ssh://root@192.168.38.200/system list
-virsh    list     --all
-virsh    dominfo   myRHELVM1
-virsh    start     Guest
-virsh    reboot    Guest
-virsh    shutdown  Guest
+virsh -c qemu+ssh://root@192.168.38.200/system list
+virsh list     --all
+virsh dominfo   myRHELVM1
+virsh start     Guest
+virsh reboot    Guest
+virsh shutdown  Guest
 
 
 virsh destroy     _domain-id_
