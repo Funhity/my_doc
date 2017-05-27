@@ -6351,10 +6351,14 @@ storage0_vlan_id=128
 dladm show-phys -m
 dladm show-link
 
-
+`````snoop section`````
 snoop -s 300 101.227.82.94  #监听ip地址，收集300个字节
 snoop -d aggr0  -s 300 port 4505
 snoop -d aggr0  -s 300 port 4506
+
+dhcp：
+/usr/sbin/snoop -d interface -o /tmp/snoop.output udp port 67 or udp port 68
+/usr/sbin/snoop -i /tmp/snoop.output -x0 -v
 `````smartos route````````````
 
 route delete default 10.0.1.1 
@@ -6928,6 +6932,7 @@ cd /root/pyfi/; make
 /root/pyfi/bin/fifo --host 10.0.1.21 --insecure  --verbose --user admin --password admin hypervisors list 
 /root/pyfi/bin/fifo --host 10.0.1.21 --insecure  --verbose --user admin --password admin datasets list
 /root/pyfi/bin/fifo --host 10.0.1.21 --insecure  --verbose --user admin --password admin datasets import --manifest /root/manifest.json  --dataset /root/pxe-17.4.6.zfs.gz
+/root/pyfi/bin/fifo --host 10.0.1.21 --insecure  --verbose --user admin --password admin vms backups 2de67afe-02ab-c1bb-c8ea-ada3be7ff343   list
 
 fifoadm vm list
 fifoadm hypervisors list
@@ -6994,7 +6999,7 @@ tee /opt/dsapid.json <<-'EOF'
 EOF
 vmadm create -f /opt/dsapid.json
 #说明：经过测试internal_metadata设置的密码无效，需要手工passwd命令重新设置
-
+ echo "root:root" |changepass
 ````````
 查看所有dataset
 https://datasets.joyent.com/datasets
@@ -7473,7 +7478,11 @@ NSQ:
 http://10.75.1.90:4171/
 
 NSQ和aggregater装在一起
-          
+
+          svcadm disable snarl
+          svcadm disable sniffle
+          svcadm disable howl
+
           svcadm enable epmd
           svcadm enable snarl
           svcadm enable sniffle
@@ -7604,7 +7613,7 @@ linux  :traceroute
 
 =========smartos timezone section=========
 pkgin -y install smtools;sm-set-timezone Asia/Shanghai
-salt 'jinhao'  cmd.run 'pkgin -y install smtools;sm-set-timezone Asia/Shanghai'  shell='/usr/bin/bash' -t 1200
+salt 'jinhao'  cmd.run 'pkgin -y install smtools;sm-set-timezone Asia/Shanghai'  shell='/usr/bin/bash' -t 1200   #注意shell参数要带单引号
 rtc -z Asia/Shanghai
 salt home_fifo cmd.run "rtc -z Asia/Shanghai"
 salt home_fifo cmd.run "rtc -c"
