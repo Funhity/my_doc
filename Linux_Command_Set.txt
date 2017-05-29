@@ -1362,6 +1362,7 @@ apache:
   
        salt perf_nginxws01            state.single   file.recurse name='/root'            source='salt://files/'  include_pat='*.xxd'
   sudo salt 'test_v6_tomcat_front01'  state.single   file.recurse name='/tmp/wujunrong'   source='salt://wujunrong'
+       ```salt backup```
        salt 'stage_v6_front0?'  state.single      file.managed  name='/opt/webserver/v6_tomcat/webapps/ROOT/redenvelops/Red-envelopes-down.jsp'   source='salt://wujunrong/20160310XA-emergency/Red-envelopes-down.jsp'  backup='minion'
        salt 'stage_v6_front01'  file.list_backups      /opt/webserver/v6_tomcat/webapps/ROOT/redenvelops/Red-envelopes-down.jsp
        salt 'stage_v6_front01'  file.restore_backups   1
@@ -7689,8 +7690,10 @@ json --version
 =======windows section=============
 
 ````screenshot section```
-“Windows + Shift + S”
-
+方法一：
+打开onenote,然后“Windows + Shift + S”
+方法二：
+打开截图工具，然后ctl+N (快捷键调用菜单)
 
 ``````````wildcard section``````````
 ansible *pxe[1-4]_fifo -m raw -a "ifconfig"
