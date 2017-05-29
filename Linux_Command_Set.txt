@@ -1232,6 +1232,7 @@ salt -l debug "*" cmd.run "uptime"
   pkill salt-master
   salt-master -d   #background
    `````salt log``salt debug``
+  sudo salt-call -l debug state.sls test
   salt-master --log-level=debug
   salt-master -l debug
   salt-minion -l debug
@@ -1795,6 +1796,13 @@ rsyslog-restart-blockreplace:
 
 the blockreplace content attribute will be filled with all the lines contained on this accumulator
 `````salt mine section``````salt jinja``
+salt-run manage.down removekeys=True
+salt '*' saltutil.refresh_pillar
+salt '*'  mine.update
+salt-run mine.get '*'       cmd.run
+salt-run mine.get '*'       network.interfaces
+
+
 mine数据存储在master上
 smartos:
 cat /opt/local/var/cache/salt/master/minions/smartos_thinkpad.zhixiang/mine.p
@@ -7165,9 +7173,9 @@ sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh
 sed -i.bak2 's/PasswordAuthentication no/PasswordAuthentication yes/g'   /etc/ssh/sshd_config
 svcadm restart svc:/network/ssh:default
 ````````````````````````
-ssh-keygen -t rsa 
+ssh-keygen -t rsa   #需要人工输入
 或：
-ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
+ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''   #不需要人工输入
 scp ~/.ssh/id_rsa.pub    10.75.1.109:/root/.ssh/authorized_keys
 
 `````````
@@ -7175,6 +7183,9 @@ zlogin bf540e13-56df-cac7-819e-c82185d58209  sed 's/PermitRootLogin without-pass
 zlogin bf540e13-56df-cac7-819e-c82185d58209  sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config  
 zlogin bf540e13-56df-cac7-819e-c82185d58209  svcadm restart svc:/network/ssh:default
 zlogin bf540e13-56df-cac7-819e-c82185d58209  cp /opt/local/etc/pkgin/repositories.conf /opt/local/etc/pkgin/repositories.conf.original
+
+
+
 ===smartos python section=====
 SmartOS install python 2.7 in global zone
 
