@@ -663,6 +663,7 @@ Yum Cache: /var/cache/yum/$basearch/$releasever/
 yum makecache
 find  /var/cache/yum/$basearch/$releasever/  -type f -name "*.rpm" -exec sh -c 'mv  {} /var/www/html/' \;
 find  /var/cache/yum/$basearch/$releasever/ -atime -1  -type f -name "*.rpm" -exec sh -c 'ansible test-xxd -m copy -a "src={} dest=/var/www/html/packages/"' \; 
+find  /var/cache/yum  -type f -name "*.rpm" -exec sh -c 'scp   {} root@10.0.1.38:/home/frank/docker-share/yum-repo-centos7' \;
 find  /var/cache/yum/$basearch/$releasever/ -amin -60  -type f -name "*.rpm"
 
 1、vi /etc/yum.conf   中设置keepcache = 1
@@ -674,14 +675,14 @@ yum -y install httpd
 yum -y install createrepo
 createrepo   /var/www/html/cm5
 ``````````
-# cat wujunrong.repo.bak 
+# cat > /etc/yum.repos.d/centos7_software.repo <<EOF
 [wujunrongrepo]
 name=wujunrong  Repository
-baseurl=http://192.168.31.155/packages/
+baseurl=http://10.0.1.38/yum-repo-centos7/
 enabled=1
 gpgcheck=0
 priority=2
-
+EOF
 ··························································
 Use yum to install a local packvi age, automatically checking/satisfying dependencies
 yum --nogpgcheck localinstall packagename.arch.rpm  
@@ -1135,6 +1136,12 @@ Jinja -> YAML -> Highstate -> low state -> execution
   
 
 ####################
+最新方法：
+sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-2.el7.noarch.rpm
+sudo yum -y clean expire-cache
+sudo yum -y install salt-minion
+sudo systemctl restart salt-minion
+
 方法一：
 CentOS 7:/etc/yum.repos.d/saltstack.repo:
 # Enable SaltStack's package repository
@@ -1232,6 +1239,7 @@ salt -l debug "*" cmd.run "uptime"
   pkill salt-master
   salt-master -d   #background
    `````salt log``salt debug``
+  sudo salt-call -l debug state.sls test
   salt-master --log-level=debug
   salt-master -l debug
   salt-minion -l debug
@@ -1364,6 +1372,7 @@ apache:
   
        salt perf_nginxws01            state.single   file.recurse name='/root'            source='salt://files/'  include_pat='*.xxd'
   sudo salt 'test_v6_tomcat_front01'  state.single   file.recurse name='/tmp/wujunrong'   source='salt://wujunrong'
+       ```salt backup```
        salt 'stage_v6_front0?'  state.single      file.managed  name='/opt/webserver/v6_tomcat/webapps/ROOT/redenvelops/Red-envelopes-down.jsp'   source='salt://wujunrong/20160310XA-emergency/Red-envelopes-down.jsp'  backup='minion'
        salt 'stage_v6_front01'  file.list_backups      /opt/webserver/v6_tomcat/webapps/ROOT/redenvelops/Red-envelopes-down.jsp
        salt 'stage_v6_front01'  file.restore_backups   1
@@ -1794,6 +1803,13 @@ rsyslog-restart-blockreplace:
 
 the blockreplace content attribute will be filled with all the lines contained on this accumulator
 `````salt mine section``````salt jinja``
+salt-run manage.down removekeys=True
+salt '*' saltutil.refresh_pillar
+salt '*'  mine.update
+salt-run mine.get '*'       cmd.run
+salt-run mine.get '*'       network.interfaces
+
+
 mine数据存储在master上
 smartos:
 cat /opt/local/var/cache/salt/master/minions/smartos_thinkpad.zhixiang/mine.p
@@ -2270,6 +2286,7 @@ chmod -R 755 /home/frank
 wget -O - http://example.com/dvd.iso  | tee >(sha1sum > dvd.sha1) > dvd.iso
 wget -O - http://example.com/dvd.iso  | tee dvd.iso | sha1sum > dvd.sha1
 wget -O - http://example.com/dvd.iso  | tee >(sha1sum > dvd.sha1)   >(md5sum > dvd.md5)   > dvd.iso
+
 wget -O  /tftpboot/undionly.kpxe   http://cuddletech.com/IPXE-100612_undionly.kpxe      
 
 
@@ -3933,6 +3950,7 @@ shift+alt+t 复制session
 ````````````````````ssh section```````````````````````````````````
 ssh -vvv root@192.168.129.76
 ssh-keygen -t rsa  
+或：ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
 ssh-copy-id -i ~/.ssh/id_rsa.pub $remote_user@$remote_host
 ssh-agent bash
 ssh-add ~/.ssh/id_rsa
@@ -7178,9 +7196,9 @@ sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh
 sed -i.bak2 's/PasswordAuthentication no/PasswordAuthentication yes/g'   /etc/ssh/sshd_config
 svcadm restart svc:/network/ssh:default
 ````````````````````````
-ssh-keygen -t rsa 
+ssh-keygen -t rsa   #需要人工输入
 或：
-ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
+ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''   #不需要人工输入
 scp ~/.ssh/id_rsa.pub    10.75.1.109:/root/.ssh/authorized_keys
 
 `````````
@@ -7188,6 +7206,9 @@ zlogin bf540e13-56df-cac7-819e-c82185d58209  sed 's/PermitRootLogin without-pass
 zlogin bf540e13-56df-cac7-819e-c82185d58209  sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config  
 zlogin bf540e13-56df-cac7-819e-c82185d58209  svcadm restart svc:/network/ssh:default
 zlogin bf540e13-56df-cac7-819e-c82185d58209  cp /opt/local/etc/pkgin/repositories.conf /opt/local/etc/pkgin/repositories.conf.original
+
+
+
 ===smartos python section=====
 SmartOS install python 2.7 in global zone
 
@@ -7706,8 +7727,10 @@ json --version
 =======windows section=============
 
 ````screenshot section```
-“Windows + Shift + S”
-
+方法一：
+打开onenote,然后“Windows + Shift + S”
+方法二：
+打开截图工具，然后ctl+N (快捷键调用菜单)
 
 ``````````wildcard section``````````
 ansible *pxe[1-4]_fifo -m raw -a "ifconfig"
@@ -7730,4 +7753,13 @@ yes Y | command-that-asks-for-input
 gunzip chunter-0.7.0p3.gz
 yes 'yes' |sh chunter-0.7.0p3
 
-==============
+========cygwin clipboard section======
+安装cygutils-extra
+ssh root@10.0.1.160 cat /data/files/66d919a8-132a-11e7-a7b8-5b99fa122880/manifest.json  > /dev/clipboard
+
+echo foobar > /dev/clipboard  # Puts "foobar\n" on the clipboard
+cat /dev/clipboard            # Pastes clipboard to stdout
+
+echo foobar > /dev/clipboard  # Puts "foobar\n" on the clipboard
+cat /dev/clipboard  # Pastes clipboard to stdout
+
