@@ -1916,7 +1916,7 @@ working copy—the command-line client knows the repository's root URL by lookin
 
 server:  
 yum -y install subversion mod_dav_sv
-mkdir /var/svn
+mkdir /var/svn #这个目录是用来放pid文件的
 
 systemctl start  svnserve
 systemctl enable  svnserve
@@ -1929,17 +1929,31 @@ $ svnadmin create repos
 svn import  /tmp/xxd_code_repo/dev_v6.5.4_20160628/   file:///srv/svnrepos/xxd-v6 -m "initial import" 
 
 ``````````````````
+systemctl restart httpd
+systemctl enable  httpd
 步骤2：
 vi /etc/httpd/conf/httpd.conf
 LoadModule dav_module modules/mod_dav.so
 LoadModule dav_svn_module modules/mod_dav_svn.so
 <Location /svn>
 DAV svn
-# Automatically map any "/svn/foo" URL to repository /var/svn/foo
+# Automatically map any "/svn/foo" URL to repository /srv/svnrepos/foo
 SVNParentPath /srv/svnrepos
 </Location>
 
 
+
+
+sudo mkdir /etc/svn
+sudo htpasswd -cm /etc/svn/svn-auth wujunrong
+sudo htpasswd -cm /etc/svn/svn-auth wujing
+sudo htpasswd -cm /etc/svn/svn-auth zhangzhen
+sudo htpasswd -cm /etc/svn/svn-auth haoyueqiang
+sudo chown root:apache /etc/svn/svn-auth
+sudo chmod 640 /etc/svn/svn-auth
+
+sudo cp /srv/svnrepos/Yibaba_Source_code/conf/authz  /svn/authz
+sudo vi /svn/authz
 ``````````````
 
 
