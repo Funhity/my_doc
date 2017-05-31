@@ -542,6 +542,20 @@ docker pull centos:6
 
 docker info
 docker search centos
+`````docker network``````
+
+ docker network ls
+ docker network inspect bridge
+
+ docker network create --subnet 172.30.0.0/16 \
+                        --opt com.docker.network.bridge.name=docker_gwbridge \
+      --opt com.docker.network.bridge.enable_icc=false \
+      docker_gwbridge
+
+``````docker swarm section ```````
+service = container image  +  commands to execute
+
+
 ``````dockerfile section```````````
 sudo docker build -t ouruser/sinatra:v2 .
 docker commit c3f279d17e0a  SvenDowideit/testimage:version3
@@ -1970,6 +1984,8 @@ sudo chmod 640 /etc/svn/svn-auth
 
 sudo cp /srv/svnrepos/Yibaba_Source_code/conf/authz  /svn/authz
 sudo vi /svn/authz
+
+
 ``````````````
 
 
