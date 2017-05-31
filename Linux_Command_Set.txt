@@ -7739,4 +7739,13 @@ yes Y | command-that-asks-for-input
 gunzip chunter-0.7.0p3.gz
 yes 'yes' |sh chunter-0.7.0p3
 
-==============
+========cygwin clipboard section======
+安装cygutils-extra
+ssh root@10.0.1.160 cat /data/files/66d919a8-132a-11e7-a7b8-5b99fa122880/manifest.json  > /dev/clipboard
+
+echo foobar > /dev/clipboard  # Puts "foobar\n" on the clipboard
+cat /dev/clipboard            # Pastes clipboard to stdout
+
+echo foobar > /dev/clipboard  # Puts "foobar\n" on the clipboard
+cat /dev/clipboard  # Pastes clipboard to stdout
+
