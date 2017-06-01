@@ -95,6 +95,8 @@ ONBOOT=yes
 NM_CONTROLLED=no
 BOOTPROTO=static
 IPADDR=192.168.38.146
+#MASK参数可能无效，需要用prefix
+PREFIX=24
 MASK=255.255.255.0
 GATEWAY=192.168.38.251
 #DNS1=202.96.209.133
@@ -7678,7 +7680,8 @@ npm install --registry  npm.briphant.cn
 windows:tracert
 linux  :traceroute
         yum -y install traceroute
-
+查第一跳用了哪个gateway
+ip route get 4.2.2.1  
 
 =========smartos timezone section=========
 pkgin -y install smtools;sm-set-timezone Asia/Shanghai
