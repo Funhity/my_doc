@@ -671,7 +671,7 @@ sudo yum info  minidlna
 rpm -q --whatprovides /opt/dell/srvadmin/bin/omreport
 srvadmin-omacore-8.2.0-1739.8348.el6.x86_64
 ``````````````private repo`````````````
-
+yum -y install createrepo
 Yum Cache: /var/cache/yum/$basearch/$releasever/
 [main] section of /etc/yum.conf   中设置keepcache = 1
 ```
