@@ -660,7 +660,12 @@ srvadmin-omacore-8.2.0-1739.8348.el6.x86_64
 
 Yum Cache: /var/cache/yum/$basearch/$releasever/
 [main] section of /etc/yum.conf   中设置keepcache = 1
+```
+自动化：
+sed -i s/keepcache=0/keepcache=1/  /etc/yum.conf
 yum makecache
+````
+
 find  /var/cache/yum/$basearch/$releasever/  -type f -name "*.rpm" -exec sh -c 'mv  {} /var/www/html/' \;
 find  /var/cache/yum/$basearch/$releasever/ -atime -1  -type f -name "*.rpm" -exec sh -c 'ansible test-xxd -m copy -a "src={} dest=/var/www/html/packages/"' \; 
 find  /var/cache/yum  -type f -name "*.rpm" -exec sh -c 'scp   {} root@10.0.1.38:/home/frank/docker-share/yum-repo-centos7' \;
@@ -669,7 +674,7 @@ find  /var/cache/yum/$basearch/$releasever/ -amin -60  -type f -name "*.rpm"
 1、vi /etc/yum.conf   中设置keepcache = 1
 2、yum makecache
 3、find  /var/cache/yum/$basearch/$releasever/ -amin -60  -type f -name "*.rpm"
-
+````````
 
 yum -y install httpd
 yum -y install createrepo
@@ -4711,7 +4716,7 @@ ansible cloudera_redis          -m shell  -a   "yum -y install make gcc tcl"
 查询channel个数
  pubsub channels *
  pubsub numsub "trade_transfer_result_topic"
-`````aria2 section```download section````wget section``
+`````aria2c section```download section````wget section``aria2 section
 
 ubuntu:   sudo apt-get install  aria2
 centos6:  wget http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el7.rf.x86_64.rpm
@@ -4733,7 +4738,7 @@ service redis start
 方法二：
 tar zxvf redis2.8.23.tar.gz
 cd redis-2.8.23/src
-yum -y groupinstall "Development Tools && make && make install
+yum -y groupinstall "Development Tools" && make && make install
 /usr/local/bin/redis-server &
 `````````
 chmod  +x /etc/keepalived/scripts/*.sh
