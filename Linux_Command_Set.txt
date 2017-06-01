@@ -3973,7 +3973,7 @@ ssh -vvv root@192.168.129.76
 ssh-keygen -t rsa  
 或：ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
 ssh-copy-id -i ~/.ssh/id_rsa.pub $remote_user@$remote_host
-ssh-agent bash
+ssh-agent bash #rsa文件密码自动输入
 ssh-add ~/.ssh/id_rsa
 #the private key is used for the opposite operation, in these examples to decrypt ciphertext or to create a digital signature. 
 ssh root@10.0.1.120 -p 2222
@@ -4851,10 +4851,11 @@ column mode:
 Alt + Mouse draggin
 Alt + Shift + Arrow keys
 ======nfs section============
-
+步骤一：
 yum -y install nfs-utils nfs-utils-lib
 
 ````````````server`````````````````
+步骤二：
 systemctl enable rpcbind
 systemctl enable nfs-server
 systemctl enable nfs-lock
@@ -4863,8 +4864,17 @@ systemctl enable nfs-idmap
 systemctl start rpcbind
 systemctl start nfs-server
 systemctl start nfs-lock
-systemctl start nfs-idmap  #rpc.idmapd is the NFSv4 ID <-> name mapping daemon. It provides functionality to the NFSv4 kernel client and server, to which it communicates via upcalls, by translating user and group IDs to names, and vice versa.
+systemctl start nfs-idmap  
+#rpc.idmapd is the NFSv4 ID <-> name mapping daemon. It provides functionality to the NFSv4 kernel client and server, to which it communicates via upcalls, by translating user and group IDs to names, and vice versa.
 
+步骤三
+cat>/etc/exports<<EOF
+/root            10.0.1.38(rw,sync,no_root_squash,no_all_squash)
+EOF
+步骤四
+在客户端执行：
+showmount -e 10.0.1.73
+mount -t nfs 10.0.1.73:/root /mnt/
 ```````````
 /etc/idmapd.conf
 Domain = xinxindai.com
@@ -4884,8 +4894,8 @@ Nobody-Group
 Local group name to be used when a mapping cannot be completed. 
 
 A blog I read stated that an error in the domain name will cause mapping to fail 
-```````````
 
+`````
 sudo vi /etc/exports
   /usr/local   192.168.0.1(ro) 192.168.0.2(ro)
   /home        192.168.0.1(rw) 192.168.0.2(rw)
@@ -4918,7 +4928,7 @@ exportfs -rav  reload /etc/exports file.
 
 ``````````mount section client``````
 yum -y install showmount
-showmount -e 192.168.0.100
+showmount -e 192.168.0.100  #地址为nfs服务器的地址
 mount -t nfs 192.168.0.100:/nfsshare /mnt/nfsshare
 
 检查mount目录被谁使用了 sudo lsof  | grep /my-wd-disk
