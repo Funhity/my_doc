@@ -554,7 +554,7 @@ docker search centos
 
 ``````docker swarm section ```````
 service = container image  +  commands to execute
-
+task    =  commands to run inside the container(atomic scheduling unit of swarm)
 
 ``````dockerfile section```````````
 sudo docker build -t ouruser/sinatra:v2 .
@@ -1976,9 +1976,9 @@ SVNParentPath /srv/svnrepos
 
 sudo mkdir /etc/svn
 sudo htpasswd -cm /etc/svn/svn-auth wujunrong
-sudo htpasswd -cm /etc/svn/svn-auth wujing
-sudo htpasswd -cm /etc/svn/svn-auth zhangzhen
-sudo htpasswd -cm /etc/svn/svn-auth haoyueqiang
+sudo htpasswd -m /etc/svn/svn-auth wujing
+sudo htpasswd -m /etc/svn/svn-auth zhangzhen
+sudo htpasswd -m /etc/svn/svn-auth haoyueqiang
 sudo chown root:apache /etc/svn/svn-auth
 sudo chmod 640 /etc/svn/svn-auth
 
