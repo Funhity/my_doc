@@ -1711,10 +1711,13 @@ vmadm list | grep home_leofs| awk '{print $1}' |xargs -I {} vmadm reboot {}
 curl -s  http://pkgs.briphant.com/pkgsrc-fifo.bak/pkg/rel/ |  sed -r -n 's/.*(fifo.*howl.*0.8.2.*.tgz).*/\1/p'
 
 ===smartos kvm migration====
+方法一：
 UUID=873f7b84-d078-62ab-d069-ce5760072253
 vmadm get ${UUID} | json zfs_filesystem disks
 
 vmadm get ${UUID} >/opt/salt.json
+vmadm get $UUID | json -e "for(i in this.disks){this.disks[i].nocreate=true;}this.i=undefined;" >/opt/salt.json
+
 zfs snapshot zones/${UUID}@sending
 zfs send -p zones/${UUID}@sending > /opt/salt.zfs
 zfs destroy zones/${UUID}@sending
@@ -1731,6 +1734,16 @@ zfs receive zones/${UUID}-disk0 < /opt/salt-disk0.zfs
 
 zfs destroy zones/873f7b84-d078-62ab-d069-ce5760072253@sending
 zfs destroy zones/873f7b84-d078-62ab-d069-ce5760072253-disk0@sending
+
+
+方法二：
+UUID=873f7b84-d078-62ab-d069-ce5760072253
+zfs snapshot zones/${UUID}@sending
+zfs snapshot zones/${UUID}-disk0@sending
+zfs send zones/${UUID}-disk0@sending | ssh 10.20.2.159  zfs recv zones/${UUID}-disk0
+zfs send zones/${UUID}@sending       | ssh 10.20.2.159  zfs recv zones/${UUID}
+
+
 ``````
 
 修改一：

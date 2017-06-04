@@ -4138,8 +4138,10 @@ sudo yum install gparted
 parted -s /dev/sdb print #disk section
 sudo mount /dev/sdb1   /home/frank/kvm/images/my-wd-disk/
 sudo yum -y install iotop
+=====smartos io section=========
+iostat -xnz 1 10
 
-````usb section```
+====usb section====
 sudo lsusb
 sudo lsusb -v | less
 ```````````````
@@ -6431,7 +6433,7 @@ dhcp：
 
 route delete default 10.0.1.1 
 route  add default 10.0.1.101
-
+route delete 10.20.2.159 10.0.1.1
 ----smartos netstat--
 
 路由：netstat -r
@@ -7221,6 +7223,9 @@ less /var/svc/log/pkgsrc-salt:minion.log
 less /var/svc/log/network-salt-minion:default.log
 less /var/svc/log/pkgsrc-salt:master.log
 less /var/svc/log/system-system-log:default.log
+less /var/adm/messages
+system-zoneinit:default.log
+vmadm:/zones/<ZONE_ID>/root/tmp/vm.log {1-9}
 ```````````
 
 /opt/local/etc/salt/states
