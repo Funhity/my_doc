@@ -4196,10 +4196,15 @@ while pgrep vpnserver > /dev/null; do sleep 1; done
 process_number=$[$line_number-1]
 ln -s  ~/backup/fk_stage.sh  fk_stage.sh
        存在的                新建的
-```````````diff section`````````````````
+==========diff section====
 cmp -l file1.bin file2.bin   #二进制文件对比
 diff -Naur               stage_v6_webservice/  temp_v6_webservice/
 diff -r --exclude=".svn" dev_v6.4.4_20160308/  ../wujunrong/dev_v6.4.4_20160308/
+diff -qr directory-1/ directory-2/ 
+``````
+$ sudo apt install meld  [Debian/Ubuntu systems]
+$ sudo yum install meld  [RHEL/CentOS systems]
+$ sudo dnf install meld  [Fedora 22+]
 ```````````du section````````````````````
 du -ah /root
 du -ak /root
