@@ -1716,7 +1716,8 @@ UUID=873f7b84-d078-62ab-d069-ce5760072253
 vmadm get ${UUID} | json zfs_filesystem disks
 
 vmadm get ${UUID} >/opt/salt.json
-vmadm get $UUID | json -e "for(i in this.disks){this.disks[i].nocreate=true;}this.i=undefined;" >/opt/salt.json
+cat /opt/salt.json |json -e "for(i in this.disks){this.disks[i].nocreate=true;this.disks[i].block_size=undefined;}this.i=undefined;" >/opt/salt.json
+cat /opt/salt.json |json -e "for(i in this.disks){this.disks[i].nocreate=true;this.disks[i].block_size=undefined;}this.i=undefined;"| ssh 10.0.2.159 vmadm create
 
 zfs snapshot zones/${UUID}@sending
 zfs send -p zones/${UUID}@sending > /opt/salt.zfs
@@ -1871,3 +1872,16 @@ rpm -qa| grep jdk
 rpm -ql jdk1.8.0_131-1.8.0_131-fcs.x86_64
 tar zxvf  /root/apache-tomcat-8.0.44.tar.gz   -C /opt/
 
+
+====zhixiang section=========
+
+ansible liuzhen  -f 1 -m raw -a "echo 10.20.2.200 salt>>/etc/hosts;cd /;curl -k httts;cd /;curl -k http://salt/smartos/bootstrap-2016Q4-x86_64.tar.gz | gzcat |/ tar -xf -;pkg_admin rebuild;cd /opt/;wget http://salt/file-share/salt-2016.3.3-esky-smartos.tar.gz   ;cd /opt ; tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz ;/opt/salt/install/install.sh && svcadm enable salt-minion;svcadm restart salt-minion"
+
+/opt/salt/bin/salt-minion -l debug
+
+sed -i.bak   's/#master: salt/master: salt/' /opt/salt/etc/minion
+ansible liuzhen -m raw -a "svcadm restart salt-minion"
+
+rsync -avzh /srv/  10.20.2.200:/srv/   --checksum --dry-run
+
+=====

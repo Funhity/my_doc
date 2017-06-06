@@ -1162,7 +1162,7 @@ sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-2.el7
 sudo yum -y clean expire-cache
 sudo yum -y install salt-minion
 sudo systemctl restart salt-minion
-
+sudo systemctl status  salt-master
 方法一：
 CentOS 7:/etc/yum.repos.d/saltstack.repo:
 # Enable SaltStack's package repository
@@ -1185,6 +1185,9 @@ sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el7
   yum install salt-minion -y
   systemctl start  salt-minion.service
   systemctl enable salt-minion.service
+
+  ```salt port`````
+  master 需要开放的端口：4505 and 4506
   `````````
   salt --versions-report
   `````````````
@@ -7155,6 +7158,7 @@ sed -i.bak2 's/#host_key_checking = False/host_key_checking = False/' /etc/ansib
 ansible qinghua -f 1 -m raw -a " format < /dev/null | sed -n 's/.*\(<.*>\).*/\1/p' "
 =====smartos salt section=====
 
+/opt/salt/bin/salt-minion -l debug
 
   smartos: salt master上配置自动注册minion：
   vi /opt/local/etc/salt/master
