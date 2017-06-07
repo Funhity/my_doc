@@ -1189,7 +1189,7 @@ sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el7
 
   ```salt port`````
   master 需要开放的端口：4505 and 4506
-  `````````
+  ```salt version section``````
   salt --versions-report
   `````````````
   smartos: salt master上配置自动注册minion：
@@ -7747,6 +7747,8 @@ sudo openvpn --config ~/Documents/briphant_office_sh_new
 
  选中一行，包括换行符
  ctl+shift+ -> 或 <-
+
+ view->wordwrap 把一行显示成两行
 ========string section==========chenge file name=========
 
 ${string/pattern/replacement}
