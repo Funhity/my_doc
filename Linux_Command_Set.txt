@@ -326,13 +326,13 @@ After disabling Network Manager on Debian or Ubuntu, use /etc/network/interfaces
 
 
 To disable Network Manager on Fedora:
-$ sudo systemctl stop NetworkManager.service
-$ sudo systemctl disable NetworkManager.service
+sudo systemctl stop NetworkManager.service
+sudo systemctl disable NetworkManager.service
 
 
 To disable Network Manager on CentOS:
-$ sudo service NetworkManager stop
-$ sudo chkconfig NetworkManager off
+sudo service NetworkManager stop
+sudo chkconfig NetworkManager off
 
 # chkconfig NetworkManager off
 # chkconfig network on
@@ -2289,6 +2289,9 @@ vim scp://root@cloudera-agent1///etc/yum.repos.d/my-cloudera-manager.repo
 
 Searching and Replacing
 :%s/HOME=\/var\/lib\/zabbix/HOME=\/etc\/zabbix/g
+
+````less section```````
+ less -i dataset_install_2017-06-07-19_57.log
 =======================  sudo section   ========================   
 命令：visudo //press escape, then type ZZ
 Cmnd_Alias SALTCMD = /usr/bin/salt, /usr/bin/salt-key, /usr/bin/salt-run, /usr/bin/salt-ssh, /usr/bin/salt-cp
@@ -6475,13 +6478,15 @@ svccfg -s FMRI setenv ENV_VARIABLE value
 
 
 
-=========pkgin section smartos repository========
+=========pkgin section smartos repository====pkg_add section====
 curl -s  http://pkgsrc.joyent.com/packages/SmartOS/2014Q4/x86_64/All/ | sed -r -n 's/.*=\"(.*.tgz)\".*/\1/p'| xargs -I {} wget http://pkgsrc.joyent.com/packages/SmartOS/2014Q4/x86_64/All/{}
 pkgin avail | more
 pkg库失效，找不到安装包时：
 rm -fr /var/db/pkgin/*    #This directory can be completely emptied if pkgin's database gets corrupted, pkgin will rebuild its database based on pkg_install's PKG_DB next time it is called.
-
-
+安装软件包，打印出依赖包：
+          pkg_add -U -v -n /root/fifo_howl.tgz 
+          pkg_add -U -v -n /root/fifo_snarl.tgz 
+          pkg_add -U -v -n /root/fifo_sniffle.tgz
 软件包缓存路径：
 /var/db/pkgin/cache
 安装错误日志：
