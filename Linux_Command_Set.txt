@@ -1009,7 +1009,8 @@ vboxmanage internalcommands sethduuid  '/media/frank/3172e678-9cfa-4781-9900-0d7
 
   1. Close virtualbox
   2. Execute in bash: sudo adduser YOURUSERNAME vboxusers
-  3. Log out and log in again
+     or  sudo usermod -a -G vboxusers frank
+  3. Log out and log in again #这步很重要
   4. Attach to your PC the USB devices you want to be automatically mounted in the VM (virtual machine).
 
 ==================
@@ -4969,6 +4970,10 @@ sudo  mount -v  -t hfsplus -o force,rw,uid=1000,gid=1000   /dev/sda1  /home/fran
 sudo mount -o umask=0  /dev/sdc2  /media/frank/Virtualbox_VM/
 sudo mount -t cifs //10.0.1.6/Shared  -o username=wujr,password=wujr  /home/frank/media
 
+====ntfs section======
+ yum install epel-release
+ sudo yum install ntfs-3g -y
+ sudo yum install ntfsprogs -y
 ==========keepalived section===========
 aria2c  https://github.com/antirez/redis/archive/2.8.23.tar.gz
 
