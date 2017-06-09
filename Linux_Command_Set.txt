@@ -6945,9 +6945,13 @@ less /var/log/leo_storage/app/error
 less /var/log/leo_manager/app/error
 
 
-
+````leofs command````
 leofs-adm status
+leofs-adm cluster-status
 leofs-adm start
+leofs-adm get-users 
+leofs-adm get-buckets
+leofs-adm  get-endpoints
 `````````
 登入leofs所需配置参数：
 sniffle-admin config show
