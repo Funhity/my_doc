@@ -2192,8 +2192,8 @@ Install the following Cygwin components.
   * make
   * python (2.7.x)
   * python-crypto
-  * python-openssl
-  * python-setuptools
+  * python2-openssl
+  * python2-setuptools
   * git (2.5.x)
   * nano
   * openssh
@@ -2218,8 +2218,8 @@ export ANSIBLE_LIBRARY=$ANSIBLE/library
 easy_install-2.7 pip
 CFLAGS="-g -O2 -D_BSD_SOURCE" pip install -U pycrypto
 pip install ansible
-mkdir ~/ansible-program-files
-cd ~/ansible-program-files
+#mkdir ~/ansible-program-files
+#cd ~/ansible-program-files
 git clone https://github.com/ansible/ansible /opt/ansible
 mkdir -p /etc/ansible
 cp /opt/ansible/examples/ansible.cfg  /etc/ansible
