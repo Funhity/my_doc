@@ -1813,6 +1813,7 @@ ansible  hyper_server_for_zhixiang -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E
 
 ```lakala ssh````
 ansible  hyper_pxe_lakala   -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'abc'| awk '{print \$1}'|xargs -I{} zlogin {} grep PermitRootLogin /etc/ssh/sshd_config "
+         global_*_briphant_dedicated_pxe*_fifo*
 ansible  hyper_pxe_lakala   -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'abc'| awk '{print \$1}'|xargs -I{} zlogin {} sed -n 's/PermitRootLogin without-password/PermitRootLogin yes/gp'   /etc/ssh/sshd_config "
 ansible  hyper_pxe_lakala   -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'abc'| awk '{print \$1}'|xargs -I{} zlogin {} sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config "
 

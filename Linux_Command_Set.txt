@@ -558,6 +558,14 @@ docker search centos
 service = container image  +  commands to execute
 task    =  commands to run inside the container(atomic scheduling unit of swarm)
 
+
+docker swarm init
+docker swarm join \
+    --token SWMTKN-1-47b6rvzc1nd5yqe46i22mcdo7myu8rcjosq4lypl4exc097skx-5cfpe2azveljgkt0wcjxt0u7t \
+    192.168.1.191:2377
+docker swarm join-token manager
+
+
 ``````dockerfile section```````````
 sudo docker build -t ouruser/sinatra:v2 .
 docker commit c3f279d17e0a  SvenDowideit/testimage:version3
@@ -4150,8 +4158,11 @@ sudo yum -y install iotop
 iostat -xnz 1 10
 
 ====usb section====
+lsblk
 sudo lsusb
 sudo lsusb -v | less
+ mtp-probe: bus: 2, device: 5 was not an MTP device
+ export MTP_NO_PROBE="1"
 ```````````````
 help export 
 help ls
