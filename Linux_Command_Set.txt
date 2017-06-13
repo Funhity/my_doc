@@ -6972,7 +6972,7 @@ leofs-adm  get-endpoints
 `````````
 登入leofs所需配置参数：
 sniffle-admin config show
-
+ok，sniffle-admin config set key value这条命令我先学习下
 ```````````chunter section`````
 /opt/chunter/etc/chunter.conf
 /opt/chunter/etc/chunter.conf.example
