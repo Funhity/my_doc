@@ -2200,15 +2200,15 @@ Install the following Cygwin components.
   * make
   * python (2.7.x)
   * python-crypto
-  * python-openssl
-  * python-setuptools
+  * python2-openssl
+  * python2-setuptools
   * git (2.5.x)
   * nano
   * openssh
   * openssl
   * openssl-devel
 
-  经测试，还需要python-devel模块
+  经测试，还需要python-devel,gcc-g++模块
 ````````````
 步骤二：
 cd ~
@@ -2226,8 +2226,8 @@ export ANSIBLE_LIBRARY=$ANSIBLE/library
 easy_install-2.7 pip
 CFLAGS="-g -O2 -D_BSD_SOURCE" pip install -U pycrypto
 pip install ansible
-mkdir ~/ansible-program-files
-cd ~/ansible-program-files
+#mkdir ~/ansible-program-files
+#cd ~/ansible-program-files
 git clone https://github.com/ansible/ansible /opt/ansible
 mkdir -p /etc/ansible
 cp /opt/ansible/examples/ansible.cfg  /etc/ansible
@@ -2239,6 +2239,12 @@ cd sshpass-1.06
 ./configure
 make
 make install
+
+步骤四：在[ssh_connection] 中增加配置项目
+vi /etc/ansible/ansible.cfg 
+[ssh_connection] 
+ssh_args = -o ControlMaster=no
+
 ===============================================  
     
 which searches your $PATH for the binary name you give. No need for an index.
