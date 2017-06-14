@@ -6683,7 +6683,9 @@ svcs -x
 svcs -p leofs/manager:default
 svcprop -p start/exec dsapid
 ps -ef | grep svc
-``````
+`````smf section ````svccfg section````
+svcprop    svc:/network/ucarp-net0:default
+svccfg -s  svc:/network/ucarp-net0:default  listprop
 svcprop -p start/exec   svc:/application/dsapid:default
 svccfg
 首先：
@@ -6693,6 +6695,7 @@ svc:/application/dsapid> setprop start/exec = "/opt/dsapid/server -config=/data/
 svc:/application/dsapid> quit
 最后：svcadm refresh  dsapid
       svcadm restart  dsapid
+
 ``````````````````
 find . -type f -newer ./auth.log
 iostat -xnc 2
@@ -7846,3 +7849,7 @@ cat /dev/clipboard            # Pastes clipboard to stdout
 echo foobar > /dev/clipboard  # Puts "foobar\n" on the clipboard
 cat /dev/clipboard  # Pastes clipboard to stdout
 
+======reboot section=======
+pkill shutdown
+killall shutdown
+kill `cat /var/run/shutdown.pid`

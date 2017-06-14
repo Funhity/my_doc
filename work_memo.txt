@@ -1743,8 +1743,9 @@ zfs snapshot zones/${UUID}@sending
 zfs snapshot zones/${UUID}-disk0@sending
 zfs send zones/${UUID}-disk0@sending | ssh 10.20.2.159  zfs recv zones/${UUID}-disk0
 zfs send zones/${UUID}@sending       | ssh 10.20.2.159  zfs recv zones/${UUID}
-
-
+····
+UUID=873f7b84-d078-62ab-d069-ce5760072253;zfs destroy zones/${UUID}@sending;zfs destroy zones/${UUID}-disk0@sending
+scp /opt/{salt.json,salt-disk0.zfs,salt.zfs} 10.0.1.99:/run/media/frank/
 ``````
 
 修改一：
