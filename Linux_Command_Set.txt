@@ -3155,6 +3155,10 @@ bzip2 -d ./zsync-0.6.2.tar.bz2
 解压缩：
 tar -xvzf /path/to/yourfile.tgz
 
+`````smartos tar section`````
+tar czvf  /tmp/wu.tar.gz -I <(find ./ -name "*.log")
+ansible  fifo_briphant_orchestra121  -m raw -a "tar -cvf /var/tmp/wujunrong.tar.gz -T  <(find /var/db/sniffle/ -name "*LOG*") "
+
 ``````````tomcat section``````
 安装tomcat解压安装包即可
 wget http://apache.fayea.com/tomcat/tomcat-6/v6.0.45/bin/apache-tomcat-6.0.45.tar.gz
@@ -6787,7 +6791,7 @@ vmadm boot 873f7b84-d078-62ab-d069-ce5760072253  order=cd,once=d cdrom=/gparted-
 vmadm info 873f7b84-d078-62ab-d069-ce5760072253  vnc
 ```````smartos snapshot section````````````
 zfs snapshot zones/677fd345-2719-e219-e81c-96e36468ebaf-disk0@kvm_backup_by_wujunrong
-批量：vmadm  list | grep old_fifo_0_7_home  | awk '{print $1}' |xargs -I {} zfs snapshot zones/{}@fifo-upgrade-backup
+批量：vmadm  list | grep old_fifo_0_7_home  | awk '{print \$1}' |xargs -I {} zfs snapshot zones/{}@fifo-upgrade-backup
 
 zfs list -t    snapshot
 zfs list -r -t snapshot -o name,creation zones
@@ -7017,7 +7021,7 @@ ps -afe | grep run_erl | grep -v grep
 dataset配置：
 vi  /opt/local/fifo-cerberus/config/config.js
     http://images.briphant.com/images
-````````````
+```````fifo log`````
 日志：
 ls -Fd /data/*/log
 /data/{sniffle,snarl,howl}/log

@@ -1844,6 +1844,11 @@ who -b
 look at /var/adm/messages file
 fmdump
 
+``````lakala log`````
+grep -i "compaction"  /var/db/sniffle/*/*LOG*
+
+
+
 =====yibaba section===
 qemu-img create -f qcow2 /var/lib/libvirt/images/redmine.qcow2 102400M
 
