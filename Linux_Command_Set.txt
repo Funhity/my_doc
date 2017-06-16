@@ -7318,6 +7318,8 @@ echo ::memstat | mdb -k
 或
 prtconf | grep Memory
 prtdiag -v | grep Memory
+
+ansible  test_server2  -m raw -a " prstat -c -Z 1 2"
 ============ ipv6 section =============
 
 To disable ip v6 in the running system:
