@@ -7318,7 +7318,7 @@ echo ::memstat | mdb -k
 或
 prtconf | grep Memory
 prtdiag -v | grep Memory
-
+prstat -c -Z 1 2 #实际使用内存
 ansible  test_server2  -m raw -a " prstat -c -Z 1 2"
 ============ ipv6 section =============
 
