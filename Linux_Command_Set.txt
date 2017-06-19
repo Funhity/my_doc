@@ -577,6 +577,27 @@ docker swarm join \
 docker swarm join-token manager
 
 
+docker stack deploy -c stack.yml redmine
+ cat stack.yml 
+version: '3.1'
+
+services:
+
+  redmine:
+    image: redmine
+    ports:
+      - 8080:3000
+    environment:
+      REDMINE_DB_MYSQL: db
+      REDMINE_DB_PASSWORD: yibaba
+
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: yibaba
+      MYSQL_DATABASE: redmine
+
+
 ``````dockerfile section```````````
 sudo docker build -t ouruser/sinatra:v2 .
 docker commit c3f279d17e0a  SvenDowideit/testimage:version3
@@ -875,6 +896,8 @@ mysqladmin -u root -p shutdown
 mysql -uroot  -p < mysqlsampledatabase1
   
 
+
+SET NAMES 'utf8';
 `````修改密码``````````
 setting /etc/my.conf using validate-password = off
 
@@ -2344,7 +2367,7 @@ wget -O - http://example.com/dvd.iso  | tee dvd.iso | sha1sum > dvd.sha1
 wget -O - http://example.com/dvd.iso  | tee >(sha1sum > dvd.sha1)   >(md5sum > dvd.md5)   > dvd.iso
 
 wget -O  /tftpboot/undionly.kpxe   http://cuddletech.com/IPXE-100612_undionly.kpxe      
-
+wget --user=briphant --password='the_password' ftp://10.16.2.130/cloud/v7.1.0/flowerrain_v7.1.0_44.tgz
 
 
 pgrep -a fk.sh| tee ./fk.log| wc -l
@@ -2399,7 +2422,7 @@ mv  /etc/nginx/conf.d/default.conf /tmp/
 /etc/nginx/nginx.conf
 /run/nginx.pid
 
-````````````
+```````nginx debug`````
 
 #Where level is one of the following values: debug, info, notice, warn, error, and crit
 error_log /file/path level  
@@ -2411,6 +2434,8 @@ rewrite_log off;
 /usr/local/nginx/conf/nginx.conf
 /usr/local/nginx/logs/access.log
 /usr/local/nginx/logs/error.log
+````smartos nginx log section````
+less /var/svc/log/pkgsrc-nginx:default.log
 
 start nginx:nginx 
 nginx -s signal
@@ -3165,6 +3190,10 @@ yum   -y install bzip2
 bzip2 -d ./zsync-0.6.2.tar.bz2 
 解压缩：
 tar -xvzf /path/to/yourfile.tgz
+
+`````smartos tar section`````
+tar czvf  /tmp/wu.tar.gz -I <(find ./ -name "*.log")
+ansible  fifo_briphant_orchestra121  -m raw -a "tar -cvf /var/tmp/wujunrong.tar.gz -T  <(find /var/db/sniffle/ -name "*LOG*") "
 
 ``````````tomcat section``````
 安装tomcat解压安装包即可
@@ -5180,6 +5209,12 @@ echo "abc 123" | sed 's/[0-9]\+/& &/'  #the special character "&." It correspond
 
 curl -s  http://pkgs.briphan.com/pkgsrc-fifo.bak/pkg/rel/ |  grep sniffle-0.7.0  | sed -r  's/.*(snif.*0.7.0.*.tgz).*/\1/' #curl section
 curl -s  http://pkgs.briphan.com/pkgsrc-fifo.bak/pkg/rel/ |  sed -r -n 's/.*(fifo.*howl.*0.7.0.*.tgz).*/\1/p'
+
+`````sed insert````
+在包含mysqld的那行前面添加default-character-set=utf8
+sed -i.bak2 '/mysqld/ i \
+default-character-set=utf8'  /etc/mysql/conf.d/mysql.cnf
+
 ====alternatives section=========
 sudo alternatives --install /usr/bin/genericcmd genericcmd /usr/bin/cmd-21.0
 alternatives --display genericcmd
@@ -6798,7 +6833,7 @@ vmadm boot 873f7b84-d078-62ab-d069-ce5760072253  order=cd,once=d cdrom=/gparted-
 vmadm info 873f7b84-d078-62ab-d069-ce5760072253  vnc
 ```````smartos snapshot section````````````
 zfs snapshot zones/677fd345-2719-e219-e81c-96e36468ebaf-disk0@kvm_backup_by_wujunrong
-批量：vmadm  list | grep old_fifo_0_7_home  | awk '{print $1}' |xargs -I {} zfs snapshot zones/{}@fifo-upgrade-backup
+批量：vmadm  list | grep old_fifo_0_7_home  | awk '{print \$1}' |xargs -I {} zfs snapshot zones/{}@fifo-upgrade-backup
 
 zfs list -t    snapshot
 zfs list -r -t snapshot -o name,creation zones
@@ -7028,7 +7063,7 @@ ps -afe | grep run_erl | grep -v grep
 dataset配置：
 vi  /opt/local/fifo-cerberus/config/config.js
     http://images.briphant.com/images
-````````````
+```````fifo log`````
 日志：
 ls -Fd /data/*/log
 /data/{sniffle,snarl,howl}/log
@@ -7325,6 +7360,8 @@ echo ::memstat | mdb -k
 或
 prtconf | grep Memory
 prtdiag -v | grep Memory
+prstat -c -Z 1 2 #实际使用内存
+ansible  test_server2  -m raw -a " prstat -c -Z 1 2"
 ============ ipv6 section =============
 
 To disable ip v6 in the running system:
@@ -7864,3 +7901,24 @@ cat /dev/clipboard  # Pastes clipboard to stdout
 pkill shutdown
 killall shutdown
 kill `cat /var/run/shutdown.pid`
+
+
+====redmine section=======
+
+version:
+http://192.168.1.191:8080/admin/info
+
+tail -n 30 /usr/src/redmine/log/production.log
+
+[root@redmine ~]# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+redmine             latest              1ecbd8e5c2ba        13 days ago         641MB
+mysql               latest              e799c7f9ae9c        5 weeks ago         407MB
+
+docker run -d --name yibaba-redmine-mysql -e MYSQL_ROOT_PASSWORD=yibaba -e MYSQL_DATABASE=redmine mysql
+docker run -d --name yibaba-redmine --link  yibaba-redmine-mysql:mysql  -p 8080:3000 redmine
+docker   exec   -it  yibaba-redmine  bash
+docker   exec   yibaba-redmine   cat /usr/src/redmine/app/controllers/users_controller.rb  |less -N
+
+docker   exec   yibaba-redmine   cat /usr/src/redmine/log/production.log  |less
+==========
