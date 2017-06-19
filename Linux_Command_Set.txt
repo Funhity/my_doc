@@ -5198,6 +5198,12 @@ echo "abc 123" | sed 's/[0-9]\+/& &/'  #the special character "&." It correspond
 
 curl -s  http://pkgs.briphan.com/pkgsrc-fifo.bak/pkg/rel/ |  grep sniffle-0.7.0  | sed -r  's/.*(snif.*0.7.0.*.tgz).*/\1/' #curl section
 curl -s  http://pkgs.briphan.com/pkgsrc-fifo.bak/pkg/rel/ |  sed -r -n 's/.*(fifo.*howl.*0.7.0.*.tgz).*/\1/p'
+
+`````sed insert````
+在包含mysqld的那行前面添加default-character-set=utf8
+sed -i.bak2 '/mysqld/ i \
+default-character-set=utf8'  /etc/mysql/conf.d/mysql.cnf
+
 ====alternatives section=========
 sudo alternatives --install /usr/bin/genericcmd genericcmd /usr/bin/cmd-21.0
 alternatives --display genericcmd
