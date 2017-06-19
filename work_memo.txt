@@ -1884,24 +1884,39 @@ tar zxvf  /root/apache-tomcat-8.0.44.tar.gz   -C /opt/
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
 redmine             latest              1ecbd8e5c2ba        13 days ago         641MB
 mysql               latest              e799c7f9ae9c        5 weeks ago         407MB
-
+``
 docker run -d --name yibaba-redmine-mysql -e MYSQL_ROOT_PASSWORD=yibaba -e MYSQL_DATABASE=redmine mysql
 docker run -d --name yibaba-redmine --link  yibaba-redmine-mysql:mysql  -p 8080:3000 redmine
-
-
+````
+docker   exec   yibaba-redmine   cat /usr/src/redmine/app/controllers/users_controller.rb  |less -N
+docker   exec   yibaba-redmine   cat /usr/src/redmine/log/production.log  |less
+````
   docker exec -it yibaba-redmine-mysql bash
   mysql -uroot -p
   SHOW VARIABLES LIKE  'char%';
+  ALTER DATABASE redmine  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+  支持中午需要一张张表改utf8
+  mysql> ALTER TABLE issue_status        CONVERT TO CHARACTER SET utf8;
 ·····
+在docker中修改/etc/mysql/conf.d/mysql.cnf 文件
 root@b10449c35554:/# cp /root/mysql.cnf     /etc/mysql/conf.d/mysql.cnf           
 root@b10449c35554:/# echo [mysqld] >> /etc/mysql/conf.d/mysql.cnf
 root@b10449c35554:/# echo character-set-server=utf8 >> /etc/mysql/conf.d/mysql.cnf
 root@b10449c35554:/# echo collation-server=utf8_general_ci  >>  /etc/mysql/conf.d/mysql.cnf 
 root@b10449c35554:/# cat /etc/mysql/conf.d/mysql.cnf
-····
+
 在包含mysqld的那行前面添加default-character-set=utf8
 sed -i.bak2 '/mysqld/ i \
 default-character-set=utf8'  /etc/mysql/conf.d/mysql.cnf
+`````
+检查是否是utf-8
+python
+Python 2.7.5 (default, Sep 15 2016, 22:37:39) 
+[GCC 4.8.5 20150623 (Red Hat 4.8.5-4)] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> "\xE5\x86\x9B\xE8\x8D\xA3".decode("utf-8")
+
+
 ====zhixiang section=========
 
 ansible liuzhen  -f 1 -m raw -a "echo 10.20.2.200 salt>>/etc/hosts;cd /;curl -k httts;cd /;curl -k http://salt/smartos/bootstrap-2016Q4-x86_64.tar.gz | gzcat |/ tar -xf -;pkg_admin rebuild;cd /opt/;wget http://salt/file-share/salt-2016.3.3-esky-smartos.tar.gz   ;cd /opt ; tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz ;/opt/salt/install/install.sh && svcadm enable salt-minion;svcadm restart salt-minion"

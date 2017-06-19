@@ -878,6 +878,8 @@ yum repolist enabled | grep "mysql.*-community.*"
 sudo yum -y install mysql-community-server
 sudo service mysqld start
 
+select version();
+
 
 SHOW VARIABLES LIKE "%version%";
 mysqladmin --version
@@ -7907,7 +7909,8 @@ mysql               latest              e799c7f9ae9c        5 weeks ago         
 docker run -d --name yibaba-redmine-mysql -e MYSQL_ROOT_PASSWORD=yibaba -e MYSQL_DATABASE=redmine mysql
 docker run -d --name yibaba-redmine --link  yibaba-redmine-mysql:mysql  -p 8080:3000 redmine
 docker   exec   -it  yibaba-redmine  bash
-docker   exec   yibaba-redmine   cat /usr/src/redmine/app/controllers/users_controller.rb  |less -N
 
+
+docker   exec   yibaba-redmine   cat /usr/src/redmine/app/controllers/users_controller.rb  |less -N
 docker   exec   yibaba-redmine   cat /usr/src/redmine/log/production.log  |less
 ==========
