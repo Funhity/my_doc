@@ -566,6 +566,27 @@ docker swarm join \
 docker swarm join-token manager
 
 
+docker stack deploy -c stack.yml redmine
+ cat stack.yml 
+version: '3.1'
+
+services:
+
+  redmine:
+    image: redmine
+    ports:
+      - 8080:3000
+    environment:
+      REDMINE_DB_MYSQL: db
+      REDMINE_DB_PASSWORD: yibaba
+
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: yibaba
+      MYSQL_DATABASE: redmine
+
+
 ``````dockerfile section```````````
 sudo docker build -t ouruser/sinatra:v2 .
 docker commit c3f279d17e0a  SvenDowideit/testimage:version3
@@ -864,6 +885,8 @@ mysqladmin -u root -p shutdown
 mysql -uroot  -p < mysqlsampledatabase1
   
 
+
+SET NAMES 'utf8';
 `````修改密码``````````
 setting /etc/my.conf using validate-password = off
 
@@ -2333,7 +2356,7 @@ wget -O - http://example.com/dvd.iso  | tee dvd.iso | sha1sum > dvd.sha1
 wget -O - http://example.com/dvd.iso  | tee >(sha1sum > dvd.sha1)   >(md5sum > dvd.md5)   > dvd.iso
 
 wget -O  /tftpboot/undionly.kpxe   http://cuddletech.com/IPXE-100612_undionly.kpxe      
-
+wget --user=briphant --password='the_password' ftp://10.16.2.130/cloud/v7.1.0/flowerrain_v7.1.0_44.tgz
 
 
 pgrep -a fk.sh| tee ./fk.log| wc -l
@@ -2388,7 +2411,7 @@ mv  /etc/nginx/conf.d/default.conf /tmp/
 /etc/nginx/nginx.conf
 /run/nginx.pid
 
-````````````
+```````nginx debug`````
 
 #Where level is one of the following values: debug, info, notice, warn, error, and crit
 error_log /file/path level  
@@ -2400,6 +2423,8 @@ rewrite_log off;
 /usr/local/nginx/conf/nginx.conf
 /usr/local/nginx/logs/access.log
 /usr/local/nginx/logs/error.log
+````smartos nginx log section````
+less /var/svc/log/pkgsrc-nginx:default.log
 
 start nginx:nginx 
 nginx -s signal
@@ -7859,3 +7884,24 @@ cat /dev/clipboard  # Pastes clipboard to stdout
 pkill shutdown
 killall shutdown
 kill `cat /var/run/shutdown.pid`
+
+
+====redmine section=======
+
+version:
+http://192.168.1.191:8080/admin/info
+
+tail -n 30 /usr/src/redmine/log/production.log
+
+[root@redmine ~]# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+redmine             latest              1ecbd8e5c2ba        13 days ago         641MB
+mysql               latest              e799c7f9ae9c        5 weeks ago         407MB
+
+docker run -d --name yibaba-redmine-mysql -e MYSQL_ROOT_PASSWORD=yibaba -e MYSQL_DATABASE=redmine mysql
+docker run -d --name yibaba-redmine --link  yibaba-redmine-mysql:mysql  -p 8080:3000 redmine
+docker   exec   -it  yibaba-redmine  bash
+docker   exec   yibaba-redmine   cat /usr/src/redmine/app/controllers/users_controller.rb  |less -N
+
+docker   exec   yibaba-redmine   cat /usr/src/redmine/log/production.log  |less
+==========
