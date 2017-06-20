@@ -1813,6 +1813,10 @@ ansible  hyper_server_for_zhixiang -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E
 
 
 ```lakala ssh````
+
+fifo相关的虚拟机所在的global zone    ： global*fifo*
+zhixiang相关的虚拟机所在的global zone： global_*_briphant_dedicated_pxe*_fifo*
+
 ansible  hyper_pxe_lakala   -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'abc'| awk '{print \$1}'|xargs -I{} zlogin {} grep PermitRootLogin /etc/ssh/sshd_config "
          global_*_briphant_dedicated_pxe*_fifo*
 ansible  hyper_pxe_lakala   -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'abc'| awk '{print \$1}'|xargs -I{} zlogin {} sed -n 's/PermitRootLogin without-password/PermitRootLogin yes/gp'   /etc/ssh/sshd_config "
@@ -1824,8 +1828,12 @@ ansible *_fifo   -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'abc'| awk '{prin
 
 
 ```lakala fifo````
-ansible *fifo  -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'briphant_orchestra'| awk '{print \$1}'|xargs -I{} zlogin {} svcs sniffle snarl howl"
-ansible hyper_server_lakala -m raw -a "uname -a"  | grep lakala |dos2unix |wc -l
+ansible global*fifo*        -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'briphant_orchestra'| awk '{print \$1}'|xargs -I{} zlogin {} svcs sniffle snarl howl"
+ansible hyper_server_lakala -m raw -a "uname -a"  | grep lakala |dos2unix |wc -l #查询主机数目
+
+查fifo zone的内存负荷
+ansible global*fifo*  -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'briphant_orchestra'| awk '{print \$1}'" 2>&1  |grep -v global| grep -v -i connection|grep -E -v "^[[:space:]]*$" |xargs -I{} grep {} ./zonememstat_lakala.txt
+ansible global*fifo*  -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'briphant_orchestra'| awk '{print \$1}'" 2>&1  |grep -v global| grep -v -i connection|grep -E -v "^[[:space:]]*$" |dos2unix.exe|xargs -I{} grep {}  ./zonememstat_lakala.txt
 
 `````lakala pxe`````
 查询pxe zone（alias 名称包含booter）有无做过snapshot
