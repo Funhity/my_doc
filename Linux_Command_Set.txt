@@ -7076,6 +7076,9 @@ vi  /opt/local/fifo-cerberus/config/config.js
 日志：
 ls -Fd /data/*/log
 /data/{sniffle,snarl,howl}/log
+
+
+/var/log/{sniffle,snarl,howl}/
 ```````````````````
 检查内存占用：
 prstat

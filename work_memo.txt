@@ -1820,7 +1820,7 @@ find /var/db/sniffle/  -path *1233142006497949337234359077604363797834693083136*
 
 [application:set_env(eleveldb, Var, Val) || {Var, Val} <- [{max_open_files, 2000}, {block_size, 1048576}, {cache_size, 20*1024*1024*1024}, {sync, false}, {data_root, ""}]].
 eleveldb:repair("/var/db/sniffle/<vnode_number>", []).
-eleveldb:repair("/var/db/sniffle/", []).
+eleveldb:repair("/var/db/sniffle/1039036320289938793410432185759232459286639542272", []).
 
 
 svcadm enable epmd;svcadm enable snarl; svcadm enable howl;svcadm enable sniffle
