@@ -922,7 +922,12 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
 mysqldump -u root -p --all-databases >  /tmp/database-backup-$(date +%Y%m%d).sql
 查询数据库大小
 
-
+``````````````
+mysql> show databases;
+mysql> show tables;
+mysql> use  zabbix;
+mysql> show tables;
+mysql> SHOW VARIABLES LIKE "%version%";
 ======================= proxy  ========================
 http-replicator:
 caching http proxy - easier method with modified Dockerfile:
@@ -6158,12 +6163,7 @@ Ctrl-w  Cut the last word
 Ctrl-k  Cut everything after the cursor
 Ctrl-y  Paste the last thing to be cut
 Ctrl-_  Undo
-===============mysql section======================
-mysql> show databases;
-mysql> show tables;
-mysql> use  zabbix;
-mysql> show tables;
-mysql> SHOW VARIABLES LIKE "%version%";
+
 
 =======kvm section 虚拟机和ip地址对应关系================
 第一步：找台31网段下的机器运行 :         nmap -sP 192.168.31.0/24   > network31.txt
