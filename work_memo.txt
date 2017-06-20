@@ -1903,7 +1903,8 @@ docker   exec   yibaba-redmine   cat /usr/src/redmine/log/production.log  |less
   mysql -uroot -p
   SHOW VARIABLES LIKE  'char%';
   ALTER DATABASE redmine  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-  支持中午需要一张张表改utf8
+  redmine支持中文,需要一张张表改utf8
+  mysql> use redmine
   mysql> ALTER TABLE issue_status        CONVERT TO CHARACTER SET utf8;
 ·····
 在docker中修改/etc/mysql/conf.d/mysql.cnf 文件

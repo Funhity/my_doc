@@ -901,16 +901,17 @@ mysql -uroot  -p < mysqlsampledatabase1
 
 SET NAMES 'utf8';
 `````修改密码``````````
-setting /etc/my.conf using validate-password = off
 
 sudo grep 'temporary password' /var/log/mysqld.log
 mysql -uroot -p 
 ALTER USER 'root'@'localhost' IDENTIFIED BY 'E431e4311!';
+uninstall plugin validate_password;
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'yibaba';
 quit
 
 ````````其他````
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '<E431e4311!>' WITH GRANT OPTION;
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '<E431e4311!>' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'yibaba' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY 'yibaba' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 
 SELECT host FROM mysql.user WHERE User = 'root';
@@ -930,6 +931,12 @@ mysql> show tables;
 mysql> use  zabbix;
 mysql> show tables;
 mysql> SHOW VARIABLES LIKE "%version%";
+``````
+使某张表支持中文
+  mysql> use redmine;
+  mysql> show tables;
+  mysql> ALTER TABLE issue_status        CONVERT TO CHARACTER SET utf8;
+
 ======================= proxy  ========================
 http-replicator:
 caching http proxy - easier method with modified Dockerfile:
