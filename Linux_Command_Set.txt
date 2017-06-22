@@ -3998,6 +3998,8 @@ www[01:50].example.com
 10.0.0.1 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=myrootpassword
 [databases]
 db-[a:f].example.com
+ansible *pxe[1-4]_fifo -m raw -a  ....
+
 
 [stage_v6_tradew]
 stage_v6_tradew01 ansible_ssh_host=192.168.31.54  ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=test
@@ -7036,13 +7038,18 @@ ok，sniffle-admin config set key value这条命令我先学习下
 /opt/chunter/etc/chunter.conf.example
 /opt/chunter/etc/hostid
 
-cd /var/log/chunter/
- 
 
- 
+
 svcadm enable  chunter
 svcadm disable chunter
 svcadm restart chunter
+
+版本查询：
+Chunter Version:
+cat /opt/chunter/etc/chunter.version
+
+cd /var/log/chunter/
+
 
 `````````````````````
 
@@ -7076,6 +7083,9 @@ vi  /opt/local/fifo-cerberus/config/config.js
 日志：
 ls -Fd /data/*/log
 /data/{sniffle,snarl,howl}/log
+
+
+/var/log/{sniffle,snarl,howl}/
 ```````````````````
 检查内存占用：
 prstat
@@ -7102,6 +7112,11 @@ cd /root/pyfi/; make
 /root/pyfi/bin/fifo --host 10.0.1.21 --insecure  --verbose --user admin --password admin datasets list
 /root/pyfi/bin/fifo --host 10.0.1.21 --insecure  --verbose --user admin --password admin datasets import --manifest /root/manifest.json  --dataset /root/pxe-17.4.6.zfs.gz
 /root/pyfi/bin/fifo --host 10.0.1.21 --insecure  --verbose --user admin --password admin vms backups 2de67afe-02ab-c1bb-c8ea-ada3be7ff343   list
+
+命令行迁移虚拟机
+vms backup <vm uuid|alias> create [\-d] [\-\-parent parent] [\-x] "<comment>"
+vms backups <vm uuid|alias> restore [\-\-hypervisor <hypervisor>] <uuid>
+
 
 fifoadm vm list
 fifoadm hypervisors list
@@ -7231,19 +7246,31 @@ bunzip2 smartos-20151029T053122Z-USB.img.bz2
 sudo dd if=smartos-20170216T015949Z-USB.img  of=/dev/sdb bs=1024
 
 =====smartos ansible section=====
+步骤一（客户端）：
+步骤a：
 pkgin install ansible sshpass
 
+步骤b：
 配置ansible minion需要的python路径
 /opt/local/etc/ansible/hosts
 [all:vars]
 ansible_python_interpreter=/opt/local/bin/python
 
-
+步骤c：
 vi /opt/local/etc/ansible/ansible.cfg
 [defaults]
 host_key_checking=false
 或
 sed -i.bak2 's/#host_key_checking = False/host_key_checking = False/' /etc/ansible/ansible.cfg
+`````
+步骤二（服务端）：
+cd /
+curl -k http://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2015Q2-x86_64.tar.gz | gzcat | tar -xf -
+pkg_admin rebuild
+pkgin -y up
+pkgin in python27
+
+
 ````````````````````
 按照hosts文件中的服务器顺序一个个执行，列出smartos上的硬盘
 ansible qinghua -f 1 -m raw -a " format < /dev/null | sed -n 's/.*\(<.*>\).*/\1/p' "
@@ -7636,6 +7663,8 @@ boot
 EOF
 
 ========fifo section====
+http://10.15.11.130/#/vms/2fbc124d-94fa-438a-9da7-27d5c52c08dd/backups
+
 chunter：
 /opt/chunter/etc/chunter.conf
 /var/log/chunter

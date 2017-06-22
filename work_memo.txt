@@ -1809,8 +1809,32 @@ cp /opt/local/fifo-sniffle/etc/sniffle.conf /data/sniffle/etc/sniffle.conf
 ====lakala section=======
 ansible  hyper_server_for_zhixiang -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'abc'| awk '{print \$1}'|xargs -I{} zlogin {} ifconfig "
 /opt/local/bin/sed -i.bak 's/PermitRootLogin without-password/PermitRootLogin yes/g'   /etc/ssh/sshd_config; /usr/sbin/svcadm restart svc:/network/ssh:default
+```````lakala snapshot ```````````
+
+ansible  global*fifo*  -m raw -a "vmadm list| grep orchestra |awk '{print \$1}' |xargs -I {} zfs snapshot zones/{}@fifo-levedb-repair-20170620-backup"
+ansible  global*fifo*  -m raw -a "vmadm list| grep orchestra |awk '{print \$1}' |xargs -I {} zfs list -t snapshot |grep repair"
+````````lakala leveldb repair``````
+find /var/db/sniffle/  -path *1233142006497949337234359077604363797834693083136*
+修复脚本
+/opt/local/fifo-sniffle/erts-7.0/bin/erl
+
+[application:set_env(eleveldb, Var, Val) || {Var, Val} <- [{max_open_files, 2000}, {block_size, 1048576}, {cache_size, 20*1024*1024*1024}, {sync, false}, {data_root, ""}]].
+eleveldb:repair("/var/db/sniffle/<vnode_number>", []).
+eleveldb:repair("/var/db/sniffle/1039036320289938793410432185759232459286639542272", []).
 
 
+svcadm enable epmd;svcadm enable snarl; svcadm enable howl;svcadm enable sniffle
+检查最后一条出现db_open的日志
+ansible native_fifo_zone -m raw -a " grep db_open /var/log/sniffle/console.log |tail -1 "
+
+`````````````lakala chunter```````````
+ ansible global_33_dataset25_joyent2015   -m raw -a "ifconfig"
+ ansible global_33_dataset25_joyent2015   -m raw -a "sed -i.bak s/127.0.0.1/10.15.11.33/g /opt/chunter/etc/chunter.conf"
+ ansible global_33_dataset25_joyent2015   -m raw -a "diff /opt/chunter/etc/chunter.conf.example  /opt/chunter/etc/chunter.conf"
+ ansible global_33_dataset25_joyent2015   -m raw -a "svcadm restart chunter"
+
+
+ ansible fifo_briphant_orchestra117  -m raw -a  "sniffle-admin hypervisors list"
 
 ```lakala ssh````
 
@@ -1828,6 +1852,15 @@ ansible *_fifo   -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'abc'| awk '{prin
 
 
 ```lakala fifo````
+ansible native_fifo_zone -m raw -a "snarl-admin member-status;howl-admin member-status;sniffle-admin member-status"
+ansible native_fifo_zone -m raw -a "howl-admin status;sniffle-admin status;snarl-admin status;"
+ansible native_fifo_zone -m raw -a "svcs epmd snarl sniffle howl"
+ansible native_fifo_zone -m raw -a "prtconf | head -3 | grep Mem"
+
+ansible native_fifo_zone -m raw -a "svcadm disable snarl; svcadm disable howl;svcadm disable sniffle;svcadm disable epmd"
+ansible native_fifo_zone -m raw -a "svcadm enable epmd;svcadm enable snarl; svcadm enable howl;svcadm enable sniffle"
+
+
 ansible global*fifo*        -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'briphant_orchestra'| awk '{print \$1}'|xargs -I{} zlogin {} svcs sniffle snarl howl"
 ansible hyper_server_lakala -m raw -a "uname -a"  | grep lakala |dos2unix |wc -l #查询主机数目
 
