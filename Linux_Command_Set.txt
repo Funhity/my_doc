@@ -6455,7 +6455,7 @@ pkg_admin rebuild
 pkgin -y up
 pkgin in python27
 
-
+或 curl -k http://10.0.1.38/smartos/bootstrap-2017Q1-x86_64.tar.gz| gzcat | tar -xf -
 `````````````````````````````````````
 当前在哪个zone： zonename
 /usbkey/config - system configuration options
