@@ -7246,19 +7246,31 @@ bunzip2 smartos-20151029T053122Z-USB.img.bz2
 sudo dd if=smartos-20170216T015949Z-USB.img  of=/dev/sdb bs=1024
 
 =====smartos ansible section=====
+步骤一（客户端）：
+步骤a：
 pkgin install ansible sshpass
 
+步骤b：
 配置ansible minion需要的python路径
 /opt/local/etc/ansible/hosts
 [all:vars]
 ansible_python_interpreter=/opt/local/bin/python
 
-
+步骤c：
 vi /opt/local/etc/ansible/ansible.cfg
 [defaults]
 host_key_checking=false
 或
 sed -i.bak2 's/#host_key_checking = False/host_key_checking = False/' /etc/ansible/ansible.cfg
+`````
+步骤二（服务端）：
+cd /
+curl -k http://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2015Q2-x86_64.tar.gz | gzcat | tar -xf -
+pkg_admin rebuild
+pkgin -y up
+pkgin in python27
+
+
 ````````````````````
 按照hosts文件中的服务器顺序一个个执行，列出smartos上的硬盘
 ansible qinghua -f 1 -m raw -a " format < /dev/null | sed -n 's/.*\(<.*>\).*/\1/p' "
