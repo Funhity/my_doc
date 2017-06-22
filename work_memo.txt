@@ -1827,6 +1827,15 @@ svcadm enable epmd;svcadm enable snarl; svcadm enable howl;svcadm enable sniffle
 检查最后一条出现db_open的日志
 ansible native_fifo_zone -m raw -a " grep db_open /var/log/sniffle/console.log |tail -1 "
 
+`````````````lakala chunter```````````
+ ansible global_33_dataset25_joyent2015   -m raw -a "ifconfig"
+ ansible global_33_dataset25_joyent2015   -m raw -a "sed -i.bak s/127.0.0.1/10.15.11.33/g /opt/chunter/etc/chunter.conf"
+ ansible global_33_dataset25_joyent2015   -m raw -a "diff /opt/chunter/etc/chunter.conf.example  /opt/chunter/etc/chunter.conf"
+ ansible global_33_dataset25_joyent2015   -m raw -a "svcadm restart chunter"
+
+
+ ansible fifo_briphant_orchestra117  -m raw -a  "sniffle-admin hypervisors list"
+
 ```lakala ssh````
 
 fifo相关的虚拟机所在的global zone    ： global*fifo*

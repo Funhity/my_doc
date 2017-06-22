@@ -3998,6 +3998,8 @@ www[01:50].example.com
 10.0.0.1 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=myrootpassword
 [databases]
 db-[a:f].example.com
+ansible *pxe[1-4]_fifo -m raw -a  ....
+
 
 [stage_v6_tradew]
 stage_v6_tradew01 ansible_ssh_host=192.168.31.54  ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=test
@@ -7036,13 +7038,18 @@ ok，sniffle-admin config set key value这条命令我先学习下
 /opt/chunter/etc/chunter.conf.example
 /opt/chunter/etc/hostid
 
-cd /var/log/chunter/
- 
 
- 
+
 svcadm enable  chunter
 svcadm disable chunter
 svcadm restart chunter
+
+版本查询：
+Chunter Version:
+cat /opt/chunter/etc/chunter.version
+
+cd /var/log/chunter/
+
 
 `````````````````````
 
@@ -7105,6 +7112,11 @@ cd /root/pyfi/; make
 /root/pyfi/bin/fifo --host 10.0.1.21 --insecure  --verbose --user admin --password admin datasets list
 /root/pyfi/bin/fifo --host 10.0.1.21 --insecure  --verbose --user admin --password admin datasets import --manifest /root/manifest.json  --dataset /root/pxe-17.4.6.zfs.gz
 /root/pyfi/bin/fifo --host 10.0.1.21 --insecure  --verbose --user admin --password admin vms backups 2de67afe-02ab-c1bb-c8ea-ada3be7ff343   list
+
+命令行迁移虚拟机
+vms backup <vm uuid|alias> create [\-d] [\-\-parent parent] [\-x] "<comment>"
+vms backups <vm uuid|alias> restore [\-\-hypervisor <hypervisor>] <uuid>
+
 
 fifoadm vm list
 fifoadm hypervisors list
