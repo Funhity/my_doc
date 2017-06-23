@@ -7086,6 +7086,7 @@ vi  /opt/local/fifo-cerberus/config/config.js
 ls -Fd /data/*/log
 /data/{sniffle,snarl,howl}/log
 
+ll -ltr /data/*/log/
 
 /var/log/{sniffle,snarl,howl}/
 ```````````````````
