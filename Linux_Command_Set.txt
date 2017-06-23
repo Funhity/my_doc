@@ -1567,6 +1567,7 @@ apache:
   salt-cp   'debian'              Dockerfile.V1   /tmp/
   sudo salt-cp  v6_front001.xxdaid.com   /home/wujunrong/office.ip.list  /tmp/
   sudo salt-cp  v6_front001.xxdaid.com   /home/wujunrong/office.ip.list  /tmp/office2.ip.list
+  salt '*' cp.get_file "salt://{{grains.os}}/vimrc" /etc/vimrc template=jinja
   ``````````salt-ssh section````````````
   salt-ssh  -i test_fk test.ping
   salt-ssh  -i test_fk cp.get_file  salt://YX.war   /tmp/
@@ -2448,9 +2449,10 @@ rewrite_log off;
 /usr/local/nginx/conf/nginx.conf
 /usr/local/nginx/logs/access.log
 /usr/local/nginx/logs/error.log
-````smartos nginx log section````
+````smartos nginx section smartos log section````
+/opt/local/etc/nginx/includes
 less /var/svc/log/pkgsrc-nginx:default.log
-
+```````
 start nginx:nginx 
 nginx -s signal
          stop   — fast shutdown
@@ -6556,6 +6558,9 @@ rm -fr /var/db/pkgin/*    #This directory can be completely emptied if pkgin's d
           pkg_add -U -v -n /root/fifo_sniffle.tgz
 软件包缓存路径：
 /var/db/pkgin/cache
+
+
+
 安装错误日志：
 /var/db/pkgin/pkg_install-err.log
 
@@ -6595,7 +6600,7 @@ echo "http://pkgs.briphant.com/pkgsrc-joyent/SmartOS/2014Q4/x86_64/All"  >>/opt/
 pkgin -fy up
 
 
-````````smartos private repository`````````
+````````smartos repository`````````
 私有源制作方法：
 方法一：
     从cache中提取软件             ：/var/db/pkgin/cache
@@ -6604,7 +6609,8 @@ pkgin -fy up
     全部pkg软件                   ：wget --mirror pkgsrc.joyent.com/packages/SmartOS/2016Q1/x86_64/All/
     私有源中必须要有如下总结性文件：
     wget https://pkgsrc.joyent.com/packages/SmartOS/2015Q4/x86_64/All/pkg_summary.gz
-
+自动化实现：
+scp /home/frank/docker-share/smartos/pkgin2016Q3/*  10.20.2.159:/var/db/pkgin/cache/; ssh 10.20.2.159 " /opt/local/sbin/pkg_info -X  /var/db/pkgin/cache/*.tgz | gzip -9 >/var/db/pkgin/cache/pkg_summary.gz " ;  scp 10.20.2.159:/var/db/pkgin/cache/*   /home/frank/docker-share/smartos/pkgin2016Q3/
     
 更换私有源配置文件地址，会删除最后一行
 sed -i.bak '$d' /opt/local/etc/pkgin/repositories.conf;echo 'http://192.168.1.128/smartos/pkgin2014Q4/' >> /opt/local/etc/pkgin/repositories.conf;rm -fr /var/db/pkgin/*;/opt/local/bin/pkgin -fy up
@@ -7378,7 +7384,7 @@ pkgin in python27
 或
 在smartos global zone上装python
 cd /
-curl -k http://10.20.2.200/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat | tar -xf -
+curl -k http://salt/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat | tar -xf -
 pkg_admin rebuild
 pkgin -y up
 pkgin in python27
