@@ -212,12 +212,17 @@ rm -f /etc/udev/rules.d/70-persistent-net.rules
   gunzip -S .zip mysqlsampledatabase1.zip
   zcat v6_mobile01_20151103.tar.gz| less
   zcat v6_mobile01_20151201.tar.gz| grep -aHn 15120115162100176722
-````````````````````
+````````````rz section sz section````````
   
   apt-get install lrzsz
   yum install lrzsz -y 
   ZMODEM sz,rz
-  
+===smartos rz section ==smartos sz section==
+  cp   /opt/local/etc/pkgin/repositories.conf.bak  /opt/local/etc/pkgin/repositories.conf
+  rm -fr /var/db/pkgin/*;/opt/local/bin/pkgin -fy up;/opt/local/bin/pkgin -y install lrzsz
+  man lsz
+      lrz
+========= 
   tail -f /var/log/foo | grep --line-buffered
   tail -f /var/log/foo | stdbuf -o0 grep
   tail -f /var/log/foo | sed -u
@@ -6547,7 +6552,7 @@ svccfg -s FMRI setenv ENV_VARIABLE value
 
 
 
-=========pkgin section smartos repository====pkg_add section====
+=========pkgin section ==pkg_add section====
 curl -s  http://pkgsrc.joyent.com/packages/SmartOS/2014Q4/x86_64/All/ | sed -r -n 's/.*=\"(.*.tgz)\".*/\1/p'| xargs -I {} wget http://pkgsrc.joyent.com/packages/SmartOS/2014Q4/x86_64/All/{}
 pkgin avail | more
 pkg库失效，找不到安装包时：
@@ -6558,8 +6563,6 @@ rm -fr /var/db/pkgin/*    #This directory can be completely emptied if pkgin's d
           pkg_add -U -v -n /root/fifo_sniffle.tgz
 软件包缓存路径：
 /var/db/pkgin/cache
-
-
 
 安装错误日志：
 /var/db/pkgin/pkg_install-err.log
@@ -6609,8 +6612,10 @@ pkgin -fy up
     全部pkg软件                   ：wget --mirror pkgsrc.joyent.com/packages/SmartOS/2016Q1/x86_64/All/
     私有源中必须要有如下总结性文件：
     wget https://pkgsrc.joyent.com/packages/SmartOS/2015Q4/x86_64/All/pkg_summary.gz
-自动化实现：
-scp /home/frank/docker-share/smartos/pkgin2016Q3/*  10.20.2.159:/var/db/pkgin/cache/; ssh 10.20.2.159 " /opt/local/sbin/pkg_info -X  /var/db/pkgin/cache/*.tgz | gzip -9 >/var/db/pkgin/cache/pkg_summary.gz " ;  scp 10.20.2.159:/var/db/pkgin/cache/*   /home/frank/docker-share/smartos/pkgin2016Q3/
+····················
+自动化实现
+10.20.2.159是获取软件的机器，操作机器就是repository所在的机器：
+export ip_pkg_made_on=10.20.2.159;scp /home/frank/docker-share/smartos/pkgin2016Q3/*  "$ip_pkg_made_on":/var/db/pkgin/cache/; ssh "$ip_pkg_made_on" " /opt/local/sbin/pkg_info -X  /var/db/pkgin/cache/*.tgz | gzip -9 >/var/db/pkgin/cache/pkg_summary.gz " ;  scp "$ip_pkg_made_on":/var/db/pkgin/cache/*   /home/frank/docker-share/smartos/pkgin2016Q3/
     
 更换私有源配置文件地址，会删除最后一行
 sed -i.bak '$d' /opt/local/etc/pkgin/repositories.conf;echo 'http://192.168.1.128/smartos/pkgin2014Q4/' >> /opt/local/etc/pkgin/repositories.conf;rm -fr /var/db/pkgin/*;/opt/local/bin/pkgin -fy up
