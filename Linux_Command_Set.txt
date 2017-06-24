@@ -4055,7 +4055,7 @@ fast point three times the mouse selects the current row
 
 shift+alt+t 复制session
 
-````````````````````ssh section```````````````````````````````````
+====ssh section ====
 ssh -vvv root@192.168.129.76
 ssh-keygen -t rsa  
 或：ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
@@ -4065,6 +4065,10 @@ ssh-add ~/.ssh/id_rsa
 #the private key is used for the opposite operation, in these examples to decrypt ciphertext or to create a digital signature. 
 ssh root@10.0.1.120 -p 2222
 curl  -s http://192.168.10.56:5000/devops/megatron/raw/master/RabbitMQ/install.sh | openssl sha1
+````ssh file section````
+cat file | ssh remoteuser@ip.address.of.remote.machine "cat > remote"
+ssh remoteuser@ip.address.of.remote.machine "cat > remote" < file
+
 ``````````````````````
 ansible cloudera-agent1  -m shell -a "ip a" --ask-pass
 ansible all              -m ping
