@@ -6570,7 +6570,7 @@ rm -fr /var/db/pkgin/*    #This directory can be completely emptied if pkgin's d
 
 安装错误日志：
 /var/db/pkgin/pkg_install-err.log
-
+```````````````
 在global zone 安装 pkgin
 方法一
 on centos:
@@ -6586,11 +6586,15 @@ on smartos:
 
 cd /
 curl -k http://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2013Q3-x86_64.tar.gz | gzcat | tar -xf -
+#curl -k http://salt/smartos/bootstrap-2017Q1-x86_64.tar.gz | gzcat | tar -xf -
 pkg_admin rebuild
 pkgin -y up
 
+方法三：
+  自动化安装参考smartos salt 在global zone中安装
+  ansible fifo9  -f 1 -m raw -a "echo 10.0.1.38 salt>>/etc/hosts;cd /;curl -k http://salt/smartos/bootstrap-2017Q1-x86_64.tar.gz | gzcat | tar -xf -;/opt/local/sbin/pkg_admin rebuild;"
 
-
+```````
 
 用官方的源安装软件：
 VERSION=rel
@@ -7253,7 +7257,7 @@ bunzip2 smartos-20151029T053122Z-USB.img.bz2
 sudo dd if=smartos-20170216T015949Z-USB.img  of=/dev/sdb bs=1024
 
 =====smartos ansible section=====
-步骤一（客户端）：
+客户端步骤：
 步骤a：
 pkgin install ansible sshpass
 
@@ -7270,14 +7274,16 @@ host_key_checking=false
 或
 sed -i.bak2 's/#host_key_checking = False/host_key_checking = False/' /etc/ansible/ansible.cfg
 `````
-步骤二（服务端）：
+服务端步骤二：
 cd /
 curl -k http://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2015Q2-x86_64.tar.gz | gzcat | tar -xf -
 pkg_admin rebuild
 pkgin -y up
 pkgin in python27
-
-
+········
+服务端自动化安装：
+scp /home/frank/docker-share/smartos/pkgin2017Q1/*  10.0.1.47:/var/db/pkgin/cache/
+ansible fifo9 -m raw -a "/opt/local/sbin/pkg_add -U /opt/python27-2.7.13nb1.tgz"
 ````````````````````
 按照hosts文件中的服务器顺序一个个执行，列出smartos上的硬盘
 ansible qinghua -f 1 -m raw -a " format < /dev/null | sed -n 's/.*\(<.*>\).*/\1/p' "
@@ -7343,7 +7349,7 @@ echo 10.75.1.70 salt>>/etc/hosts&&cd /opt && tar   zxvf   salt-2016.3.3-esky-sma
 svcadm restart salt-minion
 
 用ansible安装salt等：
- ansible hp  -f 1 -m raw -a "echo 10.0.1.38 salt>>/etc/hosts;cd /;curl -k httts;cd /;curl -k http://salt/smartos/bootstrap-2016Q3-x86_64.tar.gz | gzcat |/ tar -xf -;pkg_admin rebuild;cd /opt/;wget http://salt/file-share/salt-2016.3.3-esky-smartos.tar.gz   ;cd /opt ; tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz ;/opt/salt/install/install.sh && svcadm enable salt-minion;svcadm restart salt-minion"
+ ansible hp  -f 1 -m raw -a "echo 10.0.1.38 salt>>/etc/hosts;cd /;curl -k http://salt/smartos/bootstrap-2017Q1-x86_64.tar.gz | gzcat | tar -xf -;/opt/local/sbin/pkg_admin rebuild;  cd /opt/;wget http://salt/file-share/salt-2016.3.3-esky-smartos.tar.gz   ;cd /opt ; tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz ;/opt/salt/install/install.sh && svcadm enable salt-minion;svcadm restart salt-minion"
 ansible hp  -f 1 -m raw -a "imgadm sources -a  http://images.briphant.com; imgadm sources -d  https://images.joyent.com"
 ansible hp  -f 1 -m raw -a "imgadm import 1bd84670-055a-11e5-aaa2-0346bb21d5a1"
 ````global zone 重启``````
