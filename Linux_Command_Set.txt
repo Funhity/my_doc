@@ -7274,7 +7274,7 @@ host_key_checking=false
 或
 sed -i.bak2 's/#host_key_checking = False/host_key_checking = False/' /etc/ansible/ansible.cfg
 `````
-服务端步骤二：
+服务端步骤：
 cd /
 curl -k http://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2015Q2-x86_64.tar.gz | gzcat | tar -xf -
 pkg_admin rebuild
