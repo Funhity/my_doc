@@ -5367,6 +5367,7 @@ The basic Git workflow goes something like this:
 ```````````
 #Git - List all files currently under source control?列出被git管理的文件：
        git ls-tree -r master --name-only 
+`````git rename section `````
 git中的文件重命名       
        git mv ci_fifo.sh fifo_install_salt_command_line.sh
 ``````
@@ -6576,7 +6577,7 @@ rm -fr /var/db/pkgin/*    #This directory can be completely emptied if pkgin's d
 
 安装错误日志：
 /var/db/pkgin/pkg_install-err.log
-```````````````
+```````pkgin global section````````
 在global zone 安装 pkgin
 方法一
 on centos:
@@ -6599,6 +6600,10 @@ pkgin -y up
 方法三：
   自动化安装参考smartos salt 在global zone中安装
   ansible fifo9  -f 1 -m raw -a "echo 10.0.1.38 salt>>/etc/hosts;cd /;curl -k http://salt/smartos/bootstrap-2017Q1-x86_64.tar.gz | gzcat | tar -xf -;/opt/local/sbin/pkg_admin rebuild;"
+方法四：
+scp bootstrap-2017Q1-x86_64.tar.gz 10.20.5.20:/opt/
+ansible 'ci*:!ci19'  -f 1 -m raw -a "echo 10.20.2.200 salt>>/etc/hosts;cd /; gzcat /opt/bootstrap*.tar.gz| tar -xf -;/opt/local/sbin/pkg_admin rebuild;/opt/local/bin/pkgin -y up""
+
 
 ```````
 
@@ -7288,8 +7293,10 @@ pkgin -y up
 pkgin in python27
 ········
 服务端自动化安装：
+scp bootstrap-2017Q1-x86_64.tar.gz 10.20.5.20:/opt/
+ansible 'ci*:!ci19'  -f 1 -m raw -a "echo 10.20.2.200 salt>>/etc/hosts;cd /; gzcat /opt/bootstrap*.tar.gz| tar -xf -;/opt/local/sbin/pkg_admin rebuild;/opt/local/bin/pkgin -y up"
 scp /home/frank/docker-share/smartos/pkgin2017Q1/*  10.0.1.47:/var/db/pkgin/cache/
-ansible fifo9 -m raw -a "/opt/local/sbin/pkg_add -U /opt/python27-2.7.13nb1.tgz"
+ansible 'ci*:!ci19'  -m raw -a "/opt/local/sbin/pkg_add -U /var/db/pkgin/cache/python27-2.7.13nb1.tgz"
 ````````````````````
 按照hosts文件中的服务器顺序一个个执行，列出smartos上的硬盘
 ansible qinghua -f 1 -m raw -a " format < /dev/null | sed -n 's/.*\(<.*>\).*/\1/p' "
@@ -7333,9 +7340,9 @@ echo 10.75.1.70 salt>>/etc/hosts
               
 ```````````
 /usr/bin/hostname>/opt/local/etc/salt/minion_id
-或 echo lakala2  >/opt/salt/etc/minion_id
+或 echo lakala2  >/opt/salt/etc/minion_id   #global zone
 svcadm restart svc:/pkgsrc/salt:minion
-#svcadm restart salt-minion
+#svcadm restart salt-minion                 #global zone
 ```````在global zone安装salt```````````
 相关讨论：                   https://github.com/saltstack/salt/issues/31446
 自己编译global zone包的步骤：https://github.com/saltstack/salt/blob/develop/pkg/smartos/esky/BUILD_ENVIRONMENT.md
@@ -7356,6 +7363,9 @@ svcadm restart salt-minion
 
 用ansible安装salt等：
  ansible hp  -f 1 -m raw -a "echo 10.0.1.38 salt>>/etc/hosts;cd /;curl -k http://salt/smartos/bootstrap-2017Q1-x86_64.tar.gz | gzcat | tar -xf -;/opt/local/sbin/pkg_admin rebuild;  cd /opt/;wget http://salt/file-share/salt-2016.3.3-esky-smartos.tar.gz   ;cd /opt ; tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz ;/opt/salt/install/install.sh && svcadm enable salt-minion;svcadm restart salt-minion"
+ 或（无需安装pkgin）：
+ ansible 'ci*:!ci19'  -m raw -a "echo 10.0.1.38 salt>>/etc/hosts;cd /opt/;wget http://salt/file-share/salt-2016.3.3-esky-smartos.tar.gz   ;cd /opt ; tar   zxvf   salt-2016.3.3-esky-smartos.tar.gz ;/opt/salt/install/install.sh && svcadm enable salt-minion;svcadm restart salt-minion"
+
 ansible hp  -f 1 -m raw -a "imgadm sources -a  http://images.briphant.com; imgadm sources -d  https://images.joyent.com"
 ansible hp  -f 1 -m raw -a "imgadm import 1bd84670-055a-11e5-aaa2-0346bb21d5a1"
 ````global zone 重启``````
