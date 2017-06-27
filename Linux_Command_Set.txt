@@ -4008,7 +4008,7 @@ www[01:50].example.com
 [databases]
 db-[a:f].example.com
 ansible *pxe[1-4]_fifo -m raw -a  ....
-
+ansible  'ci*:!ci19'  -m raw -a "cat /etc/release| head -1"  #exclude ci19
 
 [stage_v6_tradew]
 stage_v6_tradew01 ansible_ssh_host=192.168.31.54  ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=test
@@ -4023,7 +4023,7 @@ other2.example.com     ansible_connection=ssh        ansible_ssh_user=mdehaan
 When you put a password with special characters inside host inventory file it breaks everything after it and even if you put the password parameter at the end the login result in a authentication failure.
 \# works. Ansible 1.9.1 though. 
 ct-stage-tomcat-partener02   ansible_ssh_host=192.168.31.91  ansible_connection=ssh ansible_ssh_user=yxaccount ansible_ssh_pass=YXxxd7361^@\#
-
+``````````````````
 
 #Let’s run a playbook using a parallelism level of 10:
 ansible-playbook playbook.yml -f 10
@@ -7989,5 +7989,21 @@ docker   exec   -it  yibaba-redmine  bash
 
 
 docker   exec   yibaba-redmine   cat /usr/src/redmine/app/controllers/users_controller.rb  |less -N
+
+
+
+````
+redmine 支持中文操作步骤：
+步骤一：根据500错误日志，找出那张表有问题
 docker   exec   yibaba-redmine   cat /usr/src/redmine/log/production.log  |less
+步骤二：修改数据库中的表，使之支持utf8
+  docker exec -it yibaba-redmine-mysql bash
+  mysql -uroot -p
+  SHOW VARIABLES LIKE  'char%';
+  ALTER DATABASE redmine  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+  redmine支持中文,需要一张张表改utf8
+  mysql> use redmine
+  mysql> show tables;
+  mysql> ALTER TABLE issue_status        CONVERT TO CHARACTER SET utf8;
+`````````
 ==========
