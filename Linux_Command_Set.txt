@@ -172,6 +172,8 @@ fi
   sudo yum install nmap -y 
   arping -c 1 -I br0      192.168.38.150
   arping      -I ens32 -b 192.168.31.123 测试是否有IP冲突
+
+  ping 10.15.11.255;arp -a  #ping广播地址，再找mac地址和ip的对应关系
   网络：
   
   nc -v -z salt.master.ip  4505
@@ -942,7 +944,7 @@ mysql> SHOW VARIABLES LIKE "%version%";
   mysql> show tables;
   mysql> ALTER TABLE issue_status        CONVERT TO CHARACTER SET utf8;
 
-======================= proxy  ========================
+======================= proxy  section========================
 http-replicator:
 caching http proxy - easier method with modified Dockerfile:
 > cd ~/your-project
@@ -4208,8 +4210,12 @@ unset HISTFILE
 tar xjvf strongswan-5.2.1.tar.bz2
 zipinfo conf_file.zip
 
+====sort section=====
 sort <file> | uniq -c            #计算重复次数
 sort <file> | uniq --count
+sort -k2,4 order.txt   #uses the second and fourth fields to sort the data.if the sorting is to be done on the basis of first 3 fields, it will be: '-k 1,3'
+=====================
+
 pwdx <PID>  #Find out current working directory of a running process?
 ``````memory section```
 free -h
