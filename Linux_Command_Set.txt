@@ -1073,6 +1073,11 @@ vboxmanage internalcommands sethduuid  '/media/frank/3172e678-9cfa-4781-9900-0d7
      or  sudo usermod -a -G vboxusers frank
   3. Log out and log in again #这步很重要
   4. Attach to your PC the USB devices you want to be automatically mounted in the VM (virtual machine).
+``````virtualbox kvm``````
+从virtualbox迁移到kvm
+sudo qemu-img convert -f vdi -O qcow2   '/home/frank/VirtualBox VMs/office-windows10-backup20170628/office-windows10-backup20170628-disk1.vdi'  /media/frank/675A31A34AF2EE2D/kvm-office-win10.qcow2
+qemu-img convert -f vdi -O qcow2 [VBOX-IMAGE.vdi] [KVM-IMAGE.qcow2]
+e.g. qemu-img convert -f vdi -O qcow2 FreeBSD-7.2.vdi FreeBSD-7.2.qcow2
 
 ==================
 
@@ -7981,7 +7986,19 @@ docker run -d --name yibaba-redmine-mysql -e MYSQL_ROOT_PASSWORD=yibaba -e MYSQL
 docker run -d --name yibaba-redmine --link  yibaba-redmine-mysql:mysql  -p 8080:3000 redmine
 docker   exec   -it  yibaba-redmine  bash
 
-
+`````
 docker   exec   yibaba-redmine   cat /usr/src/redmine/app/controllers/users_controller.rb  |less -N
 docker   exec   yibaba-redmine   cat /usr/src/redmine/log/production.log  |less
+
+
+
+```库表支持中文`````
+  docker exec -it yibaba-redmine-mysql bash
+  mysql -uroot -p
+  SHOW VARIABLES LIKE  'char%';
+  ALTER DATABASE redmine  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+  redmine支持中文,需要一张张表改utf8
+  mysql> use redmine
+  mysql> ALTER TABLE issue_status        CONVERT TO CHARACTER SET utf8;
+·····
 ==========
