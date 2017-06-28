@@ -1868,6 +1868,8 @@ ansible hyper_server_lakala -m raw -a "uname -a"  | grep lakala |dos2unix |wc -l
 ansible global*fifo*  -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'briphant_orchestra'| awk '{print \$1}'" 2>&1  |grep -v global| grep -v -i connection|grep -E -v "^[[:space:]]*$" |xargs -I{} grep {} ./zonememstat_lakala.txt
 ansible global*fifo*  -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E 'briphant_orchestra'| awk '{print \$1}'" 2>&1  |grep -v global| grep -v -i connection|grep -E -v "^[[:space:]]*$" |dos2unix.exe|xargs -I{} grep {}  ./zonememstat_lakala.txt
 
+
+ansible fifo_briphant_orchestra117  -m raw -a "fifoadm hypervisors list | grep lakala|sort -k1,1|awk '{print \$1}'|uniq -c"
 `````lakala pxe`````
 查询pxe zone（alias 名称包含booter）有无做过snapshot
 ansible *pxe[1-4]_fifo -m raw -a "zfs list -t    snapshot | grep \`vmadm list| grep booter|awk '{print \$1}'\` "
@@ -1970,4 +1972,9 @@ ansible liuzhen -m raw -a "svcadm restart salt-minion"
 
 rsync -avzh /srv/  10.20.2.200:/srv/   --checksum --dry-run
 
+````zhixiang cloud  section````
+ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  grep 'service =' /data/howl/etc/howl.conf "
+ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  grep 'service =' /data/snarl/etc/snarl.conf "
+ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  grep 'service =' /data/sniffle/etc/sniffle.conf "
+ansible  'ci*:!ci18'    -m raw -a "grep 'libsnarl.instance' /opt/chunter/etc/chunter.conf "
 =====
