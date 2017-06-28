@@ -3718,6 +3718,7 @@ pxe:		virt-install -n centos6-pxe -r 1024  --vcpus=2  --disk=path=/home/frank/my
           virt-install --connect qemu:///system --ram 1024 -n rhel_64 -r 2048 --os-type=linux --os-variant=rhel5  --disk path=/root/RHEL-Server-5.8-64-virtio.qcow2,device=disk,bus=virtio,format=qcow2 --vcpus=2 --vnc --noautoconsole --import
           virt-install --name NewVM --ram 512 --vcpus 1 --disk path=/var/lib/libvirt/images/centos.img --import --noautoconsole --force
           virt-install --name windows8-office --ram 2048 --vcpus 2 --disk path=/home/frank/kvm/images/windows8-office.img,device=disk  --os-type=windows --os-variant=win8.1 -w bridge=br0  --noautoconsole   --import
+          virt-install --name windows10--office-wujunrong  --ram 5120 --vcpus 2 --disk path=/var/lib/libvirt/images/kvm-office-win10-wujunrong.qcow2,device=disk  --os-type=windows --os-variant=win8.1 -w bridge=br0  --noautoconsole   --import --graphics vnc,listen=0.0.0.0
 centos6:  virt-install  --ram 5120 -n test_centos7_wu  --os-type=linux --os-variant=rhel7  --disk path=/opt/vm/test-centos7.img,device=disk --vcpus=2 --vnc  --import   -w bridge=br0
 centos7:  virt-install --name test-centos7 --ram 2048 --vcpus 2 --disk path=/home/frank/my-vm/kvm/images/test-centos7.qcow2 --import --noautoconsole --force  --graphics vnc,password=E431e431,listen=0.0.0.0   -w bridge:br0   -w bridge:virbr0
 
