@@ -8001,6 +8001,8 @@ mysql               latest              e799c7f9ae9c        5 weeks ago         
 
 docker run -d --name yibaba-redmine-mysql -e MYSQL_ROOT_PASSWORD=yibaba -e MYSQL_DATABASE=redmine mysql
 docker run -d --name yibaba-redmine --link  yibaba-redmine-mysql:mysql  -p 8080:3000 redmine
+
+
 docker   exec   -it  yibaba-redmine  bash
 
 `````
@@ -8012,26 +8014,19 @@ docker   exec   yibaba-redmine   cat /usr/src/redmine/app/controllers/users_cont
 redmine 支持中文操作步骤：
 步骤一：根据500错误日志，找出那张表有问题
 docker   exec   yibaba-redmine   cat /usr/src/redmine/log/production.log  |less
-<<<<<<< HEAD
-
 
 
 ```库表支持中文`````
-=======
+
 步骤二：修改数据库中的表，使之支持utf8
->>>>>>> 9432c0d58621c1632d9281a2eb27fb2b995cc447
   docker exec -it yibaba-redmine-mysql bash
   mysql -uroot -p
   SHOW VARIABLES LIKE  'char%';
   ALTER DATABASE redmine  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
   redmine支持中文,需要一张张表改utf8
   mysql> use redmine
-<<<<<<< HEAD
-  mysql> ALTER TABLE issue_status        CONVERT TO CHARACTER SET utf8;
-·····
-=======
   mysql> show tables;
   mysql> ALTER TABLE issue_status        CONVERT TO CHARACTER SET utf8;
 `````````
->>>>>>> 9432c0d58621c1632d9281a2eb27fb2b995cc447
+
 ==========
