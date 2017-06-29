@@ -7121,7 +7121,11 @@ prstat
 ````fifo debug``
 howl attach
 Llibsnarl:servers().
+························
+[root@ci_cloud_beijing_3 ~]# howl attach
+Attaching to /tmp/howl/erlang.pipe.1 (^D to exit)
 
+^Llibsnarl:servers().
 
 ``````````````
 创建虚拟机时注意jason file 必须有如下属性
