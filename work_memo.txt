@@ -1974,7 +1974,15 @@ rsync -avzh /srv/  10.20.2.200:/srv/   --checksum --dry-run
 
 ````zhixiang cloud  section````
 ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  grep 'service =' /data/howl/etc/howl.conf "
+ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  sed -i.bak  's/^service = b_howl/service = wu_b_how/'  /data/howl/etc/howl.conf "
+
 ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  grep 'service =' /data/snarl/etc/snarl.conf "
+ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  sed -i.bak  's/^service = b_snarl/service = wu_b_snarl/'  /data/snarl/etc/snarl.conf "
+
 ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  grep 'service =' /data/sniffle/etc/sniffle.conf "
+ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  sed -i.bak  's/^service = b_sniffle/service = wu_b_sniffle/'  /data/sniffle/etc/sniffle.conf "
 ansible  'ci*:!ci18'    -m raw -a "grep 'libsnarl.instance' /opt/chunter/etc/chunter.conf "
+ansible  'ci*:!ci18'    -m raw -a "sed -i.bak  's/libsnarl.instance = b_snarl/libsnarl.instance = wu_b_snarl/' /opt/chunter/etc/chunter.conf "
+ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  grep 'service = wu' /data/*/etc/*.conf "
+
 =====
