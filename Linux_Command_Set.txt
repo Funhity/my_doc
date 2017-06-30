@@ -7120,7 +7120,7 @@ prstat
 
 ````fifo debug``
 howl attach
-Llibsnarl:servers().
+libsnarl:servers().
 ························
 [root@ci_cloud_beijing_3 ~]# howl attach
 Attaching to /tmp/howl/erlang.pipe.1 (^D to exit)

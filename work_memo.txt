@@ -1666,6 +1666,11 @@ ansible hp   -m raw -a  'echo hp> /opt/salt/etc/minion_id;cat /opt/salt/etc/mini
 salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart snarl '
 salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart sniffle '
 salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart howl'
+salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart howl;svcadm restart sniffle;svcadm restart snarl'
+salt 'ci_cloud_beijing_*' cmd.run "svcs epmd snarl sniffle howl"
+salt ci_cloud_beijing_*   cmd.run  "svcadm disable snarl; svcadm disable howl;svcadm disable sniffle"
+salt ci_cloud_beijing_*   cmd.run  "svcadm enable snarl; svcadm enable howl;svcadm enable sniffle"
+
 
 pkg_add: Can't process http://pkgsrc.joyent.com:80/packages/SmartOS/2014Q4/x86_64/All/perl*: Connection timed out
 pkg_add: no pkg found for 'perl>=5.0', sorry.
@@ -1981,8 +1986,16 @@ ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xa
 
 ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  grep 'service =' /data/sniffle/etc/sniffle.conf "
 ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  sed -i.bak  's/^service = b_sniffle/service = wu_b_sniffle/'  /data/sniffle/etc/sniffle.conf "
-ansible  'ci*:!ci18'    -m raw -a "grep 'libsnarl.instance' /opt/chunter/etc/chunter.conf "
-ansible  'ci*:!ci18'    -m raw -a "sed -i.bak  's/libsnarl.instance = b_snarl/libsnarl.instance = wu_b_snarl/' /opt/chunter/etc/chunter.conf "
+
+通用版本：
 ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  grep 'service = wu' /data/*/etc/*.conf "
+
+
+
+chunter:
+ansible  'ci*:!ci18'    -m raw -a "grep 'libsnarl.instance' /opt/chunter/etc/chunter.conf "
+ansible  'ci*:!ci18'    -m raw -a "grep 'li*.instance' /opt/chunter/etc/chunter.conf "
+ansible  'ci*:!ci18'    -m raw -a "sed -i.bak   's/libsnarl.instance = b_snarl/libsnarl.instance = wu_b_snarl/' /opt/chunter/etc/chunter.conf "
+ansible  'ci*:!ci18'    -m raw -a "sed -i.bak2  's/libhowl.instance = b_howl/libhowl.instance = wu_b_snarl/'    /opt/chunter/etc/chunter.conf 
 
 =====
