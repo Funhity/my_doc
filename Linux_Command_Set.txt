@@ -7285,6 +7285,8 @@ pkgin install ansible sshpass
 步骤b：
 配置ansible minion需要的python路径
 /opt/local/etc/ansible/hosts
+/etc/ansible/hosts中
+
 [all:vars]
 ansible_python_interpreter=/opt/local/bin/python
 
@@ -8033,4 +8035,7 @@ docker   exec   yibaba-redmine   cat /usr/src/redmine/log/production.log  |less
   mysql> ALTER TABLE issue_status        CONVERT TO CHARACTER SET utf8;
 `````````
 
-==========
+==========smartos boot section===
+登入和启动历史
+last
+====
