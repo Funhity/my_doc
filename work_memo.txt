@@ -1977,7 +1977,7 @@ ansible liuzhen -m raw -a "svcadm restart salt-minion"
 
 rsync -avzh /srv/  10.20.2.200:/srv/   --checksum --dry-run
 
-````zhixiang cloud  section````
+````zhixiang cloud section````
 ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  grep 'service =' /data/howl/etc/howl.conf "
 ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  sed -i.bak  's/^service = b_howl/service = wu_b_how/'  /data/howl/etc/howl.conf "
 
@@ -1987,15 +1987,25 @@ ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xa
 ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  grep 'service =' /data/sniffle/etc/sniffle.conf "
 ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  sed -i.bak  's/^service = b_sniffle/service = wu_b_sniffle/'  /data/sniffle/etc/sniffle.conf "
 
-通用版本：
-ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  grep 'service = wu' /data/*/etc/*.conf "
 
+
+通用修改版本：
+ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  sed -i.bak  's/^service = b_sniffle/service = wu_b_sniffle/'  /data/*/etc/*.conf "
+ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  sed -i.bak  's/^service = b_sniffle/service = wu_b_sniffle/'  /data/*/etc/*.conf "
+
+ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  sed -i.bak  's/^libsnarl.instance = snarl/libsnarl.instance = wu_snarl/' /data/*/etc/*.conf"
+ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  sed -i.bak  's/^libhowl.instance = howl/libhowl.instance = wu_howl/'    /data/*/etc/*.conf"
+通用查询版本：
+ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  grep 'service = ' /data/*/etc/*.conf "
+ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  grep 'li.*.instance' /data/*/etc/*.conf "
 
 
 chunter:
-ansible  'ci*:!ci18'    -m raw -a "grep 'libsnarl.instance' /opt/chunter/etc/chunter.conf "
-ansible  'ci*:!ci18'    -m raw -a "grep 'li*.instance' /opt/chunter/etc/chunter.conf "
-ansible  'ci*:!ci18'    -m raw -a "sed -i.bak   's/libsnarl.instance = b_snarl/libsnarl.instance = wu_b_snarl/' /opt/chunter/etc/chunter.conf "
-ansible  'ci*:!ci18'    -m raw -a "sed -i.bak2  's/libhowl.instance = b_howl/libhowl.instance = wu_b_snarl/'    /opt/chunter/etc/chunter.conf 
-
+查询：
+ansible  'ci*:!ci18'    -m raw -a "grep 'li.*.instance' /opt/chunter/etc/chunter.conf "
+修改
+ansible  'ci*:!ci18'    -m raw -a "sed -i.bak   's/libsnarl.instance = snarl/libsnarl.instance = wu_snarl/' /opt/chunter/etc/chunter.conf "
+ansible  'ci*:!ci18'    -m raw -a "sed -i.bak2  's/libhowl.instance = howl/libhowl.instance = wu_howl/'    /opt/chunter/etc/chunter.conf  "
+ansible  'ci*:!ci18'    -m raw -a "sed -i.bak2  's/libsniffle.instance = sniffle/libsniffle.instance = wu_sniffle/'    /opt/chunter/etc/chunter.conf  "
+sed -i ''  's/libsnarl.instance = snarl/libsnarl.instance = wu_snarl/' /opt/chunter/etc/chunter.conf
 =====
