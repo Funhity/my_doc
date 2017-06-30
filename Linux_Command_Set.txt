@@ -2287,9 +2287,9 @@ export ANSIBLE_LIBRARY=$ANSIBLE/library
 easy_install-2.7 pip
 CFLAGS="-g -O2 -D_BSD_SOURCE" pip install -U pycrypto
 pip install ansible
-#mkdir ~/ansible-program-files
-#cd ~/ansible-program-files
+
 git clone https://github.com/ansible/ansible /opt/ansible
+#cd /opt/ansible;source ./hacking/env-setup # setup the Ansible environment
 mkdir -p /etc/ansible
 cp /opt/ansible/examples/ansible.cfg  /etc/ansible
 #install sshpass
@@ -2306,6 +2306,10 @@ vi /etc/ansible/ansible.cfg
 [ssh_connection] 
 ssh_args = -o ControlMaster=no
 
+
+/etc/ansible/ansible.cfg
+[defaults]
+host_key_checking=false
 ===============================================  
     
 which searches your $PATH for the binary name you give. No need for an index.
@@ -4029,8 +4033,10 @@ other2.example.com     ansible_connection=ssh        ansible_ssh_user=mdehaan
 When you put a password with special characters inside host inventory file it breaks everything after it and even if you put the password parameter at the end the login result in a authentication failure.
 \# works. Ansible 1.9.1 though. 
 ct-stage-tomcat-partener02   ansible_ssh_host=192.168.31.91  ansible_connection=ssh ansible_ssh_user=yxaccount ansible_ssh_pass=YXxxd7361^@\#
-``````````````````
+````ansible debug``````````````
+ANSIBLE_DEBUG=1 ansible test_server1  -m ping -vvv
 
+````````````````
 #Let’s run a playbook using a parallelism level of 10:
 ansible-playbook playbook.yml -f 10
 
