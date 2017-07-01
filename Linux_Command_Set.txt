@@ -8044,4 +8044,7 @@ docker   exec   yibaba-redmine   cat /usr/src/redmine/log/production.log  |less
 ==========smartos boot section===
 登入和启动历史
 last
-====
+====cpu section====
+cat /proc/cpuinfo | awk '/^processor/{print $3}'
+lscpu
+=================
