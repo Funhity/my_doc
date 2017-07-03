@@ -2269,7 +2269,7 @@ Install the following Cygwin components.
   * openssl
   * openssl-devel
 
-  经测试，还需要python-devel,gcc-g++模块
+  经测试，还需要python2-devel,gcc-g++模块
 ````````````
 步骤二：
 cd ~
