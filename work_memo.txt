@@ -1666,6 +1666,11 @@ ansible hp   -m raw -a  'echo hp> /opt/salt/etc/minion_id;cat /opt/salt/etc/mini
 salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart snarl '
 salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart sniffle '
 salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart howl'
+salt -L  'home_fifo,home_fifo2'   cmd.run      'svcadm restart howl;svcadm restart sniffle;svcadm restart snarl'
+salt 'ci_cloud_beijing_*' cmd.run "svcs epmd snarl sniffle howl"
+salt ci_cloud_beijing_*   cmd.run  "svcadm disable snarl; svcadm disable howl;svcadm disable sniffle"
+salt ci_cloud_beijing_*   cmd.run  "svcadm enable snarl; svcadm enable howl;svcadm enable sniffle"
+
 
 pkg_add: Can't process http://pkgsrc.joyent.com:80/packages/SmartOS/2014Q4/x86_64/All/perl*: Connection timed out
 pkg_add: no pkg found for 'perl>=5.0', sorry.
@@ -1972,9 +1977,35 @@ ansible liuzhen -m raw -a "svcadm restart salt-minion"
 
 rsync -avzh /srv/  10.20.2.200:/srv/   --checksum --dry-run
 
-````zhixiang cloud  section````
+````zhixiang cloud section````
 ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  grep 'service =' /data/howl/etc/howl.conf "
+ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  sed -i.bak  's/^service = b_howl/service = wu_b_how/'  /data/howl/etc/howl.conf "
+
 ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  grep 'service =' /data/snarl/etc/snarl.conf "
+ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  sed -i.bak  's/^service = b_snarl/service = wu_b_snarl/'  /data/snarl/etc/snarl.conf "
+
 ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  grep 'service =' /data/sniffle/etc/sniffle.conf "
-ansible  'ci*:!ci18'    -m raw -a "grep 'libsnarl.instance' /opt/chunter/etc/chunter.conf "
+ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  sed -i.bak  's/^service = b_sniffle/service = wu_b_sniffle/'  /data/sniffle/etc/sniffle.conf "
+
+
+
+通用修改版本：
+ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  sed -i.bak  's/^service = b_sniffle/service = wu_b_sniffle/'  /data/*/etc/*.conf "
+ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  sed -i.bak  's/^service = b_sniffle/service = wu_b_sniffle/'  /data/*/etc/*.conf "
+
+ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  sed -i.bak  's/^libsnarl.instance = snarl/libsnarl.instance = wu_snarl/' /data/*/etc/*.conf"
+ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  sed -i.bak  's/^libhowl.instance = howl/libhowl.instance = wu_howl/'    /data/*/etc/*.conf"
+通用查询版本：
+ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  grep 'service = ' /data/*/etc/*.conf "
+ansible  'ci*:!ci18'    -m raw -a "vmadm list| grep cloud |awk '{print \$1}' |xargs -I {} zlogin {}  grep 'li.*.instance' /data/*/etc/*.conf "
+
+
+chunter:
+查询：
+ansible  'ci*:!ci18'    -m raw -a "grep 'li.*.instance' /opt/chunter/etc/chunter.conf "
+修改
+ansible  'ci*:!ci18'    -m raw -a "sed -i.bak   's/libsnarl.instance = snarl/libsnarl.instance = wu_snarl/' /opt/chunter/etc/chunter.conf "
+ansible  'ci*:!ci18'    -m raw -a "sed -i.bak2  's/libhowl.instance = howl/libhowl.instance = wu_howl/'    /opt/chunter/etc/chunter.conf  "
+ansible  'ci*:!ci18'    -m raw -a "sed -i.bak2  's/libsniffle.instance = sniffle/libsniffle.instance = wu_sniffle/'    /opt/chunter/etc/chunter.conf  "
+sed -i ''  's/libsnarl.instance = snarl/libsnarl.instance = wu_snarl/' /opt/chunter/etc/chunter.conf
 =====

@@ -2287,9 +2287,9 @@ export ANSIBLE_LIBRARY=$ANSIBLE/library
 easy_install-2.7 pip
 CFLAGS="-g -O2 -D_BSD_SOURCE" pip install -U pycrypto
 pip install ansible
-#mkdir ~/ansible-program-files
-#cd ~/ansible-program-files
+
 git clone https://github.com/ansible/ansible /opt/ansible
+#cd /opt/ansible;source ./hacking/env-setup # setup the Ansible environment
 mkdir -p /etc/ansible
 cp /opt/ansible/examples/ansible.cfg  /etc/ansible
 #install sshpass
@@ -2306,6 +2306,10 @@ vi /etc/ansible/ansible.cfg
 [ssh_connection] 
 ssh_args = -o ControlMaster=no
 
+
+/etc/ansible/ansible.cfg
+[defaults]
+host_key_checking=false
 ===============================================  
     
 which searches your $PATH for the binary name you give. No need for an index.
@@ -4029,8 +4033,10 @@ other2.example.com     ansible_connection=ssh        ansible_ssh_user=mdehaan
 When you put a password with special characters inside host inventory file it breaks everything after it and even if you put the password parameter at the end the login result in a authentication failure.
 \# works. Ansible 1.9.1 though. 
 ct-stage-tomcat-partener02   ansible_ssh_host=192.168.31.91  ansible_connection=ssh ansible_ssh_user=yxaccount ansible_ssh_pass=YXxxd7361^@\#
-``````````````````
+````ansible debug``````````````
+ANSIBLE_DEBUG=1 ansible test_server1  -m ping -vvv
 
+````````````````
 #Let’s run a playbook using a parallelism level of 10:
 ansible-playbook playbook.yml -f 10
 
@@ -7120,8 +7126,12 @@ prstat
 
 ````fifo debug``
 howl attach
-Llibsnarl:servers().
+libsnarl:servers().
+························
+[root@ci_cloud_beijing_3 ~]# howl attach
+Attaching to /tmp/howl/erlang.pipe.1 (^D to exit)
 
+^Llibsnarl:servers().
 
 ``````````````
 创建虚拟机时注意jason file 必须有如下属性
@@ -7281,6 +7291,8 @@ pkgin install ansible sshpass
 步骤b：
 配置ansible minion需要的python路径
 /opt/local/etc/ansible/hosts
+/etc/ansible/hosts中
+
 [all:vars]
 ansible_python_interpreter=/opt/local/bin/python
 
@@ -8001,6 +8013,8 @@ mysql               latest              e799c7f9ae9c        5 weeks ago         
 
 docker run -d --name yibaba-redmine-mysql -e MYSQL_ROOT_PASSWORD=yibaba -e MYSQL_DATABASE=redmine mysql
 docker run -d --name yibaba-redmine --link  yibaba-redmine-mysql:mysql  -p 8080:3000 redmine
+
+
 docker   exec   -it  yibaba-redmine  bash
 
 `````
@@ -8012,26 +8026,25 @@ docker   exec   yibaba-redmine   cat /usr/src/redmine/app/controllers/users_cont
 redmine 支持中文操作步骤：
 步骤一：根据500错误日志，找出那张表有问题
 docker   exec   yibaba-redmine   cat /usr/src/redmine/log/production.log  |less
-<<<<<<< HEAD
-
 
 
 ```库表支持中文`````
-=======
+
 步骤二：修改数据库中的表，使之支持utf8
->>>>>>> 9432c0d58621c1632d9281a2eb27fb2b995cc447
   docker exec -it yibaba-redmine-mysql bash
   mysql -uroot -p
   SHOW VARIABLES LIKE  'char%';
   ALTER DATABASE redmine  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
   redmine支持中文,需要一张张表改utf8
   mysql> use redmine
-<<<<<<< HEAD
-  mysql> ALTER TABLE issue_status        CONVERT TO CHARACTER SET utf8;
-·····
-=======
   mysql> show tables;
   mysql> ALTER TABLE issue_status        CONVERT TO CHARACTER SET utf8;
 `````````
->>>>>>> 9432c0d58621c1632d9281a2eb27fb2b995cc447
-==========
+
+==========smartos boot section===
+登入和启动历史
+last
+====cpu section====
+cat /proc/cpuinfo | awk '/^processor/{print $3}'
+lscpu
+=================
