@@ -2015,6 +2015,7 @@ sed -i ''  's/libsnarl.instance = snarl/libsnarl.instance = wu_snarl/' /opt/chun
 
 aio:
 
-salt -C 'cloud* and not cloud18'   cmd.run "vmadm list| grep ci_cloud_beijing_ |awk '{print \$1}' |xargs -I {} echo ' {"image_uuid": "c7ddb0a8-5fe0-11e7-b983-f305fb303725"} ' | vmadm reprovision {}"
+
+salt -C 'cloud* and not cloud18'   cmd.run "vmadm list| grep ci_cloud_beijing_ |awk '{print \$1}' |xargs -I {} sh -c 'echo {\\\"image_uuid\\\": \\\"c7ddb0a8-5fe0-11e7-b983-f305fb303725\\\"} | vmadm reprovision {}' "  -t 60
 salt -C 'cloud* and not cloud18'   cmd.run "vmadm list| grep ci_cloud_beijing_ |awk '{print \$1}' |xargs -I {} vmadm stop {}"
 =====
