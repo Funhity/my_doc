@@ -1818,6 +1818,9 @@ ansible  hyper_server_for_zhixiang -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E
 
 ansible  global*fifo*  -m raw -a "vmadm list| grep orchestra |awk '{print \$1}' |xargs -I {} zfs snapshot zones/{}@fifo-levedb-repair-20170620-backup"
 ansible  global*fifo*  -m raw -a "vmadm list| grep orchestra |awk '{print \$1}' |xargs -I {} zfs list -t snapshot |grep repair"
+
+salt -C 'cloud* and not cloud18'   cmd.run "vmadm list| grep ci_cloud_beijing_  |awk '{print \$1}' |xargs -I {} zfs snapshot zones/{}@zhixiang-cloud-upgrad-snapshot"
+salt -C 'cloud* and not cloud18'   cmd.run "vmadm list| grep ci_cloud_beijing_ |awk '{print \$1}' |xargs -I {} zfs list -t snapshot |grep zhix"
 ````````lakala leveldb repair``````
 find /var/db/sniffle/  -path *1233142006497949337234359077604363797834693083136*
 修复脚本

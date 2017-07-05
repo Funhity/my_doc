@@ -1342,7 +1342,9 @@ salt -l debug "*" cmd.run "uptime"
   salt '*' state.low '{name: vim, state: pkg, fun: installed}'
   
   sudo salt-run manage.down
-  ``````````````````````````````````````````
+  `````````salt glob section`````````````````````````````````
+  salt -C 'cloud* and not cloud18'  cmd.run "imgadm import c7ddb0a8-5fe0-11e7-b983-f305fb303725"
+  `````````````````
   file_roots:
     base:
       - /srv/salt/prod
@@ -7300,8 +7302,10 @@ ansible_python_interpreter=/opt/local/bin/python
 vi /opt/local/etc/ansible/ansible.cfg
 [defaults]
 host_key_checking=false
-或
+或自动化：
 sed -i.bak2 's/#host_key_checking = False/host_key_checking = False/' /etc/ansible/ansible.cfg
+或
+export ANSIBLE_HOST_KEY_CHECKING=False
 `````
 服务端步骤：
 cd /
@@ -7400,6 +7404,14 @@ less /var/svc/log/system-system-log:default.log
 less /var/adm/messages
 system-zoneinit:default.log
 vmadm:/zones/<ZONE_ID>/root/tmp/vm.log {1-9}
+
+/zones/62be1fa4-85af-c690-9364-9b997b96bb5f/root/var/svc/log
+``````smartos provison`````
+  * /zones/<uuid>/root/var/svc/log/system-zoneinit\:default.log
+  * /zones/<uuid>/root/var/svc/log/smartdc-mdata\:fetch.log
+  * /zones/<uuid>/root/var/svc/log/smartdc-mdata\:execute.log
+
+
 ```````````
 
 /opt/local/etc/salt/states
