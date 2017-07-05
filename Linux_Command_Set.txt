@@ -6348,6 +6348,13 @@ KEY getnum (msgtoid,folder,delstatus)
 =====echo section=====
  echo -e "server.1=192.168.129.50:2888:3888\nserver.2=192.168.129.51:2888:3888\nserver.3=192.168.129.52:2888:3888"
  echo -ne " " 无换行符
+````````
+echo 的时候会把参数中的引号去掉
+[root@public-cloud-7 ~]# echo '{"image_uuid": "c7ddb0a8-5fe0-11e7-b983-f305fb303725"}' 
+{"image_uuid": "c7ddb0a8-5fe0-11e7-b983-f305fb303725"}
+[root@public-cloud-7 ~]# echo {"image_uuid": "c7ddb0a8-5fe0-11e7-b983-f305fb303725"}
+{image_uuid: c7ddb0a8-5fe0-11e7-b983-f305fb303725}
+
 ===tr section===
 去掉换行符
 tr -d \"\n\" 

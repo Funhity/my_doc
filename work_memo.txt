@@ -2011,4 +2011,10 @@ ansible  'ci*:!ci18'    -m raw -a "sed -i.bak   's/libsnarl.instance = snarl/lib
 ansible  'ci*:!ci18'    -m raw -a "sed -i.bak2  's/libhowl.instance = howl/libhowl.instance = wu_howl/'    /opt/chunter/etc/chunter.conf  "
 ansible  'ci*:!ci18'    -m raw -a "sed -i.bak2  's/libsniffle.instance = sniffle/libsniffle.instance = wu_sniffle/'    /opt/chunter/etc/chunter.conf  "
 sed -i ''  's/libsnarl.instance = snarl/libsnarl.instance = wu_snarl/' /opt/chunter/etc/chunter.conf
+
+
+aio:
+
+salt -C 'cloud* and not cloud18'   cmd.run "vmadm list| grep ci_cloud_beijing_ |awk '{print \$1}' |xargs -I {} echo ' {"image_uuid": "c7ddb0a8-5fe0-11e7-b983-f305fb303725"} ' | vmadm reprovision {}"
+salt -C 'cloud* and not cloud18'   cmd.run "vmadm list| grep ci_cloud_beijing_ |awk '{print \$1}' |xargs -I {} vmadm stop {}"
 =====
