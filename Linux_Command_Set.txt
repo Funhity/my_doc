@@ -2271,7 +2271,7 @@ Install the following Cygwin components.
   * openssl
   * openssl-devel
 
-  经测试，还需要python-devel,gcc-g++模块
+  经测试，还需要python2-devel,gcc-g++模块
 ````````````
 步骤二：
 cd ~
@@ -3445,9 +3445,14 @@ systemctl start  acpid.service
 vi /etc/libvirt/qemu.conf 
 uncomment user="root" and group="root"
 
-`````````````
+`````virsh cpu````````
 virsh vcpupin [domain-id, domain-name or domain-uuid] [vcpu] , [cpulist]
 virsh setvcpus [domain-name, domain-id or domain-uuid] [count]
+virsh setvcpus windows10--office-wujunrong 4 --current #实施修改cpu数量
+virsh setvcpus <vm_name> <vcpu_count> --config         #修改的时候，操作系必须处于关闭状态
+virsh setvcpus windows10--office-wujunrong 5  --config --maximum
+````````
+
 virsh setmem [domain-id or domain-name]  [count]
 
 virt-rescue --suggest -d cloudera-manager
