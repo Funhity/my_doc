@@ -1818,6 +1818,9 @@ ansible  hyper_server_for_zhixiang -m raw -a "vmadm list|  /usr/xpg4/bin/grep -E
 
 ansible  global*fifo*  -m raw -a "vmadm list| grep orchestra |awk '{print \$1}' |xargs -I {} zfs snapshot zones/{}@fifo-levedb-repair-20170620-backup"
 ansible  global*fifo*  -m raw -a "vmadm list| grep orchestra |awk '{print \$1}' |xargs -I {} zfs list -t snapshot |grep repair"
+
+salt -C 'cloud* and not cloud18'   cmd.run "vmadm list| grep ci_cloud_beijing_  |awk '{print \$1}' |xargs -I {} zfs snapshot zones/{}@zhixiang-cloud-upgrad-snapshot"
+salt -C 'cloud* and not cloud18'   cmd.run "vmadm list| grep ci_cloud_beijing_ |awk '{print \$1}' |xargs -I {} zfs list -t snapshot |grep zhix"
 ````````lakala leveldb repair``````
 find /var/db/sniffle/  -path *1233142006497949337234359077604363797834693083136*
 修复脚本
@@ -2008,4 +2011,28 @@ ansible  'ci*:!ci18'    -m raw -a "sed -i.bak   's/libsnarl.instance = snarl/lib
 ansible  'ci*:!ci18'    -m raw -a "sed -i.bak2  's/libhowl.instance = howl/libhowl.instance = wu_howl/'    /opt/chunter/etc/chunter.conf  "
 ansible  'ci*:!ci18'    -m raw -a "sed -i.bak2  's/libsniffle.instance = sniffle/libsniffle.instance = wu_sniffle/'    /opt/chunter/etc/chunter.conf  "
 sed -i ''  's/libsnarl.instance = snarl/libsnarl.instance = wu_snarl/' /opt/chunter/etc/chunter.conf
+
+
+```aio section````
+
+
+salt -C 'cloud* and not cloud18'   cmd.run "vmadm list| grep ci_cloud_beijing_ |awk '{print \$1}' |xargs -I {} sh -c 'echo {\\\"image_uuid\\\": \\\"c7ddb0a8-5fe0-11e7-b983-f305fb303725\\\"} | vmadm reprovision {}' "  -t 60
+salt -C 'cloud* and not cloud18'   cmd.run "vmadm list| grep ci_cloud_beijing_ |awk '{print \$1}' |xargs -I {} vmadm stop {}"
+
+
+
+salt -C 'cloud* and not cloud18'   cmd.run "vmadm list| grep ci_cloud_beijing_ |awk '{print \$1}' |xargs -I {} zlogin {} sed -i.bak \\'\$ d\\' /opt/local/etc/pkgin/repositories.conf " -t 60
+salt -C 'cloud* and not cloud18'   cmd.run "vmadm list| grep ci_cloud_beijing_ |awk '{print \$1}' |xargs -I {} zlogin {} cat /opt/local/etc/pkgin/repositories.conf " -t 60
+
+
+
+salt -C 'cloud* and not cloud18'   cmd.run "vmadm list| grep ci_cloud_beijing_ |awk '{print \$1}' |xargs -I {}  zlogin {} sh -c 'echo 10.20.2.200 salt>>/etc/hosts;echo http://192.168.31.12:8000/2016Q3/x86_64/All >> /opt/local/etc/pkgin/repositories.conf;echo http://salt/smartos/pkgin2016Q3 >> /opt/local/etc/pkgin/repositories.conf;echo http://salt/salt-2016Q3/ >> /opt/local/etc/pkgin/repositories.conf;rm -fr /var/db/pkgin/*;/opt/local/bin/pkgin -fy up;/opt/local/bin/pkgin -y install salt lrzsz;/usr/bin/hostname>/opt/local/etc/salt/minion_id;sleep 10;svcadm enable svc:/pkgsrc/salt:minion;' " -t 600
+
+
+salt ci_cloud_beijing_*  cmd.run "svcadm enable epmd;svcadm enable snarl; svcadm enable howl;svcadm enable sniffle"
+salt ci_cloud_beijing_*  cmd.run "svcs epmd snarl sniffle howl"
+salt ci_cloud_beijing_*  cmd.run "mkdir /opt/local/etc/nginx/includes;cp /opt/local/www/flower.conf /opt/local/etc/nginx/includes"
+salt ci_cloud_beijing_*   state.single      file.managed  template=jinja name=' /opt/local/etc/nginx/includes/flower.conf'   source='salt://file/flower.conf.zhixiang_cloud'  backu-C p='minion'
+salt ci_cloud_beijing_*   cmd.run           "svcadm enable nginx"
+
 =====

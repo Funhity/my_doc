@@ -1342,7 +1342,9 @@ salt -l debug "*" cmd.run "uptime"
   salt '*' state.low '{name: vim, state: pkg, fun: installed}'
   
   sudo salt-run manage.down
-  ``````````````````````````````````````````
+  `````````salt glob section`````````````````````````````````
+  salt -C 'cloud* and not cloud18'  cmd.run "imgadm import c7ddb0a8-5fe0-11e7-b983-f305fb303725"
+  `````````````````
   file_roots:
     base:
       - /srv/salt/prod
@@ -6355,6 +6357,13 @@ KEY getnum (msgtoid,folder,delstatus)
 =====echo section=====
  echo -e "server.1=192.168.129.50:2888:3888\nserver.2=192.168.129.51:2888:3888\nserver.3=192.168.129.52:2888:3888"
  echo -ne " " 无换行符
+````````
+echo 的时候会把参数中的引号去掉
+[root@public-cloud-7 ~]# echo '{"image_uuid": "c7ddb0a8-5fe0-11e7-b983-f305fb303725"}' 
+{"image_uuid": "c7ddb0a8-5fe0-11e7-b983-f305fb303725"}
+[root@public-cloud-7 ~]# echo {"image_uuid": "c7ddb0a8-5fe0-11e7-b983-f305fb303725"}
+{image_uuid: c7ddb0a8-5fe0-11e7-b983-f305fb303725}
+
 ===tr section===
 去掉换行符
 tr -d \"\n\" 
@@ -7316,8 +7325,10 @@ ansible_python_interpreter=/opt/local/bin/python
 vi /opt/local/etc/ansible/ansible.cfg
 [defaults]
 host_key_checking=false
-或
+或自动化：
 sed -i.bak2 's/#host_key_checking = False/host_key_checking = False/' /etc/ansible/ansible.cfg
+或
+export ANSIBLE_HOST_KEY_CHECKING=False
 `````
 服务端步骤：
 cd /
@@ -7416,6 +7427,14 @@ less /var/svc/log/system-system-log:default.log
 less /var/adm/messages
 system-zoneinit:default.log
 vmadm:/zones/<ZONE_ID>/root/tmp/vm.log {1-9}
+
+/zones/62be1fa4-85af-c690-9364-9b997b96bb5f/root/var/svc/log
+``````smartos provison`````
+  * /zones/<uuid>/root/var/svc/log/system-zoneinit\:default.log
+  * /zones/<uuid>/root/var/svc/log/smartdc-mdata\:fetch.log
+  * /zones/<uuid>/root/var/svc/log/smartdc-mdata\:execute.log
+
+
 ```````````
 
 /opt/local/etc/salt/states
@@ -8063,4 +8082,50 @@ last
 ====cpu section====
 cat /proc/cpuinfo | awk '/^processor/{print $3}'
 lscpu
-=================
+======here document section======salt command =====
+
+cat /srv/pillar/top.sls 
+base:
+    '*':
+      - pillar_leofs_vm
+      - pillar_menifest_jason
+      - pillar_smartos_ssh_server_share_keys
+      - pillar_command_run
+
+```````````````````````
+cat > /srv/salt/command_run.sls <<EOF
+
+generate_command_run_script_file:
+  file.managed:
+    - name: /root/command_run.sh
+    - user: root
+    - group: root
+    - mode: 755
+    - makedirs: True
+    - contents_pillar: command_run
+
+
+   
+run_command_script:
+  cmd.run:
+    - name: |      
+        echo abc 
+        cat /root/command_run.sh
+        /root/command_run.sh
+    - shell: /usr/bin/bash
+    - timeout: 1800    
+    - require:
+      - file: generate_command_run_script_file
+
+EOF
+`````
+cat > /srv/pillar/pillar_command_run.sls <<EOF
+command_run: |
+
+   hostname
+   ifconfig
+   zfs list
+   
+EOF
+```````````````````
+salt jinhao state.sls command_run; >pillar_command_run.sl
