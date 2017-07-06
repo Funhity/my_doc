@@ -8117,4 +8117,4 @@ command_run: |
    
 EOF
 ```````````````````
-salt jinhao state.sls command_run
+salt jinhao state.sls command_run; >pillar_command_run.sl
