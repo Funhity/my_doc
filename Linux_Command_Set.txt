@@ -2425,7 +2425,16 @@ name=nginx repo
 baseurl=http://nginx.org/packages/centos/6/$basearch/
 gpgcheck=0
 enabled=1
-`````````````````````
+````````````````
+sudo tee /etc/yum.repos.d/nginx.repo<<-'EOF'
+[nginx]
+name=nginx repo
+baseurl=http://nginx.org/packages/centos/6/$basearch/
+gpgcheck=0
+enabled=1
+EOF
+``````````````````````````````````````````
+
 用ansible安装yum源:
 vi install_nginx.sh
     sudo tee /etc/yum.repos.d/nginx.repo<<-'EOF'
@@ -6995,6 +7004,8 @@ vmadm list -o uuid,type,ram,quota,cpu_shares,zfs_io_priority -s -ram,cpu_shares
 vmadm list -o uuid,type,ram,quota,cpu_shares,zfs_io_priority -s -ram,cpu_shares type=OS ram=~^1
 vmadm create <  zone.json
 vmadm create -f zone.json
+vmadm reprovision
+
 
 vmadm get 54f1cc77-68f1-42ab-acac-5c4f64f5d6e0
 vmadm lookup    nics.*.ip=10.2.121.70
