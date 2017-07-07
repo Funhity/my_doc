@@ -2057,6 +2057,7 @@ salt ci_cloud_beijing_*  cmd.run "svcadm enable epmd;svcadm enable snarl; svcadm
 
 salt ci_cloud_beijing_*  cmd.run "svcs epmd snarl sniffle howl"
 salt ci_cloud_beijing_*  cmd.run "mkdir -p /opt/local/etc/nginx/includes;cp /opt/local/www/flower.conf /opt/local/etc/nginx/includes"
+salt 'ci_cloud_beijing_*'  state.single      file.managed  template=jinja name='/opt/local/etc/nginx/nginx.conf'   source='salt://file/nginx.conf.zhixiang_cloud'  backup='minion'
 salt ci_cloud_beijing_*   state.single      file.managed  template=jinja name='/opt/local/etc/nginx/includes/flower.conf'   source='salt://file/flower.conf.zhixiang_cloud'  backup='minion'
 salt ci_cloud_beijing_*   cmd.run           "svcadm enable nginx"
 salt ci_cloud_beijing_*  state.sls fifo_0_9_rsyslog5_conf_blockreplace
