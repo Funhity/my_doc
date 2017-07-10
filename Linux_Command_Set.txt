@@ -944,6 +944,18 @@ mysql> SHOW VARIABLES LIKE "%version%";
   mysql> show tables;
   mysql> ALTER TABLE issue_status        CONVERT TO CHARACTER SET utf8;
 
+````mysql user````
+SHOW GRANTS FOR 'root'@'%';
+SHOW GRANTS FOR 'devuser'@'%';
+#创建用户
+CREATE USER 'devuser'@'%' IDENTIFIED BY 'devuser';
+REVOKE CREATE ON *.* FROM 'devuser'@'%';
+GRANT CREATE ON *.* TO 'devuser'@'%' WITH GRANT OPTION ;
+FLUSH PRIVILEGES;
+#查看用户
+mysql> SELECT User,Host FROM mysql.user;  
+
+
 ======================= proxy  section========================
 http-replicator:
 caching http proxy - easier method with modified Dockerfile:
