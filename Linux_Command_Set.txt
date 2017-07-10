@@ -299,8 +299,11 @@ find  -E   ./   -iregex  ".*(ldlinux.c32|bios.*Mboot.c32|bios.*libcom32.c32|/pxe
 
    id tom
    You need to kill all process owned by tom user and forcefully logged him out of the system:
-   # pkill -u tom pid
+   
+   # pkill -u tom pid  #pkill section
    # pkill -9 -u tom
+   pkill -f
+
    usermod -l jerry      tom       把用户名由tom改成jerry
    usermod -l login-name old-name
    
