@@ -951,6 +951,14 @@ SHOW GRANTS FOR 'devuser'@'%';
 CREATE USER 'devuser'@'%' IDENTIFIED BY 'devuser';
 REVOKE CREATE ON *.* FROM 'devuser'@'%';
 GRANT CREATE ON *.* TO 'devuser'@'%' WITH GRANT OPTION ;
+
+GRANT SELECT, INSERT ON  *.* TO 'devuser'@'%' WITH GRANT OPTION;
+··············
+GRANT ALL  ON  *.* TO 'devuser'@'%' WITH GRANT OPTION;
+REVOKE DROP ON *.* FROM 'devuser'@'%';
+·················
+
+
 FLUSH PRIVILEGES;
 #查看用户
 mysql> SELECT User,Host FROM mysql.user;  
