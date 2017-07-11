@@ -4899,6 +4899,17 @@ sudo vgrename   ubuntu-vg  ubuntu-vg-lacie
 
 
 ========redis section =======
+
+sudo yum install epel-release
+
+yum install redis
+sudo systemctl start redis
+sudo systemctl enable redi
+
+cp /etc/redis.conf  /etc/redis.conf.bak 
+vi /etc/redis.conf
+# bind 127.0.0.1 ::1
+
 ansible cloudera_redis          -m shell  -a   "yum -y install make gcc tcl"
  /usr/local/redis/redis-cli keys *dic_common_BORROW_TYPE*
  /usr/local/redis/redis-cli del   "\"dic_common_BORROW_TYPE_13\""
@@ -6406,6 +6417,7 @@ N-M        from N’th to M’th (included) byte, character or field
 cut -f 3- -d \|
 
 ==========jenkins section==============
+安装方法一：
 docker pull jenkinsci/jenkins
 docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home  -v /etc/resolv.conf:/etc/resolv.conf jenkins
 我用过的插件
@@ -6415,6 +6427,14 @@ docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home  -v /et
 4.GitHub Organization Folder Plugin
 5.build-blocker-plugin ： 如果某些job在运行时等待，那么这个job等待
 6.parameterized-trigger：free-style-project开始由一个项目job触发另一个在folder中的项目，When using the "Trigger/Call builds on another project" item.
+``````
+安装方法二：
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
+yum install jenkins
+systemctl status jenkins.service
+which java
+ln -s /usr/local/java/jdk8/bin/java  /usr/bin/java
 ``````````````
 To reset it without disabling security if you're using matrix permissions (probably easily adaptable to other login methods):
 步骤一：
