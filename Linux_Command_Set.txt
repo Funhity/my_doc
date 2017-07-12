@@ -4006,6 +4006,9 @@ crontab -l
 
 -:ALL EXCEPT root :cron 
 
+
+在启动后运行程序
+@reboot  cd /root/nginx/;docker-compose up -d
 ============================   puppet   =================================
 /var/log/messages
 ============================   ansible section =================================
