@@ -1929,7 +1929,10 @@ rpm  -ivh jdk-8u131-linux-x64.rpm
 rpm -qa| grep jdk
 rpm -ql jdk1.8.0_131-1.8.0_131-fcs.x86_64
 tar zxvf  /root/apache-tomcat-8.0.44.tar.gz   -C /opt/
-
+`````````yibaba docker````````
+docker exec -ti nginx_web_1 ls /var/log/nginx/
+docker exec -t  nginx_web_1 cat /var/log/nginx/yibaba.error.log |less
+docker exec -t nginx_web_1 cat /var/log/nginx/host.access.log  |less
 ```````````yibaba redmine section```````````
 [root@redmine ~]# docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
