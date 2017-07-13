@@ -1912,6 +1912,8 @@ sudo virt-install  -n svn  -r 4096 --disk=path=/var/lib/libvirt/images/svn.qcow2
 sudo virt-install  -n redmine  -r 4096 --disk=path=/var/lib/libvirt/images/redmine.qcow2   --location ~/CentOS-7-x86_64-Minimal-1611.iso   --nographics  -w bridge:br0  --initrd-inject=/root/anaconda-ks.cfg.centos7 --extra-args "ks=file:/anaconda-ks.cfg.centos7  console=ttyS0,115200 ksdevice=eth0 ip=192.168.1.191 netmask=255.255.255.0 dns=192.168.1.1 gateway=192.168.1.1"
 
 
+virsh list | grep run| grep -v wujunrong | awk  '{print  $2}' |xargs  -I{} virsh snapshot-create-as --domain {}  --name "yibaba-everyday-backup"   --description "yibaba"  --atomic  
+
 yum -y install net-tools wget
 
 cat > kvm_snapshot.xml<<EOF

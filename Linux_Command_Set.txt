@@ -3551,6 +3551,7 @@ virsh snapshot-dumpxml cloudera-manager  operating-stsytem-installed
 virsh snapshot-create    cloudera-manager
 virsh snapshot-create    h-hadoop-data03  --atomic snapshot.xml
 virsh snapshot-create    cloudera-agent2  ./snapshot-description.xml
+virsh snapshot-create-as --domain test --name "`date`"   --description "yibaba"
 <domainsnapshot>
  <name>agent:salt minion and power package</name>
  <description>salt-master and ssh installed </description>
