@@ -584,9 +584,13 @@ docker swarm init
 docker swarm join \
     --token SWMTKN-1-47b6rvzc1nd5yqe46i22mcdo7myu8rcjosq4lypl4exc097skx-5cfpe2azveljgkt0wcjxt0u7t \
     192.168.1.191:2377
+
+``````
+查询如何加入manager或work
 docker swarm join-token manager
-
-
+docker swarm join-token worker
+docker swarm join-token  --rotate worker #修改加入的密钥
+```````
 docker stack deploy -c stack.yml redmine
  cat stack.yml 
 version: '3.1'
@@ -3756,8 +3760,12 @@ virt-install  -n centos  -r 2048  --vcpus=2  --os-variant=rhel5.4  --accelerate 
                               -l http://mirrors.nixcraft.in/centos/5.5/os/x86_64/ \
                               -nographics \
                               -x "ks=http://10.10.21.3/static/ks.cfg ksdevice=eth0 ip=10.10.21.76 netmask=255.255.255.240 dns=10.10.21.1 gateway=10.10.21.100"		 
+sudo virt-install  -n docker-test2  -r 2048 --disk=path=/home/frank/HPDisk/kvm/dokcer-test2.qcow2   --location /home/frank/Downloads/CentOS-7-x86_64-Minimal-1611.iso   --nographics  -w bridge:bridge0  --initrd-inject=/home/frank/anaconda-ks.cfg.centos7-kvm-yibaba  --extra-args "ks=file:/anaconda-ks.cfg.centos7-kvm-yibaba  console=ttyS0,115200  ip=10.0.1.189::10.0.1.1:255.255.255.0:docker2:eth0:none"
 
-pxe:		virt-install -n centos6-pxe -r 1024  --vcpus=2  --disk=path=/home/frank/my-vm/kvm/images/test-pxe.qcow2   --network bridge=br0   --network bridge=virbr0    --os-type=linux  --graphics vnc,password=w123456,listen=0.0.0.0   --os-variant=rhel6 --pxe --force
+
+pxe:		
+virt-install -n centos6-pxe -r 1024  --vcpus=2  --disk=path=/home/frank/my-vm/kvm/images/test-pxe.qcow2   --network bridge=br0   --network bridge=virbr0    --os-type=linux  --graphics vnc,password=w123456,listen=0.0.0.0   --os-variant=rhel6 --pxe --force
+
 ``````use exeisting image``````````
           virt-install --connect qemu:///system --ram 1024 -n rhel_64 -r 2048 --os-type=linux --os-variant=rhel5  --disk path=/root/RHEL-Server-5.8-64-virtio.qcow2,device=disk,bus=virtio,format=qcow2 --vcpus=2 --vnc --noautoconsole --import
           virt-install --name NewVM --ram 512 --vcpus 1 --disk path=/var/lib/libvirt/images/centos.img --import --noautoconsole --force
