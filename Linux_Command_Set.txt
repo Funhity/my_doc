@@ -701,7 +701,7 @@ cat /root/start.sh
 	
 ````````````
 docker run --volumes-from dbdata -v $(pwd):/backup ubuntu tar cvf /backup/backup.tar /dbdata
-======================  yum section and apt-get section dpkg section========================================
+======================  yum section and apt-get section dpkg section====================
 yum install yum-plugin-fastestmirror
 vi /etc/yum/pluginconf.d/fastestmirror.conf 
 rm -fr /var/cache/yum/timedhosts.txt
@@ -3738,6 +3738,9 @@ virt-install --os-variant=list
 virt-builder -l
 virt-builder fedora-20  --size 20G --format qcow2 --hostname virt.example.com  --root-password file:/tmp/rootpw  --install "inkscape,@Xfce Desktop"  -o  mydisk.img
                                                                                --root-password password:123456
+
+`````virt-install section````
+view /root/.cache/virt-manager/virt-install.log
 
 
 centos6: virt-install -n centos64-template --vcpus=2   -r 2048 --disk=path=/home/frank/kvm/images/centos64-template.qcow2  --location  http://vault.centos.org/6.4/  --nographics        --os-type=linux    --os-variant=rhel6 --network bridge=br0  -x "console=ttyS0,115200 hostname=wujunrong device=eth0 ip=10.10.21.76 netmasway=10.10.21.100"
@@ -8192,7 +8195,7 @@ sudo yum remove docker \
                   docker-engine
 
 
-
+ yum clean all
 
  sudo yum -y install -y yum-utils device-mapper-persistent-data lvm2
  sudo yum-config-manager \
