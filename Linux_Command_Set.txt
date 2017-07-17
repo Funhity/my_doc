@@ -4927,7 +4927,7 @@ sudo systemctl enable redi
 
     sudo yum -y groupinstall  "Development Tools"
     make
-    
+    make install
     % cd utils
     % ./install_server.sh
 
@@ -4935,10 +4935,12 @@ Port           : 7000
 Config file    : /etc/redis/7000.conf
 Log file       : /var/log/redis_7000.log
 Data dir       : /var/lib/redis/7000
-Executable     : /usr/bin/redis-server
-Cli Executable : /usr/bin/redis-cli
+Executable     : /usr/local/bin/redis-server
+Cli Executable : /usr/local/bin/redis-cli
 
-/usr/bin/redis-cli  -h 192.168.1.190 -p 7000
+
+
+ /usr/local/bin/redis-cli  -h 192.168.1.190 -p 7000
 
 ```````
 cp /etc/redis.conf  /etc/redis.conf.bak 
