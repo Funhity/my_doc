@@ -4310,7 +4310,7 @@ runuser -l tomcat  -c "/opt/webserver/v6_tomcat/bin/startup.sh"
 ip route  add 192.168.38.0/255.255.255.0  via 172.16.15.253  dev eth1
 ````````````````
 git clone --branch 5.2.1  https://git.strongswan.org/strongswan.git
-sudo yum groupinstall  "Development Tools"
+sudo yum -y groupinstall  "Development Tools"
 sudo apt-get install build-essential
 ``````grep section````````````````
   忽略大小写
@@ -4903,13 +4903,33 @@ sudo vgrename   ubuntu-vg  ubuntu-vg-lacie
 
 
 ========redis section =======
-
+方法一：
 sudo yum install epel-release
 
 yum install redis
 sudo systemctl start redis
 sudo systemctl enable redi
 
+方法二：
+    wget http://download.redis.io/releases/redis-4.0.0.tar.gz
+    view README.md
+
+    sudo yum -y groupinstall  "Development Tools"
+    make
+    
+    % cd utils
+    % ./install_server.sh
+
+Port           : 7000
+Config file    : /etc/redis/7000.conf
+Log file       : /var/log/redis_7000.log
+Data dir       : /var/lib/redis/7000
+Executable     : /usr/bin/redis-server
+Cli Executable : /usr/bin/redis-cli
+
+/usr/bin/redis-cli  -h 192.168.1.190 -p 7000
+
+```````
 cp /etc/redis.conf  /etc/redis.conf.bak 
 vi /etc/redis.conf
 # bind 127.0.0.1 ::1
