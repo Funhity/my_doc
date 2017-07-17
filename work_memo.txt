@@ -1958,7 +1958,8 @@ sed -i 's/^appendonly no/appendonly yes/'  /etc/redis/700*.conf
 sudo yum install rubygems
 gem install redis
 /root/redis-4.0.0/src/redis-trib.rb  create --replicas 0 127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003
-
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7000 cluster info
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7000 cluster nodes
 ..................
 
 /usr/local/bin/redis-cli  -h 192.168.1.190 -p 7000
