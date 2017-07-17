@@ -1911,8 +1911,11 @@ sudo virt-install  -n svn  -r 4096 --disk=path=/var/lib/libvirt/images/svn.qcow2
 
 sudo virt-install  -n redmine  -r 4096 --disk=path=/var/lib/libvirt/images/redmine.qcow2   --location ~/CentOS-7-x86_64-Minimal-1611.iso   --nographics  -w bridge:br0  --initrd-inject=/root/anaconda-ks.cfg.centos7 --extra-args "ks=file:/anaconda-ks.cfg.centos7  console=ttyS0,115200 ksdevice=eth0 ip=192.168.1.191 netmask=255.255.255.0 dns=192.168.1.1 gateway=192.168.1.1"
 
+````yibaba kvm snapshot````
 
-virsh list | grep run| grep -v wujunrong | awk  '{print  $2}' |xargs  -I{} virsh snapshot-create-as --domain {}  --name "yibaba-everyday-backup"   --description "yibaba"  --atomic  
+virsh list | grep run| grep -v wujunrong |awk  '{print  $2}' |xargs  -I{}  virsh snapshot-create-as --domain {}  --name "yibaba-everyday-backup-`date +%F`"   --description "yibaba"  --atomic
+virsh list | grep run| grep -v wujunrong |awk  '{print  $2}' |xargs  -I{}  virsh snapshot-list  {}
+
 
 yum -y install net-tools wget
 
@@ -1931,6 +1934,19 @@ rpm  -ivh jdk-8u131-linux-x64.rpm
 rpm -qa| grep jdk
 rpm -ql jdk1.8.0_131-1.8.0_131-fcs.x86_64
 tar zxvf  /root/apache-tomcat-8.0.44.tar.gz   -C /opt/
+
+````````yibaba redis section````
+echo slaveof 127.0.0.1 7000 >> /etc/redis/7001.conf
+echo slaveof 127.0.0.1 7000 >> /etc/redis/7002.conf
+
+protected-mode yes
+#bind 127.0.0.1
+sed -i  's/# cluster-enabled yes/cluster-enabled yes/'  700*.conf
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7000
+/etc/init.d/redis_7001 restart
+/etc/init.d/redis_7002 restart
+
+
 `````````yibaba docker````````
 docker exec -ti nginx_web_1 ls /var/log/nginx/
 docker exec -t  nginx_web_1 cat /var/log/nginx/yibaba.error.log |less

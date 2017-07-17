@@ -4939,8 +4939,8 @@ Executable     : /usr/local/bin/redis-server
 Cli Executable : /usr/local/bin/redis-cli
 
 
-
- /usr/local/bin/redis-cli  -h 192.168.1.190 -p 7000
+/etc/init.d/redis_7000 restart
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7000
 
 ```````
 cp /etc/redis.conf  /etc/redis.conf.bak 
