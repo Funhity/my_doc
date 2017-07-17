@@ -1941,7 +1941,26 @@ echo slaveof 127.0.0.1 7000 >> /etc/redis/7002.conf
 
 protected-mode yes
 #bind 127.0.0.1
+..................
+yibaba cluster：
+grep cluster-ena  /etc/redis/70*.conf
 sed -i  's/# cluster-enabled yes/cluster-enabled yes/'  700*.conf
+
+grep cluster-config-file  /etc/redis/70*.conf
+sed -i  's/# cluster-config-file nodes-6379.conf/cluster-config-file nodes-7001.conf/'  /etc/redis/7001.conf
+
+grep cluster-node-timeout /etc/redis/700*.conf
+sed -i 's/# cluster-node-timeout 15000/cluster-node-timeout 15000/' /etc/redis/700*.conf
+
+grep ^appendonly /etc/redis/700*.conf
+sed -i 's/^appendonly no/appendonly yes/'  /etc/redis/700*.conf
+
+sudo yum install rubygems
+gem install redis
+/root/redis-4.0.0/src/redis-trib.rb  create --replicas 0 127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003
+
+..................
+
 /usr/local/bin/redis-cli  -h 192.168.1.190 -p 7000
 /etc/init.d/redis_7001 restart
 /etc/init.d/redis_7002 restart
