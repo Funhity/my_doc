@@ -1937,13 +1937,15 @@ rpm -ql jdk1.8.0_131-1.8.0_131-fcs.x86_64
 tar zxvf  /root/apache-tomcat-8.0.44.tar.gz   -C /opt/
 
 ````````yibaba redis section````
+HA 模式
 echo slaveof 127.0.0.1 7000 >> /etc/redis/7001.conf
 echo slaveof 127.0.0.1 7000 >> /etc/redis/7002.conf
 
+设置可以远程访问：
 protected-mode yes
 #bind 127.0.0.1
 ..................
-yibaba cluster：
+yibaba cluster
 grep cluster-ena  /etc/redis/70*.conf
 sed -i  's/# cluster-enabled yes/cluster-enabled yes/'  700*.conf
 
@@ -1964,7 +1966,8 @@ gem install redis
 /usr/local/bin/redis-cli  -h 192.168.1.190 -p 7000 cluster nodes
 /usr/local/bin/redis-cli -h 192.168.1.190 -p 7000  -c  #注意集群必须有-c
 ......
-重建cluster流程，先forget，再flushall，最后 reset soft
+重建cluster流程，先cluster forget，然后flushall，再 cluster reset soft,最后/root/redis-4.0.0/src/redis-trib.rb  create --replicas 0 192.168.1.190:7000 192.168.1.190:7001 192.168.1.190:7002
+
 /usr/local/bin/redis-cli  -h 192.168.1.190 -p 7000 cluster nodes
 /root/redis-4.0.0/src/redis-trib.rb  create --replicas 0 192.168.1.190:7000  192.168.1.190:7002 192.168.1.190:7003
 /usr/local/bin/redis-cli  -h 192.168.1.190 -p 7001 cluster nodes
