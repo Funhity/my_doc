@@ -1916,7 +1916,6 @@ sudo virt-install  -n redmine  -r 4096 --disk=path=/var/lib/libvirt/images/redmi
 virsh list | grep run| grep -v wujunrong |awk  '{print  $2}' |xargs  -I{}  virsh snapshot-create-as --domain {}  --name "yibaba-everyday-backup-`date +%F`"   --description "yibaba"  --atomic
 virsh list | grep run| grep -v wujunrong |awk  '{print  $2}' |xargs  -I{}  virsh snapshot-list  {}
 
-
 yum -y install net-tools wget
 
 cat > kvm_snapshot.xml<<EOF
@@ -1927,6 +1926,8 @@ cat > kvm_snapshot.xml<<EOF
 EOF
 
 virsh snapshot-create    tomcat  --atomic kvm_snapshot.xml
+virsh snapshot-create-as --domain tomcat --name "`date`-redis-cluster"   --description "yibaba"  --atomic
+
 virsh snapshot-list  tomcat
 ````yibaba tomcat````
 wget http://apache.claz.org/tomcat/tomcat-8/v8.0.44/bin/apache-tomcat-8.0.44.tar.gz
@@ -1957,9 +1958,40 @@ sed -i 's/^appendonly no/appendonly yes/'  /etc/redis/700*.conf
 
 sudo yum install rubygems
 gem install redis
+
 /root/redis-4.0.0/src/redis-trib.rb  create --replicas 0 127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003
 /usr/local/bin/redis-cli  -h 192.168.1.190 -p 7000 cluster info
 /usr/local/bin/redis-cli  -h 192.168.1.190 -p 7000 cluster nodes
+/usr/local/bin/redis-cli -h 192.168.1.190 -p 7000  -c  #注意集群必须有-c
+......
+重建cluster流程，先forget，再flushall，最后 reset soft
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7000 cluster nodes
+/root/redis-4.0.0/src/redis-trib.rb  create --replicas 0 192.168.1.190:7000  192.168.1.190:7002 192.168.1.190:7003
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7001 cluster nodes
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7001 cluster forget 16d75d1e782f626009efcc08b30292578d2b6b5c
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7001 cluster forget 2b2e6b65db53acd6d32f2eeadf7b75a28bd2de7d
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7001 cluster forget caec2ba999dd7ad9fc85a9d2156d4d88ce6cb189
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7001 cluster nodes
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7002 cluster nodes
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7002 cluster forget 2b2e6b65db53acd6d32f2eeadf7b75a28bd2de7d
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7002 cluster forget caec2ba999dd7ad9fc85a9d2156d4d88ce6cb189
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7002 cluster forget 4a85499f6856da343760f08a5b6e311e9376e9e1
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7002 cluster nodes
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7003 cluster nodes
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7003 cluster forget  16d75d1e782f626009efcc08b30292578d2b6b5c
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7003 cluster forget  4a85499f6856da343760f08a5b6e311e9376e9e1
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7003 cluster forget  caec2ba999dd7ad9fc85a9d2156d4d88ce6cb189
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7003 cluster nodes
+
+127.0.0.1:7000> CLUSTER FORGET caec2ba999dd7ad9fc85a9d2156d4d88ce6cb189
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7002 cluster forget 2b2e6b65db53acd6d32f2eeadf7b75a28bd2de7d
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7000  CLUSTER RESET SOFT
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7001  CLUSTER RESET SOFT
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7002  CLUSTER RESET SOFT
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7003  CLUSTER RESET SOFT
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7003  flushall
+/usr/local/bin/redis-cli  -h 192.168.1.190 -p 7003  CLUSTER RESET SOFT
+/root/redis-4.0.0/src/redis-trib.rb  create --replicas 0 192.168.1.190:7000 192.168.1.190:7001 192.168.1.190:7002
 ..................
 
 /usr/local/bin/redis-cli  -h 192.168.1.190 -p 7000
