@@ -5385,12 +5385,14 @@ default-character-set=utf8'  /etc/mysql/conf.d/mysql.cnf
 ====alternatives section=========
 sudo alternatives --install /usr/bin/genericcmd genericcmd /usr/bin/cmd-21.0
 alternatives --display genericcmd
-=============rdesktop section====
+=============rdesktop section====rdp section===
 
 wget https://github.com/rdesktop/rdesktop/releases/download/v1.8.3/rdesktop-1.8.3.tar.gz
 tar zxvf rdesktop-1.8.3.tar.gz 
 sudo yum   install openssl-devel
+sudo yum -y install libX11-devel # centos7
 ./configure --disable-credssp --disable-smartcard
+suod make install
 rdesktop -r clipboard:PRIMARYCLIPBOARD -u wu 192.168.56.110 -g 100% -f -x an
 nohup rdesktop -r clipboard:PRIMARYCLIPBOARD -u wu 192.168.56.110 -g 100% -f -x an -a 24 >/dev/null 2>&1 &
 ```````````````
