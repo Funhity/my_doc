@@ -5410,6 +5410,10 @@ rdesktop 192.168.1.23 -k de -g 1500x1150 -r disk:mydisk=/home/soma
 方案二（centos7）：
 sudo yum install freerdp
 xfreerdp -g 1920+1080 -u unarywu 10.0.1.25
+xfreerdp -f -u unarywu 10.0.1.25  #全屏
+为什么要用这个软件：
+https://www.syskit.com/blog/credssp-required-by-server-solutions/
+因为：CredSSP required by serve
 
 ============github section===========
 ssh-keygen -t rsa
