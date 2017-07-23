@@ -1946,6 +1946,7 @@ protected-mode yes
 #bind 127.0.0.1
 ..................
 yibaba cluster
+#注意使用redis-cli连到集群时必须有-c
 grep cluster-ena  /etc/redis/70*.conf
 sed -i  's/# cluster-enabled yes/cluster-enabled yes/'  700*.conf
 
