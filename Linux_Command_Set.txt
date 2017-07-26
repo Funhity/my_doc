@@ -613,8 +613,19 @@ services:
 
 ````````docker machine section``````
 
+安装docker-machine
+https://docs.docker.com/machine/install-machine/  
 curl -L https://github.com/docker/machine/releases/download/v0.12.1/docker-machine-`uname -s`-`uname -m` >/tmp/docker-machine && chmod +x /tmp/docker-machine && sudo cp /tmp/docker-machine /usr/local/bin/docker-machine
 
+安装驱动
+https://github.com/dhiltgen/docker-machine-kvm/releases:
+  curl -L https://github.com/dhiltgen/docker-machine-kvm/releases/download/v0.10.0/docker-machine-driver-kvm-centos7 > /usr/local/bin/docker-machine-driver-kvm  
+  chmod +x /usr/local/bin/docker-machine-driver-kvm
+
+ssh-copy-id -i ~/.ssh/id_rsa.pub 10.0.1.189
+docker-machine create -d generic --generic-ip-address 10.0.1.189  --generic-ssh-user root  docker2
+docker-machine env docker2
+eval $(docker-machine env docker2)
 
 ``````dockerfile section```````````
 sudo docker build -t ouruser/sinatra:v2 .
@@ -2632,7 +2643,25 @@ server {
     server_name example.com;
     # [...]
 }
+````````
 
+cat > /root/nginx/docker-compose.yml<<-'EOF'
+web:
+  image: nginx
+  volumes:
+    - /etc/nginx:/etc/nginx
+    - /var/log/nginx:/var/log/nginx
+  ports:
+   - "80:80"
+   - "443:443"
+  environment:
+   - NGINX_HOST=foobar.com
+   - NGINX_PORT=80
+  command: [nginx-debug, '-g', 'daemon off;']
+
+EOF
+cd /root/nginx;docker-compose up -d
+cd /root/nginx;docker-compose stop
 ==========logrotate section`````````````
 copytruncate instruct logrotate to creates the copy of the original file
  (i.e rotate the original log file) and truncates the original file to zero byte size.
@@ -8279,6 +8308,7 @@ sudo yum -y install docker-ce
 sudo systemctl start docker
 sudo systemctl enable docker
 sudo docker run hello-world
+```docker compose section`````
 curl -L https://github.com/docker/compose/releases/download/1.14.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 `````
