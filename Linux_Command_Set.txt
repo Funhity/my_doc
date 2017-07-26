@@ -23,9 +23,9 @@ chkconfig --add glassfish4
 chkconfig --list glassfish4
 
 ````hostname section```host section``
-centos7:   /etc/hostname  #经测试有效
-        
-           hostname tomcat8;echo tomcat8 > /etc/hostname;hostname
+centos7:   /etc/hostname  #经测试有效      
+           vm_name=docker-test3;hostname $vm_name;echo $vm_name > /etc/hostname;hostname
+
 centos6:   /etc/sysconfig/network
            修改主机名命令：hostname yh_zabbix_server;sed -i.bak  s/HOSTNAME=.*/HOSTNAME=yh_zabbix_server/g   /etc/sysconfig/network ;hostname
     
@@ -610,6 +610,10 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: yibaba
       MYSQL_DATABASE: redmine
+
+````````docker machine section``````
+
+curl -L https://github.com/docker/machine/releases/download/v0.12.1/docker-machine-`uname -s`-`uname -m` >/tmp/docker-machine && chmod +x /tmp/docker-machine && sudo cp /tmp/docker-machine /usr/local/bin/docker-machine
 
 
 ``````dockerfile section```````````
@@ -3497,7 +3501,7 @@ virt-rescue  -d cloudera-manager
 virsh -c esx://root@192.168.129.1?no_verify=1 list --all
 sudo virsh list --all| grep shut                    | awk '{print $2}' |xargs  -I '{}' sudo virsh dominfo    '{}'
 sudo virsh list --all| grep -E 'cloudera.*running'  | awk '{print $2}' |xargs  -I '{}' sudo virsh shutdown   '{}'
-````````````````virsh image section```
+`````````kvm image section```````virsh image section```
 
 qemu-img create -f qcow2 /var/lib/libvirt/images/guest.qcow2 8192M
 qemu-img create -f qcow2 -o backing_file=original snapshot.qcow
