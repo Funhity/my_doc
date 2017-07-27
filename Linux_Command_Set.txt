@@ -613,15 +613,20 @@ services:
 
 ````````docker machine section``````
 
-安装docker-machine
-https://docs.docker.com/machine/install-machine/  
+#安装docker-machine
+#https://docs.docker.com/machine/install-machine/  
 curl -L https://github.com/docker/machine/releases/download/v0.12.1/docker-machine-`uname -s`-`uname -m` >/tmp/docker-machine && chmod +x /tmp/docker-machine && sudo cp /tmp/docker-machine /usr/local/bin/docker-machine
 
-安装驱动
+........
+#步骤一：安装驱动
 https://github.com/dhiltgen/docker-machine-kvm/releases:
   curl -L https://github.com/dhiltgen/docker-machine-kvm/releases/download/v0.10.0/docker-machine-driver-kvm-centos7 > /usr/local/bin/docker-machine-driver-kvm  
   chmod +x /usr/local/bin/docker-machine-driver-kvm
+#步骤二：在宿主机器上安装docker engine,-D是debug
+docker-machine create --kvm-boot2docker-url /home/frank/Downloads/boot2docker.iso  -d kvm my-docker-machine-docker-engine0
+.........
 
+添加现有的dockers engine到dockers machine中去
 ssh-copy-id -i ~/.ssh/id_rsa.pub 10.0.1.189
 docker-machine create -d generic --generic-ip-address 10.0.1.189  --generic-ssh-user root  docker2
 docker-machine env docker2
@@ -3798,7 +3803,7 @@ virt-install  -n centos  -r 2048  --vcpus=2  --os-variant=rhel5.4  --accelerate 
                               -l http://mirrors.nixcraft.in/centos/5.5/os/x86_64/ \
                               -nographics \
                               -x "ks=http://10.10.21.3/static/ks.cfg ksdevice=eth0 ip=10.10.21.76 netmask=255.255.255.240 dns=10.10.21.1 gateway=10.10.21.100"		 
-sudo virt-install  -n docker-test2  -r 2048 --disk=path=/home/frank/HPDisk/kvm/dokcer-test2.qcow2   --location /home/frank/Downloads/CentOS-7-x86_64-Minimal-1611.iso   --nographics  -w bridge:bridge0  --initrd-inject=/home/frank/anaconda-ks.cfg.centos7-kvm-yibaba  --extra-args "ks=file:/anaconda-ks.cfg.centos7-kvm-yibaba  console=ttyS0,115200  ip=10.0.1.189::10.0.1.1:255.255.255.0:docker2:eth0:none"
+sudo virt-install  -n docker-test2  -r 2048 --disk=path=/home/frank/HPDisk/kvm/dokcer-test2.qcow2   --location /home/frank/Downloads/CentOS-7-x86_64-Minimal-1611.iso   --nographics  -w bridge:bridge0  --initrd-inject=/home/frank/anaconda-ks.cfg.centos7-kvm-yibaba  --extra-args "ks=file:/anaconda-ks.cfg.centos7-kvm-yibaba  console=ttyS0,115200  ip=10.0.1.189::10.0.1.1:255.255.255.0:docker2:eth0:none"  #dns无效，hostname无效
 
 
 pxe:		
@@ -4992,7 +4997,7 @@ echo slaveof 127.0.0.1 7000 >> /etc/redis/7002.conf
 
 
 .........redis cluster section.........
-
+设置配置项目
 grep cluster-ena  /etc/redis/70*.conf
 sed -i  's/# cluster-enabled yes/cluster-enabled yes/'  700*.conf
 
@@ -5004,7 +5009,7 @@ sed -i 's/# cluster-node-timeout 15000/cluster-node-timeout 15000/' /etc/redis/7
 
 grep ^appendonly /etc/redis/700*.conf
 sed -i 's/^appendonly no/appendonly yes/'  /etc/redis/700*.conf
-
+安装相关软件
 sudo yum install rubygems
 gem install redis
 
@@ -5013,7 +5018,8 @@ gem install redis
 /usr/local/bin/redis-cli  -h 192.168.1.190 -p 7000 cluster nodes
 /usr/local/bin/redis-cli -h 192.168.1.190 -p 7000  -c  #注意集群必须有-c
 .............................
-重建cluster流程，先cluster forget，然后flushall，再 cluster reset soft,最后/root/redis-4.0.0/src/redis-trib.rb  create --replicas 0 192.168.1.190:7000 192.168.1.190:7001 192.168.1.190:7002
+重建cluster流程：
+先cluster forget，然后flushall，再 cluster reset soft,最后/root/redis-4.0.0/src/redis-trib.rb  create --replicas 0 192.168.1.190:7000 192.168.1.190:7001 192.168.1.190:7002
 ···········································
 ansible cloudera_redis          -m shell  -a   "yum -y install make gcc tcl"
  /usr/local/redis/redis-cli keys *dic_common_BORROW_TYPE*
