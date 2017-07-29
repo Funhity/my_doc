@@ -557,7 +557,7 @@ docker search centos
 `````docker network``````
 
  docker network ls
- docker network inspect bridge
+ docker network inspect bridge  #用Containers键值可查看bridge被哪些container使用了
 
  docker network create --subnet 172.30.0.0/16 \
                         --opt com.docker.network.bridge.name=docker_gwbridge \
@@ -8337,7 +8337,7 @@ sudo mkdir /etc/nginx/ssl
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt
 ===========bridge section===================
 apt-get install bridge-utils
-yum install bridge-utils
+yum -y install bridge-utils
 brctl addbr br0
 brctl stp br0 on
 ifconfig eth0 0.0.0.0 down
