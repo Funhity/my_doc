@@ -4900,7 +4900,7 @@ sudo tcpdump -i lo -A udp and port 514
 tcpdump -n host 192.168.1.1
 tcpdump -n net 192.168.1.0/24
 
-
+tcpdump -n dst port 23 # 能收到请求消息，响应消息不显示
 =================ubuntu section=====================
 boot: Not enough free disk space when upgrading
 方法一：sudo apt-get purge $(dpkg -l linux-{image,headers}-"[0-9]*" | awk '/ii/{print $2}' | grep -ve "$(uname -r | sed -r 's/-[a-z]+//')")
