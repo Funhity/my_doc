@@ -622,11 +622,32 @@ curl -L https://github.com/docker/machine/releases/download/v0.12.1/docker-machi
 https://github.com/dhiltgen/docker-machine-kvm/releases:
   curl -L https://github.com/dhiltgen/docker-machine-kvm/releases/download/v0.10.0/docker-machine-driver-kvm-centos7 > /usr/local/bin/docker-machine-driver-kvm  
   chmod +x /usr/local/bin/docker-machine-driver-kvm
-#步骤二：在宿主机器上安装docker engine,debug加 -D选项
+#步骤二a：在宿主机器上安装docker engine,debug加 -D选项
 docker-machine create --kvm-boot2docker-url /home/frank/Downloads/boot2docker.iso  -d kvm my-docker-machine-docker-engine0
-.........
+docker-machine create --kvm-network mynetwork1 --kvm-boot2docker-url /home/frank/Downloads/boot2docker.iso  -d kvm my-docker-machine-docker-engine2
+      其中mynetwork1来自
+      [root@hp ~]# virsh net-list     --all
+       Name                 State      Autostart     Persistent
+      ----------------------------------------------------------
+       default              active     yes           yes
+       docker-machines      active     no            no
+       mynetwork1           active     no            no
+      [root@hp ~]# cat docker-machine-for-kvm3.xml
+      <network>
+        <name>mynetwork1</name>
+        <bridge name="virbr-wu" />
+        <forward mode="route"/>
+        <ip address="10.0.2.99" netmask="255.255.255.0">
+          <dhcp>
+            <range start="10.0.2.195" end="10.0.2.199"/>
+          </dhcp>
+        </ip>
+      </network>
 
-添加现有的dockers engine到dockers machine中去
+
+.........
+#步驟二b
+#添加现有的dockers engine到dockers machine中去
 ssh-copy-id -i ~/.ssh/id_rsa.pub 10.0.1.189
 docker-machine create -d generic --generic-ip-address 10.0.1.189  --generic-ssh-user root  docker2
 docker-machine env docker2
@@ -5451,7 +5472,8 @@ sudo apt-get install freerdp-x11
 sudo yum install freerdp
 xfreerdp -g 1920+1080 -u unarywu 10.0.1.25
 xfreerdp -f -u unarywu 10.0.1.25  #全屏
-xfreerdp /f /u:unarywu@outlook.com /v:10.0.1.25 /sound:sys:alsa
+xfreerdp /f /u:unary@ /v:10.0.1.25 /sound:sys:alsa
+xfreerdp /f /u:unar /p:X1 /v:10.0.1.25 /sound:sys:alsa
 
 为什么要用这个软件：
 https://www.syskit.com/blog/credssp-required-by-server-solutions/
@@ -8350,3 +8372,14 @@ brctl addif br0 eth1
 ifconfig eth0 up
 ifconfig eth1 up
 ifconfig br0 up
+
+====thinkpad section x1 section===
+
+cat >/etc/tmpfiles.d/trackpoint.conf<<EOF
+w /sys/devices/platform/i8042/serio1/serio2/speed - - - - 255 
+w /sys/devices/platform/i8042/serio1/serio2/sensitivity - - - - 175
+EOF
+sudo systemd-tmpfiles --prefix=/sys --create
+
+
+
