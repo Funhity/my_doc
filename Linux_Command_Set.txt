@@ -184,7 +184,8 @@ fi
   nmap -T4 -A -v 10.75.1.15
   nmap -sP 192.168.56.0/24
   ansible host* -m shell -a  "virsh list --all| grep -E 'running'  | awk '{print \$2}'   |xargs  -I '{}' sudo virsh domiflist  '{}' " | grep -B 50  "52:54:00:80:c4:07"
-
+  
+  zenmap
   ===============  xwindows section  ===============================
 yum groupinstall -y 'Desktop'
 yum groupinstall -y 'X Window System'
@@ -8042,6 +8043,9 @@ rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarc
 rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
 
 sudo yum info  vlc
+.....
+
+kodi or xmbc
 `````
 
 sudo yum install  minidlna
