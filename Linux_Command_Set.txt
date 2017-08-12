@@ -4357,7 +4357,7 @@ system monitor: sudo iostat -x 10
 ====disk section==fdisk section==
 sudo fdisk -l
 或   lsblk
-sudo yum install gparted
+sudo yum install gparted #磁盘分区工具
 parted -s /dev/sdb print #disk section
 sudo mount /dev/sdb1   /home/frank/kvm/images/my-wd-disk/
 sudo yum -y install iotop
