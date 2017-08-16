@@ -587,14 +587,12 @@ docker swarm join \
     192.168.1.191:2377
 
 
-DNS based  load balancing:   docker service create --endpoint-mode dnsrr --name vote --network overlay1 --replicas 2            instavote/vote
-VIP  based load balancing:   docker service create                       --name vote --network overlay1 --replicas 2            instavote/vote
-Routing mesh                 docker service create                       --name vote --network overlay1 --replicas 2 -p 8080:80 instavote/vote
-                             docker service create                        --name dns-cache                            -p 53:53/udp dns-cache
+DNS based  load balancing:   docker service create --endpoint-mode dnsrr --name vote --network overlay1 --replicas 2              instavote/vote
+VIP  based load balancing:   docker service create                       --name vote --network overlay1 --replicas 2              instavote/vote
+Routing mesh                 docker service create                       --name vote --network overlay1 --replicas 2 -p 8080:80   instavote/vote
+                             docker service create                       --name dns-cache                            -p 53:53/udp dns-cache
 ····docker swarm port····
-docker service update \
-  --publish-add <PUBLISHED-PORT>:<TARGET-PORT> \
-  <SERVICE>
+docker service update --publish-add <PUBLISHED-PORT>:<TARGET-PORT>  <SERVICE>
 ``````
 查询如何加入manager或work
 docker swarm join-token manager
