@@ -586,6 +586,11 @@ docker swarm join \
     --token SWMTKN-1-47b6rvzc1nd5yqe46i22mcdo7myu8rcjosq4lypl4exc097skx-5cfpe2azveljgkt0wcjxt0u7t \
     192.168.1.191:2377
 
+
+DNS based  load balancing:   docker service create --endpoint-mode dnsrr --name vote --network overlay1 --replicas 2 instavote/vote
+VIP  based load balancing:   docker service create                       --name vote --network overlay1 --replicas 2 instavote/vote
+Routing mesh                 docker service create                       --name vote --network overlay1 --replicas 2 -p 8080:80 instavote/vote
+
 ``````
 查询如何加入manager或work
 docker swarm join-token manager
