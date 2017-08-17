@@ -560,10 +560,21 @@ docker search centos
  docker network ls
  docker network inspect bridge  #用Containers键值可查看bridge被哪些container使用了
 
- docker network create --subnet 172.30.0.0/16 \
-                        --opt com.docker.network.bridge.name=docker_gwbridge \
-      --opt com.docker.network.bridge.enable_icc=false \
-      docker_gwbridge
+ docker network create --subnet 172.30.0.0/16  \
+                       --opt com.docker.network.bridge.name=docker_gwbridge \
+                       --opt com.docker.network.bridge.enable_icc=false  \
+                        docker_gwbridge
+ docker network create   --driver=bridge --subnet=172.28.0.0/16  --ip-range=172.28.5.0/24 --gateway=172.28.5.254   br0
+ docker network create -d overlay \
+                      --subnet=192.168.0.0/16 \
+                      --subnet=192.170.0.0/16 \
+                      --gateway=192.168.0.100 \
+                      --gateway=192.170.0.100 \
+                      --ip-range=192.168.1.0/24 \
+                      --aux-address="my-router=192.168.1.5" --aux-address="my-switch=192.168.1.6" \
+                      --aux-address="my-printer=192.170.1.5" --aux-address="my-nas=192.170.1.6" \
+                      my-multihost-network
+
 
 `````docker link`````
     $ docker run --rm --name web2 --link db:db training/webapp env
