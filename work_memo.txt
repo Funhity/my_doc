@@ -2158,7 +2158,7 @@ salt ci_cloud_beijing_*  state.sls fifo_0_9_rsyslog5_conf_blockreplace
 
 salt -C 'cloud* and not cloud18'   cmd.run "svcs chunter"  -t 1800
 =====openstack section=====
-
+/var/tmp/packstack/20170817-140913-z2VGNg/openstack-setup.log
 sudo systemctl disable firewalld
 sudo systemctl stop firewalld
 sudo systemctl disable NetworkManager
@@ -2166,5 +2166,7 @@ sudo systemctl stop NetworkManager
 sudo systemctl enable network
 sudo systemctl start network
 
-
-
+sudo yum install -y centos-release-openstack-ocata
+sudo yum update -y
+sudo yum install -y openstack-packstack
+sudo packstack --allinone
