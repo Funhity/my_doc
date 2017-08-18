@@ -1163,11 +1163,15 @@ vboxmanage internalcommands sethduuid  '/media/frank/3172e678-9cfa-4781-9900-0d7
   3. Log out and log in again #这步很重要
   4. Attach to your PC the USB devices you want to be automatically mounted in the VM (virtual machine).
 ``````virtualbox kvm``````
+场景1：
 从virtualbox迁移到kvm
 sudo qemu-img convert -f vdi -O qcow2   '/home/frank/VirtualBox VMs/office-windows10-backup20170628/office-windows10-backup20170628-disk1.vdi'  /media/frank/675A31A34AF2EE2D/kvm-office-win10.qcow2
 qemu-img convert -f vdi -O qcow2 [VBOX-IMAGE.vdi] [KVM-IMAGE.qcow2]
 e.g. qemu-img convert -f vdi -O qcow2 FreeBSD-7.2.vdi FreeBSD-7.2.qcow2
 
+场景2：
+从kvm到virtualbox
+qemu-img convert -f qcow2 dokcer-test.qcow2  -O vdi docker-and-openstack
 ==================
 
 
