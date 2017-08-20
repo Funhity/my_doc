@@ -6343,7 +6343,7 @@ pip install sqlalchemy
  
  service ntpd start
  /bin/systemctl start  ntpd.service
-==============shortcut section bash section======
+==============shortcut section bash section=====command line section=
  Bash Keyboard ShortcutsMoving the cursor:
   Ctrl + a   Go to the beginning of the line (Home)
   Ctrl + e   Go to the End of the line (End)

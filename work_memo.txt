@@ -2159,12 +2159,42 @@ salt ci_cloud_beijing_*  state.sls fifo_0_9_rsyslog5_conf_blockreplace
 salt -C 'cloud* and not cloud18'   cmd.run "svcs chunter"  -t 1800
 =====openstack section=====
 
-sudo systemctl disable firewalld
-sudo systemctl stop firewalld
-sudo systemctl disable NetworkManager
-sudo systemctl stop NetworkManager
-sudo systemctl enable network
-sudo systemctl start network
 
 
 
+#http://tripleo.org/environments/baremetal.html#instackenv
+#To deploy a minimal TripleO cloud with TripleO you need the following baremetal machines:
+
+  * 1 Undercloud
+  * 1 Overcloud Controller
+  * 1 Overcloud Compute
+
+
+#步骤1：安装Undercloud，在虚拟机上执行 https://www.rdoproject.org/tripleo/，装ansible远程控制物理机
+
+ ssh root@$VIRTHOST uname -a
+ wget https://raw.githubusercontent.com/openstack/tripleo-quickstart/master/quickstart.sh
+ sudo bash quickstart.sh --install-deps
+ 
+ export VIRTHOST='my_test_machine.example.com'
+ curl -O https://raw.githubusercontent.com/openstack/tripleo-quickstart/master/quickstart.sh
+ bash quickstart.sh $VIRTHOST
+
+#步骤2： 在上述虚拟机上执行
+ ssh -F /root/.quickstart/ssh.config.ansible undercloud
+ http://tripleo.org/basic_deployment/basic_deployment_cli.html#upload-images
+
+#步骤3：在物理机上执行,安装用于控制虚拟机的ipmi组件
+
+#install RDO repository:
+sudo yum install -y centos-release-openstack-ocata
+sudo yum install -y python-virtualbm
+
+[root@hp stack]# virsh  list
+ Id    Name                           State
+----------------------------------------------------
+ 6     docker-test2                   running
+ 7     docker-test3                   runnin
+
+sudo vbmc add   --port 7000 --username admin --password admin  docker-test2
+sudo vbmc add   --port 7001 --username admin --password admin  docker-test3
