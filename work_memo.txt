@@ -2198,11 +2198,11 @@ salt -C 'cloud* and not cloud18'   cmd.run "svcs chunter"  -t 1800
  curl -O https://raw.githubusercontent.com/openstack/tripleo-quickstart/master/quickstart.sh
  bash quickstart.sh $VIRTHOST
 
-#步骤2： 在上述虚拟机上执行
+ 执行bash quickstart.sh $VIRTHOST命令后输出如下
  ssh -F /root/.quickstart/ssh.config.ansible undercloud
  http://tripleo.org/basic_deployment/basic_deployment_cli.html#upload-images
 
-#步骤3：在物理机上执行,安装用于控制虚拟机的ipmi组件
+#步骤2：在物理机上执行,安装用于控制虚拟机的ipmi组件
 
 #install RDO repository:
 sudo yum install -y centos-release-openstack-ocata
@@ -2216,5 +2216,18 @@ sudo yum install -y python-virtualbm
 
 sudo vbmc add   --port 7000 --username admin --password admin  docker-test2
 sudo vbmc add   --port 7001 --username admin --password admin  docker-test3
+
+yum -y install ipmitool
+ipmitool -I lanplus -U admin -P admin  -H 10.0.1.99 -p 7001 power status
+
+步骤3：在undercloud上查看相关信息
+ssh -F /root/.quickstart/ssh.config.ansible undercloud #undercloud
+[stack@undercloud ~]$ source stackrc 
+[stack@undercloud ~]$ openstack image list
+[stack@undercloud ~]$ neutron subnet-list
+                      #查看物理机
+                      openstack baremetal node list
+                      #查看物理机地址
+                      less /home/stack/instackenv.json
 =======
 

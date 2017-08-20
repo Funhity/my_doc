@@ -6249,8 +6249,8 @@ racadm config -g cfgLanNetworking -o cfgNicUseDHCP 1 #从dhcp获取IP地址
 #ln    -s /opt/dell/srvadmin/bin/omreport /sbin/omreport
 #chmod +s /opt/dell/srvadmin/bin/omreport
 ==========ipmi section========================================
-yum install ipmitool
-yum install OpenIPMI OpenIPMI-tools
+yum -y install ipmitool
+yum -y install OpenIPMI OpenIPMI-tools
 
 /opt/custom/smf
 `````````````smartos ipmi`````````````
