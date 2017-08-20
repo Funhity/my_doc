@@ -2162,6 +2162,24 @@ salt -C 'cloud* and not cloud18'   cmd.run "svcs chunter"  -t 1800
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #http://tripleo.org/environments/baremetal.html#instackenv
 #To deploy a minimal TripleO cloud with TripleO you need the following baremetal machines:
 
@@ -2198,3 +2216,5 @@ sudo yum install -y python-virtualbm
 
 sudo vbmc add   --port 7000 --username admin --password admin  docker-test2
 sudo vbmc add   --port 7001 --username admin --password admin  docker-test3
+=======
+
