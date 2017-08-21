@@ -2225,9 +2225,12 @@ ssh -F /root/.quickstart/ssh.config.ansible undercloud #undercloud
 [stack@undercloud ~]$ source stackrc 
 [stack@undercloud ~]$ openstack image list
 [stack@undercloud ~]$ neutron subnet-list
+#步骤4：配置可用于部署云的物理机器
+
                       #查看物理机
                       openstack baremetal node list
                       #查看物理机地址
+
                       less /home/stack/instackenv.json
                       openstack baremetal import --json ~/instackenv.json
                       openstack baremetal configure boot
@@ -2236,10 +2239,17 @@ ssh -F /root/.quickstart/ssh.config.ansible undercloud #undercloud
 [stack@undercloud ~]$ openstack baremetal node manage 29ae7132-a28d-4db0-af0c-9534e2f30d5f
 或                    for node in $(openstack baremetal node list -c UUID -f value) ; do openstack baremetal node manage $node ; done
                       openstack baremetal node delete cfe0d0f8-5424-458b-a44f-4ee181d7c6cd
+#introspect
+openstack overcloud node introspect 201121dd-fad4-4be7-a94b-b5cbd92369f7 --provide #失败out-of-band introspection有bug，https://bugzilla.redhat.com/show_bug.cgi?id=1395819
+openstack baremetal introspection bulk start  #成功
 
-
+openstack baremetal introspection status 201121dd-fad4-4be7-a94b-b5cbd92369f7         #查看结果
+sudo journalctl -u openstack-ironic-inspector -u openstack-ironic-inspector-dnsmasq   #日志
+ #日志：/var/log/ironic-inspector/  
+systemctl status openstack-ironic-inspector-dnsmasq
                       
-
+ironic node-update compute add properties/capabilities='profile:compute,boot_option:local'
+ironic node-update controller add properties/capabilities='profile:control,boot_option:local'
 
 
 =======
