@@ -2229,5 +2229,18 @@ ssh -F /root/.quickstart/ssh.config.ansible undercloud #undercloud
                       openstack baremetal node list
                       #查看物理机地址
                       less /home/stack/instackenv.json
+                      openstack baremetal import --json ~/instackenv.json
+                      openstack baremetal configure boot
+
+[stack@undercloud ~]$ openstack baremetal node manage 201121dd-fad4-4be7-a94b-b5cbd92369f7
+[stack@undercloud ~]$ openstack baremetal node manage 29ae7132-a28d-4db0-af0c-9534e2f30d5f
+或                    for node in $(openstack baremetal node list -c UUID -f value) ; do openstack baremetal node manage $node ; done
+                      openstack baremetal node delete cfe0d0f8-5424-458b-a44f-4ee181d7c6cd
+
+
+                      
+
+
+
 =======
 
