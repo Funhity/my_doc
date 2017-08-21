@@ -2219,12 +2219,40 @@ sudo vbmc add   --port 7001 --username admin --password admin  docker-test3
 
 yum -y install ipmitool
 ipmitool -I lanplus -U admin -P admin  -H 10.0.1.99 -p 7001 power status
-
+ipmitool -I lanplus -U admin -P admin  -H 192.168.23.1 -p 7000 power status
 步骤3：在undercloud上查看相关信息
 ssh -F /root/.quickstart/ssh.config.ansible undercloud #undercloud
+
+物理机配置：
+[stack@undercloud ~]$ cat instackenv.json
+{
+    "nodes":[
+        {
+            "name":"compute",
+            "pm_type":"pxe_ipmitool",
+            "pm_user":"admin",
+            "pm_password":"admin",
+            "pm_addr":"192.168.23.1",
+            "pm_port":"7000"
+        },
+        {
+            "name":"controller",
+            "pm_type":"pxe_ipmitool",
+            "pm_user":"admin",
+            "pm_password":"admin",
+            "pm_addr":"192.168.23.1",
+            "pm_port":"7001"
+        }
+    ]
+}
+
+
+
 [stack@undercloud ~]$ source stackrc 
 [stack@undercloud ~]$ openstack image list
 [stack@undercloud ~]$ neutron subnet-list
+                      neutron subnet-update f31f5147-2004-47fd-af79-780864f89a57  --dns-nameservers list=true 8.8.8.8
+
 #步骤4：配置可用于部署云的物理机器
 
                       #查看物理机
