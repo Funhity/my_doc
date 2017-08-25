@@ -4221,6 +4221,14 @@ curl  -s http://192.168.10.56:5000/devops/megatron/raw/master/RabbitMQ/install.s
 cat file | ssh remoteuser@ip.address.of.remote.machine "cat > remote"
 ssh remoteuser@ip.address.of.remote.machine "cat > remote" < file
 
+``````ssh proxy````
+
+GatewayPorts yes
+Make sure you add it only once!
+$ sudo vim /etc/ssh/sshd_config
+And restart SSH
+$ sudo service ssh restart
+
 ``````````````````````
 ansible cloudera-agent1  -m shell -a "ip a" --ask-pass
 ansible all              -m ping
