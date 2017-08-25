@@ -4436,7 +4436,9 @@ sudo apt-get install build-essential
   
   
   grep -r --exclude-dir={packages,rsync,workspace} xinxindai  *
-  
+  grep -r tag      --include=*.yml   #搜索目录下所有yml文件
+  grep -r tag -A 2 --include=*.yml   # -A num for the number of lines after the match.
+
   grep -e pattern1 -e pattern2 filename
   
   cat v6_nginx01-tomcat_access-2016-06-07-14_05_01.log |   gawk -F@  '{print $1 $5  $9}' |  grep -E "[[:space:]]+/[[:space:]]*$" |  gawk -F@  '{print $1 $5 $9 $17}'
