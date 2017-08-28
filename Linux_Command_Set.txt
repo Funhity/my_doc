@@ -4242,18 +4242,21 @@ ssh remoteuser@ip.address.of.remote.machine "cat > remote" < file
 ssh -R 9000:localhost:3000 user@example.com
 
 步骤一：
+若使用remote模式在执行此步骤
 $ sudo vim /etc/ssh/sshd_config
 GatewayPorts yes
-Make sure you add it only once!
-And restart SSH
+#Make sure you add it only once!
+#And restart SSH
 $ sudo service ssh restart
+
 步骤二：
-ssh -L 127.0.0.1:6000:teamviewer.com:443 root@139.196.102.159
-       访问本地6000端口，相当于访问139.196.102.159的443端口，而在外界只看到本地到139.196.102.159的ssh连接
-ssh -R 3389:127.0.0.1:3389   frank@139.219.100.43   #在公司机器上运行此命令，139.219.100.43是公网地址
-       访问139.196.102.159上的3389端口相当于访问公司机器上的3389端口，127.0.0.1是公司机器的本地地址，而在公司只看到公司内机器到139.196.102.159的ssh连接
-
-
+ssh -L 9000:localhost:5432 user@example.com
+       访问本地9000端口，相当于访问user@example.com上的5432端口，而在外界只看到本地到user@example.com的ssh连接
+ssh -R     3389:127.0.0.1:3389   frank@139.219.100.43   #在公司机器上运行此命令，139.219.100.43是公网地址
+#       -R 两个参数的含义    "冒号左边，指在公网地址139.219.100.43上监听的端口，没有具体地址表示在所有ip地址上监听"   :  
+                           "冒号右边，在公司内执行ssh命令，是公司内机器的ip地址及端口"
+#       访问139.196.102.159上的3389端口相当于访问公司机器上的3389端口，127.0.0.1是公司机器的本地地址，而在公司只看到公司内机器到139.196.102.159的ssh连接
+#       remote 模式要在ssh服务器上打开GatewayPorts yes开关
 
 
 ``````````````````````
