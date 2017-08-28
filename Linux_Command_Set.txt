@@ -366,6 +366,7 @@ nmtui
   
  ````````````````ufw section  firewall section``````````firewalld section````````````````````
  sudo ufw disable     #firewall
+ sudo ufw status verbose
  sudo ufw enable
  sudo ufw reload
  sudo ufw default allow outgoing
