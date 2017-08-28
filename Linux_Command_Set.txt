@@ -530,6 +530,23 @@ sudo service postgresql initdb
 listen_addresses = '*'
 standard_conforming_strings = off
  
+=======ubuntu docker section=======
+sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    software-properties-common
+
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo apt-key fingerprint 0EBFCD88
+
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+
+
 
 =====================  docker section  =========================================
 docker hub accout :weakfrankwu  wuj*rong**
@@ -4222,12 +4239,17 @@ cat file | ssh remoteuser@ip.address.of.remote.machine "cat > remote"
 ssh remoteuser@ip.address.of.remote.machine "cat > remote" < file
 
 ``````ssh proxy````
+ssh -R 9000:localhost:3000 user@example.com
 
+步骤一：
+$ sudo vim /etc/ssh/sshd_config
 GatewayPorts yes
 Make sure you add it only once!
-$ sudo vim /etc/ssh/sshd_config
 And restart SSH
 $ sudo service ssh restart
+步骤二：
+ssh -L 127.0.0.1:6000:teamviewer.com:443 root@139.196.102.159
+
 
 ``````````````````````
 ansible cloudera-agent1  -m shell -a "ip a" --ask-pass
@@ -4958,6 +4980,9 @@ tcpdump -n net 192.168.1.0/24
 
 tcpdump -n dst port 23 # 能收到请求消息，响应消息不显示
 =================ubuntu section=====================
+检查版本号
+lsb_release -a
+
 boot: Not enough free disk space when upgrading
 方法一：sudo apt-get purge $(dpkg -l linux-{image,headers}-"[0-9]*" | awk '/ii/{print $2}' | grep -ve "$(uname -r | sed -r 's/-[a-z]+//')")
 方法二：A more concise command to purge all old kernels is: sudo apt-get autoremove --purge
@@ -8310,6 +8335,12 @@ last
 ====cpu section====
 cat /proc/cpuinfo | awk '/^processor/{print $3}'
 lscpu
+
+
+ubuntu:
+cat /proc/cpuinfo或lscpu
+
+
 ======here document section======salt command =====
 
 cat /srv/pillar/top.sls 
