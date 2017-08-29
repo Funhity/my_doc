@@ -4260,6 +4260,29 @@ ssh -R     3389:127.0.0.1:3389   frank@139.219.100.43   #在公司机器上运�
 #       remote 模式要在ssh服务器上打开GatewayPorts yes开关
 
 
+
+········
+ssh proxy on ubuntu:
+步驟一：安裝proxychains
+sudo apt-get install proxychains
+turn off proxy_dns or use 127.0.0.1 as your app server address instead of localhost.
+sudo vi /etc/proxychains.conf
+edit the port number on the last line
+socks4  127.0.0.1 8000
+
+步驟二：
+in /etc/ssh/sshd_config on the server, AllowTcpForwarding is enabled, as like below.
+Code:
+AllowTcpForwarding yes
+
+service sshd restart
+
+步驟三：
+ssh -D 8000 root@139.196.102.159
+sudo proxychains   apt-get -y install docker-ce
+
+
+
 ``````````````````````
 ansible cloudera-agent1  -m shell -a "ip a" --ask-pass
 ansible all              -m ping
