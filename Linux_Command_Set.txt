@@ -363,7 +363,14 @@ nmtui
   cat  /etc/sysconfig/iptables
   sudo yum remove  iptables-services
   lsmod|grep 'ipt'  #For most of the iptables related modules 
-  
+·····
+iptable中增加端口支持
+iptables -I INPUT 1 -p tcp --dport 80    -j ACCEPT  #在表前面加
+iptables -A INPUT   -p tcp --dport 5901  -j ACCEPT  #在imput表后面加
+service iptables restart                            #增加规则后，上述增加的规则消失
+······
+
+
  ````````````````ufw section  firewall section``````````firewalld section````````````````````
  sudo ufw disable     #firewall
  sudo ufw status verbose
@@ -5140,7 +5147,7 @@ ansible cloudera_redis          -m shell  -a   "yum -y install make gcc tcl"
 查询channel个数
  pubsub channels *
  pubsub numsub "trade_transfer_result_topic"
-`````aria2c section```download section````wget section``aria2 section
+`````aria2c section```download section````wget section``aria2 section```curl section```
 
 ubuntu:   sudo apt-get install  aria2
 centos6:  wget http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el7.rf.x86_64.rpm
