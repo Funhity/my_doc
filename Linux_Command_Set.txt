@@ -786,6 +786,31 @@ cat /root/start.sh
 	
 ````````````
 docker run --volumes-from dbdata -v $(pwd):/backup ubuntu tar cvf /backup/backup.tar /dbdata
+
+
+``````docker repository section`````
+步骤一：在第一台机器上创建repository
+       [root@docker1 ~]# docker run -d -p 5000:5000 --restart=always --name registry registry:2
+步骤二：在第二台机器上上传docker image
+       [root@docker2 ~]# docker tag nginx  10.0.1.8:5000/nginx-wujunrong-private-repository-test
+       [root@docker2 ~]# docker push 10.0.1.8:5000/nginx-wujunrong-private-repository-test
+       The push refers to a repository [10.0.1.8:5000/nginx-wujunrong-private-repository-test]
+       Get https://10.0.1.8:5000/v2/: http: server gave HTTP response to HTTPS client
+       ·········
+       解决http: server gave HTTP response to HTTPS client问题：
+       Create or modify /etc/docker/daemon.json on the client machine
+       { "insecure-registries":["myregistry.example.com:5000"] }
+       systemctl restart  docker.service
+步骤三：在第三台机器上，下载docker image
+       cat > /etc/docker/daemon.json <<EOF
+       { "insecure-registries":["10.0.1.8:5000"] }
+       EOF
+       systemctl restart  docker.service
+
+       docker pull  10.0.1.8:5000/nginx-wujunrong-private-repository-test
+       [root@docker-test3 ~]# docker images
+       REPOSITORY                                              TAG                 IMAGE ID            CREATED             SIZE
+       10.0.1.8:5000/nginx-wujunrong-private-repository-test   latest              b8efb18f159b        5 weeks ago         107MB
 ======================  yum section and apt-get section dpkg section====================
 yum install yum-plugin-fastestmirror
 vi /etc/yum/pluginconf.d/fastestmirror.conf 
@@ -8513,8 +8538,8 @@ w /sys/devices/platform/i8042/serio1/serio2/sensitivity - - - - 175
 EOF
 sudo systemd-tmpfiles --prefix=/sys --create
 
-====os section ===init section
-yum -y install wget lrzsz aria2
+====os section ===init section===centos section===
+yum -y install wget telnet lrzsz aria2
 
 
 ====firefox section=====
