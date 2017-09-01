@@ -3478,6 +3478,9 @@ Default locale: en_US, platform encoding: UTF-8
 OS name: "linux", version: "2.6.32-358.el6.x86_64", arch: "amd64", family: "unix"
 
 
+mvn [plugin-name]:[goal-name]
+mvn compiler:compile
+#解释：compiled with the maven-compiler-plugin's compile-goal
 ``````````````````````````````````````
 
 mvn package  #Making a JAR file
@@ -3982,6 +3985,18 @@ virsh edit <VM name>
     <model type='virtio'/>   # try this if you experience problems with VLANs
  </interface>
  
+```````kvm boot ````virsh boot``````
+#virsh edit <your-domain-name> 
+#then adjust the boot order with this example (copied from libvirt.org):
+<os>
+  <type>hvm</type>
+  <loader>/usr/lib/xen/boot/hvmloader</loader>
+  <boot dev='network'/>
+  <boot dev='cdrom'/>
+  <boot dev='hd'/>
+  <bootmenu enable='yes'/>
+</os>
+
 ``````````````kickstart section``````````````
  network --device eth0 --bootproto static --ip 194.117.142.153 --netmask 255.255.255.0 --gateway 194.117.142.2 --nameserver 194.117.142.83 --hostname kickclient
 ======ineted section============
@@ -5614,8 +5629,9 @@ git config user.name
 ````````初次使用git要设置```
  git config --list
  git config --global user.name "wujunrong"
- git config --global user.email "wujunrong@xinxindai.com"
+ git config --global user.email "publicwu@163.com"
  git config --global core.editor "'C:/Program Files (x86)/Notepad++/notepad++.exe' -multiInst -nosession"
+ git config --global core.editor "vim"
  创建要迁移的仓库文件
  git clone --bare my_project my_project.git （等价于：cp -Rf my_project/.git my_project.git）
  scp -r my_project.git user@git.example.com:/srv/git
@@ -8497,5 +8513,15 @@ w /sys/devices/platform/i8042/serio1/serio2/sensitivity - - - - 175
 EOF
 sudo systemd-tmpfiles --prefix=/sys --create
 
+====os section ===init section
+yum -y install wget lrzsz aria2
 
 
+====firefox section=====
+用Ctrl+Tab切换tab页
+
+Actually, this is secretly built in. :-)
+(1) In a new tab, type or paste about:config in the address bar and press Enter. Click the button promising to be careful.
+(2) In the filter box, type or paste ctrl and pause while the list is filtered
+(3) Double-click browser.ctrlTab.previews to set its value to true.
+Now try Ctrl+Tab and, like Alt+Tab, release the tab but keep Ctrl down. Feel familiar?
