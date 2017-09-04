@@ -356,7 +356,7 @@ nmtui
  sudo vi /etc/network/interfaces
  /etc/init.d/networking restart
  
- `````iptables section```````
+ `````iptables section````iptable section```
   sudo iptables  -n -L -v
   sudo iptables -t nat -n -L -v
   service iptables save
@@ -367,6 +367,7 @@ nmtui
 iptable中增加端口支持
 iptables -I INPUT 1 -p tcp --dport 80    -j ACCEPT  #在表前面加
 iptables -A INPUT   -p tcp --dport 5901  -j ACCEPT  #在imput表后面加
+service iptables save
 service iptables restart                            #增加规则后，上述增加的规则消失
 ······
 
@@ -4899,12 +4900,15 @@ password "ranbiao"
 ·······················································
 
 
-===========================  samba section  ==========================================
+===========================  samba section  =======smb section===================================
 sudo yum install -y samba samba-client samba-common
 sudo cp  /etc/samba/smb.conf   /etc/samba/smb.conf.bak
 
-
 sudo cat /etc/samba/smb.conf 
+
+iptables -I INPUT 1 -p tcp --dport 445    -j ACCEPT  #在表前面加
+service iptables save
+
 
 ```````log level````
 
