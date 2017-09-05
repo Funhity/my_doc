@@ -707,13 +707,16 @@ docker commit --change='CMD ["/root/start.sh"]'   --change='ENTRYPOINT ["/tini",
 docker images
 docker rmi training/sinatra
 
-````````docker systemd section```````````
+````````docker systemd section``````docker coentos7`````
 Dockerfile for systemd base image
-
-FROM centos:7
-MAINTAINER "wu" <publicwu@163.com>
+··········
+#创建带systemd的centos7
+docker pull centos
+cat > ./Dockerfile <<EOF
+FROM centos:latest
 ENV container docker
-RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
+RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
+systemd-tmpfiles-setup.service ] || rm -f $i; done); \
 rm -f /lib/systemd/system/multi-user.target.wants/*;\
 rm -f /etc/systemd/system/*.wants/*;\
 rm -f /lib/systemd/system/local-fs.target.wants/*; \
@@ -723,8 +726,9 @@ rm -f /lib/systemd/system/basic.target.wants/*;\
 rm -f /lib/systemd/system/anaconda.target.wants/*;
 VOLUME [ "/sys/fs/cgroup" ]
 CMD ["/usr/sbin/init"]
-
-
+EOF
+docker build --rm -t local/c7-systemd .
+············
 
 This Dockerfile deletes a number of unit files which might cause issues. From here, you are ready to build your base image.
 
@@ -5560,6 +5564,8 @@ end1
 
 
 ====sed section awk section========
+awk '{print $NF}' #获得最后一列 
+
 
 #Only return the matched string in sed
 echo "atestb" | sed -n 's/.*\(test\).*/\1/p'
@@ -8545,7 +8551,7 @@ EOF
 sudo systemd-tmpfiles --prefix=/sys --create
 
 ====os section ===init section===centos section===
-yum -y install wget telnet lrzsz aria2
+yum -y install wget telnet lrzsz aria2 openssh-clients
 
 
 ====firefox section=====
@@ -8565,15 +8571,21 @@ source ~/.bashrc
 
 
 ====vpn section===
+
+启动docker
 export VPN_SERVER_IPV4='v.xxsl.org'
 export VPN_PSK='xxsl'
 export VPN_USERNAME='wjr'
 export VPN_PASSWORD='wjr1977'
+docker run --rm -it --privileged --net=host            -v /lib/modules:/lib/modules:ro            -e VPN_SERVER_IPV4            -e VPN_PSK            -e VPN_USERNAME            -e VPN_PASSWORD               ubergarm/l2tp-ipsec-vpn-client
 
+···········
 VPN_SERVER_IPV4=104.168.30.76
 ip a show ppp0                                   
 sudo ip route add $VPN_SERVER_IPV4 via 192.0.2.1 dev ppp0   # route traffic for a specific target ip through VPN tunnel address
 sudo ip route add default via 192.0.2.1 dev ppp0   # route all traffice through VPN tunnel address 
                                                    # or sudo route add -net default gw 192.0.2.1 dev ppp0
 sudo route del -net default gw 10.0.1.1 dev eth0   # and delete old default routes e.g. 
-
+·············
+#停止docker
+sudo docker ps | grep uberga | awk '{print $NF}' |xargs -I{} sudo docker stop {}
