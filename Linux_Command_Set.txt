@@ -793,6 +793,8 @@ docker run --volumes-from dbdata -v $(pwd):/backup ubuntu tar cvf /backup/backup
        [root@docker1 ~]# docker run -d -p 5000:5000 --restart=always --name registry registry:2
 步骤二：在第二台机器上上传docker image
        [root@docker2 ~]# docker tag nginx  10.0.1.8:5000/nginx-wujunrong-private-repository-test
+                                           10.0.1.8:5000是私有源地址
+                                           nginx-wujunrong-private-repository-test是image的名字
        [root@docker2 ~]# docker push 10.0.1.8:5000/nginx-wujunrong-private-repository-test
        The push refers to a repository [10.0.1.8:5000/nginx-wujunrong-private-repository-test]
        Get https://10.0.1.8:5000/v2/: http: server gave HTTP response to HTTPS client
@@ -8550,3 +8552,11 @@ Actually, this is secretly built in. :-)
 (2) In the filter box, type or paste ctrl and pause while the list is filtered
 (3) Double-click browser.ctrlTab.previews to set its value to true.
 Now try Ctrl+Tab and, like Alt+Tab, release the tab but keep Ctrl down. Feel familiar?
+
+====spark section====
+tar xvf spark-1.3.1-bin-hadoop2.6.tgz 
+mv spark-2.2.0-bin-hadoop2.7 /usr/local/spark
+export PATH=$PATH:/usr/local/spark/bin
+source ~/.bashrc
+
+
