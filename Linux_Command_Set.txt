@@ -8554,3 +8554,16 @@ Actually, this is secretly built in. :-)
 (2) In the filter box, type or paste ctrl and pause while the list is filtered
 (3) Double-click browser.ctrlTab.previews to set its value to true.
 Now try Ctrl+Tab and, like Alt+Tab, release the tab but keep Ctrl down. Feel familiar?
+
+====vpn section===
+export VPN_SERVER_IPV4='v.xxsl.org'
+export VPN_PSK='xxsl'
+export VPN_USERNAME='wjr'
+export VPN_PASSWORD='wjr1977'
+
+VPN_SERVER_IPV4=104.168.30.76
+ip a show ppp0                                   
+sudo ip route add $VPN_SERVER_IPV4 via 192.0.2.1 dev ppp0   # route traffic for a specific target ip through VPN tunnel address
+sudo ip route add default via 192.0.2.1 dev ppp0   # route all traffice through VPN tunnel address 
+                                                   # or sudo route add -net default gw 192.0.2.1 dev ppp0
+sudo route del -net default gw 10.0.1.1 dev eth0   # and delete old default routes e.g. 
