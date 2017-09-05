@@ -728,6 +728,8 @@ VOLUME [ "/sys/fs/cgroup" ]
 CMD ["/usr/sbin/init"]
 EOF
 docker build --rm -t local/c7-systemd .
+#运行systemd的centos7
+docker run -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro local/c7-systemd:latest bash
 ············
 
 This Dockerfile deletes a number of unit files which might cause issues. From here, you are ready to build your base image.
@@ -8550,8 +8552,8 @@ w /sys/devices/platform/i8042/serio1/serio2/sensitivity - - - - 175
 EOF
 sudo systemd-tmpfiles --prefix=/sys --create
 
-====os section ===init section===centos section===
-yum -y install wget telnet lrzsz aria2 openssh-clients
+====os section ===init section===centos section==os init=
+yum -y install wget telnet lrzsz aria2 openssh-clients iotop
 
 
 ====firefox section=====
@@ -8570,6 +8572,9 @@ export PATH=$PATH:/usr/local/spark/bin
 source ~/.bashrc
 
 
+curl https://bintray.com/sbt/rpm/rpm | sudo tee /etc/yum.repos.d/bintray-sbt-rpm.repo
+sudo yum -y install sbt
+/usr/local/spark/bin/spark-submit   --class "SimpleApp"   --master local[4]   target/scala-2.11/simple-project_2.11-1.0.jar
 ====vpn section===
 
 启动docker
