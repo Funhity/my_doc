@@ -803,7 +803,7 @@ cat /root/start.sh
 docker run --volumes-from dbdata -v $(pwd):/backup ubuntu tar cvf /backup/backup.tar /dbdata
 
 
-``````docker repository section`````
+``````docker repository section````docker private repository`
 步骤一：在第一台机器上创建repository
        [root@docker1 ~]# docker run -d -p 5000:5000 --restart=always --name registry registry:2
 步骤二：在第二台机器上上传docker image
@@ -816,16 +816,24 @@ docker run --volumes-from dbdata -v $(pwd):/backup ubuntu tar cvf /backup/backup
        ·········
        下面两条命令解决http: server gave HTTP response to HTTPS client问题：
         cat > /etc/docker/daemon.json <<-EOF
-        { "insecure-registries":["10.0.1.8:5000"] }
+        { "insecure-registries":["139.219.100.43:5000"] }
 EOF
        systemctl restart  docker.service
 步骤三：在第三台机器上，下载docker image
+       样例1：
+            docker pull  10.0.1.8:5000/nginx-wujunrong-private-repository-test
+            [root@docker-test3 ~]# docker images
+            REPOSITORY                                              TAG                 IMAGE ID            CREATED             SIZE
+            10.0.1.8:5000/nginx-wujunrong-private-repository-test   latest              b8efb18f159b        5 weeks ago         107MB
+       样例2：
+           #在公司
+           [root@pwc-hp ~]# docker ps
+           CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
+           22a00f4b2dbb        registry:latest     "/entrypoint.sh /e..."   22 hours ago        Up 3 hours          0.0.0.0:5000->5000/tcp   registry
+           ssh -R     5000:127.0.0.1:5000   frank@139.219.100.43 #设置ssh proxy 从家里访问公司内网
+           # 在家里
+           docker pull 139.219.100.43:5000/spark:version1  
 
-
-       docker pull  10.0.1.8:5000/nginx-wujunrong-private-repository-test
-       [root@docker-test3 ~]# docker images
-       REPOSITORY                                              TAG                 IMAGE ID            CREATED             SIZE
-       10.0.1.8:5000/nginx-wujunrong-private-repository-test   latest              b8efb18f159b        5 weeks ago         107MB
 ======================  yum section and apt-get section dpkg section====================
 yum install yum-plugin-fastestmirror
 vi /etc/yum/pluginconf.d/fastestmirror.conf 
@@ -4311,6 +4319,7 @@ ssh remoteuser@ip.address.of.remote.machine "cat > remote" < file
 
 ``````ssh proxy````
 ssh -R 9000:localhost:3000 user@example.com
+ssh -R     1977:127.0.0.1:3389   frank@139.219.100.43
 
 步骤一：
 若使用remote模式在执行此步骤
@@ -5084,6 +5093,7 @@ tcpdump -n host 192.168.1.1
 tcpdump -n net 192.168.1.0/24
 
 tcpdump -n dst port 23 # 能收到请求消息，响应消息不显示
+tcpdump -n dst port 5000
 =================ubuntu section=====================
 检查版本号
 lsb_release -a
@@ -8559,7 +8569,7 @@ EOF
 sudo systemd-tmpfiles --prefix=/sys --create
 
 ====os section ===init section===centos section==os init=
-yum -y install wget telnet lrzsz aria2 openssh-clients iotop net-tools
+yum -y install wget curl telnet lrzsz aria2 openssh-clients iotop net-tools lsof tcpdump
 
 
 ====firefox section=====
