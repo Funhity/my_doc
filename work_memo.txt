@@ -2287,10 +2287,16 @@ sudo hiera admin_password
 
 
 `````````spark section````````````````
+#安装spark
 tar xvf spark-1.3.1-bin-hadoop2.6.tgz 
 mv spark-2.2.0-bin-hadoop2.7 /usr/local/spark
 export PATH=$PATH:/usr/local/spark/bin
 source ~/.bashrc
+
+#在dockers内安装并运行spark demo程序
+docker run -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro local/c7-systemd:latest bash
+或 docker exec -it youthful_albattani   bash
+
 
 http://spark.apache.org/docs/latest/quick-start.html
 curl https://bintray.com/sbt/rpm/rpm | sudo tee /etc/yum.repos.d/bintray-sbt-rpm.repo
@@ -2298,5 +2304,11 @@ sudo yum -y install sbt
 
 /usr/local/spark/bin/spark-submit   --class "SimpleApp"   --master local[4]   target/scala-2.11/simple-project_2.11-1.0.jar
 
+#步骤三：创建image
+
+docker commit --change='CMD ["/usr/sbin/init"]'    -c "EXPOSE 80"    1e5037d756a3      local/c7-systemd-spark:version1
+
+docker tag local/c7-systemd-spark:version1  localhost:5000/spark:version1
+docker push localhost:5000/spark:version1
 
 ====================

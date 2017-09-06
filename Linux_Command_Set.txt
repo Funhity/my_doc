@@ -707,7 +707,7 @@ docker commit --change='CMD ["/root/start.sh"]'   --change='ENTRYPOINT ["/tini",
 docker images
 docker rmi training/sinatra
 
-````````docker systemd section``````docker coentos7`````
+````````docker systemd section``````docker centos7`````
 Dockerfile for systemd base image
 ··········
 #创建带systemd的centos7
@@ -738,7 +738,15 @@ $ docker build --rm -t local/c7-systemd .
   docker build --rm -t centos7:systemd  .
 docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro                                       -p 80:80 local/centos7:yum-repository 
 docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /home/frank/docker-share:/root:rw  -p 80:80 centos7:systemd
- 
+
+````docker port section```docker ipv6 section`
+https://github.com/moby/moby/issues/2174
+问题描述：-p 80:80开放端口后可以telnet 通，但用其他机器telnet不通
+方案一：I enabled IPv6 forwarding on all interfaces by uncommenting the entry with: net.ipv6.conf.all.forwarding=1 in the /etc/sysctl.conf
+方案二：上一次查出问题是ip 转发功能没打开，导致只有ipv6相关端口，没有ipv4相关端口
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+
 ```````````
 
 sudo docker run -i -t ubuntu /bin/bash
@@ -806,15 +814,13 @@ docker run --volumes-from dbdata -v $(pwd):/backup ubuntu tar cvf /backup/backup
        The push refers to a repository [10.0.1.8:5000/nginx-wujunrong-private-repository-test]
        Get https://10.0.1.8:5000/v2/: http: server gave HTTP response to HTTPS client
        ·········
-       解决http: server gave HTTP response to HTTPS client问题：
-       Create or modify /etc/docker/daemon.json on the client machine
-       { "insecure-registries":["myregistry.example.com:5000"] }
+       下面两条命令解决http: server gave HTTP response to HTTPS client问题：
+        cat > /etc/docker/daemon.json <<-EOF
+        { "insecure-registries":["10.0.1.8:5000"] }
+EOF
        systemctl restart  docker.service
 步骤三：在第三台机器上，下载docker image
-       cat > /etc/docker/daemon.json <<EOF
-       { "insecure-registries":["10.0.1.8:5000"] }
-       EOF
-       systemctl restart  docker.service
+
 
        docker pull  10.0.1.8:5000/nginx-wujunrong-private-repository-test
        [root@docker-test3 ~]# docker images
@@ -8553,7 +8559,7 @@ EOF
 sudo systemd-tmpfiles --prefix=/sys --create
 
 ====os section ===init section===centos section==os init=
-yum -y install wget telnet lrzsz aria2 openssh-clients iotop
+yum -y install wget telnet lrzsz aria2 openssh-clients iotop net-tools
 
 
 ====firefox section=====
