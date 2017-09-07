@@ -833,6 +833,16 @@ EOF
            ssh -R     5000:127.0.0.1:5000   frank@139.219.100.43 #设置ssh proxy 从家里访问公司内网
            # 在家里
            docker pull 139.219.100.43:5000/spark:version1  
+``````docker registry storage```
+ #registry data is persisted as a docker volume on the host filesystem
+https://github.com/docker/docker.github.io/blob/master/registry/deploying.md
+$ docker run -d \
+  -p 5000:5000 \
+  --restart=always \
+  --name registry \
+  -v /mnt/registry:/var/lib/registry \
+  registry:2
+用docker inspect 22a00f4b2dbb| less查看/var/lib/registry被mount到哪个目录
 
 ======================  yum section and apt-get section dpkg section====================
 yum install yum-plugin-fastestmirror
@@ -3415,6 +3425,8 @@ yum   -y install bzip2
 bzip2 -d ./zsync-0.6.2.tar.bz2 
 解压缩：
 tar -xvzf /path/to/yourfile.tgz
+#jar section 列出jar文件中的内容
+jar tvf /root/.m2/repository/org/apache/spark/spark-sql_2.11/2.2.0/spark-sql_2.11-2.2.0.jar | grep  dataset
 
 `````smartos tar section`````
 tar czvf  /tmp/wu.tar.gz -I <(find ./ -name "*.log")
@@ -3507,11 +3519,11 @@ cat /root/install_java_env.sh
 wget       https://archive.apache.org/dist/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.zip
 unzip      apache-maven-3.3.3-bin.zip
 
-vi  /etc/profile.d/java.sh
+cat>  /etc/profile.d/java.sh<<EOF
 export PATH=/root/apache-maven-3.2.5/bin:$PATH
 export JAVA_HOME=/usr/java/default
 export PATH=$JAVA_HOME/bin:$PATH
-
+EOF
 chmod +x  /etc/profile.d/java.sh
 ``````````````````````````````````````
 /usr/local/maven/conf/settings.xml
@@ -4599,13 +4611,15 @@ $ sudo apt install meld  [Debian/Ubuntu systems]
 $ sudo yum install meld  [RHEL/CentOS systems]
 $ sudo dnf install meld  [Fedora 22+]
 meld
-```````````du section````````````````````
+```````````du section``````````size section``````````
 du -ah /root
 du -ak /root
 du --max-depth  1 -h
 du -k --exclude /opt/webserver/v6_tomcat/webapps/m/static/image   | sort -nk1 
 查看当前目录大小，并排序：du --max-depth  1 2>&1  | sort -nk1
 查看当前目录中文件的大小：du -a --max-depth 1  -h
+#查看_data目录大小
+du  --max-depth  0  -ah  /var/lib/docker/volumes/181f8ba1f76f6d6f132ae91f9c9fff2c518d841d00b2137a5457c74de2828b5c/_data
 ```````````ls section``````````````````````````
 ls -ltr
 # ls -ld /home/jerry
@@ -4636,6 +4650,7 @@ cp -p tre.sh /tmp/tre.sh.5
 只显示目录
 tree -d
 tree -d -L 4  #目录深度
+tree -d /root
 
 pstree
 
@@ -8569,7 +8584,7 @@ EOF
 sudo systemd-tmpfiles --prefix=/sys --create
 
 ====os section ===init section===centos section==os init=
-yum -y install wget curl telnet lrzsz aria2 openssh-clients iotop net-tools lsof tcpdump
+yum -y install wget curl telnet lrzsz aria2 openssh-clients iotop net-tools lsof tcpdump tree tcpdump zip unzip less dos2unix
 
 
 ====firefox section=====

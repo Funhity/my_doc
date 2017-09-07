@@ -2298,7 +2298,7 @@ docker run -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro local/c7-systemd:latest bash
 或 docker exec -it youthful_albattani   bash
 
 
-http://spark.apache.org/docs/latest/quick-start.html
+#http://spark.apache.org/docs/latest/quick-start.html
 curl https://bintray.com/sbt/rpm/rpm | sudo tee /etc/yum.repos.d/bintray-sbt-rpm.repo
 sudo yum -y install sbt
 
@@ -2311,4 +2311,57 @@ docker commit --change='CMD ["/usr/sbin/init"]'    -c "EXPOSE 80"    1e5037d756a
 docker tag local/c7-systemd-spark:version1  localhost:5000/spark:version1
 docker push localhost:5000/spark:version1
 
-====================
+```````spark java example`````
+vi ./src/main/java/SimpleApp.java
+<project>
+  <groupId>edu.berkeley</groupId>
+  <artifactId>simple-project</artifactId>
+  <modelVersion>4.0.0</modelVersion>
+  <name>Simple Project</name>
+  <packaging>jar</packaging>
+  <version>1.0</version>
+  <dependencies>
+
+    <dependency>
+        <groupId>org.apache.spark</groupId>
+        <artifactId>spark-sql_2.10</artifactId>
+        <version>2.2.0</version>
+    </dependency>
+    
+  </dependencies>
+  <build>
+
+   <plugins>
+     <plugin>
+       <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+             <version>3.7.0</version>
+             <configuration>
+               <source>1.8</source>
+               <target>1.8</target>
+             </configuration>
+     </plugin>
+    </plugins>
+   </build>
+</project>    
+
+````````````
+
+vi ./src/main/java/SimpleApp.java
+
+/* SimpleApp.java */
+import org.apache.spark.sql.SparkSession;
+public class SimpleApp {
+  public static void main(String[] args) {
+    String logFile = "YOUR_SPARK_HOME/README.md"; // Should be some file on your system
+    SparkSession spark = SparkSession.builder().appName("Simple Application").getOrCreate();
+    org.apache.spark.sql.Dataset<String> logData = spark.read().textFile(logFile).cache();
+
+    long numAs = logData.filter(s -> s.contains("a")).count();
+    long numBs = logData.filter(s -> s.contains("b")).count();
+
+    System.out.println("Lines with a: " + numAs + ", lines with b: " + numBs);
+
+    spark.stop();
+  }
+}
