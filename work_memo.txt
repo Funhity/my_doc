@@ -2347,13 +2347,12 @@ vi ./src/main/java/SimpleApp.java
 
 ````````````
 
-vi ./src/main/java/SimpleApp.java
-
+cat /root/java-devops/src/main/java/SimpleApp.java
 /* SimpleApp.java */
 import org.apache.spark.sql.SparkSession;
 public class SimpleApp {
   public static void main(String[] args) {
-    String logFile = "YOUR_SPARK_HOME/README.md"; // Should be some file on your system
+    String logFile = "/usr/local/spark/README.md"; // Should be some file on your system
     SparkSession spark = SparkSession.builder().appName("Simple Application").getOrCreate();
     org.apache.spark.sql.Dataset<String> logData = spark.read().textFile(logFile).cache();
 
@@ -2365,5 +2364,30 @@ public class SimpleApp {
     spark.stop();
   }
 }
+
 mvn package
 /usr/local/spark/bin/spark-submit   --class "SimpleApp"   --master local[4]   target/simple-project-1.0.jar
+
+`````spark python section
+SPARK_HOME=/usr/local/spark
+export PYTHONPATH=$SPARK_HOME/python:$PYTHONPATH
+export PYTHONPATH=$SPARK_HOME/python/lib/py4j-0.10.4-src.zip:$PYTHONPATH
+#/usr/local/spark/python/lib/py4j-0.10.4-src.zip
+····················
+cat  /root/python-devops/SimpleApp.py 
+"""SimpleApp.py"""
+from pyspark.sql import SparkSession
+
+logFile = "/usr/local/spark/README.md"  # Should be some file on your system
+appName = "spark-python-wujunrong"
+spark = SparkSession.builder.appName(appName).master("local").getOrCreate()
+logData = spark.read.text(logFile).cache()
+
+numAs = logData.filter(logData.value.contains('a')).count()
+numBs = logData.filter(logData.value.contains('b')).count()
+
+print("Lines with a: %i, lines with b: %i" % (numAs, numBs))
+
+spark.stop()
+···················
+./bin/spark-submit  --master local[4] /root/python-devops/SimpleApp.py 
