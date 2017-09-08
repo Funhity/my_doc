@@ -560,7 +560,7 @@ sudo add-apt-repository \
 =====================  docker section  =========================================
 docker hub accout :weakfrankwu  wuj*rong**
 docker 基础软件
-yum -y install openssh-clients wget netstat lsof vi
+yum -y install openssh-clients wget net-tools lsof vi
 
 ```````````````````
 sudo tee /etc/yum.repos.d/docker.repo <<-'EOF'
