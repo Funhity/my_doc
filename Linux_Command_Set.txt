@@ -581,6 +581,17 @@ docker pull centos:6
 
 docker info
 docker search centos
+````````docker run section```````````
+docker run -ti
+       -t, --tty=true|false
+          Allocate a pseudo-TTY. The default is false.
+
+       -i, --interactive=true|false
+          Keep STDIN open even if not attached. The default is false.
+   
+       -d, --detach=true|false
+          Detached mode: run the container in the background and print the new container ID. The default is false.
+
 `````docker network``````
 
  docker network ls
@@ -8584,7 +8595,7 @@ EOF
 sudo systemd-tmpfiles --prefix=/sys --create
 
 ====os section ===init section===centos section==os init=
-yum -y install wget curl telnet lrzsz aria2 openssh-clients iotop net-tools lsof tcpdump tree tcpdump zip unzip less dos2unix
+yum -y install wget curl telnet lrzsz aria2 openssh-clients iotop net-tools lsof tcpdump tree tcpdump zip unzip less dos2unix git
 
 
 ====firefox section=====
@@ -8625,3 +8636,14 @@ sudo route del -net default gw 10.0.1.1 dev eth0   # and delete old default rout
 ·············
 #停止docker
 sudo docker ps | grep uberga | awk '{print $NF}' |xargs -I{} sudo docker stop {}
+
+
+======gerrit section=======
+
+The easiest way is to temporarily disable authenticated logins.
+Edit your [auth] statement in gerrit.config to look like this:
+[auth]
+type = development_become_any_account
+And then force login as the admin, grant yourself access and then restore the [auth] config.
+
+===========================

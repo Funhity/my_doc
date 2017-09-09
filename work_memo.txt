@@ -2405,8 +2405,10 @@ ssh -R     5000:127.0.0.1:5000   frank@139.219.100.43
 #步骤七：在另一台机器上运行装有spark的docker
 docker pull 139.219.100.43:5000/c7-systemd-spark:example-shell-java-python
 查看ropository中有多少image
+方法一：
 http://139.219.100.43:5000/v2/_catalog
-
+方法二：
+/var/lib/docker/volumes/181f8ba1f76f6d6f132ae91f9c9fff2c518d841d00b2137a5457c74de2828b5c/_data/docker/registry/v2/repositories
 
 docker run -ti -p 4040:4040 -p 18080:18080   139.219.100.43:5000/c7-systemd-spark:example-shell-java-python bash
  mkdir /tmp/spark-events
