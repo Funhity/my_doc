@@ -5777,7 +5777,28 @@ The basic Git workflow goes something like this:
 2、git add:       You stage the files, adding snapshots of them to your staging area.  
 3、git commit -m: You do a commit, which takes the files as they are in the staging area and stores that snapshot permanently to your Git directory.
 
-```````````
+```````git 标准操作流程`````
+https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository
+1.添加文件
+git add CONTRIBUTING.md
+2.修改文件,git status查询时CONTRIBUTING.md文件会出现两次，此时用git commit修改内容不会进入本地repository
+   $ git status
+   On branch master
+   Your branch is up-to-date with 'origin/master'.
+   Changes to be committed:
+     (use "git reset HEAD <file>..." to unstage)
+   
+       new file:   README
+       modified:   CONTRIBUTING.md
+   
+   Changes not staged for commit:
+     (use "git add <file>..." to update what will be committed)
+     (use "git checkout -- <file>..." to discard changes in working directory)
+   
+       modified:   CONTRIBUTING.md
+3.git add CONTRIBUTING.md  #think of it more as “add this content to the next commit” rather than “add this file to the project”.
+  此时用git commit修改会进入本地repository
+````````````````````````````
 #Git - List all files currently under source control?列出被git管理的文件：
        git ls-tree -r master --name-only 
 `````git rename section `````
@@ -5863,7 +5884,15 @@ This was motivated by the analogy to the shell idiom cd - to go back to whatever
 历史切换信息：
 git reflog
 
+`````git object section````
+git cat-file -p 83baae61804e65cc73a7201a7252750c76066a30 > test.txt
 
+git cat-file -t 1f7a7a472abf3dd9643fd615f6da379c4acb3e3a
+blob
+git cat-file -t d8329fc1cc938780ffdd9f94e0d364e0ea74f579
+tree
+
+git cat-file -p master^{tree}
 ===========zabbix section===========
 zabbix_server --version
 zabbix-server-mysql.x86_64 : Zabbix server compiled to use MySQL database
