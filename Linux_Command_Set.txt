@@ -5785,13 +5785,14 @@ git add CONTRIBUTING.md
    $ git status
    On branch master
    Your branch is up-to-date with 'origin/master'.
-   Changes to be committed:
+   #staging area
+   Changes to be committed:                                    
      (use "git reset HEAD <file>..." to unstage)
    
        new file:   README
        modified:   CONTRIBUTING.md
-   
-   Changes not staged for commit:
+   #working tree
+   Changes not staged for commit:                                
      (use "git add <file>..." to update what will be committed)
      (use "git checkout -- <file>..." to discard changes in working directory)
    
@@ -5806,22 +5807,38 @@ git中的文件重命名
        git mv ci_fifo.sh fifo_install_salt_command_line.sh
 ``````
 git status
-git status -s                                       #Short Status
-git commit -a -m 'added new benchmarks'             #Skipping the Staging Area
-
-git stash
-git stash listz
+git status -s                             #Short Status,??表示没有add的文件，两个M，左边的M表示the status of the staging area，右边的M表示the right-hand column indicates the status of the working tree
+git commit -a -m 'added new benchmarks'   #Skipping the Staging Area
+``````git stash section`````
+#使用场景：Stashing takes the dirty state of your working directory – that is, your modified tracked files and staged changes – and saves it on a stack of unfinished changes that you can reapply at any time.
+步骤一：保存
+git stash                 # 完全备份，git status清空
+git stash --keep-index    # git index serves as a staging area
+                          # This tells Git to not stash anything that you’ve already staged with the git add command.
+                          保留在stage中的内容，可以继续开发，直至commit提交到本地repository
+步骤二：                          
+git stash list
+步骤三：
 git stash apply stash@{2}
-git stash apply
-git stash apply --index
-git stash drop stash@{0}
+git stash apply          #原有的内容都在working direcotry中，但已经stage的内容丢失，要不丢失，则加--index 参数
+                         #The changes to your files were reapplied, but the file you staged before wasn’t restaged.
+                         #You can also have modified and uncommitted files in your working directory when you apply a stash – Git gives you merge conflicts if anything no longer applies cleanly.
+git stash apply --index  #完全恢复原有状态
+                         #run the git stash apply command with a --index option to tell the command to try to reapply the staged changes.
 
+git stash branch <branch-name>
+                         # Creates and checks out a new branch named <branchname> starting from the commit at which the <stash> was
+                           originally created, applies the changes recorded in <stash> to the new working tree and index. If that succeeds,
+                           and <stash> is a reference of the form stash@{<revision>}, it then drops the <stash>. When no <stash> is given,
+                           applies the latest one.
+git stash drop stash@{0}
+`````
 
 
 git log salt-office/master --stat
 
-git diff
-git diff --staged
+git diff                 #working目录和stage中的差别，即add后再次修改，尚未再次执行add
+git diff --staged        #stage和本地repository的差别，即在stage中，但还没有提交到repository，(--staged and --cached are synonyms)
  
 #white space check
 git diff --check  
@@ -5843,7 +5860,8 @@ git remote show     origin
 git remote rename   pb     paul
 git remote rm       paul
 
-git rm --cached file1.txt
+git rm --cached file1.txt  #在git体系中去除，但在硬盘中仍旧存在
+git rm log/\*.log          #*号要转义，*在git中有自己的含义
 
 git commit --amend #Undoing Things:重新commit
 
@@ -5857,8 +5875,12 @@ git tag -a v1.2     9fceb02    #you specify the commit checksum (or part of it) 
 git push origin   v1.5
 git push origin --tags
 
+`````
 git checkout -b [branchname] [tagname]:
 git checkout -b version2     v2.0.0
+#切换分支
+git checkout -b iss53 = git branch iss53;git checkout iss53
+````````
 
 git branch   testing
 切换本地分支
