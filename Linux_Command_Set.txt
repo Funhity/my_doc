@@ -4361,7 +4361,12 @@ ssh -R     3389:127.0.0.1:3389   frank@139.219.100.43   #在公司机器上运�
 #       访问139.196.102.159上的3389端口相当于访问公司机器上的3389端口，127.0.0.1是公司机器的本地地址，而在公司只看到公司内机器到139.196.102.159的ssh连接
 #       remote 模式要在ssh服务器上打开GatewayPorts yes开关
 
-
+具体案例：
+在公司家里都执行：ssh-copy-id -i ~/.ssh/id_rsa.pub frank@139.219.100.43
+在公司执行： ssh -R     1977:127.0.0.1:3389   frank@139.219.100.43
+            家里访问公司windows用1977端口
+在家里执行： ssh -R     3389:127.0.0.1:3389   frank@139.219.100.43
+            公司访问家里windows用3389端口
 
 ········
 ssh proxy on ubuntu:
@@ -5770,7 +5775,7 @@ git config user.name
 导出具体文件：        
 		git archive   --format=tar --remote=/srv/git/xxd_code_repo.git            HEAD -- ansible.hosts     | tar -xf -
         git archive   --format=tar --remote=/srv/git/xxd_code_repo.git            HEAD -- ansible.hosts     | tar -xf - -C /etc/ansible
-
+git archive --format zip --output /full/path master
 `````````````
 The basic Git workflow goes something like this:
 1、You modify files in your working directory.
@@ -5876,19 +5881,31 @@ git push origin   v1.5
 git push origin --tags
 
 `````
+#创建本地分支，再checkout
 git checkout -b [branchname] [tagname]:
 git checkout -b version2     v2.0.0
 #切换分支
-git checkout -b iss53 = git branch iss53;git checkout iss53
+git checkout -b iss53 = git branch iss53(创建新本地分支);git checkout iss53
 ````````
 
-git branch   testing
-切换本地分支
+git branch   testing #创建本地分支
+git branch -d hotfix #删除本地分支
+
+
+#从服务器下载，实现切换分支，
+#注意：if your working directory or staging area has uncommitted changes that conflict with the branch you’re checking out, Git won’t let you switch branches.
 git checkout testing   #To switch to an existing branch
 git checkout master
+``````
+git merge 操作步骤：
+git checkout master
+git merge iss53
+git status
+git add #解决conflict后执行
+git mergetool
+$ git config --global merge.tool "meld"
+$ git config --global mergetool.meld.path "C:\Program Files (x86)\Meld\Meld.exe"
 
-
-git archive --format zip --output /full/path master
 
 ````````git tags ```git release````````````````
 方法一：
