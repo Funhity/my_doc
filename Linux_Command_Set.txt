@@ -5746,6 +5746,9 @@ git config user.name
   git push --set-upstream salt-office master  #推送当前分支并建立与远程上游的跟踪
 
   git push origin master
+  git push origin serverfix:serverfix
+  git push origin serverfix:awesomebranch #serverfix是本地branch名称，awesomebranch是远程branch
+
 `````````````
 创建中心仓库，是空仓库，然后用push往仓库中添加
 1、服务器端，创建空仓库，然后通过客户端，用push往仓库中添加
@@ -5769,6 +5772,7 @@ git config user.name
    git commit --dry-run -a
    git push
    git pull  -s  resolve #pull的时候你这边已经被svn update改了，pull的时候需要指定merge策略
+
 `````````
         git archive   --format=tar --remote=/srv/git/xxd_code_repo.git/           master                    | tar -xf -
 子目录：git archive   --format=tar --remote=ssh://remote_server/remote_repository master path1/ path2/      | tar -xv
@@ -5857,13 +5861,21 @@ git diff HEAD~2 HEAD -- main.c
 #本地文件和本地master中的文件比较，显示修改内容
  git diff master:Linux_Command_Set.txt -- Linux_Command_Set.txt 
 ```````````````````````
-
+#fetch 和 checkout的关系
+ git fetch origin                             #只能获得origin/serverfix，但没有本地分支，可以通过merge到本地分支的方法来继续工作
+ git checkout -b serverfix origin/serverfix   #能获得本地分支serverfix，可以在此分支上修改
+```````````````````````
 git remote add pb https://github.com/paulboone/ticgit
 git fetch  pb
 git push   origin   master
+
+git push origin --delete serverfix  #Deleting Remote Branches
+
 git remote show     origin
 git remote rename   pb     paul
 git remote rm       paul
+git ls-remote --heads origin             #The --heads option lists only branch names
+                                         #list only refs/heads,refs/heads中包含了各个分支名称文件，文件里面是hash code
 
 git rm --cached file1.txt  #在git体系中去除，但在硬盘中仍旧存在
 git rm log/\*.log          #*号要转义，*在git中有自己的含义
@@ -5887,6 +5899,13 @@ git checkout -b version2     v2.0.0
 #切换分支
 git checkout -b iss53 = git branch iss53(创建新本地分支);git checkout iss53
 ````````
+git branch                        #列出本地所有branch
+git branch -r                     #列出remote中的所有分支          
+或git branch -a          
+git branch -vv                    #列出本地分支和remote之间的关系
+git branch -u origin/serverfix    #为当前本地分支创建上游分支
+
+git remote show origin  #给出remote的详细信息
 
 git branch   testing #创建本地分支
 git branch -d hotfix #删除本地分支
