@@ -2424,13 +2424,16 @@ docker run -ti -p 4040:4040 -p 18080:18080   139.219.100.43:5000/c7-systemd-spar
 
 
 ```gerrit section````
-1.把frank放到administration组中去
+搜索文档：
+Change-Id site:https://gerrit-documentation.storage.googleapis.com/
+
+
+
+1.把frank放到administration组中去，设置电子邮件，否则下面无法执行gerrit command
 cat ~/.ssh/id_rsa.pub | ssh -p 29418 192.168.56.17  gerrit set-account --add-ssh-key - --add-email publicwu@163.com frank
 2.设置frank用户密码,否则下面一步frank用户无法登入
 操作方法：主页右上角，switch account成frank用户，右上角，点setting按钮，在左边选http password活页夹
 3.git clone http://192.168.56.17:8080/hadoop-spark.git
-
-
 
 4.上传gerrit project项目：
 4/1)
@@ -2445,5 +2448,5 @@ git add java-devops/src/main/java/SimpleApp.java
 
 4/3).设置git自动生成Change-Id，install the hook，否则下面一步无法执行
         gitdir=$(git rev-parse --git-dir); scp -p -P 29418 frank@192.168.56.17:hooks/commit-msg ${gitdir}/hooks/
-        
+
 4/4).   git commit -m "wujunrong test gerrit"
