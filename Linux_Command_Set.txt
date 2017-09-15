@@ -5786,7 +5786,7 @@ The basic Git workflow goes something like this:
 2、git add:       You stage the files, adding snapshots of them to your staging area.  
 3、git commit -m: You do a commit, which takes the files as they are in the staging area and stores that snapshot permanently to your Git directory.
 
-```````git 标准操作流程`````
+```````git 标准操作流程````git workflow section````
 https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository
 1.添加文件
 git add CONTRIBUTING.md
@@ -5903,6 +5903,7 @@ git branch                        #列出本地所有branch
 git branch -r                     #列出remote中的所有分支          
 或git branch -a          
 git branch -vv                    #列出本地分支和remote之间的关系
+                                   列出最新所有分支的情况：git fetch --all; git branch -vv
 git branch -u origin/serverfix    #为当前本地分支创建上游分支
 
 git remote show origin  #给出remote的详细信息
@@ -8733,4 +8734,11 @@ Edit your [auth] statement in gerrit.config to look like this:
 type = development_become_any_account
 And then force login as the admin, grant yourself access and then restore the [auth] config.
 
-===========================
+==========dash section========- section=========
+
+find . -type f -print0 | tar -czvf backup.tar.gz --null -T -
+https://gerrit-documentation.storage.googleapis.com/Documentation/2.14.3/cmd-set-account.html
+cat ~/.ssh/id_watcher.pub | ssh -p 29418 review.example.com gerrit set-account --add-ssh-key - --add-email mail@example.com watcher
+
+
+=======
