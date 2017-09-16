@@ -5780,11 +5780,14 @@ git config user.name
 		git archive   --format=tar --remote=/srv/git/xxd_code_repo.git            HEAD -- ansible.hosts     | tar -xf -
         git archive   --format=tar --remote=/srv/git/xxd_code_repo.git            HEAD -- ansible.hosts     | tar -xf - -C /etc/ansible
 git archive --format zip --output /full/path master
-`````````````
+``````git workflow section```````
 The basic Git workflow goes something like this:
 1、You modify files in your working directory.
 2、git add:       You stage the files, adding snapshots of them to your staging area.  
 3、git commit -m: You do a commit, which takes the files as they are in the staging area and stores that snapshot permanently to your Git directory.
+
+ $ git show
+ # check what would be pushed to Gerrit
 
 ```````git 标准操作流程````git workflow section````
 https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository
@@ -8683,7 +8686,7 @@ EOF
 sudo systemd-tmpfiles --prefix=/sys --create
 
 ====os section ===init section===centos section==os init=
-yum -y install wget curl telnet lrzsz aria2 openssh-clients iotop net-tools lsof tcpdump tree tcpdump zip unzip less dos2unix git
+yum -y install epel-release wget curl telnet lrzsz aria2 openssh-clients iotop net-tools lsof tcpdump tree tcpdump zip unzip less dos2unix git
 
 
 ====firefox section=====

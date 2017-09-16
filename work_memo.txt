@@ -2428,6 +2428,35 @@ docker run -ti -p 4040:4040 -p 18080:18080   139.219.100.43:5000/c7-systemd-spar
 Change-Id site:https://gerrit-documentation.storage.googleapis.com/
 
 
+······
+登入设置
+Edit your [auth] statement in gerrit.config to look like this:
+[auth]
+type = development_become_any_account
+
+And then force login as the admin, grant yourself access
+
+····
+
+安装git-review
+步骤一：
+sudo yum install git-review
+$ git config --global gitreview.remote origin
+$ git config --global gitreview.username myusername
+
+步骤二：
+commit内容到repository上去，
+或
+cat  .gitreview
+[gerrit]
+host=192.168.56.17
+port=29418
+project=hadoop-spark.git
+defaultbranch=master
+
+步骤三：
+git review -s
+·······
 
 1.把frank放到administration组中去，设置电子邮件，否则下面无法执行gerrit command
 cat ~/.ssh/id_rsa.pub | ssh -p 29418 192.168.56.17  gerrit set-account --add-ssh-key - --add-email publicwu@163.com frank
@@ -2450,3 +2479,8 @@ git add java-devops/src/main/java/SimpleApp.java
         gitdir=$(git rev-parse --git-dir); scp -p -P 29418 frank@192.168.56.17:hooks/commit-msg ${gitdir}/hooks/
 
 4/4).   git commit -m "wujunrong test gerrit"
+
+
+
+git show #查看哪些会被push到remote中去
+git review -R  #申请review
