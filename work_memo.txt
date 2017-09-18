@@ -2462,6 +2462,7 @@ git review -s
 cat ~/.ssh/id_rsa.pub | ssh -p 29418 192.168.56.17  gerrit set-account --add-ssh-key - --add-email publicwu@163.com frank
 2.设置frank用户密码,否则下面一步frank用户无法登入
 操作方法：主页右上角，switch account成frank用户，右上角，点setting按钮，在左边选http password活页夹
+
 3.git clone http://192.168.56.17:8080/hadoop-spark.git
 
 4.上传gerrit project项目：
@@ -2484,3 +2485,7 @@ git add java-devops/src/main/java/SimpleApp.java
 
 git show #查看哪些会被push到remote中去
 git review -R  #申请review
+
+步骤三：peer review，从change 到submittable 需要为label打分，label达到一定能分数才能submittable
+入口             ： 菜单all->open 查看上述提交的review 
+配置私有label入口：  菜单project->General->Project command->Edit config
