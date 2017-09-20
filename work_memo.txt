@@ -2441,8 +2441,12 @@ And then force login as the admin, grant yourself access
 安装git-review
 步骤一：
 sudo yum install git-review
-$ git config --global gitreview.remote origin
-$ git config --global gitreview.username myusername
+git config --global gitreview.remote origin
+git config --global gitreview.username myusername
+git config --list
+remote.gerrit.url=ssh://frank@192.168.56.17:29418/hadoop-spark.git
+remote.gerrit.fetch=+refs/heads/*:refs/remotes/gerrit/*
+
 
 步骤二：
 commit内容到repository上去，
@@ -2455,15 +2459,18 @@ project=hadoop-spark.git
 defaultbranch=master
 
 步骤三：
-git review -s
+git review -s  #初始化git review
 ·······
 
 1.把frank放到administration组中去，设置电子邮件，否则下面无法执行gerrit command
-cat ~/.ssh/id_rsa.pub | ssh -p 29418 192.168.56.17  gerrit set-account --add-ssh-key - --add-email publicwu@163.com frank
-2.设置frank用户密码,否则下面一步frank用户无法登入
-操作方法：主页右上角，switch account成frank用户，右上角，点setting按钮，在左边选http password活页夹
+  cat ~/.ssh/id_rsa.pub | ssh -p 29418 192.168.56.17  gerrit set-account --add-ssh-key - --add-email publicwu@163.com frank
+  cat ~/.ssh/id_rsa.pub | ssh -p 29418 frank@192.168.56.17  gerrit set-account --add-ssh-key - --add-email unarywu2@163.com wujr
+  说明:frank@192.168.56.17用frank用户设定的publickey去访问gerrit服务器
 
-3.git clone http://192.168.56.17:8080/hadoop-spark.git
+2.设置frank用户密码,否则下面一步frank用户无法登入
+  操作方法：主页右上角，switch account成frank用户，右上角，点setting按钮，在左边选http password活页夹
+
+3.git clone http://192.168.56.17:8080/hadoop-spark.git  #git clone时用的用户，git review提交审核时也是以这个用户的名义提交审核
 
 4.上传gerrit project项目：
 4/1)
@@ -2490,5 +2497,5 @@ git review -R  #申请review
 知识点：
 1、查看上述提交的review的界面入口             ： 菜单all->open 查看上述提交的review 
 2、配置私有label入口：  菜单project->General->Project command->Edit config
-3、默认组有对review label打分的权限（porject菜单->owner->添加组)，对每个reference也可以设置权限（porject菜单->reference->选add group）
+3、默认组有对review label打分的权限（porject菜单->owner->添加组)，对每个reference也可以设置打分权限（porject菜单->reference->选add group）
 
