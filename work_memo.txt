@@ -2436,7 +2436,7 @@ type = development_become_any_account
 
 And then force login as the admin, grant yourself access
 
-····
+···gerrit work flow·
 
 安装git-review
 步骤一：
@@ -2487,5 +2487,8 @@ git show #查看哪些会被push到remote中去
 git review -R  #申请review
 
 步骤三：peer review，从change 到submittable 需要为label打分，label达到一定能分数才能submittable
-入口             ： 菜单all->open 查看上述提交的review 
-配置私有label入口：  菜单project->General->Project command->Edit config
+知识点：
+1、查看上述提交的review的界面入口             ： 菜单all->open 查看上述提交的review 
+2、配置私有label入口：  菜单project->General->Project command->Edit config
+3、默认组有对review label打分的权限（porject菜单->owner->添加组)，对每个reference也可以设置权限（porject菜单->reference->选add group）
+
