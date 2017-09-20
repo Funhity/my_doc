@@ -2519,6 +2519,6 @@ You can configure your project config in the Gerrit UI.You should follow the fol
   3. - Go to projects > and click List.
   4. - Select your project and click Edit config button.
   5. - Paste your content and click save.
-  6. - 点publish，即使review +2分也不能submit
-  7. - 此时还处于draft状态，到my菜单，选中点publish，此时submit按钮出现
+  6. - 点publish，此时change处于draft状态，即使review +2分也不能submit
+  7. - 到my菜单，选中点publish，此时submit按钮出现
 ······
