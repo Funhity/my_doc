@@ -2499,3 +2499,26 @@ git review -R  #申请review
 2、配置私有label入口：  菜单project->General->Project command->Edit config
 3、默认组有对review label打分的权限（porject菜单->owner->添加组)，对每个reference也可以设置打分权限（porject菜单->reference->选add group）
 
+
+
+····gerrit jenkins·····
+I want to add a "verified" label to my Gerrit project to allow Jenkins to verify that the code builds and passes its tests and so on.I know I need to add a section to project.config as below:[label "Verified"]
+      function = MaxWithBlock
+      value = -1 Fails
+      value =  0 No score
+      value = +1 Verified
+
+However, how do I get to that file to edit it?
+
+
+You can configure your project config in the Gerrit UI.You should follow the following steps:
+
+
+  1. - Launch your Gerrit UI.
+  2. - Login as admin.
+  3. - Go to projects > and click List.
+  4. - Select your project and click Edit config button.
+  5. - Paste your content and click save.
+  6. - 点publish，即使review +2分也不能submit
+  7. - 此时还处于draft状态，到my菜单，选中点publish，此时submit按钮出现
+······
