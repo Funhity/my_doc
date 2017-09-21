@@ -718,6 +718,13 @@ docker commit --change='CMD ["/root/start.sh"]'   --change='ENTRYPOINT ["/tini",
 docker images
 docker rmi training/sinatra
 
+```````docker volume section````
+/var/lib/docker/volumes/<volume-name>
+docker volume prune
+docker volume ls
+docker volume inspect my-vol
+docker volume rm my-vol
+
 ````````docker systemd section``````docker centos7`````
 Dockerfile for systemd base image
 ··········
@@ -2638,7 +2645,25 @@ ansible perf_ngi*  -m shell -a "/etc/init.d/nginx start"
 ansible perf_ngi*  -m shell -a "nginx -v"
 
 systemctl status nginx.service
+``````nginx docker section``````docker compose section````
 
+cat > /root/nginx/docker-compose.yml<<-'EOF'
+web:
+  image: nginx
+  volumes:
+    - /etc/nginx:/etc/nginx
+    - /var/log/nginx:/var/log/nginx
+  ports:
+   - "80:80"
+   - "443:443"
+  environment:
+   - NGINX_HOST=foobar.com
+   - NGINX_PORT=80
+  command: [nginx-debug, '-g', 'daemon off;']
+
+EOF
+cd /root/nginx;docker-compose up -d
+cd /root/nginx;docker-compose stop
 ```````检查配置文件语法````````````
 nginx -t -c /etc/nginx/nginx.conf
 
@@ -2786,25 +2811,7 @@ server {
     server_name example.com;
     # [...]
 }
-````````
 
-cat > /root/nginx/docker-compose.yml<<-'EOF'
-web:
-  image: nginx
-  volumes:
-    - /etc/nginx:/etc/nginx
-    - /var/log/nginx:/var/log/nginx
-  ports:
-   - "80:80"
-   - "443:443"
-  environment:
-   - NGINX_HOST=foobar.com
-   - NGINX_PORT=80
-  command: [nginx-debug, '-g', 'daemon off;']
-
-EOF
-cd /root/nginx;docker-compose up -d
-cd /root/nginx;docker-compose stop
 ==========logrotate section`````````````
 copytruncate instruct logrotate to creates the copy of the original file
  (i.e rotate the original log file) and truncates the original file to zero byte size.
