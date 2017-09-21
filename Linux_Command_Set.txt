@@ -719,11 +719,30 @@ docker images
 docker rmi training/sinatra
 
 ```````docker volume section````
-/var/lib/docker/volumes/<volume-name>
-docker volume prune
+
+
 docker volume ls
 docker volume inspect my-vol
 docker volume rm my-vol
+docker volume prune
+案例：
+       [root@pwc-hp jenkins_home]# docker volume ls
+       DRIVER              VOLUME NAME
+       local               181f8ba1f76f6d6f132ae91f9c9fff2c518d841d00b2137a5457c74de2828b5c
+       local               46b256f42c76c005f2da8c0bd61be501473b3b5adfb68f1f333ce0695706c506
+       local               jenkins_home
+       [root@pwc-hp jenkins_home]# docker volume inspect jenkins_home
+       [
+           {
+               "Driver": "local",
+               "Labels": null,
+               "Mountpoint": "/var/lib/docker/volumes/jenkins_home/_data",
+               "Name": "jenkins_home",
+               "Options": {},
+               "Scope": "local"
+           }
+       ]
+       查出jenkins_home对应dockers host上本地目录：/var/lib/docker/volumes/jenkins_home/_data
 
 ````````docker systemd section``````docker centos7`````
 Dockerfile for systemd base image

@@ -2162,24 +2162,6 @@ salt -C 'cloud* and not cloud18'   cmd.run "svcs chunter"  -t 1800
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #http://tripleo.org/environments/baremetal.html#instackenv
 #To deploy a minimal TripleO cloud with TripleO you need the following baremetal machines:
 
@@ -2437,6 +2419,9 @@ type = development_become_any_account
 And then force login as the admin, grant yourself access
 
 ···gerrit work flow·
+查看git源地址：
+gerrit上：菜单project->List->选中项目，点Repository Browser列对应的项目
+
 
 安装git-review
 步骤一：
@@ -2463,7 +2448,7 @@ git review -s  #初始化git review
 ·······
 
 1.把frank放到administration组中去，设置电子邮件，否则下面无法执行gerrit command
-  cat ~/.ssh/id_rsa.pub | ssh -p 29418 192.168.56.17  gerrit set-account --add-ssh-key - --add-email publicwu@163.com frank
+  cat ~/.ssh/id_rsa.pub | ssh -p 29418 192.168.56.17  gerrit set-account --add-ssh-key - --add-email publicwu@163.com frank  #以frank用户执行
   cat ~/.ssh/id_rsa.pub | ssh -p 29418 frank@192.168.56.17  gerrit set-account --add-ssh-key - --add-email unarywu2@163.com wujr
   说明:frank@192.168.56.17用frank用户设定的publickey去访问gerrit服务器
 
@@ -2522,3 +2507,26 @@ You can configure your project config in the Gerrit UI.You should follow the fol
   6. - 点publish，此时change处于draft状态，即使review +2分也不能submit
   7. - 到my菜单，选中点publish，此时submit按钮出现
 ······
+
+步骤四：:配置jenkins plugin
+
+1）登入jenkins服务器：
+cp -r /var/jenkins_home/.ssh    /var/lib/docker/volumes/jenkins_home/_data
+#在docker宿主机上，jenkins_home对应的目录是/var/lib/docker/volumes/jenkins_home/_data,可用docker volume inspect jenkins_home命令查询
+#历史命令参考：docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts
+2）jenkins上安装Gerrit Trigger插件
+   Manage Jenkins->搜索Gerrit Trigger，在配置trigger的时候，要用wujunrog-username，而不是wujunrong(注册用户时候有2个用户名,一个是简称，另一个是真正的ssh用户名)
+
+
+步骤五:测试stream-events
+ssh -p 29418 wujunrog-username@192.168.56.17  gerrit stream-events
+
+
+
+
+
+
+
+
+
+
