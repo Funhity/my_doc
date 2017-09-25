@@ -2276,15 +2276,17 @@ ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
 
 
 `````````spark section````````````````
+
+#在dockers内安装并运行spark demo程序
+docker run -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro local/c7-systemd:latest bash
+或 docker exec -it youthful_albattani   bash
+
+
 #安装spark
 tar xvf spark-1.3.1-bin-hadoop2.6.tgz 
 mv spark-2.2.0-bin-hadoop2.7 /usr/local/spark
 export PATH=$PATH:/usr/local/spark/bin
 source ~/.bashrc
-
-#在dockers内安装并运行spark demo程序
-docker run -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro local/c7-systemd:latest bash
-或 docker exec -it youthful_albattani   bash
 
 
 #http://spark.apache.org/docs/latest/quick-start.html
@@ -2423,7 +2425,7 @@ And then force login as the admin, grant yourself access
 gerrit上：菜单project->List->选中项目，点Repository Browser列对应的项目
 
 
-安装git-review
+安装git-review  #git review section
 步骤一：
 sudo yum install git-review
 git config --global gitreview.remote origin
@@ -2472,8 +2474,7 @@ git add java-devops/src/main/java/SimpleApp.java
         gitdir=$(git rev-parse --git-dir); scp -p -P 29418 frank@192.168.56.17:hooks/commit-msg ${gitdir}/hooks/
 
 4/4).   git commit -m "wujunrong test gerrit"
-
-
+        或前面的add没有执行的情况下，可执行git commit -a -m "a week before national day"
 
 git show #查看哪些会被push到remote中去
 git review -R  #申请review
@@ -2509,24 +2510,27 @@ You can configure your project config in the Gerrit UI.You should follow the fol
 ······
 
 步骤四：:配置jenkins plugin
-
+https://wiki.jenkins.io/display/JENKINS/Gerrit+Trigger
 1）登入jenkins服务器：
-cp -r /var/jenkins_home/.ssh    /var/lib/docker/volumes/jenkins_home/_data
-#在docker宿主机上，jenkins_home对应的目录是/var/lib/docker/volumes/jenkins_home/_data,可用docker volume inspect jenkins_home命令查询
-#历史命令参考：docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts
+   cp -r /var/jenkins_home/.ssh    /var/lib/docker/volumes/jenkins_home/_data
+   #在docker宿主机上，jenkins_home对应的目录是/var/lib/docker/volumes/jenkins_home/_data,可用docker volume inspect jenkins_home命令查询
+   #历史命令参考：docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts
 2）jenkins上安装Gerrit Trigger插件
    Manage Jenkins->搜索Gerrit Trigger，在配置trigger的时候，要用wujunrog-username，而不是wujunrong(注册用户时候有2个用户名,一个是简称，另一个是真正的ssh用户名)
+   测试stream-events
+   ssh -p 29418 wujunrog-username@192.168.56.17  gerrit stream-events
+3）配置好git后， 要配置$GERRIT_REFSPEC等变量，只有通过stream-events触发genkins，$GERRIT_REFSPEC等变量才会被触发填值
 
+步骤五:
+配置maven
+系统管理->Global Tool Configuration->JDK
+ /var/jenkins_home/workspace/build-spark-enviromnet
 
-步骤五:测试stream-events
-ssh -p 29418 wujunrog-username@192.168.56.17  gerrit stream-events
+步骤六：在maven中安装spark
+docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home  -v /etc/resolv.conf:/etc/resolv.conf jenkins
 
+              docker host上   本地目录： /var/lib/docker/volumes/jenkins_home/_data
+              docker container内的目录： /var/jenkins_home
 
-
-
-
-
-
-
-
-
+docker cp youthful_albattani:/root/spark-2.2.0-bin-hadoop2.7.tgz /root/
+cp /root/spark-2.2.0-bin-hadoop2.7.tgz /var/lib/docker/volumes/jenkins_home/_data/

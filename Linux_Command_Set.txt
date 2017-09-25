@@ -726,6 +726,7 @@ docker volume inspect my-vol
 docker volume rm my-vol
 docker volume prune
 案例：
+       docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home  -v /etc/resolv.conf:/etc/resolv.conf jenkins
        [root@pwc-hp jenkins_home]# docker volume ls
        DRIVER              VOLUME NAME
        local               181f8ba1f76f6d6f132ae91f9c9fff2c518d841d00b2137a5457c74de2828b5c
@@ -742,7 +743,10 @@ docker volume prune
                "Scope": "local"
            }
        ]
-       查出jenkins_home对应dockers host上本地目录：/var/lib/docker/volumes/jenkins_home/_data
+       查出jenkins_home对应dockers host上本地目录：/var/lib/docker/volumes/jenkins_home/_data,
+                                                 其中，/var/lib/docker/volumes/是固定的，
+                                                      jenkins_home对应冒号的左边（jenkins_home:/var/jenkins_home）
+                                                                      冒号的右边是/var/jenkins_home（在container内） 
 
 ````````docker systemd section``````docker centos7`````
 Dockerfile for systemd base image
@@ -6895,6 +6899,12 @@ docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home  -v /et
 4.GitHub Organization Folder Plugin
 5.build-blocker-plugin ： 如果某些job在运行时等待，那么这个job等待
 6.parameterized-trigger：free-style-project开始由一个项目job触发另一个在folder中的项目，When using the "Trigger/Call builds on another project" item.
+
+
+````jenkins jdk````
+  
+系统管理->Global Tool Configuration->JDK
+
 ``````
 安装方法二：
 sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat/jenkins.repo
@@ -8687,6 +8697,7 @@ sudo rm -rf /var/lib/docker
 docker cp  nginx_web_1:/etc/nginx/nginx.conf /etc/nginx/nginx.conf
 docker cp  nginx_web_1:/etc/nginx   /tmp
 docker cp compassionate_bohr:/opt/softether.ovpn  .
+docker cp Dockerfile youthful_albattani:/tmp/
 `````
 sudo mkdir /etc/nginx/ssl
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt
