@@ -2474,8 +2474,8 @@ git review -s  #初始化git review，第一次运行是会让你输入用户名
 
 1.把frank放到administration组中去，设置电子邮件，否则下面无法执行gerrit command
   cat ~/.ssh/id_rsa.pub | ssh -p 29418 192.168.56.17  gerrit set-account --add-ssh-key - --add-email publicwu@163.com frank  #以frank用户执行
-  cat ~/.ssh/id_rsa.pub | ssh -p 29418 frank@192.168.56.17  gerrit set-account --add-ssh-key - --add-email unarywu2@163.com wujr
-  说明:frank@192.168.56.17用frank用户设定的publickey去访问gerrit服务器
+  cat ~/.ssh/id_rsa.pub | ssh -p 29418 frank@192.168.56.17  gerrit set-account --add-ssh-key - --add-email unarywu2@163.com wujr #说明:frank@192.168.56.17用frank用户的publickey去访问gerrit服务器,frank用户是已存在的并已存在email地址的管理员用户，wujr是要在gerrit服务器上设置account的用户
+  
 
 2.设置frank用户密码,否则下面一步frank用户无法登入
   操作方法：主页右上角，switch account成frank用户，右上角，点setting按钮，在左边选http password活页夹
