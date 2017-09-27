@@ -8387,7 +8387,7 @@ sudo yum info  vlc
 .....
 
 kodi or xmbc
-`````
+``vedio section```
 
 sudo yum install  minidlna
 
@@ -8398,6 +8398,8 @@ media_dir=/opt
 http://10.0.1.99:8200/
 
 systemctl start minidlna
+[frank@hp ~]$ sudo iptables -I INPUT 1 -p tcp --dport 8200    -j ACCEPT  #在表前面加
+[frank@hp ~]$ sudo iptables -I INPUT 1 -p udp --dport 1900    -j ACCEPT  #在表前面加
 ========jobs section===========
     如何使得命令进入后台
 	方法一： Appending an ampersand ( & ) to the command runs the job in the background.
