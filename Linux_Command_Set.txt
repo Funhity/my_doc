@@ -5728,7 +5728,9 @@ git commit -a -m "about github"
 ============git section=====
 /etc/gitconfig                                git config  --system 
 ~/.gitconfig or ~/.config/git/config          git config  --global 
-.git/config                                   Specific to that single repository
+
+.git/config                                   #1:Specific to that single repository
+                                              #2:定义了从remote下载哪些分支
 
 ``````````初始化 git``````````
 svn mkdir <url> -m <msg>
@@ -5768,10 +5770,13 @@ git config user.name
   code you’re currently working on.
 
   git remote
-  git remote -v
+  git remote -v  # 显示当前所有remote名称，及其对应的地址       
+                 # Git's default remote name is "origin"
   初始化远程地址
   git remote add salt-office  root@172.16.15.88:/srv/git/svn_repository.git
   git remote set-url origin   root@172.16.15.88:/srv/git/xxd_doc_repo.git
+
+  git remote rm  gerrit
   初始化远程默认push分支，
   git push --set-upstream salt-office master  #推送当前分支并建立与远程上游的跟踪
 
@@ -6927,6 +6932,11 @@ Go to the Jenkins web page and sign up with a new user.
 curl -u wujunrong:wujunrong http://192.168.31.178:8080/job/wu/build?token=abc
 
 /var/jenkins_home/workspace/wu
+
+
+```````
+重新触发jenkins方法：
+在build history中，选择一次正确的build，再弹出的界面中选择retrigger
 ==========nexus section=============================
 user/passwd:admin/admin123
 $ sudo cp nexus-2.13.0-01-bundle.tar.gz /usr/local

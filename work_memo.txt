@@ -2283,7 +2283,7 @@ docker run -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro local/c7-systemd:latest bash
 
 
 #安装spark
-tar xvf spark-1.3.1-bin-hadoop2.6.tgz 
+tar xvf spark-2.2.0-bin-hadoop2.7.tgz
 mv spark-2.2.0-bin-hadoop2.7 /usr/local/spark
 export PATH=$PATH:/usr/local/spark/bin
 source ~/.bashrc
@@ -2413,7 +2413,7 @@ Change-Id site:https://gerrit-documentation.storage.googleapis.com/
 
 
 ······
-登入设置
+gerrit用户设置
 Edit your [auth] statement in gerrit.config to look like this:
 [auth]
 type = development_become_any_account
@@ -2421,32 +2421,47 @@ type = development_become_any_account
 And then force login as the admin, grant yourself access
 
 ···gerrit work flow·
-查看git源地址：
-gerrit上：菜单project->List->选中项目，点Repository Browser列对应的项目
+1.查看git源地址：
+  gerrit上：菜单project->List->选中项目，点Repository Browser列对应的项目
 
+2.设置ssh
+  ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
+  cat .ssh/id_rsa.pub
+  切换用户，在右上角setting选项，在左边添加ssh public key，  
+3.git clone ssh://wujunrog-username@192.168.56.17:29418/hadoop-spark.git
+  用git 来提交， git push origin HEAD:refs/for/master  #https://gerrit-documentation.storage.googleapis.com/Documentation/2.14.3/intro-user.html#upload-change
+  或用下面的git-review软件来提交
 
 安装git-review  #git review section
 步骤一：
 sudo yum install git-review
-git config --global gitreview.remote origin
-git config --global gitreview.username myusername
+
 git config --list
-remote.gerrit.url=ssh://frank@192.168.56.17:29418/hadoop-spark.git
-remote.gerrit.fetch=+refs/heads/*:refs/remotes/gerrit/*
+    remote.gerrit.url=ssh://frank@192.168.56.17:29418/hadoop-spark.git
+    remote.gerrit.fetch=+refs/heads/*:refs/remotes/gerrit/*
 
 
 步骤二：
-commit内容到repository上去，
-或
-cat  .gitreview
+
+用git review来提交
+
+设置git-review
+cat > .gitreview <<EOF
 [gerrit]
 host=192.168.56.17
 port=29418
 project=hadoop-spark.git
 defaultbranch=master
+EOF
 
+git remote -v
+git remote rm gerrit
+git remote add gerrit  ssh://wujunrog-username@192.168.56.17:29418/hadoop-spark.git  #必须包含用户名称wujunrog-username来源（菜单project->List->选中项目，点Repository Browser列对应的项目）
 步骤三：
-git review -s  #初始化git review
+git review -s  #初始化git review，第一次运行是会让你输入用户名称，这个用户名称用来向git 提交change
+    1.Could not connect to gerrit.
+      Enter your gerrit username: wujunrong
+    2.We don't know where your gerrit is. Please manually create a remote
 ·······
 
 1.把frank放到administration组中去，设置电子邮件，否则下面无法执行gerrit command
@@ -2478,6 +2493,8 @@ git add java-devops/src/main/java/SimpleApp.java
 
 git show #查看哪些会被push到remote中去
 git review -R  #申请review
+! [remote rejected] HEAD -> refs/publish/master (no new changes),错误是由于commit的时候没有加-a参数 git commit -a  -m "wujunrong test gerrit tuesday"
+
 
 步骤三：peer review，从change 到submittable 需要为label打分，label达到一定能分数才能submittable
 知识点：
@@ -2528,9 +2545,35 @@ https://wiki.jenkins.io/display/JENKINS/Gerrit+Trigger
 
 步骤六：在maven中安装spark
 docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home  -v /etc/resolv.conf:/etc/resolv.conf jenkins
+`````
+https://github.com/jenkinsci/docker/blob/master/README.md
+docker commit   -c "EXPOSE 50000"   -c "EXPOSE 8080"  187b27435067  pwc/jenkins:lts
+
+cat > /var/lib/docker/volumes/jenkins_home/_data/log.properties <<EOF
+handlers=java.util.logging.ConsoleHandler
+jenkins.level=FINEST
+java.util.logging.ConsoleHandler.level=FINEST
+EOF
+docker run --name pwc_jenkins -p 8080:8080 -p 50000:50000 --env JAVA_OPTS="-Djava.util.logging.config.file=/var/jenkins_home/log.properties"   -v jenkins_home:/var/jenkins_home -v /etc/resolv.conf:/etc/resolv.conf pwc/jenkins:lts
+```````
 
               docker host上   本地目录： /var/lib/docker/volumes/jenkins_home/_data
               docker container内的目录： /var/jenkins_home
 
 docker cp youthful_albattani:/root/spark-2.2.0-bin-hadoop2.7.tgz /root/
 cp /root/spark-2.2.0-bin-hadoop2.7.tgz /var/lib/docker/volumes/jenkins_home/_data/
+
+
+``
+jenkins中编译spark java代码
+#!/bin/bash
+export PATH=$PATH:/var/jenkins_home/spark-2.2.0-bin-hadoop2.7/bin/
+exec &> >(tee /tmp/wujunrong.log)
+ls
+pwd
+date
+cd /var/jenkins_home/workspace/build-spark-enviromnet/default/java-devops
+/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/pwc-maven/bin/mvn package
+
+`````
+spark-submit  --class "SimpleApp"   --master local[4]   target/simple-project-1.0.jar
