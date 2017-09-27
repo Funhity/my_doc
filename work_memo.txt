@@ -2413,12 +2413,17 @@ Change-Id site:https://gerrit-documentation.storage.googleapis.com/
 
 
 ······
+步骤1：
 gerrit用户设置
 Edit your [auth] statement in gerrit.config to look like this:
 [auth]
 type = development_become_any_account
 
 And then force login as the admin, grant yourself access
+
+步骤2：在gerrit服务器上，在docker中用了机器名称，需要把他改成ip地址，否则用户logout后，会访问http://f018b8793a63:8080/
+vi /var/gerrit/review_site/etc/gerrit.config
+canonicalWebUrl = http://192.168.56.17:8080/
 
 ···gerrit work flow·
 1.查看git源地址：
@@ -2580,3 +2585,26 @@ cd /var/jenkins_home/workspace/build-spark-enviromnet/default/java-devops
 
 `````
 spark-submit  --class "SimpleApp"   --master local[4]   target/simple-project-1.0.jar
+
+
+``````````jira section`````
+docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro  --name jira      -p 18080:8080         -p 180:80 pwc/centos7:spark
+用已有的gerrit frank用户在gerrit上创建 jira用户
+chmod 600 /root/.ssh/id_rsa
+cat ~/.ssh/id_rsa.pub| ssh frank@192.168.56.17 -p 29418 gerrit create-account jira --email jira@pwc.com --full-name JIRA --ssh-key -
+
+
+
+https://github.com/MeetMe/jira-gerrit-plugin
+Optionally change the Gerrit search query patterns:
+
+    tr:%s - Look for the issue key in a "Bug:" or "Issue:" footer
+    topic:%s - Look for the issue key in the change Topic (uploaded using HEAD:refs/for/master/(issueKey))
+    message:%s - Look for the issue key in the commit message
+
+https://community.atlassian.com/t5/Questions/JIRA-Gerrit-Plugin-config-issue/qaq-p/41445
+       You should double-check the "Issues Search" value in the Gerrit configuration page. Usually that would be something like message:%s or tr:%s.  Whatever that happens to        be, replace the %s with the JIRA ticket key, and search in Gerrit for that string (i.e., if it's JIRA-123, then look for "tr:JIRA-123" or "message:JIRA-123").  If        Gerrit itself does not return anything for that search query, then the Gerrit plugin also cannot show anything, and you should try changing the search predicate for        something more appropriate.
+
+In my shop, we use "message:%s" and it works fine
+
+```
