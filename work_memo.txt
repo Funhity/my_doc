@@ -2457,11 +2457,14 @@ EOF
 git remote -v
 git remote rm gerrit
 git remote add gerrit  ssh://wujunrog-username@192.168.56.17:29418/hadoop-spark.git  #必须包含用户名称wujunrog-username来源（菜单project->List->选中项目，点Repository Browser列对应的项目）
+
+
 步骤三：
 git review -s  #初始化git review，第一次运行是会让你输入用户名称，这个用户名称用来向git 提交change
     1.Could not connect to gerrit.
       Enter your gerrit username: wujunrong
     2.We don't know where your gerrit is. Please manually create a remote
+后续git review -R还会报错，按照提示安装即可“Hint: To automatically insert Change-Id, install the hook:”
 ·······
 
 1.把frank放到administration组中去，设置电子邮件，否则下面无法执行gerrit command
