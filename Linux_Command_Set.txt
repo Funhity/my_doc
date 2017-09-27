@@ -907,6 +907,7 @@ yum --disablerepo="*" --enablerepo="google" list available
 sudo yum list installed| grep audit
 sudo yum info  minidlna 
 
+
 查询命令在哪个rpm包中
 rpm -q --whatprovides /opt/dell/srvadmin/bin/omreport
 srvadmin-omacore-8.2.0-1739.8348.el6.x86_64
@@ -8395,6 +8396,8 @@ sudo yum install  minidlna
 sudo vi  /etc/minidlna.conf
 media_dir=/opt
 http://10.0.1.99:8200/
+
+systemctl start minidlna
 ========jobs section===========
     如何使得命令进入后台
 	方法一： Appending an ampersand ( & ) to the command runs the job in the background.
