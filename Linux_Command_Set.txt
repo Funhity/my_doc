@@ -718,7 +718,7 @@ docker commit --change='CMD ["/root/start.sh"]'   --change='ENTRYPOINT ["/tini",
 docker images
 docker rmi training/sinatra
 
-```````docker volume section````
+```````docker volume section````docker storage```````````
 
 
 docker volume ls

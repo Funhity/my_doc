@@ -2576,8 +2576,8 @@ docker cp youthful_albattani:/root/spark-2.2.0-bin-hadoop2.7.tgz /root/
 cp /root/spark-2.2.0-bin-hadoop2.7.tgz /var/lib/docker/volumes/jenkins_home/_data/
 
 
-``
-jenkins中编译spark java代码
+```````````````
+jenkins execute shell 中编译spark java代码
 #!/bin/bash
 export PATH=$PATH:/var/jenkins_home/spark-2.2.0-bin-hadoop2.7/bin/
 exec &> >(tee /tmp/wujunrong.log)
@@ -2588,6 +2588,9 @@ cd /var/jenkins_home/workspace/build-spark-enviromnet/default/java-devops
 /var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/pwc-maven/bin/mvn package
 spark-submit  --class "SimpleApp"   --master local[4]   target/simple-project-1.0.jar
 
+ssh root@192.168.56.17  docker cp /var/jenkins_home/workspace/build-spark-enviromnet/default/python-devops/SimpleApp.py spark:/root/gerrit/hadoop-spark/python-devops/SimpleApp.py
+#ssh root@192.168.56.17 docker exec -ti  spark  /usr/local/spark/sbin/start-history-server.sh
+ssh root@192.168.56.17  docker exec spark /usr/local/spark/bin/spark-submit  --master local[4] /root/python-devops/SimpleApp.py
 
 ``````````jira section`````
 docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro  --name jira      -p 18080:8080         -p 180:80 pwc/centos7:spark
