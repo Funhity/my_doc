@@ -7697,7 +7697,7 @@ delegate_dataset=true
 indestructible_delegated=true
 cpu_cap=100
 
-`````fifo console````````
+`````fifo console``````fifo command``
 cd /root/
 git clone https://github.com/project-fifo/pyfi
 cd /root/pyfi/; make
@@ -7961,10 +7961,18 @@ system-zoneinit:default.log
 vmadm:/zones/<ZONE_ID>/root/tmp/vm.log {1-9}
 
 /zones/62be1fa4-85af-c690-9364-9b997b96bb5f/root/var/svc/log
+·····Bryan M. Cantrill, Joyent section```
+svcs -L ntp
+cat `svcs -L ntp`
+svcs -LZ                      # every log on every zones
+ls -tal `svcs -LZ` | head -10 # ten most recently touched log file 
+ls -ltr                       # 倒序列出最后修改的过的文件
+
 ``````smartos provison`````
   * /zones/<uuid>/root/var/svc/log/system-zoneinit\:default.log
   * /zones/<uuid>/root/var/svc/log/smartdc-mdata\:fetch.log
   * /zones/<uuid>/root/var/svc/log/smartdc-mdata\:execute.log
+
 
 
 ```````````
