@@ -2356,11 +2356,14 @@ public class SimpleApp {
     spark.stop();
   }
 }
-
+cd /root/java-devops
 mvn package
 /usr/local/spark/bin/spark-submit   --class "SimpleApp"   --master local[4]   target/simple-project-1.0.jar
 
-`````spark python section
+
+
+
+`````spark python section``````````
 #步骤六：运行python版本的例子
 SPARK_HOME=/usr/local/spark
 export PYTHONPATH=$SPARK_HOME/python:$PYTHONPATH
@@ -2387,13 +2390,13 @@ SPARK_HOME=/usr/local/spark
 export PYTHONPATH=$SPARK_HOME/python:$PYTHONPATH
 export PYTHONPATH=$SPARK_HOME/python/lib/py4j-0.10.4-src.zip:$PYTHONPATH
 /usr/local/spark/bin/spark-submit  --master local[4] /root/python-devops/SimpleApp.py 
-步骤六：制作docker镜像
+步骤六：制作docker镜像(迁移docker container场景)
 docker commit --change='CMD ["/usr/sbin/init"]'    -c "EXPOSE 80" -c "EXPOSE 4040"  1e5037d756a3      local/c7-systemd-spark:example-shell-java-python
 docker tag local/c7-systemd-spark:example-shell-java-python  localhost:5000/c7-systemd-spark:example-shell-java-python
 ssh -R     5000:127.0.0.1:5000   frank@139.219.100.43
 
 
-#步骤七：在另一台机器上运行装有spark的docker
+#步骤七：在另一台机器上运行装有spark的docker(迁移docker container场景)
 docker pull 139.219.100.43:5000/c7-systemd-spark:example-shell-java-python
 查看ropository中有多少image
 方法一：
@@ -2402,10 +2405,11 @@ http://139.219.100.43:5000/v2/_catalog
 /var/lib/docker/volumes/181f8ba1f76f6d6f132ae91f9c9fff2c518d841d00b2137a5457c74de2828b5c/_data/docker/registry/v2/repositories
 
 docker run -ti -p 4040:4040 -p 18080:18080   139.219.100.43:5000/c7-systemd-spark:example-shell-java-python bash
- mkdir /tmp/spark-events
+通过网页浏览查看历史运行数据（只有python程序支持）：
+mkdir /tmp/spark-events
 /usr/local/spark/sbin/start-history-server.sh
 /usr/local/spark/bin/spark-submit  --master local[4] --conf spark.eventLog.enabled=true  /root/python-devops/SimpleApp.py
-
+网页地址http://192.168.56.17:38080  #docker run --name spark -ti -p 4040:4040 -p 38080:18080  -p 280:80 pwc/centos7:spark bash
 
 ```gerrit section````
 搜索文档：
@@ -2572,8 +2576,8 @@ docker cp youthful_albattani:/root/spark-2.2.0-bin-hadoop2.7.tgz /root/
 cp /root/spark-2.2.0-bin-hadoop2.7.tgz /var/lib/docker/volumes/jenkins_home/_data/
 
 
-``
-jenkins中编译spark java代码
+```````````````
+jenkins execute shell 中编译spark java代码
 #!/bin/bash
 export PATH=$PATH:/var/jenkins_home/spark-2.2.0-bin-hadoop2.7/bin/
 exec &> >(tee /tmp/wujunrong.log)
@@ -2582,10 +2586,11 @@ pwd
 date
 cd /var/jenkins_home/workspace/build-spark-enviromnet/default/java-devops
 /var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/pwc-maven/bin/mvn package
-
-`````
 spark-submit  --class "SimpleApp"   --master local[4]   target/simple-project-1.0.jar
 
+ssh root@192.168.56.17  docker cp /var/jenkins_home/workspace/build-spark-enviromnet/default/python-devops/SimpleApp.py spark:/root/gerrit/hadoop-spark/python-devops/SimpleApp.py
+#ssh root@192.168.56.17 docker exec -ti  spark  /usr/local/spark/sbin/start-history-server.sh
+ssh root@192.168.56.17  docker exec spark /usr/local/spark/bin/spark-submit  --master local[4] /root/python-devops/SimpleApp.py
 
 ``````````jira section`````
 docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro  --name jira      -p 18080:8080         -p 180:80 pwc/centos7:spark

@@ -718,7 +718,7 @@ docker commit --change='CMD ["/root/start.sh"]'   --change='ENTRYPOINT ["/tini",
 docker images
 docker rmi training/sinatra
 
-```````docker volume section````
+```````docker volume section````docker storage```````````
 
 
 docker volume ls
@@ -782,7 +782,7 @@ docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /home/fran
 
 ````docker port section```docker ipv6 section`
 https://github.com/moby/moby/issues/2174
-问题描述：-p 80:80开放端口后可以telnet 通，但用其他机器telnet不通
+问题描述：-p 80:80开放端口后可以telnet 通，但用其他机器telnet不通这台机器
 方案一：I enabled IPv6 forwarding on all interfaces by uncommenting the entry with: net.ipv6.conf.all.forwarding=1 in the /etc/sysctl.conf
 方案二：上一次查出问题是ip 转发功能没打开，导致只有ipv6相关端口，没有ipv4相关端口
 echo 1 > /proc/sys/net/ipv4/ip_forward
