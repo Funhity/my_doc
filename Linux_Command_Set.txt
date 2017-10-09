@@ -4399,7 +4399,10 @@ ssh -R     3389:127.0.0.1:3389   frank@139.219.100.43   #在公司机器上运�
 在家里执行： ssh -R     3389:127.0.0.1:3389   frank@139.219.100.43
             公司访问家里windows用3389端口
 
-········
+·····ssh proxy dynamic section···
+https://unix.stackexchange.com/posts/233862/edit
+#用ssh实现sock代理，在proxychains设置端口，相当于在linux上设置代理服务器端口
+
 ssh proxy on ubuntu:
 步驟一：安裝proxychains
 sudo apt-get install proxychains
@@ -4417,7 +4420,11 @@ service sshd restart
 
 步驟三：
 ssh -D 8000 root@139.196.102.159
-sudo proxychains   apt-get -y install docker-ce
+sudo proxychains
+
+步骤四 
+使用代理安装程序
+apt-get -y install docker-ce
 
 
 
