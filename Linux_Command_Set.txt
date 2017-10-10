@@ -894,9 +894,12 @@ rm -f /var/cache/yum/x86_64/6/timedhosts.txt
 
 yum install yum-plugin-priorities
 priority=2
+ 
 
-``````
+``apt-get search section````
 aptitude search '~i'
+apt-cache search libappindicator3
+
 apt list --installed | grep virtual
 sudo apt-get remove virtualbox-5.1
 `````````list the contents of a package using YUM````````
@@ -5171,7 +5174,18 @@ boot: Not enough free disk space when upgrading
 方法一：sudo apt-get purge $(dpkg -l linux-{image,headers}-"[0-9]*" | awk '/ii/{print $2}' | grep -ve "$(uname -r | sed -r 's/-[a-z]+//')")
 方法二：A more concise command to purge all old kernels is: sudo apt-get autoremove --purge
 
-------
+````ubuntu ssh section```lantern section`
+ apt-get update
+ apt-get install openssh-server
+ systemctl start ssh 
+ service ssh start
+ wget https://raw.githubusercontent.com/getlantern/lantern-binaries/master/lantern-installer-64-bit.deb
+ dpkg -i lantern-installer-64-bit.deb
+ apt-cache search libappindicator3
+ apt-get install libappindicator3-1
+
+
+`````ubuntu network section`````
 
 cat  /etc/network/interfaces
 # interfaces(5) file used by ifup(8) and ifdown(8)
