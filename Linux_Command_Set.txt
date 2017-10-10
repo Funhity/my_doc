@@ -5864,7 +5864,8 @@ git中的文件重命名
        git mv ci_fifo.sh fifo_install_salt_command_line.sh
 ``````
 git status
-git status -s                             #Short Status,??表示没有add的文件，两个M，左边的M表示the status of the staging area，右边的M表示the right-hand column indicates the status of the working tree
+git status -s                             #Short Status,??表示没有add的文件，两个M，左边的M表示the status of the staging area，
+                                                                                  右边的M表示the right-hand column indicates the status of the working tree
 git commit -a -m 'added new benchmarks'   #Skipping the Staging Area
 ``````git stash section`````
 #使用场景：Stashing takes the dirty state of your working directory – that is, your modified tracked files and staged changes – and saves it on a stack of unfinished changes that you can reapply at any time.
@@ -5911,7 +5912,7 @@ git diff HEAD~2 HEAD -- main.c
 ```````````````````````
 #fetch 和 checkout的关系
  git fetch origin                             #只能获得origin/serverfix，但没有本地分支，可以通过merge到本地分支的方法来继续工作
- git checkout -b serverfix origin/serverfix   #能获得本地分支serverfix，可以在此分支上修改
+ git checkout -b serverfix origin/serverfix   #能获得本地分支serverfix，可以在此分支上修改;checkout只和本地分支有关
 ```````````````````````
 git remote add pb https://github.com/paulboone/ticgit
 git fetch  pb
