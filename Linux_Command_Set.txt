@@ -4403,7 +4403,9 @@ ssh -R     3389:127.0.0.1:3389   frank@139.219.100.43   #在公司机器上运�
             公司访问家里windows用3389端口
 
 ·····ssh proxy dynamic section···
-https://unix.stackexchange.com/posts/233862/edit
+#https://www.codeproject.com/Tips/634228/How-to-Use-Proxychains-Forwarding-Ports
+#proxy traffic from one application on your local computer through another application on your local computer. That's what proxychains does. 
+#https://unix.stackexchange.com/posts/233862/edit
 #用ssh实现sock代理，在proxychains设置端口，相当于在linux上设置代理服务器端口
 
 ssh proxy on ubuntu:
@@ -5848,26 +5850,26 @@ The basic Git workflow goes something like this:
 
 ```````git 标准操作流程````git workflow section````
 https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository
-1.添加文件
+步骤1.  添加文件
 git add CONTRIBUTING.md
-2.修改文件,git status查询时CONTRIBUTING.md文件会出现两次，此时用git commit修改内容不会进入本地repository
-   $ git status
-   On branch master
-   Your branch is up-to-date with 'origin/master'.
-   #staging area
-   Changes to be committed:                                    
-     (use "git reset HEAD <file>..." to unstage)
-   
-       new file:   README
+步骤2.  修改文件,git status查询时CONTRIBUTING.md文件会出现两次，此时用git commit修改内容不会进入本地repository
+        $ git status
+        On branch master
+        Your branch is up-to-date with 'origin/master'.
+        #staging area
+        Changes to be committed:                                    
+          (use "git reset HEAD <file>..." to unstage)
+        
+            new file:   README
+            modified:   CONTRIBUTING.md
+        #working tree
+        Changes not staged for commit:                                
+          (use "git add <file>..." to update what will be committed)
+          (use "git checkout -- <file>..." to discard changes in working directory)
+        
        modified:   CONTRIBUTING.md
-   #working tree
-   Changes not staged for commit:                                
-     (use "git add <file>..." to update what will be committed)
-     (use "git checkout -- <file>..." to discard changes in working directory)
-   
-       modified:   CONTRIBUTING.md
-3.git add CONTRIBUTING.md  #think of it more as “add this content to the next commit” rather than “add this file to the project”.
-  此时用git commit修改会进入本地repository
+步骤3.  git add CONTRIBUTING.md  #think of it more as “add this content to the next commit” rather than “add this file to the project”.
+步骤4.  此时用git commit修改会进入本地repository
 ````````````````````````````
 #Git - List all files currently under source control?列出被git管理的文件：
        git ls-tree -r master --name-only 

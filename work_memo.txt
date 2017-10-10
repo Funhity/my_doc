@@ -2612,4 +2612,4 @@ https://community.atlassian.com/t5/Questions/JIRA-Gerrit-Plugin-config-issue/qaq
 
 In my shop, we use "message:%s" and it works fine
 
-```
+teamview:G6H2 H88C PPDK V44L
