@@ -6016,10 +6016,11 @@ tree
 
 git cat-file -p master^{tree}
 `````git history 问题诊断···
+git log --diff-filter=D --summary          #查看所有delete操作
 git diff COMMIT^ COMMIT                    #will show you the difference between that COMMIT's ancestor and the COMMIT
 git rev-list --all     -- foo.txt                     #This will give you a list of all commits containing foo.txt.
 git rev-list --all --remotes --pretty=oneline foo.txt
-
+       
                                            #https://stackoverflow.com/questions/6311226/query-git-reflog-for-all-commits-to-a-specific-file
 git rev-list -n 5 HEAD -- <file_path>      #Find the last commit that affected the given path. As the file isn't in the HEAD commit, this commit must have deleted it.
                                            #https://stackoverflow.com/questions/953481/find-and-restore-a-deleted-file-in-a-git-repository
