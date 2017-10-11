@@ -852,7 +852,7 @@ docker run --volumes-from dbdata -v $(pwd):/backup ubuntu tar cvf /backup/backup
 
 
 ``````docker repository section````docker private repository`
-步骤一：在第一台机器上创建repository
+步骤一：在第一台机器上安装private repository
        [root@docker1 ~]# docker run -d -p 5000:5000 --restart=always --name registry registry:2
 步骤二：在第二台机器上上传docker image
        [root@docker2 ~]# docker tag nginx  10.0.1.8:5000/nginx-wujunrong-private-repository-test
@@ -4005,6 +4005,10 @@ sudo virt-install  -n docker-test2  -r 2048 --disk=path=/home/frank/HPDisk/kvm/d
 
 pxe:		
 virt-install -n centos6-pxe -r 1024  --vcpus=2  --disk=path=/home/frank/my-vm/kvm/images/test-pxe.qcow2   --network bridge=br0   --network bridge=virbr0    --os-type=linux  --graphics vnc,password=w123456,listen=0.0.0.0   --os-variant=rhel6 --pxe --force
+
+安装失败，删除原有虚拟机流程：
+virsh shutdown pwc
+virsh undefine pwc
 
 ``````use exeisting image``````````
           virt-install --connect qemu:///system --ram 1024 -n rhel_64 -r 2048 --os-type=linux --os-variant=rhel5  --disk path=/root/RHEL-Server-5.8-64-virtio.qcow2,device=disk,bus=virtio,format=qcow2 --vcpus=2 --vnc --noautoconsole --import

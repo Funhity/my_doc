@@ -2264,6 +2264,14 @@ http://192.168.23.1:3000
 sudo hiera admin_password
 
 ====pwc section===
+
+
+
+`````pwc kvm````
+qemu-img create -f qcow2  /home/frank/HPDisk/kvm/pwc.qcow2 100G
+sudo virt-install  -n pwc  -r 2048 --disk=path=/home/frank/HPDisk/kvm/pwc.qcow2   --location /home/frank/Downloads/CentOS-7-x86_64-Minimal-1611.iso   --nographics  -w bridge:bridge0  --initrd-inject=/home/frank/anaconda-ks.cfg.centos7-kvm-yibaba   --extra-args "ks=file:/anaconda-ks.cfg.centos7-kvm-yibaba console=ttyS0,115200 ksdevice=eth0 ip=10.0.1.198 netmask=255.255.255.0 dns=10.0.1.1 gateway=10.0.1.1"
+
+````````````````````
 ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N '' 
 在公司家里都执行：ssh-copy-id -i ~/.ssh/id_rsa.pub frank@139.219.100.43
 在公司执行： ssh -R     1977:127.0.0.1:3389   frank@139.219.100.43
@@ -2274,7 +2282,7 @@ ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
 /usr/libexec/qemu-kvm -name guest=undercloud,debug-threads=on -S -object secret,id=masterKey0,format=raw,file=/home/stack/.config/libvirt/qemu/lib/domain-1-undercloud/master-key.aes -machine pc-i440fx-rhel7.3.0,accel=kvm,usb=off -cpu Skylake-Client,+ds,+acpi,+ss,+ht,+tm,+pbe,+dtes64,+monitor,+ds_cpl,+vmx,+smx,+est,+tm2,+xtpr,+pdcm,+osxsave,+tsc_adjust,+clflushopt,+pdpe1gb,-avx,-avx2 -m 12288 -realtime mlock=off -smp 6,sockets=6,cores=1,threads=1 -uuid da53a3ab-1a3c-4330-b4a4-0d3eb5e1fb62 -no-user-config -nodefaults -chardev socket,id=charmonitor,path=/home/stack/.config/libvirt/qemu/lib/domain-1-undercloud/monitor.sock,server,nowait -mon chardev=charmonitor,id=monitor,mode=control -rtc base=utc,driftfix=slew -global kvm-pit.lost_tick_policy=discard -no-hpet -no-shutdown -boot menu=off,strict=on -device piix3-usb-uhci,id=usb,bus=pci.0,addr=0x1.0x2 -drive file=/home/stack/pool/undercloud.qcow2,format=qcow2,if=none,id=drive-virtio-disk0 -device virtio-blk-pci,scsi=off,bus=pci.0,addr=0x5,drive=drive-virtio-disk0,id=virtio-disk0,bootindex=1 -netdev tap,fd=25,id=hostnet0 -device virtio-net-pci,netdev=hostnet0,id=net0,mac=00:aa:2d:6e:e8:5a,bus=pci.0,addr=0x3 -netdev tap,fd=26,id=hostnet1 -device virtio-net-pci,netdev=hostnet1,id=net1,mac=00:aa:2d:6e:e8:58,bus=pci.0,addr=0x4 -chardev pty,id=charserial0 -device isa-serial,chardev=charserial0,id=serial0 -vnc 127.0.0.1:0 -device cirrus-vga,id=video0,bus=pci.0,addr=0x2 -device virtio-balloon-pci,id=balloon0,bus=pci.0,addr=0x6 -msg timestamp=on
 
 
-`````demo section``````
+`````demo section````pwc backup section``
 
 
 docker inspect 58e872eebcd3 |less -i
