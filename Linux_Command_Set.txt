@@ -711,12 +711,17 @@ eval $(docker-machine env docker2)
 
 ``````dockerfile section```````````
 sudo docker build -t ouruser/sinatra:v2 .
-docker commit c3f279d17e0a  SvenDowideit/testimage:version3
-docker commit --change='CMD ["apachectl", "-DFOREGROUND"]'                               -c "EXPOSE 80"    c3f279d17e0a       SvenDowideit/testimage:version4
-docker commit --change='CMD ["/root/start.sh"]'   --change='ENTRYPOINT ["/tini", "--"]'  -c "EXPOSE 8080"  pensive_austin    xxd-tomcat:final
+
+
 ``````docker image section```````
 docker images
 docker rmi training/sinatra
+
+#container->images
+docker commit c3f279d17e0a  SvenDowideit/testimage:version3
+docker commit --change='CMD ["apachectl", "-DFOREGROUND"]'                               -c "EXPOSE 80"    c3f279d17e0a       SvenDowideit/testimage:version4
+docker commit --change='CMD ["/root/start.sh"]'   --change='ENTRYPOINT ["/tini", "--"]'  -c "EXPOSE 8080"  pensive_austin     xxd-tomcat:final
+docker commit   -c "EXPOSE 50000"   -c "EXPOSE 8080"  187b27435067  pwc/jenkins:lts
 
 ```````docker volume section````docker storage```````````
 
@@ -809,7 +814,9 @@ sudo docker start reverent_hopper
 docker port sharp_tesla
 docker attach 0cfbc636ba81
 
-docker inspect angry_leakey | less
+docker inspect angry_leakey | less -i
+docker inspect --format="{{json .Config.ExposedPorts }}"  pwc_jenkins
+
 
 more /var/log/docker 
 To detach the tty without exiting the shell, use the escape sequence Ctrl+p + Ctrl+q.
@@ -2569,6 +2576,11 @@ dd Delete line
 d$ Delete to end of line
 d^ (d caret, not CTRL d) Delete to beginning of line
 
+`````
+#忽略大小写:
+You need to use the \c escape sequence. So:
+/\ccopyright
+
 `````````````````````
 column mode: CTRL-V
 Ctrl + V to go into column mode.
@@ -2591,7 +2603,7 @@ Searching and Replacing
 :%s/HOME=\/var\/lib\/zabbix/HOME=\/etc\/zabbix/g
 
 ````less section```````
- 忽略大小写
+ #忽略大小写
  less -i dataset_install_2017-06-07-19_57.log
 =======================  sudo section   ========================   
 命令：visudo //press escape, then type ZZ
@@ -6015,7 +6027,7 @@ git cat-file -t d8329fc1cc938780ffdd9f94e0d364e0ea74f579
 tree
 
 git cat-file -p master^{tree}
-`````git history 问题诊断···
+`````git history 问题诊断···git troubleshooting······
 git log --diff-filter=D --summary          #查看所有delete操作
 git diff COMMIT^ COMMIT                    #will show you the difference between that COMMIT's ancestor and the COMMIT
 git rev-list --all     -- foo.txt                     #This will give you a list of all commits containing foo.txt.
