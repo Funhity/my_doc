@@ -6015,7 +6015,7 @@ git cat-file -t d8329fc1cc938780ffdd9f94e0d364e0ea74f579
 tree
 
 git cat-file -p master^{tree}
-`````git问题诊断···
+`````git history 问题诊断···
 git diff COMMIT^ COMMIT                    #will show you the difference between that COMMIT's ancestor and the COMMIT
 git rev-list --all     -- foo.txt                     #This will give you a list of all commits containing foo.txt.
 git rev-list --all --remotes --pretty=oneline foo.txt
