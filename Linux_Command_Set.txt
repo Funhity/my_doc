@@ -4437,11 +4437,11 @@ service sshd restart
 
 步驟三：
 ssh -D 8000 root@139.196.102.159
-sudo proxychains
+
 
 步骤四 
-使用代理安装程序
-apt-get -y install docker-ce
+#使用代理安装程序,注意用proxychains开头
+proxychains apt-get -y install docker-ce 
 
 
 
@@ -8842,7 +8842,7 @@ Edit your [auth] statement in gerrit.config to look like this:
 type = development_become_any_account
 And then force login as the admin, grant yourself access and then restore the [auth] config.
 
-==========dash section========- section=========
+==========dash section========- section======standard output section===
 
 find . -type f -print0 | tar -czvf backup.tar.gz --null -T -
 https://gerrit-documentation.storage.googleapis.com/Documentation/2.14.3/cmd-set-account.html
