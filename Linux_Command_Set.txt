@@ -6015,6 +6015,14 @@ git cat-file -t d8329fc1cc938780ffdd9f94e0d364e0ea74f579
 tree
 
 git cat-file -p master^{tree}
+`````git问题诊断···
+git diff COMMIT^ COMMIT                    #will show you the difference between that COMMIT's ancestor and the COMMIT
+git rev-list --all     -- foo.txt                     #This will give you a list of all commits containing foo.txt.
+git rev-list --all --remotes --pretty=oneline foo.txt
+
+                                           #https://stackoverflow.com/questions/6311226/query-git-reflog-for-all-commits-to-a-specific-file
+git rev-list -n 5 HEAD -- <file_path>      #Find the last commit that affected the given path. As the file isn't in the HEAD commit, this commit must have deleted it.
+                                           #https://stackoverflow.com/questions/953481/find-and-restore-a-deleted-file-in-a-git-repository
 ===========zabbix section===========
 zabbix_server --version
 zabbix-server-mysql.x86_64 : Zabbix server compiled to use MySQL database
