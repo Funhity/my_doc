@@ -575,6 +575,7 @@ EOF
 
 sudo yum -y install docker-engine
 systemctl start docker.service
+systemctl enable docker.service
 docker pull centos:7
 docker pull centos:6
 `````````````
@@ -6680,7 +6681,7 @@ ipmitool sdr type 'Power Supply'
 ```````````````
 curl -k http://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2013Q3-x86_64.tar.gz | gzcat | tar -xf -
 
-=======cx_Oracle section===========
+=======cx_Oracle section====
 yum install -y libxml2 libxslt libxslt-devel python-setuptools python-pip
 yum -y install subversion
 yum -y groupinstall "Development Tools"
@@ -6690,6 +6691,13 @@ yum localinstall cx_Oracle-5.2.1-11g-py26-1.x86_64.rpm
 pip install python-docx
 pip install cx_Oracle
 pip install sqlalchemy
+
+
+===pip section====
+yum -y install python
+wget https://bootstrap.pypa.io/get-pip.py
+python get-pip.py
+
 
 
 =========ntp section=========
