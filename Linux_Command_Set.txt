@@ -6695,10 +6695,14 @@ pip install sqlalchemy
 
 ===pip section====
 yum -y install python
-wget https://bootstrap.pypa.io/get-pip.py
-python get-pip.py
+yum -y install python-setuptools && easy_install pip
+#wget https://bootstrap.pypa.io/get-pip.py
+#python get-pip.py
+pip install -vvv  shadowshocks
+pip install shadowsocks
 
-
+sslocal -s 服务器域名或IP -p 服务器端口号 -k “密码” -l 1080 -t 600 -m rc4-md5
+sslocal -s 104.250.146.212 -p 15770 -k  "68187067" -t 600 -m AES-256-CFB
 
 =========ntp section=========
  yum -y install ntp
