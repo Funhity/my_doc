@@ -4426,14 +4426,14 @@ ssh -R     3389:127.0.0.1:3389   frank@139.219.100.43   #在公司机器上运�
 #用ssh实现sock代理，在proxychains设置端口，相当于在linux上设置代理服务器端口
 
 ssh proxy on ubuntu:
-步驟一：安裝proxychains  #proxychains section
+步驟一：安裝proxychains  #proxychains section，使用本地端口代理翻墙
 sudo apt-get install proxychains
 turn off proxy_dns or use 127.0.0.1 as your app server address instead of localhost.
 sudo vi /etc/proxychains.conf
 edit the port number on the last line
 socks4  127.0.0.1 8000
 
-步驟二：
+步驟二：配置ssh
 in /etc/ssh/sshd_config on the server, AllowTcpForwarding is enabled, as like below.
 Code:
 AllowTcpForwarding yes
@@ -6707,7 +6707,7 @@ sslocal -s 服务器域名或IP -p 服务器端口号 -k “密码” -l 1080 -t
 sslocal -s 104.250.146.212 -p 15770 -k  "68187067" -t 600 -m AES-256-CFB
 017-10-12 17:27:15 INFO     loading libcrypto from libcrypto.so.10
 2017-10-12 17:27:15 INFO     starting local at 127.0.0.1:108
-
+然后配置 proxychains 使得应用程序用本地端口代理翻墙
 ····proxychains section···
 #centos:
 #https://techglimpse.com/install-proxychains-internet-behind-proxy-firewall/
@@ -6719,7 +6719,15 @@ cd proxychains-ng/
 ./configure
 make && make install
 make install-config
-vi /usr/local/etc/proxychains.conf
+vi /usr/local/etc/proxychains.conf  #在最后一行增加 socks4 127.0.0.1 1080
+   [ProxyList]
+   # add proxy here ...
+   # meanwile
+   # defaults set to "tor"
+   #socks4         127.0.0.1 9050
+   socks4 127.0.0.1 1080
+
+proxychains4 docker pull registry
 
 
 =========ntp section=========
