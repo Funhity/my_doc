@@ -4426,7 +4426,7 @@ ssh -R     3389:127.0.0.1:3389   frank@139.219.100.43   #在公司机器上运�
 #用ssh实现sock代理，在proxychains设置端口，相当于在linux上设置代理服务器端口
 
 ssh proxy on ubuntu:
-步驟一：安裝proxychains
+步驟一：安裝proxychains  #proxychains section
 sudo apt-get install proxychains
 turn off proxy_dns or use 127.0.0.1 as your app server address instead of localhost.
 sudo vi /etc/proxychains.conf
@@ -4447,6 +4447,7 @@ ssh -D 8000 root@139.196.102.159
 步骤四 
 #使用代理安装程序,注意用proxychains开头
 proxychains apt-get -y install docker-ce 
+
 
 
 
@@ -4606,10 +4607,11 @@ mesg(1) permission set to yes
 system monitor: sudo iostat -x 10
                 sudo iotop
 ====disk section==fdisk section==
+yum -y install iotop                 #查看磁盘系统读取速率
 sudo fdisk -l
 或   lsblk
-sudo yum install gparted #磁盘分区工具
-parted -s /dev/sdb print #disk section
+sudo yum install gparted          #磁盘分区工具
+parted -s /dev/sdb print          #disk section
 sudo mount /dev/sdb1   /home/frank/kvm/images/my-wd-disk/
 sudo yum -y install iotop
 =====smartos io section=========
@@ -6693,7 +6695,7 @@ pip install cx_Oracle
 pip install sqlalchemy
 
 
-===pip section====
+===pip section===shadowsocks section=
 yum -y install python
 yum -y install python-setuptools && easy_install pip
 #wget https://bootstrap.pypa.io/get-pip.py
@@ -6703,6 +6705,22 @@ pip install shadowsocks
 
 sslocal -s 服务器域名或IP -p 服务器端口号 -k “密码” -l 1080 -t 600 -m rc4-md5
 sslocal -s 104.250.146.212 -p 15770 -k  "68187067" -t 600 -m AES-256-CFB
+017-10-12 17:27:15 INFO     loading libcrypto from libcrypto.so.10
+2017-10-12 17:27:15 INFO     starting local at 127.0.0.1:108
+
+····proxychains section···
+#centos:
+#https://techglimpse.com/install-proxychains-internet-behind-proxy-firewall/
+#https://echohn.github.io/2016/05/29/to-build-the-fullstack-tools-for-over-the-wall/
+sudo yum -y install git 
+sudo yum -y groupinstall  "Development Tools"
+git clone https://github.com/rofl0r/proxychains-ng.git
+cd proxychains-ng/
+./configure
+make && make install
+make install-config
+vi /usr/local/etc/proxychains.conf
+
 
 =========ntp section=========
  yum -y install ntp
