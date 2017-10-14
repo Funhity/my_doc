@@ -2282,7 +2282,7 @@ ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
 /usr/libexec/qemu-kvm -name guest=undercloud,debug-threads=on -S -object secret,id=masterKey0,format=raw,file=/home/stack/.config/libvirt/qemu/lib/domain-1-undercloud/master-key.aes -machine pc-i440fx-rhel7.3.0,accel=kvm,usb=off -cpu Skylake-Client,+ds,+acpi,+ss,+ht,+tm,+pbe,+dtes64,+monitor,+ds_cpl,+vmx,+smx,+est,+tm2,+xtpr,+pdcm,+osxsave,+tsc_adjust,+clflushopt,+pdpe1gb,-avx,-avx2 -m 12288 -realtime mlock=off -smp 6,sockets=6,cores=1,threads=1 -uuid da53a3ab-1a3c-4330-b4a4-0d3eb5e1fb62 -no-user-config -nodefaults -chardev socket,id=charmonitor,path=/home/stack/.config/libvirt/qemu/lib/domain-1-undercloud/monitor.sock,server,nowait -mon chardev=charmonitor,id=monitor,mode=control -rtc base=utc,driftfix=slew -global kvm-pit.lost_tick_policy=discard -no-hpet -no-shutdown -boot menu=off,strict=on -device piix3-usb-uhci,id=usb,bus=pci.0,addr=0x1.0x2 -drive file=/home/stack/pool/undercloud.qcow2,format=qcow2,if=none,id=drive-virtio-disk0 -device virtio-blk-pci,scsi=off,bus=pci.0,addr=0x5,drive=drive-virtio-disk0,id=virtio-disk0,bootindex=1 -netdev tap,fd=25,id=hostnet0 -device virtio-net-pci,netdev=hostnet0,id=net0,mac=00:aa:2d:6e:e8:5a,bus=pci.0,addr=0x3 -netdev tap,fd=26,id=hostnet1 -device virtio-net-pci,netdev=hostnet1,id=net1,mac=00:aa:2d:6e:e8:58,bus=pci.0,addr=0x4 -chardev pty,id=charserial0 -device isa-serial,chardev=charserial0,id=serial0 -vnc 127.0.0.1:0 -device cirrus-vga,id=video0,bus=pci.0,addr=0x2 -device virtio-balloon-pci,id=balloon0,bus=pci.0,addr=0x6 -msg timestamp=on
 
 
-`````demo section````pwc backup section``
+`````demo section````pwc backup section`````pwc demo section````
 
 
 docker inspect 58e872eebcd3 |less -i
@@ -2294,6 +2294,21 @@ docker commit   -c "EXPOSE 50000"   -c "EXPOSE 8080"  e8403a745904   pwc/jenkins
 docker commit   -c "EXPOSE 80"      -c "EXPOSE 8080"  jira           pwc/jira:20171011
 docker commit   -c "EXPOSE 4040"  -c "EXPOSE 18080"   -c "EXPOSE 8080"  -c "EXPOSE 80"  spark pwc/spark_env:20171011
 docker commit   -c "EXPOSE 29418"   -c "EXPOSE 8080"  nifty_neumann   pwc/gerrit:20171011
+
+
+docker tag pwc/gerrit:20171011  10.0.1.198:5000/pwc/gerrit:20171011
+docker tag pwc/spark_env:20171011  10.0.1.198:5000/pwc/spark_env:20171011
+docker tag pwc/jira:20171011  10.0.1.198:5000/pwc/jira:20171011
+docker tag pwc/jenkins:20171011  10.0.1.198:5000/pwc/jenkins:20171011
+
+cat > /etc/docker/daemon.json <<-EOF
+        { "insecure-registries":["10.0.1.198:5000"] }
+EOF
+       systemctl restart  docker.service
+docker push 10.0.1.198:5000/pwc/gerrit:20171011
+docker push 10.0.1.198:5000/pwc/jira:20171011
+docker push 10.0.1.198:5000/pwc/spark_env:20171011
+docker push 10.0.1.198:5000/pwc/jenkins:20171011
 
 `````````spark section````````````````
 
@@ -2614,6 +2629,7 @@ ssh root@192.168.56.17  docker exec spark /usr/local/spark/bin/spark-submit  --m
 
 ``````````jira section`````
 docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro  --name jira      -p 18080:8080         -p 180:80 pwc/centos7:spark
+/opt/atlassian/jira/bin/start-jira.sh
 用已有的gerrit frank用户在gerrit上创建 jira用户
 chmod 600 /root/.ssh/id_rsa
 cat ~/.ssh/id_rsa.pub| ssh frank@192.168.56.17 -p 29418 gerrit create-account jira --email jira@pwc.com --full-name JIRA --ssh-key -

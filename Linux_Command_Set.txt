@@ -668,8 +668,8 @@ services:
       MYSQL_ROOT_PASSWORD: yibaba
       MYSQL_DATABASE: redmine
 
-````````docker machine section``````
-
+````````docker machine section````docker-machine section``
+#docker-machine是控制kvm虚拟机中的docker engine的，粒度级别为kvm虚拟机
 #安装docker-machine
 #https://docs.docker.com/machine/install-machine/  
 curl -L https://github.com/docker/machine/releases/download/v0.12.1/docker-machine-`uname -s`-`uname -m` >/tmp/docker-machine && chmod +x /tmp/docker-machine && sudo cp /tmp/docker-machine /usr/local/bin/docker-machine
@@ -689,6 +689,8 @@ docker-machine create --kvm-network mynetwork1 --kvm-boot2docker-url /home/frank
        default              active     yes           yes
        docker-machines      active     no            no
        mynetwork1           active     no            no
+      
+      virsh net-dumpxml default
       [root@hp ~]# cat docker-machine-for-kvm3.xml
       <network>
         <name>mynetwork1</name>
