@@ -5861,6 +5861,8 @@ git config user.name
         git archive   --format=tar --remote=/srv/git/xxd_code_repo.git            HEAD -- ansible.hosts     | tar -xf - -C /etc/ansible
 git archive --format zip --output /full/path master
 ``````git workflow section`````git conflict section`````
+#处理conflict的方法和正常提交的方法一样
+#https://easyengine.io/tutorials/git/git-resolve-merge-conflicts/
 方法一：
 The basic Git workflow goes something like this:
 1、You modify files in your working directory.
@@ -8881,6 +8883,18 @@ sudo docker ps | grep uberga | awk '{print $NF}' |xargs -I{} sudo docker stop {}
 
 
 ======gerrit section=======
+```docker gerrit section `````gerrit docker section````
+Use local directory as the gerrit site storage.
+
+    Create a site directory for the gerrit site.
+
+mkdir ~/gerrit_volume
+
+    Initialize and start gerrit using the local directory created above.
+
+docker run -d -v ~/gerrit_volume:/var/gerrit/review_site -p 8080:8080 -p 29418:29418 openfrontier/gerrit
+````````
+
 
 The easiest way is to temporarily disable authenticated logins.
 Edit your [auth] statement in gerrit.config to look like this:
