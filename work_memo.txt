@@ -2310,6 +2310,16 @@ docker push 10.0.1.198:5000/pwc/jira:20171011
 docker push 10.0.1.198:5000/pwc/spark_env:20171011
 docker push 10.0.1.198:5000/pwc/jenkins:20171011
 
+
+docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro  --name jira      -p 18080:8080         -p 180:80 10.0.1.198:5000/pwc/jira:20171011
+docker  exec -ti  jira bash
+/opt/atlassian/jira/bin/start-jira.sh
+
+docker run --name pwc_jenkins -p 8080:8080 -p 50000:50000 --env JAVA_OPTS="-Djava.util.logging.config.file=/var/jenkins_home/log.properties"   -v jenkins_home:/var/jenkins_home -v /etc/resolv.conf:/etc/resolv.conf pwc/jenkins:lts
+
+docker run --name gerrit -d -p 8081:8080 -p 29418:29418 10.0.1.198:5000/pwc/gerrit:20171011
+
+
 `````````spark section````````````````
 
 #在dockers内安装并运行spark demo程序
