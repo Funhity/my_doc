@@ -5860,7 +5860,8 @@ git config user.name
 		git archive   --format=tar --remote=/srv/git/xxd_code_repo.git            HEAD -- ansible.hosts     | tar -xf -
         git archive   --format=tar --remote=/srv/git/xxd_code_repo.git            HEAD -- ansible.hosts     | tar -xf - -C /etc/ansible
 git archive --format zip --output /full/path master
-``````git workflow section```````
+``````git workflow section`````git conflict section`````
+方法一：
 The basic Git workflow goes something like this:
 1、You modify files in your working directory.
 2、git add:       You stage the files, adding snapshots of them to your staging area.  
@@ -5868,7 +5869,8 @@ The basic Git workflow goes something like this:
 
  $ git show
  # check what would be pushed to Gerrit
-
+方法二：
+git commit -a -m 'added new benchmarks'   #Skipping the Staging Area
 ```````git 标准操作流程````git workflow section````
 https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository
 步骤1.  添加文件
