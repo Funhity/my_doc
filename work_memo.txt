@@ -2284,7 +2284,8 @@ ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
 
 `````demo section````pwc backup section`````pwc demo section````
 
-
+docker run -d -p 5000:5000 --restart=always --name registry registry:latest
+#步骤一：在源机器上执行：
 docker inspect 58e872eebcd3 |less -i
 docker inspect --format="{{json .Config.ExposedPorts }}"  pwc_jenkins
 docker inspect --format="{{json .Config.ExposedPorts }}" spark
@@ -2301,6 +2302,7 @@ docker tag pwc/spark_env:20171011  10.0.1.198:5000/pwc/spark_env:20171011
 docker tag pwc/jira:20171011  10.0.1.198:5000/pwc/jira:20171011
 docker tag pwc/jenkins:20171011  10.0.1.198:5000/pwc/jenkins:20171011
 
+
 cat > /etc/docker/daemon.json <<-EOF
         { "insecure-registries":["10.0.1.198:5000"] }
 EOF
@@ -2309,6 +2311,16 @@ docker push 10.0.1.198:5000/pwc/gerrit:20171011
 docker push 10.0.1.198:5000/pwc/jira:20171011
 docker push 10.0.1.198:5000/pwc/spark_env:20171011
 docker push 10.0.1.198:5000/pwc/jenkins:20171011
+
+#步骤二：在10.0.1.198机器上执行：
+cat > /etc/docker/daemon.json <<-EOF
+        { "insecure-registries":["10.0.1.198:5000"] }
+EOF
+       systemctl restart  docker.service
+docker pull 10.0.1.198:5000/pwc/gerrit:20171011
+docker pull 10.0.1.198:5000/pwc/jira:20171011
+docker pull 10.0.1.198:5000/pwc/spark_env:20171011
+docker pull 10.0.1.198:5000/pwc/jenkins:20171011
 
 `````````spark section````````````````
 
