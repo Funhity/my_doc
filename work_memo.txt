@@ -2326,7 +2326,10 @@ docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro  --name jira 
 docker  exec -ti  jira bash
 /opt/atlassian/jira/bin/start-jira.sh
 
-docker run --name pwc_jenkins -p 8080:8080 -p 50000:50000 --env JAVA_OPTS="-Djava.util.logging.config.file=/var/jenkins_home/log.properties"   -v jenkins_home:/var/jenkins_home -v /etc/resolv.conf:/etc/resolv.conf 10.0.1.198:5000/pwc/jenkins:20171011
+
+rsync -avzh  --checksum  /var/lib/docker/volumes/jenkins_home/  10.0.1.198:/var/lib/docker/volumes/jenkins_home/ --delete -n
+docker run -d -ti --name jenkins -p 8080:8080 -p 50000:50000 --env JAVA_OPTS="-Djava.util.logging.config.file=/var/jenkins_home/log.properties"   -v jenkins_home:/var/jenkins_home -v /etc/resolv.conf:/etc/resolv.conf 10.0.1.198:5000/pwc/jenkins:20171011
+
 
 docker run --name gerrit -d -v ~/gerrit_volume:/var/gerrit/review_site -p 8081:8080 -p 29418:29418 10.0.1.198:5000/pwc/gerrit:20171011
 docker run --name gerrit -d -p 8081:8080 -p 29418:29418 10.0.1.198:5000/pwc/gerrit:20171011
@@ -2475,6 +2478,7 @@ Change-Id site:https://gerrit-documentation.storage.googleapis.com/
 
 ······
 步骤1：
+#vi /var/gerrit/review_site/etc/gerrit.config
 gerrit用户设置
 Edit your [auth] statement in gerrit.config to look like this:
 [auth]
