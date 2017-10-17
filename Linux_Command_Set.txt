@@ -371,14 +371,17 @@ service iptables save
 service iptables restart                            #增加规则后，上述增加的规则消失
 ······
 #删除规则：
+sudo iptables  -n -L -v --line-number
+sudo iptables -D OUTPUT 2
+sudo iptables -D INPUT 34
 iptables -D INPUT 4
 iptables -D INPUT -s 202.54.1.1 -j DROP
-······
+···iptables debug·····iptables log········
 sudo iptables -N LOGGING
 sudo iptables -A INPUT -j LOGGING
 sudo iptables -A OUTPUT -j LOGGING
 sudo iptables -A LOGGING -m limit --limit 2/min -j LOG --log-prefix "IPTables-Dropped: " --log-level 4
-sudo iptables -A LOGGING -j DROP
+#sudo iptables -A LOGGING -j DROP  执行会导致整个hp服务器in out全部封死
 
 
  ````````````````ufw section  firewall section``````````firewalld section````````````````````
