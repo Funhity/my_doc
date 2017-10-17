@@ -729,6 +729,8 @@ docker-machine ssh docker-machine1  "ip a"
 docker-machine ip  docker-machine1
 docker-machine ssh docker-machine1                    #用ssh登入到docker-machine1虚拟机中
 docker-machine scp config.yml my.host.com:config.yml  #https://blog.dahanne.net/2015/10/07/adding-an-existing-docker-host-to-docker-machine-a-few-tips/
+
+
 .........
 #步驟二b
 #添加现有的dockers engine到dockers machine中去
@@ -736,6 +738,21 @@ ssh-copy-id -i ~/.ssh/id_rsa.pub 10.0.1.189
 docker-machine create -d generic --generic-ip-address 10.0.1.189  --generic-ssh-user root  docker2
 docker-machine env docker2
 eval $(docker-machine env docker2)
+
+`````rancheros section`````
+sudo system-docker ps
+sudo system-docker run -d --net=host --name busydash husseingalal/busydash
+docker-machine create --kvm-boot2docker-url /home/frank/Downloads/rancheros.iso  -d kvm rancheros-docker-machine
+
+添加网卡：
+步骤1：
+virsh attach-interface --domain rancheros-docker-machine  --type bridge --source  bridge0  --model virtio --config --live
+步骤2：
+sudo ros config set rancher.network.interfaces.eth2.dhcp true
+sudo system-docker restart network
+
+sudo system-docker ps
+sudo system-docker run -d --net=host --name busydash husseingalal/busydash
 
 ``````dockerfile section```````````
 sudo docker build -t ouruser/sinatra:v2 .
@@ -4466,7 +4483,7 @@ ssh -R     3389:127.0.0.1:3389   frank@139.219.100.43   #在公司机器上运�
 在家里执行： ssh -R     3389:127.0.0.1:3389   frank@139.219.100.43
             公司访问家里windows用3389端口
 
-·····ssh proxy dynamic section···
+·····ssh proxy dynamic section···ssh proxy section·····
 #https://www.codeproject.com/Tips/634228/How-to-Use-Proxychains-Forwarding-Ports
 #proxy traffic from one application on your local computer through another application on your local computer. That's what proxychains does. 
 #https://unix.stackexchange.com/posts/233862/edit
@@ -4488,7 +4505,7 @@ AllowTcpForwarding yes
 service sshd restart
 
 步驟三：
-ssh -D 8000 root@139.196.102.159
+ssh -D 1080 root@139.196.102.159
 
 
 步骤四 
@@ -6748,7 +6765,7 @@ pip install cx_Oracle
 pip install sqlalchemy
 
 
-===pip section===shadowsocks section=
+===pip section===shadowsocks section===vpn section===
 yum -y install python
 yum -y install python-setuptools && easy_install pip
 #wget https://bootstrap.pypa.io/get-pip.py
