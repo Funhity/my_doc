@@ -358,6 +358,7 @@ nmtui
  
  `````iptables section````iptable section```
   sudo iptables  -n -L -v
+  sudo iptables  -n -L -v --line-number
   sudo iptables -t nat -n -L -v
   service iptables save
   cat  /etc/sysconfig/iptables
@@ -377,13 +378,16 @@ sudo iptables -D INPUT 34
 iptables -D INPUT 4
 iptables -D INPUT -s 202.54.1.1 -j DROP
 ···iptables debug·····iptables log········
+sudo iptables  -n -L -v --line-number
 #http://www.thegeekstuff.com/2012/08/iptables-log-packets/
 步骤一：创建table
 sudo iptables -N LOGGING
 步骤二：在其他table创建规则，使得数据包跳到LOGGING table
 sudo iptables -A INPUT -j LOGGING
 sudo iptables -A OUTPUT -j LOGGING
-sudo iptables -I INPUT 32 -j LOGGING
+sudo iptables -I INPUT 32 -j LOGGING   #其中32行是reject 规则所在的行
+sudo iptables -I FORWARD 2 -j LOGGING
+sudo iptables -I FORWARD 2 -i virbr1 -o bridge0  -j ACCEPT
 步骤三：log日志相关设置
 sudo iptables -A LOGGING -m limit --limit 2/min -j LOG --log-prefix "IPTables-Dropped: " --log-level 4
 #sudo iptables -A LOGGING -j DROP  执行会导致整个hp服务器in out全部封死
