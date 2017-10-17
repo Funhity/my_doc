@@ -370,6 +370,15 @@ iptables -A INPUT   -p tcp --dport 5901  -j ACCEPT  #在imput表后面加
 service iptables save
 service iptables restart                            #增加规则后，上述增加的规则消失
 ······
+#删除规则：
+iptables -D INPUT 4
+iptables -D INPUT -s 202.54.1.1 -j DROP
+······
+sudo iptables -N LOGGING
+sudo iptables -A INPUT -j LOGGING
+sudo iptables -A OUTPUT -j LOGGING
+sudo iptables -A LOGGING -m limit --limit 2/min -j LOG --log-prefix "IPTables-Dropped: " --log-level 4
+sudo iptables -A LOGGING -j DROP
 
 
  ````````````````ufw section  firewall section``````````firewalld section````````````````````
@@ -2583,10 +2592,19 @@ dd Delete line
 d$ Delete to end of line
 d^ (d caret, not CTRL d) Delete to beginning of line
 
-`````
+```case section``
 #忽略大小写:
 You need to use the \c escape sequence. So:
 /\ccopyright
+
+#man uses less to display man pages.
+#https://unix.stackexchange.com/questions/101295/case-insensitive-search-in-man-pages
+man -i virsh
+
+````less section```````
+ #忽略大小写
+ less -i dataset_install_2017-06-07-19_57.log
+
 
 `````````````````````
 column mode: CTRL-V
@@ -2609,9 +2627,7 @@ vim scp://root@cloudera-agent1///etc/yum.repos.d/my-cloudera-manager.repo
 Searching and Replacing
 :%s/HOME=\/var\/lib\/zabbix/HOME=\/etc\/zabbix/g
 
-````less section```````
- #忽略大小写
- less -i dataset_install_2017-06-07-19_57.log
+
 =======================  sudo section   ========================   
 命令：visudo //press escape, then type ZZ
 Cmnd_Alias SALTCMD = /usr/bin/salt, /usr/bin/salt-key, /usr/bin/salt-run, /usr/bin/salt-ssh, /usr/bin/salt-cp
