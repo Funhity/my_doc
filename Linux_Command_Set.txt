@@ -381,16 +381,16 @@ iptables -D INPUT -s 202.54.1.1 -j DROP
 sudo iptables  -n -L -v --line-number
 #http://www.thegeekstuff.com/2012/08/iptables-log-packets/
 步骤一：创建table
-sudo iptables -N LOGGING
+        sudo iptables -N LOGGING
 步骤二：在其他table创建规则，使得数据包跳到LOGGING table
-sudo iptables -A INPUT -j LOGGING
-sudo iptables -A OUTPUT -j LOGGING
-sudo iptables -I INPUT 32 -j LOGGING   #其中32行是reject 规则所在的行
-sudo iptables -I FORWARD 2 -j LOGGING
-sudo iptables -I FORWARD 2 -i virbr1 -o bridge0  -j ACCEPT
+        sudo iptables -A INPUT -j LOGGING
+        sudo iptables -A OUTPUT -j LOGGING
+        sudo iptables -I INPUT 32 -j LOGGING   #其中32行是reject 规则所在的行
+        sudo iptables -I FORWARD 2 -j LOGGING
+        sudo iptables -I FORWARD 2 -i virbr1 -o bridge0  -j ACCEPT
 步骤三：log日志相关设置
-sudo iptables -A LOGGING -m limit --limit 2/min -j LOG --log-prefix "IPTables-Dropped: " --log-level 4
-#sudo iptables -A LOGGING -j DROP  执行会导致整个hp服务器in out全部封死
+        sudo iptables -A LOGGING -m limit --limit 2/min -j LOG --log-prefix "IPTables-Dropped: " --log-level 4
+        #sudo iptables -A LOGGING -j DROP  执行会导致整个hp服务器in out全部封死
 
 
  ````````````````ufw section  firewall section``````````firewalld section````````````````````
@@ -3949,6 +3949,28 @@ virsh detach-interface --domain windows7                --type bridge   --mac 52
 
 virbr0:/etc/libvirt/hooks/qemu
 
+brctl show
+brctl stp br0 yes
+
+virsh net-dumpxml  default
+virsh net-list     --all  
+virsh net-update   default add ip-dhcp-host \
+          "<host mac='52:54:00:00:00:01' \
+           name='bob' ip='192.168.122.45' />" \
+           --live --config
+```
+#virsh net-dumpxml  default 发现default被损坏，修复流程如下
+#https://serverfault.com/questions/534484/libvirt-network-error-no-default-network-device-found
+#/usr/share/libvirt/networks/default.xml
+#/etc/libvirt/qemu/networks/autostart/
+#/etc/libvirt/qemu/networks/
+
+virsh net-destroy default
+virsh net-undefine default
+virsh net-define /usr/share/libvirt/networks/default.xml
+virsh net-autostart default
+virsh net-start default
+
 ````````````` run as non-root```````````````````````
 /etc/libvirt/qemu.conf  #user=$USERNAME and group=$GROUPNAME
  /var/run/libvirt/qemu/
@@ -4083,15 +4105,6 @@ virsh undefine    _domain-id_
 3. Edit the xml file then import it.
    virsh define name_of_vm.xml
 `````````
-brctl show
-brctl stp br0 yes
-
-virsh net-dumpxml  default
-virsh net-list     --all	
-virsh net-update   default add ip-dhcp-host \
-          "<host mac='52:54:00:00:00:01' \
-           name='bob' ip='192.168.122.45' />" \
-           --live --config
 
 autrace /usr/bin/virsh migrate  centos64-minimal  qemu+ssh://root@192.168.31.200/system   --verbose
 
