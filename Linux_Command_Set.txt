@@ -681,7 +681,7 @@ services:
       MYSQL_DATABASE: redmine
 
 ````````docker machine section````docker-machine section``
-#docker-machine是控制kvm虚拟机中的docker engine的，粒度级别为kvm虚拟机
+#docker-machine,相当于virt-intall,是控制kvm虚拟机中的docker engine的，粒度级别为kvm虚拟机
 #安装docker-machine
 #https://docs.docker.com/machine/install-machine/  
 curl -L https://github.com/docker/machine/releases/download/v0.12.1/docker-machine-`uname -s`-`uname -m` >/tmp/docker-machine && chmod +x /tmp/docker-machine && sudo cp /tmp/docker-machine /usr/local/bin/docker-machine
@@ -692,7 +692,7 @@ https://github.com/dhiltgen/docker-machine-kvm/releases:
   curl -L https://github.com/dhiltgen/docker-machine-kvm/releases/download/v0.10.0/docker-machine-driver-kvm-centos7 > /usr/local/bin/docker-machine-driver-kvm  
   chmod +x /usr/local/bin/docker-machine-driver-kvm
 #步骤二a：在宿主机器上安装docker engine,debug加 -D选项
-docker-machine create --kvm-boot2docker-url /home/frank/Downloads/boot2docker.iso  -d kvm my-docker-machine-docker-engine0
+docker-machine create --kvm-boot2docker-url /home/frank/Downloads/boot2docker.iso  -d kvm docker-machine1
 docker-machine create --kvm-network mynetwork1 --kvm-boot2docker-url /home/frank/Downloads/boot2docker.iso  -d kvm my-docker-machine-docker-engine2
       其中mynetwork1来自
       [root@hp ~]# virsh net-list     --all
@@ -703,6 +703,7 @@ docker-machine create --kvm-network mynetwork1 --kvm-boot2docker-url /home/frank
        mynetwork1           active     no            no
       
       virsh net-dumpxml default
+
       [root@hp ~]# cat docker-machine-for-kvm3.xml
       <network>
         <name>mynetwork1</name>
@@ -715,7 +716,10 @@ docker-machine create --kvm-network mynetwork1 --kvm-boot2docker-url /home/frank
         </ip>
       </network>
 
-
+docker-machine ssh docker-machine1  "ip a"
+docker-machine ip  docker-machine1
+docker-machine ssh docker-machine1                    #用ssh登入到docker-machine1虚拟机中
+docker-machine scp config.yml my.host.com:config.yml  #https://blog.dahanne.net/2015/10/07/adding-an-existing-docker-host-to-docker-machine-a-few-tips/
 .........
 #步驟二b
 #添加现有的dockers engine到dockers machine中去
@@ -3863,7 +3867,7 @@ virsh resume  mirror
 virt-clone  --connect qemu:///system --original  centos64-minimal --name centos64-minimal2 --file /home/frank/kvm/images/centos-minimal2.qcow2	 
 
 
-`````````virsh network section````
+`````````virsh network section```````virsh qemu section`````virsh hook`````
 ```ubuntu:
 Create the file /etc/libvirt/hooks/qemu  #In NAT network,used to Forwarding Incoming Connections
 virsh net-update  default add ip-dhcp-host "<host mac='52:54:00:ab:d3:72' name='windows7-for-office' ip='192.168.122.227'/>"  --live --config		   
@@ -5208,6 +5212,8 @@ tcpdump -n net 192.168.1.0/24
 
 tcpdump -n dst port 23 # 能收到请求消息，响应消息不显示
 tcpdump -n dst port 5000
+
+tcpdump -nni bridge0 icmp  #在bridge0监听ping消息
 =================ubuntu section=====================
 检查版本号
 lsb_release -a
@@ -8914,7 +8920,7 @@ mkdir ~/gerrit_volume
 docker run -d -v ~/gerrit_volume:/var/gerrit/review_site -p 8080:8080 -p 29418:29418 openfrontier/gerrit
 ````````
 
-
+#vi /var/gerrit/review_site/etc/gerrit.config
 The easiest way is to temporarily disable authenticated logins.
 Edit your [auth] statement in gerrit.config to look like this:
 [auth]
