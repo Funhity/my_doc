@@ -2517,6 +2517,9 @@ ss -napt | grep 3260
 			用 cyg_server 用户 或 当前使用用户名登入ssh  有时候得在windows上重新设置一下priviledged server的密码才能登入
 install svn: package subversion
 
+
+find '/cygdrive/c/Program Files (x86)/sbt/'  -path ".sbt*"  #搜索.sbt时要加引号
+
 `````cygwin telnet section````````````
 telnet: 装inetutils 模块
 ```````````````````````````````

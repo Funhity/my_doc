@@ -2342,18 +2342,34 @@ docker run -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro local/c7-systemd:latest bash
 或 docker exec -it youthful_albattani   bash
 
 
-#安装spark
+#步骤一：安装spark
 tar xvf spark-2.2.0-bin-hadoop2.7.tgz
 mv spark-2.2.0-bin-hadoop2.7 /usr/local/spark
 export PATH=$PATH:/usr/local/spark/bin
 source ~/.bashrc
 
 
-#http://spark.apache.org/docs/latest/quick-start.html
-curl https://bintray.com/sbt/rpm/rpm | sudo tee /etc/yum.repos.d/bintray-sbt-rpm.repo
-sudo yum -y install sbt
+#步骤二：安装sbt编译环境，http://spark.apache.org/docs/latest/quick-start.html
+linux:
+      curl https://bintray.com/sbt/rpm/rpm | sudo tee /etc/yum.repos.d/bintray-sbt-rpm.repo
+      sudo yum -y install sbt
+#windows:
+      http://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Windows.html
 
+
+$ find .
+.
+./build.sbt
+./src
+./src/main
+./src/main/scala
+./src/main/scala/SimpleApp.scala
+
+sbt package
+#on linux:
 /usr/local/spark/bin/spark-submit   --class "SimpleApp"   --master local[4]   target/scala-2.11/simple-project_2.11-1.0.jar
+#on windows:
+/cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7/bin/spark-submit.cmd  --class "SimpleApp"   --master local[4]   target/scala-2.11/simple-project_2.11-1.0.jar
 
 #步骤三：创建image
 
