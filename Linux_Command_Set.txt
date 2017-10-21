@@ -4602,12 +4602,12 @@ grep rsync /etc/selinux/targeted/contexts/files/file_contexts.local
 restorecon -R -v /etc/rc.d/init.d/rsyncd
 ls -lZ /etc/rc.d/init.d/rsyncd
 semanage port -a -t rsync_port_t -p tcp 10000
-==============command section================================================
+==============command section==================command line section==============================
 C-w Kill from the cursor to the previous whitespace. This is different than M- because the word boundaries differ.
 C-b Move back one character.
 C-f Move forward one character.
-Ctrl-A to get to the beginning 
-Ctrl-A to get to the beginning 
+Ctrl-a to get to the beginning 
+Ctrl-e 到最后
 
 ````````````
 M-b and M-f for moving backwards and forwards to the current word,
@@ -4615,11 +4615,14 @@ xshell meta key
 File -> Properties -> Terminal -> Keyboard
 把 "Use Alt as Meta key" 这个选项勾上
  
-``````````````````````````````
+```````````````dash section```````````````
 参数"-"代表 standard input
+find . -type f -print0 | tar -czvf backup.tar.gz --null -T -
+cat ~/.ssh/id_watcher.pub | ssh -p 29418 review.example.com gerrit set-account --add-ssh-key - --add-email mail@example.com watcher
+`````null section```
 echo $?  ##see exit status of cal command type following command:
 >/dev/null 2>&1
-```````网安````````````````````
+```````网安````````````awk section````````
 cat *.csv    | grep -v '^$'  | awk  -F,   -f ./china_network.awk  | grep 关键词名称 | grep -v 动词 |awk '{ $1=""; $2=""; print $0 }'|| sed -e 's/\s\+/\n/g'| grep -v '^$' | awk '{ print "关键词," $0}' | grep -v 关键词名称| grep -v 专属词语   > bbs_key_word_filter.txt
 
 
