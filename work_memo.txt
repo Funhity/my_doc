@@ -2373,7 +2373,34 @@ sbt package
 /cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7/bin/spark-submit.cmd  --class "SimpleApp"   --master local[4]   target/scala-2.11/simple-project_2.11-1.0.jar
 
 
+步骤一:
+cat ./project/site.sbt
+addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "5.2.2")
+步骤二:
+运行sbt ecliplse
+```````
+eclipse问题描述:
+scalatest_2.10-1.9.1.jar is cross-compiled with an incompatible version of Scala (2.10).
+In case of errorneous report, this check can be disabled in the compiler preference page.
 
+
+进入到scala compiler preference page (project->properties) 
+方法一：
+#http://spark.apache.org/developer-tools.html
+#alvinalexander.com/scala/sbt-how-to-configure-work-with-eclipse-projects
+#在scala intallation中选中scala版本，
+#  scala版本是运行sbt ecliplse时下载的scala库文件版本，
+#  scala库文件版本在.classpath中
+#  运行sbt ecliplse会下载scala库文件，并生成.classpath和.project文件
+Frank@Frank-PC /cygdrive/c/work/PwC/spark
+$ ls -a
+.  ..  .cache-main  .classpath  .project  .settings  bin  build.sbt  project  spark-warehouse  src  target
+
+方法二：
+#http://blog.csdn.net/liujinkui41/article/details/38314687
+->Build manager->withVersionClasspathValidator 勾选去掉
+然后 compileorder 默认 Mixed (如果默认错误会仍然显示），选择java then scala 或 scala then java 均可
+`````````````````
 无 https://repo.typesafe.com/typesafe/ivy-releases/com.typesafe.sbteclipse/sbteclipse-plugin/scala_2.12/sbt_1.0//4.0.0/ivys/ivy.xml
 有 https://dl.bintray.com/typesafe/ivy-releases/com.typesafe.sbteclipse/sbteclipse-plugin/scala_2.10/sbt_0.13/3.0.0/ivys/
 
