@@ -2356,7 +2356,7 @@ linux:
 #windows:
       http://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Windows.html
 
-
+#sbt 在windows上的相关路径，C:\Users\Frank\.sbt\preloaded\oro\oro\2.0.8\docs\oro-javadoc.jar
 $ find .
 .
 ./build.sbt
@@ -2365,11 +2365,18 @@ $ find .
 ./src/main/scala
 ./src/main/scala/SimpleApp.scala
 
-sbt package
+#compile-scalar-code-by-sbt-for-spark
+sbt package  
 #on linux:
 /usr/local/spark/bin/spark-submit   --class "SimpleApp"   --master local[4]   target/scala-2.11/simple-project_2.11-1.0.jar
 #on windows:
 /cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7/bin/spark-submit.cmd  --class "SimpleApp"   --master local[4]   target/scala-2.11/simple-project_2.11-1.0.jar
+
+
+
+无 https://repo.typesafe.com/typesafe/ivy-releases/com.typesafe.sbteclipse/sbteclipse-plugin/scala_2.12/sbt_1.0//4.0.0/ivys/ivy.xml
+有 https://dl.bintray.com/typesafe/ivy-releases/com.typesafe.sbteclipse/sbteclipse-plugin/scala_2.10/sbt_0.13/3.0.0/ivys/
+
 
 #步骤三：创建image
 
