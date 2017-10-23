@@ -3506,7 +3506,7 @@ fuser -v test.txt
 fuser file_name
 fuser /tmp/.X11-unix/X1
 ===================== java section jdk section =====================================
-
+http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
  
 ```````rpm section````````
 rpm -ivh jdk-8uversion-linux-x64.rpm  #Install the package.
@@ -3527,7 +3527,11 @@ zip   abc.zip *
 tar -xzf rebol.tar.gz
 tar zxf file.tar.gz -C /root/Desktop/folder
 
+······tgz section············
 tar -zxvf filename.tgz
+tar zxvf  ./platform-latest.tgz 
+···················
+
 $ tar -zxvf filename.tar.gz
 $ tar -jxvf filename.tar.bz2
 
@@ -3581,12 +3585,12 @@ tomat6:
 cat /etc/profile.d/java.sh 
    export JAVA_HOME=/usr/java/default
    export CATALINA_HOME=/root/apache-tomcat-6.0.45
-   export PATH=/root/apache-maven-3.2.5/bin:$PATH
+   export PATH=/root/apache-maven-3.2.5/bin:\$PATH
 tomcat8:
 cat > /etc/profile.d/java.sh <<EOF
    export JAVA_HOME=/usr/java/default
    export CATALINA_HOME=/opt/apache-tomcat-8.0.44
-   export PATH=/root/apache-maven-3.2.5/bin:$PATH
+   export PATH=/root/apache-maven-3.2.5/bin:\$PATH
 EOF
 ········
 tomcat6:
@@ -3628,15 +3632,21 @@ cat /root/install_java_env.sh
 	
 
 ====================maven section======mvn section================================
+第一步：下载
 wget       https://archive.apache.org/dist/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.zip
+           http://mirror.bit.edu.cn/apache/maven/maven-3/3.5.0/binaries/apache-maven-3.5.0-bin.zip
 unzip      apache-maven-3.3.3-bin.zip
+           apache-maven-3.5.0-bin.zip
+第二步：装java
+rpm -ivh jdk-8u151-linux-x64.rpm
 
 cat>  /etc/profile.d/java.sh<<EOF
-export PATH=/root/apache-maven-3.2.5/bin:$PATH
+export PATH=/root/apache-maven-3.5.0/bin:\$PATH
 export JAVA_HOME=/usr/java/default
-export PATH=$JAVA_HOME/bin:$PATH
+export PATH=$JAVA_HOME/bin:\$PATH
 EOF
 chmod +x  /etc/profile.d/java.sh
+source /etc/profile.d/java.sh
 ``````````````````````````````````````
 /usr/local/maven/conf/settings.xml
 配置文件（设置nexus仓库）：/root/apache-maven-3.2.3/conf/settings.xml
