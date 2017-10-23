@@ -233,14 +233,14 @@ rm -f /etc/udev/rules.d/70-persistent-net.rules
   tail -f /var/log/foo | mawk -Winteractive
   `````````find section``````````
   我推荐的搜索方式，目录和文件名称一起搜索：
-  find /usr   -path   '*usr/bin*'
-  find -path "*leo*"
+  find /usr   -ipath   '*usr/bin*'
+  find -ipath "*leo*"
   下面正则表达式参数-iregex和-path功能一样，会搜索整个路径，而不是文件名称：
   find    ./   -regextype posix-extended  -iregex  ".*(ldlinux.c32|bios.*Mboot.c32|bios.*libcom32.c32|/pxelinux.0)" 
 
   find /  -type d -name 'httpdocs'
                   -iname pattern       #Like  -name, but the match is case insensitive.
-  
+  find . -iname "WSFY321.c"            #忽略大小写
 
   find /opt/webserver/   -path  '*web*\intr*'
   find . -path \*content/docs/file.xml  
