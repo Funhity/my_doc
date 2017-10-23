@@ -2375,7 +2375,7 @@ sbt package
   
   eclipse build 路径
   If you want to change the location of this directory for whatever reason, right-click any Java project, the select "Build Path" -> "Configure Build Path". The location   of the output directory is specified in the "Source" tab.
-
+  用sbt编译出来的路径./bin，和用eclipse编译出来的路径./target/scala-2.11/classes/
   $ find ./ -ipath *simpleapp*
   ./bin/SimpleApp$$anonfun$1.class
   ./bin/SimpleApp$$anonfun$2.class
