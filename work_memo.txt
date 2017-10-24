@@ -2337,6 +2337,13 @@ docker run --name gerrit -d -p 8081:8080 -p 29418:29418 10.0.1.198:5000/pwc/gerr
 
 `````````spark section````````````````
 
+··········
+spark编译
+export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m"
+·············
+
+
+
 #在dockers内安装并运行spark demo程序
 docker run -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro local/c7-systemd:latest bash
 或 docker exec -it youthful_albattani   bash
@@ -2371,10 +2378,10 @@ sbt package
   /usr/local/spark/bin/spark-submit   --class "SimpleApp"   --master local[4]   target/scala-2.11/simple-project_2.11-1.0.jar
 ···············spark windows··············
 #on windows:
+  cd /cygdrive/c/work/PwC/spark
   /cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7/bin/spark-submit.cmd  --class "SimpleApp"   --master local[4]   target/scala-2.11/simple-project_2.11-1.0.jar
   
-  eclipse build 路径
-  If you want to change the location of this directory for whatever reason, right-click any Java project, the select "Build Path" -> "Configure Build Path". The location   of the output directory is specified in the "Source" tab.
+ 
   用sbt编译出来的路径./bin，和用eclipse编译出来的路径./target/scala-2.11/classes/
   $ find ./ -ipath *simpleapp*
   ./bin/SimpleApp$$anonfun$1.class
@@ -2386,6 +2393,9 @@ sbt package
   ./target/scala-2.11/classes/SimpleApp$$anonfun$2.class
   ./target/scala-2.11/classes/SimpleApp$.class
   ./target/scala-2.11/classes/SimpleApp.class  
+
+  eclipse build 路径
+  If you want to change the location of this directory for whatever reason, right-click any Java project, the select "Build Path" -> "Configure Build Path". The location   of the output directory is specified in the "Source" tab.
 ·······················································
 
 步骤一:

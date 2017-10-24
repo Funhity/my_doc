@@ -81,6 +81,7 @@ sudo discoveryutil mdnsflushcache
 ================ network section =========================
 ubuntu: /etc/network/interfaces
 
+yum -y install iftop
 
 ``````
 centos7:
