@@ -2335,7 +2335,7 @@ docker run --name gerrit -d -v ~/gerrit_volume:/var/gerrit/review_site -p 8081:8
 docker run --name gerrit -d -p 8081:8080 -p 29418:29418 10.0.1.198:5000/pwc/gerrit:20171011
 
 
-`````````spark section````````````````
+`````````spark scala section for linux````````````````
 
 ··········
 spark编译
@@ -2378,13 +2378,21 @@ $ find .
   docker exec -ti  spark bash
   cd /root/devops
   /usr/local/spark/bin/spark-submit   --class "SimpleApp"   --master local[4]   target/scala-2.11/simple-project_2.11-1.0.jar
-···············spark windows··············
+
+
+#步骤三：创建image
+
+docker commit --change='CMD ["/usr/sbin/init"]'    -c "EXPOSE 80"    1e5037d756a3      local/c7-systemd-spark:version1
+#步骤四：上传到docker私有源
+docker tag local/c7-systemd-spark:version1  localhost:5000/spark:version1
+docker push localhost:5000/spark:version1
+···············spark scala section for windows··············
 #on windows:
 
   cd /cygdrive/c/work/PwC/spark
   /cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7/bin/spark-submit.cmd  --class "SimpleApp"   --master local[4]   target/scala-2.11/simple-project_2.11-1.0.jar
   
- 
+步骤0：
   用sbt编译出来的路径./bin，和用eclipse编译出来的路径./target/scala-2.11/classes/
   $ find ./ -ipath *simpleapp*
   ./bin/SimpleApp$$anonfun$1.class
@@ -2399,36 +2407,6 @@ $ find .
 
   eclipse build 路径
   If you want to change the location of this directory for whatever reason, right-click any Java project, the select "Build Path" -> "Configure Build Path". The location   of the output directory is specified in the "Source" tab.
-
-···spark history section···
-步骤一：
-在windows中设置环境变量
-echo %HADOOP_HOME%
-
-  0.  在windows上运行hadoop需要winutils binary in the hadoop binary path.
-      https://stackoverflow.com/questions/19620642/failed-to-locate-the-winutils-binary-in-the-hadoop-binary-path
-  0.5 运行hadoop，报错17/10/24 15:38:16 INFO SparkContext: Successfully stopped SparkContext  Exception in thread "main" ExitCodeException exitCode=-1073741515:
-      https://stackoverflow.com/questions/45947375/why-does-starting-a-streaming-query-lead-to-exitcodeexception-exitcode-1073741
-      使用winutils会发现缺少dll文件
-
-  1.运行windows缺文件：C:\Users\Frank>C:\work\PwC\spark-2.2.0-bin-hadoop2.7\bin\winutils.exe chmod -R 777 C:\work\PwC\spark-2.2.0-bin-hadoop2.7
-                    C:\work\PwC\spark-2.2.0-bin-hadoop2.7\bin\winutils.exe chmod -R 777 /tmp
-  2.缺的dll文件到https://www.microsoft.com/en-us/download/details.aspx?id=14632下载，具体来源见下面网址
-    https://www.faqforge.com/windows/fix-the-program-cant-start-because-msvcr100-dll-is-missing-from-your-computer-error-on-windows/
-     
-
-
-步骤二：
-   mkdir -p /cygdrive/c/tmp/spark-events
-
-   cp ./spark-2.2.0-bin-hadoop2.7/conf/spark-defaults.conf.template ./spark-2.2.0-bin-hadoop2.7/conf/spark-defaults.conf
-   vi /cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7/conf/spark-defaults.conf
-
-        spark.eventLog.enabled          true
-        spark.history.fs.logDirectory   file:///C:/work/PwC/spark-2.2.0-bin-hadoop2.7/logs
-   cd /cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7
-   ./bin/spark-class.cmd org.apache.spark.deploy.history.HistoryServer
-·················spark scala section······································
 
 步骤一:
 cat ./project/site.sbt
@@ -2457,20 +2435,41 @@ In case of errorneous report, this check can be disabled in the compiler prefere
   ->Build manager->withVersionClasspathValidator 勾选去掉
   然后 compileorder 默认 Mixed (如果默认错误会仍然显示），选择java then scala 或 scala then java 均可
  
-`````````````````
-无 https://repo.typesafe.com/typesafe/ivy-releases/com.typesafe.sbteclipse/sbteclipse-plugin/scala_2.12/sbt_1.0//4.0.0/ivys/ivy.xml
-有 https://dl.bintray.com/typesafe/ivy-releases/com.typesafe.sbteclipse/sbteclipse-plugin/scala_2.10/sbt_0.13/3.0.0/ivys/
+
+···spark history section for windows···
+步骤一：
+在windows中设置环境变量
+echo %HADOOP_HOME%
+
+  0.  在windows上运行hadoop需要winutils binary in the hadoop binary path.
+      https://stackoverflow.com/questions/19620642/failed-to-locate-the-winutils-binary-in-the-hadoop-binary-path
+  0.5 运行hadoop，报错17/10/24 15:38:16 INFO SparkContext: Successfully stopped SparkContext  Exception in thread "main" ExitCodeException exitCode=-1073741515:
+      https://stackoverflow.com/questions/45947375/why-does-starting-a-streaming-query-lead-to-exitcodeexception-exitcode-1073741
+      使用winutils会发现缺少dll文件
+
+  1.运行windows缺文件：C:\Users\Frank>C:\work\PwC\spark-2.2.0-bin-hadoop2.7\bin\winutils.exe chmod -R 777 C:\work\PwC\spark-2.2.0-bin-hadoop2.7
+                    C:\work\PwC\spark-2.2.0-bin-hadoop2.7\bin\winutils.exe chmod -R 777 /tmp
+  2.缺的dll文件到https://www.microsoft.com/en-us/download/details.aspx?id=14632下载，具体来源见下面网址
+    https://www.faqforge.com/windows/fix-the-program-cant-start-because-msvcr100-dll-is-missing-from-your-computer-error-on-windows/
+     
 
 
-#步骤三：创建image
+步骤二：
+   mkdir -p /cygdrive/c/tmp/spark-events
 
-docker commit --change='CMD ["/usr/sbin/init"]'    -c "EXPOSE 80"    1e5037d756a3      local/c7-systemd-spark:version1
-#步骤四：上传到docker私有源
-docker tag local/c7-systemd-spark:version1  localhost:5000/spark:version1
-docker push localhost:5000/spark:version1
-#步骤五：运行java版本的例子
+   cp ./spark-2.2.0-bin-hadoop2.7/conf/spark-defaults.conf.template ./spark-2.2.0-bin-hadoop2.7/conf/spark-defaults.conf
+   vi /cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7/conf/spark-defaults.conf
+
+        spark.eventLog.enabled          true
+        spark.history.fs.logDirectory   file:///C:/work/PwC/spark-2.2.0-bin-hadoop2.7/logs
+   cd /cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7
+   ./bin/spark-class.cmd org.apache.spark.deploy.history.HistoryServer
+
+··································································
+
+
 ```````spark java section`````
-
+#步骤五：运行java版本的例子
 vi ./src/main/java/SimpleApp.java
 <project>
   <groupId>edu.berkeley</groupId>
