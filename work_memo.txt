@@ -2380,15 +2380,6 @@ $ find .
   /usr/local/spark/bin/spark-submit   --class "SimpleApp"   --master local[4]   target/scala-2.11/simple-project_2.11-1.0.jar
 ···············spark windows··············
 #on windows:
-  0.  在windows上运行hadoop需要winutils binary in the hadoop binary path.
-      https://stackoverflow.com/questions/19620642/failed-to-locate-the-winutils-binary-in-the-hadoop-binary-path
-  0.5 运行hadoop，报错17/10/24 15:38:16 INFO SparkContext: Successfully stopped SparkContext  Exception in thread "main" ExitCodeException exitCode=-1073741515:
-      https://stackoverflow.com/questions/45947375/why-does-starting-a-streaming-query-lead-to-exitcodeexception-exitcode-1073741
-      使用winutils会发现缺少dll文件
-
-  1.运行windows缺文件：C:\Users\Frank>C:\work\PwC\spark-2.2.0-bin-hadoop2.7\bin\winutils.exe chmod -R 777 C:\work\PwC\spark-2.2.0-bin-hadoop2.7
-  2.缺的dll文件到https://www.microsoft.com/en-us/download/details.aspx?id=14632下载，具体来源见下面网址
-    https://www.faqforge.com/windows/fix-the-program-cant-start-because-msvcr100-dll-is-missing-from-your-computer-error-on-windows/
 
   cd /cygdrive/c/work/PwC/spark
   /cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7/bin/spark-submit.cmd  --class "SimpleApp"   --master local[4]   target/scala-2.11/simple-project_2.11-1.0.jar
@@ -2413,6 +2404,19 @@ $ find .
 步骤一：
 在windows中设置环境变量
 echo %HADOOP_HOME%
+
+  0.  在windows上运行hadoop需要winutils binary in the hadoop binary path.
+      https://stackoverflow.com/questions/19620642/failed-to-locate-the-winutils-binary-in-the-hadoop-binary-path
+  0.5 运行hadoop，报错17/10/24 15:38:16 INFO SparkContext: Successfully stopped SparkContext  Exception in thread "main" ExitCodeException exitCode=-1073741515:
+      https://stackoverflow.com/questions/45947375/why-does-starting-a-streaming-query-lead-to-exitcodeexception-exitcode-1073741
+      使用winutils会发现缺少dll文件
+
+  1.运行windows缺文件：C:\Users\Frank>C:\work\PwC\spark-2.2.0-bin-hadoop2.7\bin\winutils.exe chmod -R 777 C:\work\PwC\spark-2.2.0-bin-hadoop2.7
+                    C:\work\PwC\spark-2.2.0-bin-hadoop2.7\bin\winutils.exe chmod -R 777 /tmp
+  2.缺的dll文件到https://www.microsoft.com/en-us/download/details.aspx?id=14632下载，具体来源见下面网址
+    https://www.faqforge.com/windows/fix-the-program-cant-start-because-msvcr100-dll-is-missing-from-your-computer-error-on-windows/
+     
+
 
 步骤二：
    mkdir -p /cygdrive/c/tmp/spark-events
