@@ -2551,11 +2551,17 @@ numBs = logData.filter(logData.value.contains('b')).count()
 print("Lines with a: %i, lines with b: %i" % (numAs, numBs))
 
 spark.stop()
-···················
+·········spark python windows··········
+windows:
+SPARK_HOME=/cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7
+cd /cygdrive/c/work/PwC/spark
+/cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7/bin/spark-submit.cmd --master local[4] ./SimpleApp.py
+```````
 SPARK_HOME=/usr/local/spark
 export PYTHONPATH=$SPARK_HOME/python:$PYTHONPATH
 export PYTHONPATH=$SPARK_HOME/python/lib/py4j-0.10.4-src.zip:$PYTHONPATH
 /usr/local/spark/bin/spark-submit  --master local[4] /root/python-devops/SimpleApp.py 
+
 步骤六：制作docker镜像(迁移docker container场景)
 docker commit --change='CMD ["/usr/sbin/init"]'    -c "EXPOSE 80" -c "EXPOSE 4040"  1e5037d756a3      local/c7-systemd-spark:example-shell-java-python
 docker tag local/c7-systemd-spark:example-shell-java-python  localhost:5000/c7-systemd-spark:example-shell-java-python
@@ -2572,7 +2578,7 @@ http://139.219.100.43:5000/v2/_catalog
 
 docker run -ti -p 4040:4040 -p 18080:18080   139.219.100.43:5000/c7-systemd-spark:example-shell-java-python bash
 #步骤八
-··········spark history················
+··········spark history section················
 通过网页浏览查看历史运行数据（默认只有python程序支持）：
 
 vi  /usr/local/spark/conf/spark-defaults.conf
