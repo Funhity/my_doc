@@ -2569,7 +2569,13 @@ http://139.219.100.43:5000/v2/_catalog
 
 docker run -ti -p 4040:4040 -p 18080:18080   139.219.100.43:5000/c7-systemd-spark:example-shell-java-python bash
 #步骤八
-通过网页浏览查看历史运行数据（只有python程序支持）：
+··········spark history················
+通过网页浏览查看历史运行数据（默认只有python程序支持）：
+
+vi  /usr/local/spark/conf/spark-defaults.conf
+spark.eventLog.enabled          true
+spark.history.fs.logDirectory   file:///tmp/spark-events
+
 mkdir /tmp/spark-events
 /usr/local/spark/sbin/start-history-server.sh
 /usr/local/spark/bin/spark-submit  --master local[4] --conf spark.eventLog.enabled=true  /root/python-devops/SimpleApp.py
