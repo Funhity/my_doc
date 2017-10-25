@@ -2373,8 +2373,10 @@ $ find .
 ./src/main/scala/SimpleApp.scala
 
 #compile-scalar-code-by-sbt-for-spark
-sbt package  
+   sbt package  
 #on linux:
+  docker exec -ti  spark bash
+  cd /root/devops
   /usr/local/spark/bin/spark-submit   --class "SimpleApp"   --master local[4]   target/scala-2.11/simple-project_2.11-1.0.jar
 ···············spark windows··············
 #on windows:
@@ -2383,7 +2385,7 @@ sbt package
   0.5 运行hadoop，报错17/10/24 15:38:16 INFO SparkContext: Successfully stopped SparkContext  Exception in thread "main" ExitCodeException exitCode=-1073741515:
       https://stackoverflow.com/questions/45947375/why-does-starting-a-streaming-query-lead-to-exitcodeexception-exitcode-1073741
       使用winutils会发现缺少dll文件
-      
+
   1.运行windows缺文件：C:\Users\Frank>C:\work\PwC\spark-2.2.0-bin-hadoop2.7\bin\winutils.exe chmod -R 777 C:\work\PwC\spark-2.2.0-bin-hadoop2.7
   2.缺的dll文件到https://www.microsoft.com/en-us/download/details.aspx?id=14632下载，具体来源见下面网址
     https://www.faqforge.com/windows/fix-the-program-cant-start-because-msvcr100-dll-is-missing-from-your-computer-error-on-windows/
@@ -2406,6 +2408,7 @@ sbt package
 
   eclipse build 路径
   If you want to change the location of this directory for whatever reason, right-click any Java project, the select "Build Path" -> "Configure Build Path". The location   of the output directory is specified in the "Source" tab.
+
 ···spark history section···
 步骤一：
 在windows中设置环境变量
@@ -2421,7 +2424,7 @@ echo %HADOOP_HOME%
         spark.history.fs.logDirectory   file:///C:/work/PwC/spark-2.2.0-bin-hadoop2.7/logs
    cd /cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7
    ./bin/spark-class.cmd org.apache.spark.deploy.history.HistoryServer
-·······················································
+·················spark scala section······································
 
 步骤一:
 cat ./project/site.sbt
@@ -2449,6 +2452,7 @@ In case of errorneous report, this check can be disabled in the compiler prefere
   #http://blog.csdn.net/liujinkui41/article/details/38314687
   ->Build manager->withVersionClasspathValidator 勾选去掉
   然后 compileorder 默认 Mixed (如果默认错误会仍然显示），选择java then scala 或 scala then java 均可
+ 
 `````````````````
 无 https://repo.typesafe.com/typesafe/ivy-releases/com.typesafe.sbteclipse/sbteclipse-plugin/scala_2.12/sbt_1.0//4.0.0/ivys/ivy.xml
 有 https://dl.bintray.com/typesafe/ivy-releases/com.typesafe.sbteclipse/sbteclipse-plugin/scala_2.10/sbt_0.13/3.0.0/ivys/
@@ -2461,7 +2465,7 @@ docker commit --change='CMD ["/usr/sbin/init"]'    -c "EXPOSE 80"    1e5037d756a
 docker tag local/c7-systemd-spark:version1  localhost:5000/spark:version1
 docker push localhost:5000/spark:version1
 #步骤五：运行java版本的例子
-```````spark java example`````
+```````spark java section`````
 
 vi ./src/main/java/SimpleApp.java
 <project>
@@ -2564,6 +2568,7 @@ http://139.219.100.43:5000/v2/_catalog
 /var/lib/docker/volumes/181f8ba1f76f6d6f132ae91f9c9fff2c518d841d00b2137a5457c74de2828b5c/_data/docker/registry/v2/repositories
 
 docker run -ti -p 4040:4040 -p 18080:18080   139.219.100.43:5000/c7-systemd-spark:example-shell-java-python bash
+#步骤八
 通过网页浏览查看历史运行数据（只有python程序支持）：
 mkdir /tmp/spark-events
 /usr/local/spark/sbin/start-history-server.sh
