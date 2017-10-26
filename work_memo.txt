@@ -2394,26 +2394,23 @@ docker push localhost:5000/spark:version1
 步骤0：
   用sbt编译出来的路径./bin，和用eclipse编译出来的路径./target/scala-2.11/classes/
   $ find ./ -ipath *simpleapp*
+  用elipse编译出来的：
   ./bin/SimpleApp$$anonfun$1.class
   ./bin/SimpleApp$$anonfun$2.class
   ./bin/SimpleApp$.class
   ./bin/SimpleApp.class
   ./src/main/scala/SimpleApp.scala
+  #用stb编译出来的：
   ./target/scala-2.11/classes/SimpleApp$$anonfun$1.class
   ./target/scala-2.11/classes/SimpleApp$$anonfun$2.class
   ./target/scala-2.11/classes/SimpleApp$.class
   ./target/scala-2.11/classes/SimpleApp.class  
 
  
-
-  
-
-  
-
-步骤一:
+3步骤一:
 cat ./project/site.sbt
 addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "5.2.2")
-步骤二:
+#步骤二:生成eclipse需要的文件
 运行sbt ecliplse
 ```````
 eclipse问题描述:
