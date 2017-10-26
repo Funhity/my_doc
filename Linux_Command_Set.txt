@@ -650,12 +650,22 @@ docker run -ti
 ``````docker swarm section ```````
 service = container image  +  commands to execute
 task    =  commands to run inside the container(atomic scheduling unit of swarm)
+··························
+检查swarm： 是否处于swarm mode的方法：docker node ls，如果不是的话会报错
 
+离开swarm：
+docker swarm leave
 
-docker swarm init
-docker swarm join \
-    --token SWMTKN-1-47b6rvzc1nd5yqe46i22mcdo7myu8rcjosq4lypl4exc097skx-5cfpe2azveljgkt0wcjxt0u7t \
-    192.168.1.191:2377
+加入swarm：
+步骤一：
+      docker swarm init
+    或docker swarm init --advertise-addr <MANAGER-IP> #配置manage的IP地址，manager用此IP地址和worker联系
+步骤二：
+    docker swarm join-token worker #执行此命令获得token
+    docker swarm join \
+         --token SWMTKN-1-47b6rvzc1nd5yqe46i22mcdo7myu8rcjosq4lypl4exc097skx-5cfpe2azveljgkt0wcjxt0u7t \
+         192.168.1.191:2377
+
 .......docker load balance section············
 #https://sreeninet.wordpress.com/2016/07/29/service-discovery-and-load-balancing-internals-in-docker-1-12/
 方式一：DNS based load balancing
@@ -691,7 +701,7 @@ Routing mesh                 docker service create                       --name 
                                    root@node1:/var/run/docker/netns# ipvsadm
         验证方式：                  curl 192.168.99.102:8080  | grep -i "container id"
                                    curl 192.168.99.102:8080  | grep -i "container id"
-                                   
+
 ····docker swarm port····
 docker service update --publish-add <PUBLISHED-PORT>:<TARGET-PORT>  <SERVICE>
 ``````
