@@ -675,7 +675,7 @@ Vitual IP  based load balancing:   docker service create                       -
                                                    [{bhijn66xu7jagzzhfjdsg68ba 10.0.0.4/24}]  #返回virtual ip具体地址
                                    docker@node1:~$ docker service inspect --format {{.Endpoint.VirtualIPs}}  client 
                                                    [{bhijn66xu7jagzzhfjdsg68ba 10.0.0.2/24}]
-                                   方式3：
+        原理：
                                    root@node1:/var/run/docker/netns# docker ps                                       #查container id
                                    root@node1:/var/run/docker/netns# docker inspect 9b7e8d8ce531 | grep -i sandbox   #通过container id查询到网络id为934e0fdc377d7a6f597beb3e43f06b9d68b74b2e7746df8be70693664c03cc28
                                    root@node1:/var/run/docker/netns# nsenter --net=934e0fdc377d sh                   #进入934e0fdc377d的网络
@@ -684,9 +684,14 @@ Vitual IP  based load balancing:   docker service create                       -
 #方式三：
 Routing mesh                 docker service create                       --name vote --network overlay1 --replicas 2 -p 8080:80   instavote/vote
                              docker service create                       --name dns-cache                            -p 53:53/udp dns-cache
-        验证方式：                  docker@node1:~$ docker service tasks vote
+        原理：                      docker@node1:~$ docker service tasks vote
                                    docker@node1:~$ docker service tasks client
                                    root@node1:/home/docker# iptables -nvL -t nat
+                                   root@node1:/var/run/docker/netns# iptables -nvL -t mangle
+                                   root@node1:/var/run/docker/netns# ipvsadm
+        验证方式：                  curl 192.168.99.102:8080  | grep -i "container id"
+                                   curl 192.168.99.102:8080  | grep -i "container id"
+                                   
 ····docker swarm port····
 docker service update --publish-add <PUBLISHED-PORT>:<TARGET-PORT>  <SERVICE>
 ``````
