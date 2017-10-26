@@ -8673,6 +8673,11 @@ linux  :traceroute
 查第一跳用了哪个gateway
 ip route get 4.2.2.1  
 
+
+windows:
+route print
+route  add  10.253.251.0  mask  255.255.255.0  192.254.1.1 -p
+
 =========smartos timezone section=========
 pkgin -y install smtools;sm-set-timezone Asia/Shanghai
 salt 'jinhao'  cmd.run 'pkgin -y install smtools;sm-set-timezone Asia/Shanghai'  shell='/usr/bin/bash' -t 1200   #注意shell参数要带单引号
