@@ -2389,8 +2389,7 @@ docker push localhost:5000/spark:version1
 ···············spark scala section for windows··············
 #on windows:
 
-  cd /cygdrive/c/work/PwC/spark
-  /cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7/bin/spark-submit.cmd  --class "SimpleApp"   --master local[4]   target/scala-2.11/simple-project_2.11-1.0.jar
+
   
 步骤0：
   用sbt编译出来的路径./bin，和用eclipse编译出来的路径./target/scala-2.11/classes/
@@ -2405,8 +2404,11 @@ docker push localhost:5000/spark:version1
   ./target/scala-2.11/classes/SimpleApp$.class
   ./target/scala-2.11/classes/SimpleApp.class  
 
-  eclipse build 路径
-  If you want to change the location of this directory for whatever reason, right-click any Java project, the select "Build Path" -> "Configure Build Path". The location   of the output directory is specified in the "Source" tab.
+ 
+
+  
+
+  
 
 步骤一:
 cat ./project/site.sbt
@@ -2434,8 +2436,16 @@ In case of errorneous report, this check can be disabled in the compiler prefere
   #http://blog.csdn.net/liujinkui41/article/details/38314687
   ->Build manager->withVersionClasspathValidator 勾选去掉
   然后 compileorder 默认 Mixed (如果默认错误会仍然显示），选择java then scala 或 scala then java 均可
- 
-
+ ····················
+#运行scalar程序
+ 步骤一：
+ sbt package  #把class文件打包成jar文件
+ 步骤二：
+ eclipse build 路径：设置为 target/scala-2.11/simple-project_2.11-1.0.jar
+  If you want to change the location of this directory for whatever reason, right-click any Java project, the select "Build Path" -> "Configure Build Path". The location   of the output directory is specified in the "Source" tab. 
+ 步骤三
+ cd /cygdrive/c/work/PwC/spark
+  /cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7/bin/spark-submit.cmd  --class "SimpleApp"   --master local[4]   target/scala-2.11/simple-project_2.11-1.0.jar 
 ···spark history section for windows···
 步骤一：
 在windows中设置环境变量
@@ -2462,10 +2472,10 @@ echo %HADOOP_HOME%
 
         spark.eventLog.enabled          true
         spark.history.fs.logDirectory   file:///tmp/spark-events
+步骤三：运行  
    cd /cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7
    ./bin/spark-class.cmd org.apache.spark.deploy.history.HistoryServer
 
-··································································
 
 
 ```````spark java section`````
