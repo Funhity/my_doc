@@ -2461,7 +2461,7 @@ echo %HADOOP_HOME%
    vi /cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7/conf/spark-defaults.conf
 
         spark.eventLog.enabled          true
-        spark.history.fs.logDirectory   file:///C:/work/PwC/spark-2.2.0-bin-hadoop2.7/logs
+        spark.history.fs.logDirectory   file:///tmp/spark-events
    cd /cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7
    ./bin/spark-class.cmd org.apache.spark.deploy.history.HistoryServer
 
@@ -2578,8 +2578,8 @@ http://139.219.100.43:5000/v2/_catalog
 
 docker run -ti -p 4040:4040 -p 18080:18080   139.219.100.43:5000/c7-systemd-spark:example-shell-java-python bash
 #步骤八
-··········spark history section················
-通过网页浏览查看历史运行数据（默认只有python程序支持）：
+··········spark history section for linux················
+通过网页浏览查看历史运行数据(这种配置方式在python模式相关文档中有阐述，在windows下也适用）：
 
 vi  /usr/local/spark/conf/spark-defaults.conf
 spark.eventLog.enabled          true

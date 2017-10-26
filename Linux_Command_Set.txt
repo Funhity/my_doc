@@ -656,16 +656,38 @@ docker swarm init
 docker swarm join \
     --token SWMTKN-1-47b6rvzc1nd5yqe46i22mcdo7myu8rcjosq4lypl4exc097skx-5cfpe2azveljgkt0wcjxt0u7t \
     192.168.1.191:2377
-
-
-DNS based  load balancing:   docker service create --endpoint-mode dnsrr --name vote --network overlay1 --replicas 2              instavote/vote
-VIP  based load balancing:   docker service create                       --name vote --network overlay1 --replicas 2              instavote/vote
+.......docker load balance section············
+#https://sreeninet.wordpress.com/2016/07/29/service-discovery-and-load-balancing-internals-in-docker-1-12/
+方式一：DNS based load balancing
+DNS based  load balancing:   docker service create --endpoint-mode dnsrr --name vote   --network overlay1 --replicas 2              instavote/vote
+                             docker service create --endpoint-mode dnsrr --name client --network overlay1 --replicas 1              smakam/myubuntu:v4 ping docker.com
+        验证方式：curl vote  | grep -i "container id"
+                 ping -c1 vote
+#方式二：Service IP 10.0.0.4 gets load balanced to the 2 containers using Linux kernel iptables and ipvs
+Vitual IP  based load balancing:   docker service create                       --name vote   --network overlay1 --replicas 2     instavote/vote
+                                   docker service create                       --name client --network overlay1 --replicas 1     smakam/myubuntu:v4 ping docker.com
+                                   
+        验证方式：
+                                   方式1：
+                                   dig vote
+                                   方式2：
+                                   docker@node1:~$ docker service inspect --format {{.Endpoint.VirtualIPs}}  vote  
+                                                   [{bhijn66xu7jagzzhfjdsg68ba 10.0.0.4/24}]  #返回virtual ip具体地址
+                                   docker@node1:~$ docker service inspect --format {{.Endpoint.VirtualIPs}}  client 
+                                                   [{bhijn66xu7jagzzhfjdsg68ba 10.0.0.2/24}]
+                                   方式3：
+                                   root@node1:/var/run/docker/netns# docker ps                                       #查container id
+                                   root@node1:/var/run/docker/netns# docker inspect 9b7e8d8ce531 | grep -i sandbox   #通过container id查询到网络id为934e0fdc377d7a6f597beb3e43f06b9d68b74b2e7746df8be70693664c03cc28
+                                   root@node1:/var/run/docker/netns# nsenter --net=934e0fdc377d sh                   #进入934e0fdc377d的网络
+                                   root@node1:/var/run/docker/netns# iptables -nvL -t mangle                         #查看934e0fdc377d的网络的iptable设置
+                                   root@node1:/var/run/docker/netns# ipvsadm                                #iptables implements firewall rules and ipvs does load balancing.
+#方式三：
 Routing mesh                 docker service create                       --name vote --network overlay1 --replicas 2 -p 8080:80   instavote/vote
                              docker service create                       --name dns-cache                            -p 53:53/udp dns-cache
 ····docker swarm port····
 docker service update --publish-add <PUBLISHED-PORT>:<TARGET-PORT>  <SERVICE>
 ``````
-查询如何加入manager或work
+查询如何加入manager或worker
 docker swarm join-token manager
 docker swarm join-token worker
 docker swarm join-token  --rotate worker #修改加入的密钥
