@@ -918,7 +918,7 @@ docker attach 0cfbc636ba81
 docker inspect angry_leakey | less -i
 docker inspect --format="{{json .Config.ExposedPorts }}"  pwc_jenkins
 
-
+docker update --restart=always <CONTAINER ID>
 more /var/log/docker 
 To detach the tty without exiting the shell, use the escape sequence Ctrl+p + Ctrl+q.
 ```````````
@@ -1147,6 +1147,9 @@ ansible Cloudera*        -m shell  -a "ip r"
 ansible Cloudera*        -m shell  -a "ping www.sina.com.cn -c 1"
 
 ======================= copy scp section ssh section======================================
+yum -y install openssh-clients
+yum -y install openssh-server
+
 sshpass -p 'password' scp user1@xxx.xxx.x.5:sys_config /var/www/dev/
 scp on esxi :
 scp -r -C -o CompressionLevel=6   ./Linux-Test/    root@192.168.0.6:/vmfs/volumes/datastore1/Linux-Test
@@ -1154,12 +1157,12 @@ scp -r root@192.168.38.10:/tmp/wujunrong2     .
 ssh ops@magpie.example.com sudo puppet agent --test
 多文件拷贝：
 scp root@192.168.1.148:/srv/\{*,pillar/*,salt/*\}         /cygdrive/c/git/code_example/
-
+scp -P 222 /tmp/README.md root@192.168.56.17:/tmp
 
 fingerprint:
 ssh-keygen -lf /etc/ssh/ssh_host_ecdsa_key.pub
 
-yum -y install openssh-clients
+
 允许root用户远程登入：
 
 ``````
@@ -4515,6 +4518,7 @@ ssh -vvv root@192.168.129.76
 ssh-keygen -t rsa  
 或：ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
 ssh-copy-id -i ~/.ssh/id_rsa.pub $remote_user@$remote_host
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.56.17 -p222
 ssh-agent bash #rsa文件密码自动输入
 ssh-add ~/.ssh/id_rsa
 #the private key is used for the opposite operation, in these examples to decrypt ciphertext or to create a digital signature. 
@@ -8979,8 +8983,8 @@ w /sys/devices/platform/i8042/serio1/serio2/sensitivity - - - - 175
 EOF
 sudo systemd-tmpfiles --prefix=/sys --create
 
-====os section ===init section===centos section==os init=
-yum -y install epel-release wget curl telnet lrzsz aria2 openssh-clients iotop net-tools lsof tcpdump tree tcpdump zip unzip less dos2unix git
+====os section ===init section===centos section==os init===docker init===
+yum -y install epel-release wget curl telnet lrzsz aria2 openssh-clients iotop net-tools lsof tcpdump tree tcpdump zip unzip less dos2unix git iproute
 
 
 ====firefox section=====
