@@ -1145,6 +1145,7 @@ fingerprint:
 ssh-keygen -lf /etc/ssh/ssh_host_ecdsa_key.pub
 
 yum -y install openssh-clients
+yum -y install openssh-server
 允许root用户远程登入：
 
 ``````
