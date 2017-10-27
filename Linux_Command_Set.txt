@@ -695,7 +695,7 @@ Vitual IP  based load balancing:   docker service create                       -
 Routing mesh                 docker service create                       --name vote --network overlay1 --replicas 2 -p 8080:80   instavote/vote
                              docker service create                       --name dns-cache                            -p 53:53/udp dns-cache
         原理：                      docker@node1:~$ docker service tasks vote
-                                   docker@node1:~$ docker service tasks client
+                                  docker@node1:~$ docker service tasks client
                                    root@node1:/home/docker# iptables -nvL -t nat
                                    root@node1:/var/run/docker/netns# iptables -nvL -t mangle
                                    root@node1:/var/run/docker/netns# ipvsadm
@@ -705,10 +705,25 @@ Routing mesh                 docker service create                       --name 
 ····docker swarm port····
 docker service update --publish-add <PUBLISHED-PORT>:<TARGET-PORT>  <SERVICE>
 ``````
-查询如何加入manager或worker
+执行下面命令，可给出最为manager或worker加入swarm的命令
 docker swarm join-token manager
 docker swarm join-token worker
 docker swarm join-token  --rotate worker #修改加入的密钥
+
+
+````docker swarm command````
+docker node inspect self --pretty
+docker service ls
+docker service ps nginx
+docker service rm nginx
+
+docker service inspect --format {{.Endpoint.VirtualIPs}}  nginx
+docker service inspect   nginx|less
+docker network ls
+docker network --help
+docker network inspect my-multihost-network|less
+
+
 ```````
 docker stack deploy -c stack.yml redmine
  cat stack.yml 
