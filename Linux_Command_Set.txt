@@ -1132,6 +1132,9 @@ ansible Cloudera*        -m shell  -a "ip r"
 ansible Cloudera*        -m shell  -a "ping www.sina.com.cn -c 1"
 
 ======================= copy scp section ssh section======================================
+yum -y install openssh-clients
+yum -y install openssh-server
+
 sshpass -p 'password' scp user1@xxx.xxx.x.5:sys_config /var/www/dev/
 scp on esxi :
 scp -r -C -o CompressionLevel=6   ./Linux-Test/    root@192.168.0.6:/vmfs/volumes/datastore1/Linux-Test
@@ -1144,8 +1147,7 @@ scp root@192.168.1.148:/srv/\{*,pillar/*,salt/*\}         /cygdrive/c/git/code_e
 fingerprint:
 ssh-keygen -lf /etc/ssh/ssh_host_ecdsa_key.pub
 
-yum -y install openssh-clients
-yum -y install openssh-server
+
 允许root用户远程登入：
 
 ``````
