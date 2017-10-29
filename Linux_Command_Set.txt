@@ -4556,7 +4556,9 @@ ssh -R     3389:127.0.0.1:3389   frank@139.219.100.43   #在公司机器上运�
 在家里执行： ssh -R     3389:127.0.0.1:3389   frank@139.219.100.43
             公司访问家里windows用3389端口
 
-·····ssh proxy dynamic section···ssh proxy section·····dynamic proxy····
+
+·····ssh proxy dynamic section···ssh proxy section····aliyun section····dynamic proxy··
+
 #https://www.codeproject.com/Tips/634228/How-to-Use-Proxychains-Forwarding-Ports
 #proxy traffic from one application on your local computer through another application on your local computer. That's what proxychains does. 
 #https://unix.stackexchange.com/posts/233862/edit
