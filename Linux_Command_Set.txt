@@ -921,10 +921,10 @@ docker inspect --format="{{json .Config.ExposedPorts }}"  pwc_jenkins
 docker update --restart=always <CONTAINER ID>
 more /var/log/docker 
 To detach the tty without exiting the shell, use the escape sequence Ctrl+p + Ctrl+q.
-```````````
+```````docker images section````
 sudo docker save -o /home/matrix/matrix-data.tar matrix-data
 sudo docker load -i <path to copied image file>
-
+docker save centos:latest |ssh 10.0.1.8 docker load
 
 ````````````````
 docker stop $(docker ps -a -q)
