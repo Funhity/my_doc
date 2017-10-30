@@ -635,7 +635,7 @@ docker run -ti
                       --aux-address="my-printer=192.170.1.5" --aux-address="my-nas=192.170.1.6" \
                       my-multihost-network
 
-
+docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' f6f9b5a4ebe5
 `````docker link`````
     $ docker run --rm --name web2 --link db:db training/webapp env
 
