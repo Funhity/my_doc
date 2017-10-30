@@ -655,7 +655,7 @@ task    =  commands to run inside the container(atomic scheduling unit of swarm)
 
 离开swarm：
 docker swarm leave
-
+docker swarm leave --force
 加入swarm：
 步骤一：
       docker swarm init
@@ -886,6 +886,65 @@ $ docker build --rm -t local/c7-systemd .
 docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro                                       -p 80:80 local/centos7:yum-repository 
 docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /home/frank/docker-share:/root:rw  -p 80:80 centos7:systemd
 
+
+
+````docker swarm centos7 section`````
+mkdir -p /root/centos-swarm
+cat >/root/centos-swarm/Dockerfile <<EOF
+FROM centos:latest
+ENV container docker
+RUN yum -y install epel-release wget curl telnet lrzsz aria2 openssh-clients iotop net-tools lsof tcpdump tree tcpdump zip unzip less dos2unix git iproute;\
+(cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
+systemd-tmpfiles-setup.service ] || rm -f $i; done); \
+rm -f /lib/systemd/system/multi-user.target.wants/*;\
+rm -f /etc/systemd/system/*.wants/*;\
+rm -f /lib/systemd/system/local-fs.target.wants/*; \
+rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
+rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
+rm -f /lib/systemd/system/basic.target.wants/*;\
+rm -f /lib/systemd/system/anaconda.target.wants/*;
+
+VOLUME [ "/sys/fs/cgroup" ]
+EXPOSE 80
+EXPOSE 8080
+EXPOSE 22
+EXPOSE 443
+CMD ["/usr/sbin/init"]
+EOF
+
+cat  >/root/centos-swarm/docker-compose.yml <<EOF
+version: '3'
+services:
+ centos7-docker-swarm:
+  volumes:
+    - /sys/fs/cgroup:/sys/fs/cgroup:ro 
+  ports:
+   - "80:80"
+   - "443:443"
+   - "8080:8080"
+  environment:
+   - NGINX_HOST=foobar.com
+   - NGINX_PORT=80
+  command: ['/usr/sbin/init']
+  privileged: true
+  build: .
+  image: 10.0.1.198:5000/docker-swarm/centos7:20171030
+EOF
+cd /root/centos-swarm/
+sudo docker build -t  docker-swarm/centos7:20171030  .
+docker-compose up -d  #只要有build: .就会自动build，重新build要用docker-compose up -d --build
+部分输出：
+#To rebuild this image you must use `docker-compose build` or `docker-compose up -d --build`.
+
+removing intermediate container cf045eebd54b
+Successfully built 5d1e324b089d
+Successfully tagged 10.0.1.198:5000/docker-swarm/centos7:20171030
+
+
+docker-compose ps
+docker-compose down --volumes
+docker-compose push  #docker-compose.yml 中的image 的作用为，使用docker-compose build后将在本地创建image并且打上tag，为push做准备
+
 ````docker port section```docker ipv6 section`
 https://github.com/moby/moby/issues/2174
 问题描述：-p 80:80开放端口后可以telnet 通，但用其他机器telnet不通这台机器
@@ -955,6 +1014,9 @@ docker run --volumes-from dbdata -v $(pwd):/backup ubuntu tar cvf /backup/backup
 ``````docker repository section````docker private repository`
 步骤一：在第一台机器上安装private repository
        [root@docker1 ~]# docker run -d -p 5000:5000 --restart=always --name registry registry:2
+       验证方法：
+       curl http://localhost:5000/v2/
+       {}
 步骤二：在第二台机器上上传docker image
        [root@docker2 ~]# docker tag nginx  10.0.1.8:5000/nginx-wujunrong-private-repository-test
                                            10.0.1.8:5000是私有源地址
@@ -964,6 +1026,7 @@ docker run --volumes-from dbdata -v $(pwd):/backup ubuntu tar cvf /backup/backup
        Get https://10.0.1.8:5000/v2/: http: server gave HTTP response to HTTPS client
        ·········
        下面两条命令解决http: server gave HTTP response to HTTPS client问题：
+       在客户端执行：
         cat > /etc/docker/daemon.json <<-EOF
         { "insecure-registries":["139.219.100.43:5000"] }
 EOF
@@ -8943,8 +9006,16 @@ sudo systemctl start docker
 sudo systemctl enable docker
 sudo docker run hello-world
 ```docker compose section`````
+方法一：
 curl -L https://github.com/docker/compose/releases/download/1.14.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
+方法二：
+    #https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-centos-7
+    sudo yum  -y  install epel-release python-pip
+    sudo pip install docker-compose
+    sudo yum  -y  upgrade python*
+
+
 `````
 docker-compose up -d
 
