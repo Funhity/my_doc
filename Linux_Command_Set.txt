@@ -169,7 +169,7 @@ fi
 /etc/init.d/network restart
    sed -i.bak  's/HOSTNAME=.*/HOSTNAME=cloudera-manager/g' /etc/sysconfig/network
 
-=====nmap section==arp section==nc section==address section=
+=====nmap section==arp section==nc section==address section===ping section====
   sudo yum install nmap -y 
   arping -c 1 -I br0      192.168.38.150
   arping      -I ens32 -b 192.168.31.123 测试是否有IP冲突
@@ -980,10 +980,10 @@ docker inspect --format="{{json .Config.ExposedPorts }}"  pwc_jenkins
 docker update --restart=always <CONTAINER ID>
 more /var/log/docker 
 To detach the tty without exiting the shell, use the escape sequence Ctrl+p + Ctrl+q.
-```````````
+```````docker images section````
 sudo docker save -o /home/matrix/matrix-data.tar matrix-data
 sudo docker load -i <path to copied image file>
-
+docker save centos:latest |ssh 10.0.1.8 docker load
 
 ````````````````
 docker stop $(docker ps -a -q)
@@ -4619,7 +4619,9 @@ ssh -R     3389:127.0.0.1:3389   frank@139.219.100.43   #在公司机器上运�
 在家里执行： ssh -R     3389:127.0.0.1:3389   frank@139.219.100.43
             公司访问家里windows用3389端口
 
-·····ssh proxy dynamic section···ssh proxy section····aliyun section······
+
+·····ssh proxy dynamic section···ssh proxy section····aliyun section····dynamic proxy··
+
 #https://www.codeproject.com/Tips/634228/How-to-Use-Proxychains-Forwarding-Ports
 #proxy traffic from one application on your local computer through another application on your local computer. That's what proxychains does. 
 #https://unix.stackexchange.com/posts/233862/edit
@@ -4649,6 +4651,39 @@ ssh -D 1080 root@139.196.102.159
 proxychains apt-get -y install docker-ce 
 
 
+===pip section===shadowsocks section===vpn section===
+yum -y install python
+yum -y install python-setuptools && easy_install pip
+#wget https://bootstrap.pypa.io/get-pip.py
+#python get-pip.py
+pip install -vvv  shadowshocks
+pip install shadowsocks
+
+sslocal -s 服务器域名或IP -p 服务器端口号 -k “密码” -l 1080 -t 600 -m rc4-md5
+sslocal -s 104.250.146.212 -p 15770 -k  "68187067" -t 600 -m AES-256-CFB
+017-10-12 17:27:15 INFO     loading libcrypto from libcrypto.so.10
+2017-10-12 17:27:15 INFO     starting local at 127.0.0.1:108
+然后配置 proxychains 使得应用程序用本地端口代理翻墙
+····proxychains section···
+#centos:
+#https://techglimpse.com/install-proxychains-internet-behind-proxy-firewall/
+#https://echohn.github.io/2016/05/29/to-build-the-fullstack-tools-for-over-the-wall/
+sudo yum -y install git 
+sudo yum -y groupinstall  "Development Tools"
+git clone https://github.com/rofl0r/proxychains-ng.git
+cd proxychains-ng/
+./configure
+make && make install
+make install-config
+vi /usr/local/etc/proxychains.conf  #在最后一行增加 socks4 127.0.0.1 1080
+   [ProxyList]
+   # add proxy here ...
+   # meanwile
+   # defaults set to "tor"
+   #socks4         127.0.0.1 9050
+   socks4 127.0.0.1 9095
+ssh -D 9095 root@139.196.102.159
+proxychains4 docker pull registry
 
 
 ``````````````````````
@@ -6904,39 +6939,6 @@ pip install cx_Oracle
 pip install sqlalchemy
 
 
-===pip section===shadowsocks section===vpn section===
-yum -y install python
-yum -y install python-setuptools && easy_install pip
-#wget https://bootstrap.pypa.io/get-pip.py
-#python get-pip.py
-pip install -vvv  shadowshocks
-pip install shadowsocks
-
-sslocal -s 服务器域名或IP -p 服务器端口号 -k “密码” -l 1080 -t 600 -m rc4-md5
-sslocal -s 104.250.146.212 -p 15770 -k  "68187067" -t 600 -m AES-256-CFB
-017-10-12 17:27:15 INFO     loading libcrypto from libcrypto.so.10
-2017-10-12 17:27:15 INFO     starting local at 127.0.0.1:108
-然后配置 proxychains 使得应用程序用本地端口代理翻墙
-····proxychains section···
-#centos:
-#https://techglimpse.com/install-proxychains-internet-behind-proxy-firewall/
-#https://echohn.github.io/2016/05/29/to-build-the-fullstack-tools-for-over-the-wall/
-sudo yum -y install git 
-sudo yum -y groupinstall  "Development Tools"
-git clone https://github.com/rofl0r/proxychains-ng.git
-cd proxychains-ng/
-./configure
-make && make install
-make install-config
-vi /usr/local/etc/proxychains.conf  #在最后一行增加 socks4 127.0.0.1 1080
-   [ProxyList]
-   # add proxy here ...
-   # meanwile
-   # defaults set to "tor"
-   #socks4         127.0.0.1 9050
-   socks4 127.0.0.1 1080
-
-proxychains4 docker pull registry
 
 
 =========ntp section=========
