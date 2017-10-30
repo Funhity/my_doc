@@ -888,7 +888,8 @@ docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /home/fran
 
 
 
-````docker swarm centos7 section`````
+````docker swarm centos7 section```docker centos7``
+步骤一：用docker compose测试并创建image，上传到repository
 mkdir -p /root/centos-swarm
 cat >/root/centos-swarm/Dockerfile <<EOF
 FROM centos:latest
@@ -944,6 +945,51 @@ Successfully tagged 10.0.1.198:5000/docker-swarm/centos7:20171030
 docker-compose ps
 docker-compose down --volumes
 docker-compose push  #docker-compose.yml 中的image 的作用为，使用docker-compose build后将在本地创建image并且打上tag，为push做准备
+
+步骤二：用docker stack 方式启动swarm
+cat >/root/centos-swarm/docker-swarm.yml <<EOF
+version: '3'
+services:
+ centos7-docker-swarm:
+  volumes:
+    - /sys/fs/cgroup:/sys/fs/cgroup:ro 
+  ports:
+   - "180:80"
+   - "1443:443"
+   - "18080:8080"
+   - "122:22"
+  environment:
+   - NGINX_HOST=foobar.com
+   - NGINX_PORT=80
+  command: ['/usr/sbin/init']
+  networks:
+   - wu
+
+  deploy:
+     replicas: 2 
+     restart_policy:
+                condition: any
+
+  privileged: true
+  build: .
+  image: 10.0.1.198:5000/docker-swarm/centos7:20171030
+
+
+networks:
+ wu:
+  external: true
+EOF
+
+docker network ls
+docker stack deploy centos7 --compose-file=./docker-swarm.yml
+docker stack ls
+验证:
+查看是用哪个images创建的swarm,名字参数用docker stack ps centos7查:
+docker inspect centos7_centos7-docker-swarm  --format="{{.Spec.Labels}}"
+查虚拟ip：
+docker service inspect --format {{.Endpoint.VirtualIPs}} centos7_centos7-docker-swarm
+[root@ccd89983fd41 /]# ping centos7_centos7-docker-swarm
+
 
 ````docker port section```docker ipv6 section`
 https://github.com/moby/moby/issues/2174
