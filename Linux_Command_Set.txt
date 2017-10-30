@@ -635,7 +635,7 @@ docker run -ti
                       --aux-address="my-printer=192.170.1.5" --aux-address="my-nas=192.170.1.6" \
                       my-multihost-network
 
-
+docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' f6f9b5a4ebe5
 `````docker link`````
     $ docker run --rm --name web2 --link db:db training/webapp env
 
@@ -694,6 +694,13 @@ Vitual IP  based load balancing:   docker service create                       -
 #方式三：
 Routing mesh                 docker service create                       --name vote --network overlay1 --replicas 2 -p 8080:80   instavote/vote
                              docker service create                       --name dns-cache                            -p 53:53/udp dns-cache
+
+                             $ docker network create -d overlay \
+                                         --subnet=10.11.0.0/16 \
+                                         --ingress \
+                                         --opt com.docker.network.driver.mtu=9216 \
+                                         --opt encrypted=true \
+  my-ingress-network
         原理：                      docker@node1:~$ docker service tasks vote
                                   docker@node1:~$ docker service tasks client
                                    root@node1:/home/docker# iptables -nvL -t nat
