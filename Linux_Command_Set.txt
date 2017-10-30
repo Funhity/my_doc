@@ -694,7 +694,7 @@ Vitual IP  based load balancing:   docker service create                       -
 #方式三：
 Routing mesh                 docker service create                       --name vote --network overlay1 --replicas 2 -p 8080:80   instavote/vote
                              docker service create                       --name dns-cache                            -p 53:53/udp dns-cache
-
+                             #文档中说创建network要用--ingress参数https://docs.docker.com/engine/reference/commandline/network_create/#network-internal-mode
                              $ docker network create -d overlay \
                                          --subnet=10.11.0.0/16 \
                                          --ingress \
