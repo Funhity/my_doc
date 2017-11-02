@@ -6164,6 +6164,28 @@ The basic Git workflow goes something like this:
  # check what would be pushed to Gerrit
 方法二：
 git commit -a -m 'added new benchmarks'   #Skipping the Staging Area
+
+
+······git rebase conflict······
+https://help.github.com/articles/resolving-merge-conflicts-after-a-git-rebase/
+方案一：git rebase --abort
+方案二： git rebase --skip
+方案三：You can fix the conflict.
+       git  add ./scala-devops/src/main/scala/SimpleApp.scala
+       git rebase --continue
+==========gerrit conflict section===========
+https://www.entropywins.wtf/blog/2013/07/01/resolving-a-merge-conflict-on-gerrit/
+    git pull origin master
+    git remote show     origin
+    git review -d 12345  #Download change from Gerrit into a local branch. The branch will be named after the patch author and the name of
+             a topic. 
+    git rebase master
+    “fix conflicts”
+    git add *
+    git rebase –continue
+    git review
+
+
 ```````git 标准操作流程````git workflow section````
 https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository
 步骤1.  添加文件
@@ -6224,6 +6246,9 @@ git stash drop stash@{0}
 
 
 git log salt-office/master --stat
+git log -2
+git log --graph --oneline --decorate --all
+
 
 git diff                 #working目录和stage中的差别，即add后再次修改，尚未再次执行add
 git diff --staged        #stage和本地repository的差别，即在stage中，但还没有提交到repository，(--staged and --cached are synonyms)
@@ -6258,9 +6283,17 @@ git ls-remote --heads origin             #The --heads option lists only branch n
 
 git rm --cached file1.txt  #在git体系中去除，但在硬盘中仍旧存在
 git rm log/\*.log          #*号要转义，*在git中有自己的含义
+······git amend············· 
+#https://www.atlassian.com/git/tutorials/rewriting-history
+It lets you combine staged changes with the previous commit instead of creating an entirely new commit.
+It can also be used to simply edit the previous commit message without changing its snapshot
 
 git commit --amend #Undoing Things:重新commit
-
+git commit --amend -m "an updated commit message"
+# Edit hello.py and main.py git add hello.py git commit
+# Realize you forgot to add the changes from main.py git add main.py
+git commit --amend --no-edit
+·························
 git tag
 git tag -l "v1.8.5*"
 git tag -a v1.4      -m "my version 1.4"
@@ -6305,7 +6338,8 @@ git mergetool
 $ git config --global merge.tool "meld"
 $ git config --global mergetool.meld.path "C:\Program Files (x86)\Meld\Meld.exe"
 
-
+#git rebase理解：
+分支路径消失（git branch到分支上，看到的是master分支上的内容），分支上的commit，被放到master分支上。
 ````````git tags ```git release````````````````
 方法一：
 git clone git://git.openssl.org/openssl.git
@@ -6319,7 +6353,7 @@ git ls-remote --tags git://git.openssl.org/openssl.git
 git checkout -
 to switch back to wherever it was before the last checkout. 
 This was motivated by the analogy to the shell idiom cd - to go back to whatever working directory one was previously in.
-历史切换信息：
+历史操作信息：
 git reflog
 
 `````git object section````
@@ -9154,6 +9188,11 @@ sudo docker ps | grep uberga | awk '{print $NF}' |xargs -I{} sudo docker stop {}
 
 
 ======gerrit section=======
+https://www.mediawiki.org/wiki/Gerrit/Troubleshooting
+#注意点：
+用git review -R 提交前要git pull，这样git review能正确显示要提交的change，否则
+  1）git review以最后一次git pull为基准，计算要提交的change
+  2）repository中可能有新的提交，这个新的提交和当前的修改有冲突（以当前master为基准的修改）
 ```docker gerrit section `````gerrit docker section````
 Use local directory as the gerrit site storage.
 
@@ -9164,7 +9203,8 @@ mkdir ~/gerrit_volume
     Initialize and start gerrit using the local directory created above.
 
 docker run -d -v ~/gerrit_volume:/var/gerrit/review_site -p 8080:8080 -p 29418:29418 openfrontier/gerrit
-````````
+
+
 
 #vi /var/gerrit/review_site/etc/gerrit.config
 The easiest way is to temporarily disable authenticated logins.
@@ -9173,6 +9213,17 @@ Edit your [auth] statement in gerrit.config to look like this:
 type = development_become_any_account
 And then force login as the admin, grant yourself access and then restore the [auth] config.
 
+······gerrit workflow·······
+git commit -a -m "aaa"
+git review -R  --yes
+······gerrit patchset workflow······
+git commit --amend -m "test patch set--an updated commit message"
+git review -R  --yes
+会重新创建一个change set，并且把前面一个change set平级，在共同的基础上修改
+正确的方法是：原则是不修改commit message
+git commit --amend
+git review -R  --yes
+````````
 ==========dash section========- section======standard output section===
 
 find . -type f -print0 | tar -czvf backup.tar.gz --null -T -
