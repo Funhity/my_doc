@@ -6248,7 +6248,7 @@ git stash drop stash@{0}
 git log salt-office/master --stat
 git log -2
 git log --graph --oneline --decorate --all
-
+```git diff section``
 
 git diff                 #working目录和stage中的差别，即add后再次修改，尚未再次执行add
 git diff --staged        #stage和本地repository的差别，即在stage中，但还没有提交到repository，(--staged and --cached are synonyms)
@@ -6264,6 +6264,12 @@ git diff HEAD^^..HEAD -- main.c
 git diff HEAD~2 HEAD -- main.c
 #本地文件和本地master中的文件比较，显示修改内容
  git diff master:Linux_Command_Set.txt -- Linux_Command_Set.txt 
+# what change was introduced to origin/master in the last 4 commits?
+git diff origin/master origin/master~3
+
+If you want to diff your current working directory against the 5th most recent commit on origin/master, you would omit the first argument:
+git diff origin/master~4
+
 ```````````````````````
 #fetch 和 checkout的关系
  git fetch origin                             #只能获得origin/serverfix，但没有本地分支，可以通过merge到本地分支的方法来继续工作
@@ -9189,10 +9195,21 @@ sudo docker ps | grep uberga | awk '{print $NF}' |xargs -I{} sudo docker stop {}
 
 ======gerrit section=======
 https://www.mediawiki.org/wiki/Gerrit/Troubleshooting
-#注意点：
+#gerrit注意点：
 用git review -R 提交前要git pull，这样git review能正确显示要提交的change，否则
-  1）git review以最后一次git pull为基准，计算要提交的change
-  2）repository中可能有新的提交，这个新的提交和当前的修改有冲突（以当前master为基准的修改）
+  repository中可能有新的提交，这个新的提交和当前的修改有冲突（以当前master为基准的修改）
+  用git amend -m 修改commit内容会新产生一个change，
+  a) change的内容和前面的一致
+  b) 两个change都有同一个父change，这和git是串行的是不同的
+
+
+#git注意点：
+  1. it's important to not use git rebase on commits that have been pushed public, or it will appear that your project history disappeared. https://www.atlassian.com/git/tutorials/rewriting-history
+  2. Be cautious when using --amend on commits shared with other team members. Amending a commit that is shared with another user will potentially require confusing and lengthy merge conflict resolutions.
+  3. 在没有git pull的情况下执行 git push --force ，会导致git repository中的内容丢失
+     https://help.github.com/articles/resolving-a-merge-conflict-using-the-command-line/
+
+
 ```docker gerrit section `````gerrit docker section````
 Use local directory as the gerrit site storage.
 
@@ -9217,12 +9234,14 @@ And then force login as the admin, grant yourself access and then restore the [a
 git commit -a -m "aaa"
 git review -R  --yes
 ······gerrit patchset workflow······
-git commit --amend -m "test patch set--an updated commit message"
-git review -R  --yes
-会重新创建一个change set，并且把前面一个change set平级，在共同的基础上修改
+错误的方法：
+  git commit --amend -m "test patch set--an updated commit message"
+  git review -R  --yes
+  会重新创建一个change set，并且把前面一个change set平级，在共同的基础上修改
 正确的方法是：原则是不修改commit message
-git commit --amend
-git review -R  --yes
+  git commit -a --amend
+  或者git commit --amend
+  git review -R  --yes
 ````````
 ==========dash section========- section======standard output section===
 
