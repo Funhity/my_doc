@@ -9193,14 +9193,14 @@ sudo route del -net default gw 10.0.1.1 dev eth0   # and delete old default rout
 sudo docker ps | grep uberga | awk '{print $NF}' |xargs -I{} sudo docker stop {}
 
 
-======gerrit section=======
+======gerrit section===gerrit conflict===git conflict section=
 https://www.mediawiki.org/wiki/Gerrit/Troubleshooting
 #gerrit注意点：
 用git review -R 提交前要git pull，这样git review能正确显示要提交的change，否则
   repository中可能有新的提交，这个新的提交和当前的修改有冲突（以当前master为基准的修改）
   用git amend -m 修改commit内容会新产生一个change，
   a) change的内容和前面的一致
-  b) 两个change都有同一个父change，这和git是串行的是不同的
+  b) 两个change都有同一个父change(一个submit了，另一个就会conflict)，这和git是串行的是不同的
 
 
 #git注意点：
