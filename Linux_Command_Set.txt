@@ -6074,7 +6074,7 @@ cd <localdir>
 svn co <url> .
 svn add <files etc>
 svn commit -m <msg>
-```````````````````````````````````
+```````git config section````````````````````````````
 
 git config --list
 git config user.name
@@ -6173,18 +6173,6 @@ https://help.github.com/articles/resolving-merge-conflicts-after-a-git-rebase/
 方案三：You can fix the conflict.
        git  add ./scala-devops/src/main/scala/SimpleApp.scala
        git rebase --continue
-==========gerrit conflict section===========
-https://www.entropywins.wtf/blog/2013/07/01/resolving-a-merge-conflict-on-gerrit/
-    git pull origin master
-    git remote show     origin
-    git review -d 12345  #Download change from Gerrit into a local branch. The branch will be named after the patch author and the name of
-             a topic. 
-    git rebase master
-    “fix conflicts”
-    git add *
-    git rebase –continue
-    git review
-
 
 ```````git 标准操作流程````git workflow section````
 https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository
@@ -6318,10 +6306,13 @@ git checkout -b version2     v2.0.0
 git checkout -b iss53 = git branch iss53(创建新本地分支);git checkout iss53
 ````````
 git branch                        #列出本地所有branch
+git branch -v                     #功能1：To see the last commit on each branch 
+                                   功能2：查看head领先remote、origin多少了
 git branch -r                     #列出remote中的所有分支          
 或git branch -a          
 git branch -vv                    #列出本地分支和remote之间的关系
                                    列出最新所有分支的情况：git fetch --all; git branch -vv
+git branch --merged               #列出分支，这些分支的最新内容已经合并到当前分支中，另一个参数是--no-merged
 git branch -u origin/serverfix    #为当前本地分支创建上游分支
 
 git remote show origin  #给出remote的详细信息
@@ -6337,7 +6328,7 @@ git checkout master
 ``````
 git merge 操作步骤：
 git checkout master
-git merge iss53
+git merge iss53   #如果master只是落后几个commit的话，这个操作就是fast-forward 
 git status
 git add #解决conflict后执行
 git mergetool
@@ -9194,6 +9185,21 @@ sudo docker ps | grep uberga | awk '{print $NF}' |xargs -I{} sudo docker stop {}
 
 
 ======gerrit section===gerrit conflict===git conflict section=
+操作流程：
+https://www.entropywins.wtf/blog/2013/07/01/resolving-a-merge-conflict-on-gerrit/
+    git pull origin master
+    git remote show     origin
+    git review -d 12345  #Download change from Gerrit into a local branch. The branch will be named after the patch author and the name of
+             a topic. 
+    git rebase master
+    “fix conflicts”
+    git add *
+    git rebase –continue
+    git review
+
+
+`````````````````````````````
+
 https://www.mediawiki.org/wiki/Gerrit/Troubleshooting
 #gerrit注意点：
 用git review -R 提交前要git pull，这样git review能正确显示要提交的change，否则
@@ -9204,11 +9210,11 @@ https://www.mediawiki.org/wiki/Gerrit/Troubleshooting
 
 
 #git注意点：
-  1. it's important to not use git rebase on commits that have been pushed public, or it will appear that your project history disappeared. https://www.atlassian.com/git/tutorials/rewriting-history
-  2. Be cautious when using --amend on commits shared with other team members. Amending a commit that is shared with another user will potentially require confusing and lengthy merge conflict resolutions.
-  3. 在没有git pull的情况下执行 git push --force ，会导致git repository中的内容丢失
-     https://help.github.com/articles/resolving-a-merge-conflict-using-the-command-line/
 
+  * it's important to not use git rebase on commits that have been pushed public, or it will appear that your project history disappeared. https://www.atlassian.com/git/tutorials/rewriting-history
+  * Be cautious when using --amend on commits shared with other team members. Amending a commit that is shared with another user will potentially require confusing and lengthy merge conflict resolutions.
+  * 在没有git pull的情况下执行 git push --force ，会导致git repository中的内容丢失 https://help.github.com/articles/resolving-a-merge-conflict-using-the-command-line/
+  * Already pushed changes and someone else pulled those changes? You should not use git reset to undo changes, you should use git revert as described in our Git rollback commit guide instead. http://www.hostingadvice.com/how-to/git-undo-commit/#git-reset-vs-revert
 
 ```docker gerrit section `````gerrit docker section````
 Use local directory as the gerrit site storage.
@@ -9234,6 +9240,7 @@ And then force login as the admin, grant yourself access and then restore the [a
 git commit -a -m "aaa"
 git review -R  --yes
 ······gerrit patchset workflow······
+一个change多个patchset：
 错误的方法：
   git commit --amend -m "test patch set--an updated commit message"
   git review -R  --yes
@@ -9242,7 +9249,9 @@ git review -R  --yes
   git commit -a --amend
   或者git commit --amend
   git review -R  --yes
-````````
+```gerrit command setion`````
+ssh -p <port> <host> gerrit review --restore <change-id>
+
 ==========dash section========- section======standard output section===
 
 find . -type f -print0 | tar -czvf backup.tar.gz --null -T -
