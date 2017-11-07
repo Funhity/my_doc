@@ -2840,3 +2840,53 @@ https://community.atlassian.com/t5/Questions/JIRA-Gerrit-Plugin-config-issue/qaq
 In my shop, we use "message:%s" and it works fine
 
 teamview:G6H2 H88C PPDK V44L
+=====git remote section======git fetch section======
+
+Frank@Frank-PC /cygdrive/c/work/PwC/hadoop-spark
+$  git remote -v
+gerrit  ssh://wujunrog-username@192.168.56.17:29418/hadoop-spark.git (fetch)
+gerrit  ssh://wujunrog-username@192.168.56.17:29418/hadoop-spark.git (push)
+origin  ssh://wujunrog-username@192.168.56.17:29418/hadoop-spark.git (fetch)
+origin  ssh://wujunrog-username@192.168.56.17:29418/hadoop-spark.git (push)
+Frank@Frank-PC /cygdrive/c/work/PwC/hadoop-spark
+$ git branch -vv
+  master  f729559 [origin/master: 领先 5] test branch on gerrit2-before checkout
+* testing 71979fa I am on test branch
+Frank@Frank-PC /cygdrive/c/work/PwC/hadoop-spark
+$ git remote show origin
+* 远程 origin
+  获取地址：ssh://wujunrog-username@192.168.56.17:29418/hadoop-spark.git
+  推送地址：ssh://wujunrog-username@192.168.56.17:29418/hadoop-spark.git
+  HEAD 分支：master
+  远程分支：
+    master 已跟踪
+  为 'git pull' 配置的本地分支：
+    master 与远程 master 合并
+  为 'git push' 配置的本地引用：
+    master 推送至 master (本地已过时)
+Frank@Frank-PC /cygdrive/c/work/PwC/hadoop-spark
+$ git branch -a
+  master
+* testing
+  remotes/gerrit/master
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/master
+
+Frank@Frank-PC /cygdrive/c/work/PwC/hadoop-spark
+$ git config --list  #配置fetch只获取部分分支
+user.email=publicwu@163.com
+user.name=frank
+merge.tool=meld
+mergetool.meld.path=C:\Program Files (x86)\Meld\Meld.exe
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true
+core.ignorecase=true
+remote.origin.url=ssh://wujunrog-username@192.168.56.17:29418/hadoop-spark.git
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+branch.master.remote=origin
+branch.master.merge=refs/heads/master
+remote.gerrit.url=ssh://wujunrog-username@192.168.56.17:29418/hadoop-spark.git
+remote.gerrit.fetch=+refs/heads/*:refs/remotes/gerrit/*
+====================
