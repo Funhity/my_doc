@@ -6314,6 +6314,7 @@ git branch -r                     #列出remote中的所有分支
 或git branch -a          
 git branch -vv                    #列出本地分支和remote之间的关系
                                    列出最新所有分支的情况：git fetch --all; git branch -vv
+                                   用git remote -v显示所有远程repository
 git branch --merged               #列出分支，这些分支的最新内容已经合并到当前分支中，另一个参数是--no-merged
 git branch -u origin/serverfix    #为当前本地分支创建上游分支
 
