@@ -6290,7 +6290,7 @@ git ls-remote --heads origin             #The --heads option lists only branch n
 
 git rm --cached file1.txt  #在git体系中去除，但在硬盘中仍旧存在
 git rm log/\*.log          #*号要转义，*在git中有自己的含义
-······git amend············· 
+······git amend section············· 
 #https://www.atlassian.com/git/tutorials/rewriting-history
 It lets you combine staged changes with the previous commit instead of creating an entirely new commit.
 It can also be used to simply edit the previous commit message without changing its snapshot
@@ -6360,13 +6360,14 @@ git checkout tags/<name>     # to switch to the desired tag
 方法二：
 git ls-remote --tags git://git.openssl.org/openssl.git
 ```
-工作区版本切换：
+工作区版本切换：#dash section
 git checkout -
 to switch back to wherever it was before the last checkout. 
 This was motivated by the analogy to the shell idiom cd - to go back to whatever working directory one was previously in.
 历史操作信息：
-git reflog
-
+ git reflog
+ git reflog --pretty='%cd %h %gd %gs'
+ git reflog --date=iso
 `````git object section````
 git cat-file -p 83baae61804e65cc73a7201a7252750c76066a30 > test.txt
 
@@ -8966,7 +8967,7 @@ yes Y | command-that-asks-for-input
 gunzip chunter-0.7.0p3.gz
 yes 'yes' |sh chunter-0.7.0p3
 
-========cygwin clipboard section======
+========cygwin clipboard section====cygwin paste==
 安装cygutils-extra
 ssh root@10.0.1.160 cat /data/files/66d919a8-132a-11e7-a7b8-5b99fa122880/manifest.json  > /dev/clipboard
 
@@ -9212,7 +9213,7 @@ https://www.entropywins.wtf/blog/2013/07/01/resolving-a-merge-conflict-on-gerrit
     git review
 
 
-`````````````````````````````
+``````````git amend section```````````````````
 
 https://www.mediawiki.org/wiki/Gerrit/Troubleshooting
 #gerrit注意点：
