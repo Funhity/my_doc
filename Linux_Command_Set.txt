@@ -6062,8 +6062,9 @@ git clone git+ssh://git@github.com/webloginwu/code_example
 git commit -a -m "about github"
 
 ============git section=====
+理解：
 git merge 和git rebase的区别：
-git merge 会在当前所在的分支上新产生一个commit（three-way merge），
+git merge 会在当前所在的分支上新产生一个commit（three-way merge，合并时会找共同的父亲，在父亲之前的commit忽略），
 git rebase在当前分支的head上重新commit，
 机制不一样
 
@@ -6249,6 +6250,7 @@ git log --graph --oneline --decorate --all #git graph section
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h %s %ci %h %b'
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %s, %ci, %b'
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci, %b %C(bold green)%s'
+
 git log  gerrit/master
 git log  origin/master
 git blame ./scala-devops/src/main/scala/SimpleApp.scala
