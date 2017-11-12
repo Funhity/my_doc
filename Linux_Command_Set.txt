@@ -6350,7 +6350,7 @@ $ git config --global merge.tool "meld"
 $ git config --global mergetool.meld.path "C:\Program Files (x86)\Meld\Meld.exe"
 
 #git rebase理解：
-分支路径消失（git branch到分支上，看到的是master分支上的内容），分支上的commit，被放到master分支上。
+分支路径消失（git branch切到分支上后，看到的是master分支上的内容），分支上的commit，被放到master分支上。
 ````````git tags ```git release````````````````
 方法一：
 git clone git://git.openssl.org/openssl.git
