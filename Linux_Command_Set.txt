@@ -6065,11 +6065,11 @@ git commit -a -m "about github"
 理解：
 git merge 和git rebase的区别：
 git merge 会在当前所在的分支上新产生一个commit（three-way merge，合并时会找共同的父亲，在父亲之前的commit忽略），
-git rebase在当前分支的head上重新commit，
-机制不一样
+git rebase在当前分支的head上重新commit，机制不一样
+#git rebase理解：
+分支路径消失（git branch到分支上，看到的是master分支上的内容），分支上的commit，被放到master分支上。
 
-
-
+``````````````````````````````
 /etc/gitconfig                                git config  --system 
 ~/.gitconfig or ~/.config/git/config          git config  --global 
 
@@ -6242,14 +6242,17 @@ git stash branch <branch-name>
                            and <stash> is a reference of the form stash@{<revision>}, it then drops the <stash>. When no <stash> is given,
                            applies the latest one.
 git stash drop stash@{0}
-``git log section```
+``git log section```git graph section````
 
 git log salt-office/master --stat
 git log -2
-git log --graph --oneline --decorate --all #git graph section
+git log --graph --oneline --decorate --all 
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h %s %ci %h %b'
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %s, %ci, %b'
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci, %b %C(bold green)%s'
+git rev-list --left-right --boundary --pretty=oneline HEAD...origin/master
+git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci)%s'      --left-right --boundary  HEAD...origin/master
+
 
 git log  gerrit/master
 git log  origin/master
@@ -6354,8 +6357,8 @@ git mergetool
 $ git config --global merge.tool "meld"
 $ git config --global mergetool.meld.path "C:\Program Files (x86)\Meld\Meld.exe"
 
-#git rebase理解：
-分支路径消失（git branch到分支上，看到的是master分支上的内容），分支上的commit，被放到master分支上。
+
+git merge-base branch2 branch3
 ````````git tags ```git release````````````````
 方法一：
 git clone git://git.openssl.org/openssl.git
@@ -9279,4 +9282,12 @@ https://gerrit-documentation.storage.googleapis.com/Documentation/2.14.3/cmd-set
 cat ~/.ssh/id_watcher.pub | ssh -p 29418 review.example.com gerrit set-account --add-ssh-key - --add-email mail@example.com watcher
 
 
-=======
+=======css section====
+<style>
+body{
+display: flex;
+ justify-content:center;
+  align-items:center;
+}
+</style>
+=========
