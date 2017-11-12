@@ -6062,13 +6062,14 @@ git clone git+ssh://git@github.com/webloginwu/code_example
 git commit -a -m "about github"
 
 ============git section=====
+理解：
 git merge 和git rebase的区别：
-git merge 会在当前所在的分支上新产生一个commit（three-way merge），
-git rebase在当前分支的head上重新commit，
-机制不一样
+git merge 会在当前所在的分支上新产生一个commit（three-way merge，合并时会找共同的父亲，在父亲之前的commit忽略），
+git rebase在当前分支的head上重新commit，机制不一样
+#git rebase理解：
+分支路径消失（git branch到分支上，看到的是master分支上的内容），分支上的commit，被放到master分支上。
 
-
-
+``````````````````````````````
 /etc/gitconfig                                git config  --system 
 ~/.gitconfig or ~/.config/git/config          git config  --global 
 
@@ -6154,6 +6155,9 @@ A refspec is specified as [+]<src>:<dst>. The <src> parameter is the source bran
    git commit --dry-run -a
    git push
    git pull  -s  resolve #pull的时候你这边已经被svn update改了，pull的时候需要指定merge策略
+````git head section```git command section`````
+git rev-parse HEAD
+git merge-base branch2 branch3
 
 `````````
         git archive   --format=tar --remote=/srv/git/xxd_code_repo.git/           master                    | tar -xf -
@@ -6241,14 +6245,25 @@ git stash branch <branch-name>
                            and <stash> is a reference of the form stash@{<revision>}, it then drops the <stash>. When no <stash> is given,
                            applies the latest one.
 git stash drop stash@{0}
-`````
-
+``git log section```git graph section````
 
 git log salt-office/master --stat
 git log -2
-git log --graph --oneline --decorate --all #git graph section
+·········
+git log --graph --oneline --decorate --all 
+git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h %s %ci %h %b'
+git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %s, %ci, %b'
+git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci, %b %C(bold green)%s'
+git rev-list --left-right --boundary --pretty=oneline HEAD...origin/master
+git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci)%s'      --left-right --boundary  HEAD...origin/master
+git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci)%s'      --left-right --boundary    71979fa...5ec0355
+····
+'%b': body
+'%C(…)': color specification
+·······
 git log  gerrit/master
 git log  origin/master
+git blame ./scala-devops/src/main/scala/SimpleApp.scala
 ```git diff section``
 
 git diff                 #working目录和stage中的差别，即add后再次修改，尚未再次执行add
@@ -6290,7 +6305,7 @@ git ls-remote --heads origin             #The --heads option lists only branch n
 
 git rm --cached file1.txt  #在git体系中去除，但在硬盘中仍旧存在
 git rm log/\*.log          #*号要转义，*在git中有自己的含义
-······git amend············· 
+······git amend section············· 
 #https://www.atlassian.com/git/tutorials/rewriting-history
 It lets you combine staged changes with the previous commit instead of creating an entirely new commit.
 It can also be used to simply edit the previous commit message without changing its snapshot
@@ -6351,6 +6366,9 @@ $ git config --global mergetool.meld.path "C:\Program Files (x86)\Meld\Meld.exe"
 
 #git rebase理解：
 分支路径消失（git branch切到分支上后，看到的是master分支上的内容），分支上的commit，被放到master分支上。
+
+git merge-base branch2 branch3
+
 ````````git tags ```git release````````````````
 方法一：
 git clone git://git.openssl.org/openssl.git
@@ -6360,13 +6378,17 @@ git checkout tags/<name>     # to switch to the desired tag
 方法二：
 git ls-remote --tags git://git.openssl.org/openssl.git
 ```
-工作区版本切换：
+工作区版本切换：#dash section
 git checkout -
 to switch back to wherever it was before the last checkout. 
 This was motivated by the analogy to the shell idiom cd - to go back to whatever working directory one was previously in.
-历史操作信息：
-git reflog
+cd -  #切换到上次所在的目录
+`````
 
+历史操作信息：
+ git reflog
+ git reflog --pretty='%cd %h %gd %gs'
+ git reflog --date=iso
 `````git object section````
 git cat-file -p 83baae61804e65cc73a7201a7252750c76066a30 > test.txt
 
@@ -8966,7 +8988,7 @@ yes Y | command-that-asks-for-input
 gunzip chunter-0.7.0p3.gz
 yes 'yes' |sh chunter-0.7.0p3
 
-========cygwin clipboard section======
+========cygwin clipboard section====cygwin paste==
 安装cygutils-extra
 ssh root@10.0.1.160 cat /data/files/66d919a8-132a-11e7-a7b8-5b99fa122880/manifest.json  > /dev/clipboard
 
@@ -9212,7 +9234,7 @@ https://www.entropywins.wtf/blog/2013/07/01/resolving-a-merge-conflict-on-gerrit
     git review
 
 
-`````````````````````````````
+``````````git amend section```````````````````
 
 https://www.mediawiki.org/wiki/Gerrit/Troubleshooting
 #gerrit注意点：
@@ -9273,4 +9295,12 @@ https://gerrit-documentation.storage.googleapis.com/Documentation/2.14.3/cmd-set
 cat ~/.ssh/id_watcher.pub | ssh -p 29418 review.example.com gerrit set-account --add-ssh-key - --add-email mail@example.com watcher
 
 
-=======
+=======css section====
+<style>
+body{
+display: flex;
+ justify-content:center;
+  align-items:center;
+}
+</style>
+=========
