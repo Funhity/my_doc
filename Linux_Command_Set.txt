@@ -6155,6 +6155,9 @@ A refspec is specified as [+]<src>:<dst>. The <src> parameter is the source bran
    git commit --dry-run -a
    git push
    git pull  -s  resolve #pull的时候你这边已经被svn update改了，pull的时候需要指定merge策略
+````git head section```git command section`````
+git rev-parse HEAD
+git merge-base branch2 branch3
 
 `````````
         git archive   --format=tar --remote=/srv/git/xxd_code_repo.git/           master                    | tar -xf -
@@ -6252,7 +6255,7 @@ git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %s,
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci, %b %C(bold green)%s'
 git rev-list --left-right --boundary --pretty=oneline HEAD...origin/master
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci)%s'      --left-right --boundary  HEAD...origin/master
-
+git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci)%s'      --left-right --boundary    71979fa...5ec0355
 
 git log  gerrit/master
 git log  origin/master
@@ -6372,6 +6375,9 @@ git ls-remote --tags git://git.openssl.org/openssl.git
 git checkout -
 to switch back to wherever it was before the last checkout. 
 This was motivated by the analogy to the shell idiom cd - to go back to whatever working directory one was previously in.
+cd -  #切换到上次所在的目录
+`````
+
 历史操作信息：
  git reflog
  git reflog --pretty='%cd %h %gd %gs'
