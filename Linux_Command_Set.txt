@@ -615,7 +615,7 @@ docker run -ti
        -d, --detach=true|false
           Detached mode: run the container in the background and print the new container ID. The default is false.
 
-`````docker network``````
+`````docker network section``````
 
  docker network ls
  docker network inspect bridge  #用Containers键值可查看bridge被哪些container使用了
@@ -701,7 +701,7 @@ Routing mesh                 docker service create                       --name 
                                          --ingress \
                                          --opt com.docker.network.driver.mtu=9216 \
                                          --opt encrypted=true \
-  my-ingress-network
+                                         my-ingress-network
         原理：                      docker@node1:~$ docker service tasks vote
                                   docker@node1:~$ docker service tasks client
                                    root@node1:/home/docker# iptables -nvL -t nat
