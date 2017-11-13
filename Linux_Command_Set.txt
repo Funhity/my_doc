@@ -637,7 +637,7 @@ docker run -ti
                       --aux-address="my-router=192.168.1.5" --aux-address="my-switch=192.168.1.6" \
                       --aux-address="my-printer=192.170.1.5" --aux-address="my-nas=192.170.1.6" \
                       my-multihost-network
-
+#说明：routing mesh模式，文档中说创建network要用--ingress参数
 docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' f6f9b5a4ebe5
 `````docker link`````
     $ docker run --rm --name web2 --link db:db training/webapp env
@@ -700,7 +700,7 @@ docker network inspect my-multihost-network|less
 
 docker service create   --name centos7-swarm   --network my-multihost-network --replicas 2  10.0.1.198:5000/docker-swarm/centos7:20171030
 
-.......docker load balance section············
+.......docker load balance section·······docker dns section·····
 #https://sreeninet.wordpress.com/2016/07/29/service-discovery-and-load-balancing-internals-in-docker-1-12/
 方式一：DNS based load balancing
 DNS based  load balancing:   docker service create --endpoint-mode dnsrr --name vote   --network overlay1 --replicas 2              instavote/vote
@@ -726,7 +726,7 @@ Vitual IP  based load balancing:   docker service create                       -
                                    root@node1:/var/run/docker/netns# iptables -nvL -t mangle                         #查看934e0fdc377d的网络的iptable设置
                                    root@node1:/var/run/docker/netns# ipvsadm                                #iptables implements firewall rules and ipvs does load balancing.
 #方式三：
-Routing mesh                 docker service create                       --name vote --network overlay1 --replicas 2 -p 8080:80   instavote/vote
+routing mesh                 docker service create                       --name vote --network overlay1 --replicas 2 -p 8080:80   instavote/vote
                              docker service create                       --name dns-cache                            -p 53:53/udp dns-cache
                              #文档中说创建network要用--ingress参数https://docs.docker.com/engine/reference/commandline/network_create/#network-internal-mode
                              $ docker network create -d overlay \
@@ -9189,7 +9189,7 @@ EOF
 sudo systemd-tmpfiles --prefix=/sys --create
 
 ====os section ===init section===centos section==os init===docker init===
-yum -y install epel-release wget curl telnet lrzsz aria2 openssh-clients iotop net-tools lsof tcpdump tree tcpdump zip unzip less dos2unix git iproute
+yum -y install epel-release wget curl telnet lrzsz aria2 openssh-clients iotop net-tools lsof tcpdump tree tcpdump zip unzip less dos2unix git iproute bind-utils
 
 
 ====firefox section=====
