@@ -616,7 +616,7 @@ docker run -ti
           Detached mode: run the container in the background and print the new container ID. The default is false.
 
 `````docker network``````
-
+ docker service inspect --pretty centos7_centos7-docker-swarm | grep -i networks
  docker network ls
  docker network inspect bridge  #用Containers键值可查看bridge被哪些container使用了
 
@@ -667,6 +667,36 @@ docker swarm leave --force
          --token SWMTKN-1-47b6rvzc1nd5yqe46i22mcdo7myu8rcjosq4lypl4exc097skx-5cfpe2azveljgkt0wcjxt0u7t \
          192.168.1.191:2377
 
+
+····docker swarm port····
+docker service update --publish-add <PUBLISHED-PORT>:<TARGET-PORT>  <SERVICE>
+``````
+执行下面命令，可给出最为manager或worker加入swarm的命令
+docker swarm join-token manager
+docker swarm join-token worker
+docker swarm join-token  --rotate worker #修改加入的密钥
+
+
+````docker swarm command````docker service section``````
+docker node inspect self --pretty
+docker node inspect docker2 |less
+docker service ls
+docker service ps nginx
+docker service rm nginx
+
+docker service scale SERVICE_NAME=0
+docker service scale SERVICE_NAME=1
+
+docker service inspect --format {{.Endpoint.VirtualIPs}}  nginx
+docker service inspect   nginx|less
+
+docker network ls
+docker network --help
+docker network inspect my-multihost-network|less
+
+
+docker service create   --name centos7-swarm   --network my-multihost-network --replicas 2  10.0.1.198:5000/docker-swarm/centos7:20171030
+
 .......docker load balance section············
 #https://sreeninet.wordpress.com/2016/07/29/service-discovery-and-load-balancing-internals-in-docker-1-12/
 方式一：DNS based load balancing
@@ -709,28 +739,6 @@ Routing mesh                 docker service create                       --name 
                                    root@node1:/var/run/docker/netns# ipvsadm
         验证方式：                  curl 192.168.99.102:8080  | grep -i "container id"
                                    curl 192.168.99.102:8080  | grep -i "container id"
-
-····docker swarm port····
-docker service update --publish-add <PUBLISHED-PORT>:<TARGET-PORT>  <SERVICE>
-``````
-执行下面命令，可给出最为manager或worker加入swarm的命令
-docker swarm join-token manager
-docker swarm join-token worker
-docker swarm join-token  --rotate worker #修改加入的密钥
-
-
-````docker swarm command````
-docker node inspect self --pretty
-docker service ls
-docker service ps nginx
-docker service rm nginx
-
-docker service inspect --format {{.Endpoint.VirtualIPs}}  nginx
-docker service inspect   nginx|less
-docker network ls
-docker network --help
-docker network inspect my-multihost-network|less
-
 
 ```````
 docker stack deploy -c stack.yml redmine
@@ -9021,17 +9029,17 @@ docker run -d --name yibaba-redmine-mysql -e MYSQL_ROOT_PASSWORD=yibaba -e MYSQL
 docker run -d --name yibaba-redmine --link  yibaba-redmine-mysql:mysql  -p 8080:3000 redmine
 
 
-docker   exec   -it  yibaba-redmine  bash
+docker exec   -it  yibaba-redmine  bash
 
 `````
-docker   exec   yibaba-redmine   cat /usr/src/redmine/app/controllers/users_controller.rb  |less -N
+docker exec   yibaba-redmine   cat /usr/src/redmine/app/controllers/users_controller.rb  |less -N
 
 
 
 ````
 redmine 支持中文操作步骤：
 步骤一：根据500错误日志，找出那张表有问题
-docker   exec   yibaba-redmine   cat /usr/src/redmine/log/production.log  |less
+docker exec   yibaba-redmine   cat /usr/src/redmine/log/production.log  |less
 
 
 ```库表支持中文`````
