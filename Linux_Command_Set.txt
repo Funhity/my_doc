@@ -662,6 +662,7 @@ docker swarm leave --force
     或docker swarm init --advertise-addr <MANAGER-IP> #配置manage的IP地址，manager用此IP地址和worker联系
 步骤二：
     docker swarm join-token worker #执行此命令获得token
+    docker swarm leave
     docker swarm join \
          --token SWMTKN-1-47b6rvzc1nd5yqe46i22mcdo7myu8rcjosq4lypl4exc097skx-5cfpe2azveljgkt0wcjxt0u7t \
          192.168.1.191:2377
@@ -6364,8 +6365,11 @@ git mergetool
 $ git config --global merge.tool "meld"
 $ git config --global mergetool.meld.path "C:\Program Files (x86)\Meld\Meld.exe"
 
+#git rebase理解：
+分支路径消失（git branch切到分支上后，看到的是master分支上的内容），分支上的commit，被放到master分支上。
 
 git merge-base branch2 branch3
+
 ````````git tags ```git release````````````````
 方法一：
 git clone git://git.openssl.org/openssl.git
