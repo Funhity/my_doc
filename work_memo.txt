@@ -2751,35 +2751,60 @@ docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home  -v /et
 
 
 
-     #!/bin/bash
-     export PATH=$PATH:/var/jenkins_home/spark-2.2.0-bin-hadoop2.7/bin/
-     exec &> >(tee /tmp/wujunrong.log)
-     ls
-     pwd
-     date
-     cd /var/jenkins_home/workspace/build-spark-enviromnet/default/java-devops
-     /var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/pwc-maven/bin/mvn package
-     
-     spark-submit  --class "SimpleApp"   --master local[4]   target/simple-project-1.0.jar
-     echo ==============run on remote server==============================
-     ssh -p 222  root@192.168.56.17 mkdir -p /root/jenkins-spark/python-devops
-     ssh -p 222  root@192.168.56.17 mkdir -p /root/jenkins-spark/scala-devops/src/main/scala/
-     ssh -p 222  root@192.168.56.17 mkdir -p /root/jenkins-spark/scala-devops/project
-     
-     scp -P 222  /var/jenkins_home/workspace/build-spark-enviromnet/default/python-devops/SimpleApp.py   root@192.168.56.17:/root/jenkins-spark/python-devops/
-     scp -P 222  /var/jenkins_home/workspace/build-spark-enviromnet/default/scala-devops/src/main/scala/SimpleApp.scala root@192.168.56.17:/root/jenkins-spark/scala-devops/     src/main/scala/SimpleApp.scala 
-     scp -P 222  /var/jenkins_home/workspace/build-spark-enviromnet/default/scala-devops/build.sbt root@192.168.56.17:/root/jenkins-spark/scala-devops/build.sbt
-     
-     
-     echo "cd /root/jenkins-spark/scala-devops;sbt package" |ssh -p 222  root@192.168.56.17 
-     
-     echo "cd /root/jenkins-spark/scala-devops ;/usr/local/spark/bin/spark-submit   --class "SimpleApp"   --master local[4]   target/scala-2.11/simple-project_2.11-1.0.jar>/     var/www/html/spark.html" | ssh -p 222  root@192.168.56.17
-     
-     #ssh root@192.168.56.17  docker cp /var/lib/docker/volumes/jenkins_home/_data/workspace/build-spark-enviromnet/python-devops/SimpleApp.py   spark:/root/python-devops/     SimpleApp.py
-     #ssh root@192.168.56.17 docker exec -ti  spark  /usr/local/spark/sbin/start-history-server.sh
-     #ssh root@192.168.56.17  docker exec spark /usr/local/spark/bin/spark-submit  --master local[4] /root/python-devops/SimpleApp.py
-     
-     
+
+
+    #!/bin/bash
+    export PATH=$PATH:/var/jenkins_home/spark-2.2.0-bin-hadoop2.7/bin/
+    exec &> >(tee /tmp/wujunrong.log)
+    ls
+    pwd
+    date
+    
+    #compile java source code using maven
+    cd /var/jenkins_home/workspace/build-spark-enviromnet/default/java-devops
+    /var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/pwc-maven/bin/mvn package
+    
+    spark-submit  --class "SimpleApp"   --master local[4]   target/simple-project-1.0.jar
+    echo ==============run on remote server==============================
+    
+    #deploy python code and scala code including sbt
+    ssh -p 222  root@192.168.56.17 mkdir -p /root/jenkins-spark/python-devops
+    ssh -p 222  root@192.168.56.17 mkdir -p /root/jenkins-spark/scala-devops/src/main/scala/
+    ssh -p 222  root@192.168.56.17 mkdir -p /root/jenkins-spark/scala-devops/project
+    #complie scala code 
+    scp -P 222  /var/jenkins_home/workspace/build-spark-enviromnet/default/python-devops/SimpleApp.py   root@192.168.56.17:/root/jenkins-spark/python-devops/
+    scp -P 222  /var/jenkins_home/workspace/build-spark-enviromnet/default/scala-devops/src/main/scala/SimpleApp.scala root@192.168.56.17:/root/jenkins-spark/scala-devops/    src/main/scala/SimpleApp.scala 
+    scp -P 222  /var/jenkins_home/workspace/build-spark-enviromnet/default/scala-devops/build.sbt root@192.168.56.17:/root/jenkins-spark/scala-devops/build.sbt
+    
+    
+    echo "cd /root/jenkins-spark/scala-devops;sbt package" |ssh -p 222  root@192.168.56.17 
+    echo "cd /root/jenkins-spark/scala-devops ;/usr/local/spark/bin/spark-submit   --class "SimpleApp"   --master local[4]   target/scala-2.11/simple-project_2.11-1.0.jar>/    var/www/html/spark.html" | ssh -p 222  root@192.168.56.17
+    
+    #handle scalar programm report
+    cat > /tmp/report_template.html<<EOF
+    <style>
+    body{
+    display: flex;
+     justify-content:center;
+      align-items:center;
+    }
+    </style>
+    
+    <html>
+    <h1>template</h1>
+    </html>
+    EOF
+    
+    scp -P 222 /tmp/report_template.html root@192.168.56.17:/var/www/html/report_template.html
+    
+    echo 'abc=`cat /var/www/html/spark.html` ; sed s/template/"$abc"/  /var/www/html/report_template.html >/var/www/html/linux-spark.html' | ssh -p 222  root@192.168.56.17
+    
+    
+    #ssh root@192.168.56.17  docker cp /var/lib/docker/volumes/jenkins_home/_data/workspace/build-spark-enviromnet/python-devops/SimpleApp.py   spark:/root/python-devops/    SimpleApp.py
+    #ssh root@192.168.56.17 docker exec -ti  spark  /usr/local/spark/sbin/start-history-server.sh
+    #ssh root@192.168.56.17  docker exec spark /usr/local/spark/bin/spark-submit  --master local[4] /root/python-devops/SimpleApp.py
+    
+
 
 `````
 https://github.com/jenkinsci/docker/blob/master/README.md

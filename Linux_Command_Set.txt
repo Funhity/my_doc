@@ -9293,6 +9293,7 @@ cat ~/.ssh/id_watcher.pub | ssh -p 29418 review.example.com gerrit set-account -
 
 
 =======css section====
+cat > /var/www/html/report_template.html<<EOF
 <style>
 body{
 display: flex;
@@ -9300,4 +9301,9 @@ display: flex;
   align-items:center;
 }
 </style>
+
+<html>
+<h1>template</h1>
+</html>
+EOF
 =========
