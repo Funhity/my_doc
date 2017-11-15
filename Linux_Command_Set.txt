@@ -7312,9 +7312,14 @@ echo 的时候会把参数中的引号去掉
 [root@public-cloud-7 ~]# echo {"image_uuid": "c7ddb0a8-5fe0-11e7-b983-f305fb303725"}
 {image_uuid: c7ddb0a8-5fe0-11e7-b983-f305fb303725}
 
-===tr section===
-去掉换行符
-tr -d \"\n\" 
+===tr section===sed section==
+说明：
+tr is specifically intended to replace single characters by single characters (or, depending on command-line options, to delete characters or replace runs of a single character by one occurrence.).
+
+#去掉换行符
+ tr -d \"\n\" 
+#把\n替换成</<br/>
+ tr '\n' '<' < /var/www/html/spark-log.html |sed 's/</<br\/>/g'>/var/www/html/spark-log2.html
 ====passwd section===
 centos:
   echo "root:xinxindai" |chpasswd
