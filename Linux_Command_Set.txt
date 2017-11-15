@@ -6196,7 +6196,7 @@ The basic Git workflow goes something like this:
 git commit -a -m 'added new benchmarks'   #Skipping the Staging Area
 
 
-······git rebase conflict······
+······git rebase conflict······git rebase section······
 https://help.github.com/articles/resolving-merge-conflicts-after-a-git-rebase/
 方案一：git rebase --abort
 方案二： git rebase --skip
@@ -6205,7 +6205,7 @@ https://help.github.com/articles/resolving-merge-conflicts-after-a-git-rebase/
        git rebase --continue
 
 
-git rebase -i HEAD~3 -s recursive -X theirs  #squash时一共有四个commit
+git rebase -i HEAD~3 -s recursive -X theirs  #squash时一共有三个commit
 ```````git 标准操作流程````git workflow section````
 https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository
 步骤1.  添加文件
@@ -6375,6 +6375,7 @@ git checkout master
 git merge 操作步骤：
 git checkout master
 git merge iss53   #如果master只是落后几个commit的话，这个操作就是fast-forward 
+git merge --abort #取消merge
 git status
 git add #解决conflict后执行
 git mergetool
@@ -9250,7 +9251,7 @@ https://www.entropywins.wtf/blog/2013/07/01/resolving-a-merge-conflict-on-gerrit
     git rebase –continue
     git review
 
-
+gerrit abandon掉了之后，这个commit就不能提交到gerrit上去了，把这个change delete掉之后才能重新用git review -R提交
 ``````````git amend section```````````````````
 
 https://www.mediawiki.org/wiki/Gerrit/Troubleshooting

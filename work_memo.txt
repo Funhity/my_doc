@@ -2818,9 +2818,10 @@ docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home  -v /et
     #ssh root@192.168.56.17  docker cp /var/lib/docker/volumes/jenkins_home/_data/workspace/build-spark-enviromnet/python-devops/SimpleApp.py   spark:/root/python-devops/    SimpleApp.py
     #ssh root@192.168.56.17 docker exec -ti  spark  /usr/local/spark/sbin/start-history-server.sh
     #ssh root@192.168.56.17  docker exec spark /usr/local/spark/bin/spark-submit  --master local[4] /root/python-devops/SimpleApp.py
-    
-
-
+ ······   
+  执行完上述内容后再执行，传输日志文件：
+  scp -P 222  /tmp/wujunrong.log  root@192.168.56.17:/var/www/html/spark-log.html
+  ssh -p 222  root@192.168.56.17 tr '\n' '<' < /var/www/html/spark-log.html |sed 's/</<br\/>/g'>/var/www/html/spark-log2.html
 `````
 https://github.com/jenkinsci/docker/blob/master/README.md
 docker commit   -c "EXPOSE 50000"   -c "EXPOSE 8080"  187b27435067  pwc/jenkins:lts
