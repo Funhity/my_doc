@@ -6169,6 +6169,9 @@ A refspec is specified as [+]<src>:<dst>. The <src> parameter is the source bran
    git pull  -s  resolve #pull的时候你这边已经被svn update改了，pull的时候需要指定merge策略
 ````git head section```git command section`````
 git rev-parse HEAD
+git rev-parse origin/master
+git rev-parse testing
+
 git merge-base branch2 branch3
 
 `````````
@@ -6201,6 +6204,8 @@ https://help.github.com/articles/resolving-merge-conflicts-after-a-git-rebase/
        git  add ./scala-devops/src/main/scala/SimpleApp.scala
        git rebase --continue
 
+
+git rebase -i HEAD~3 -s recursive -X theirs  #squash时一共有四个commit
 ```````git 标准操作流程````git workflow section````
 https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository
 步骤1.  添加文件
