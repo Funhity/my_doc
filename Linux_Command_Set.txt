@@ -9247,6 +9247,9 @@ sudo docker ps | grep uberga | awk '{print $NF}' |xargs -I{} sudo docker stop {}
 ======gerrit section=
 version:
 ssh wujunrog-username@192.168.56.17 -p 29418  gerrit version
+#https://gerrit-releases.storage.googleapis.com/index.html
+wget --no-check-certificate https://www.gerritcodereview.com/download/gerrit-2.14.5.1.war
+java -jar gerrit.war init --batch -d ~/gerrit_testsite
 
 `````gerrit conflict````git conflict section```
 操作流程：
@@ -9340,12 +9343,15 @@ git review -R  --yes
 ssh -p <port> <host> gerrit review --restore <change-id>
 
 ``````````gerrit plugin`````
+#gerrit replication plugin
 #https://docs.bazel.build/versions/master/install-redhat.html
 wget -O /etc/yum.repos.d/vbatts-bazel-epel-7.repo  https://copr.fedorainfracloud.org/coprs/vbatts/bazel/repo/epel-7/vbatts-bazel-epel-7.repo
 yum -y install bazel
-
+mkdir plugins
+cd plugins
 git clone https://gerrit.googlesource.com/plugins/replication
-cd replication
+touch WORKSPACE  #解决The 'build' command is only supported from within a workspace
+bazel build plugins/replication:replication
 
 ==========dash section========- section======standard output section===
 
