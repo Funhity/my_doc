@@ -9245,6 +9245,7 @@ sudo docker ps | grep uberga | awk '{print $NF}' |xargs -I{} sudo docker stop {}
 
 ======gerrit section===gerrit conflict===git conflict section=
 操作流程：
+流程一
 https://www.entropywins.wtf/blog/2013/07/01/resolving-a-merge-conflict-on-gerrit/
     git pull origin master
     git remote show     origin
@@ -9255,8 +9256,30 @@ https://www.entropywins.wtf/blog/2013/07/01/resolving-a-merge-conflict-on-gerrit
     git add *
     git rebase –continue
     git review
+流程二
+https://stackoverflow.com/questions/37583710/cannot-merge-in-gerrit
+
+  1. Update your local repository (git fetch)
+  2. Run a manual rebase (git rebase)
+  3. Resolve the conflicts (git mergetool)
+  4. Commit (amend) the result (git commit --amend)
+  5. Push a new patchset to Gerrit (git push)
+
 
 gerrit abandon掉了之后，这个commit就不能提交到gerrit上去了，把这个change delete掉之后才能重新用git review -R提交
+
+gerrit和本地git不一致情况分析：
+  1. 用amend修改一次commit message，本地git上对应2个commit，这两个commit是串行的（一个是另一个的父亲），在gerrit上对应2个change，但这两个change的父亲是是同一个change
+  2. 凡是要修改commit修改历史的（https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History），要检查相关commit是否已经提交到gerrit，如果已经提交到gerrit了，rewrite history会使gerrit和本地不一致，如果不清楚就不建议操作
+  3. git commit --amend --no-edit（执行一次修改） ,在gerrit上对应一个change set和二个patch，在gerrit中的2个patch只有最后一个patch有效，但在git中2个commit都有效，如果rewriting history，前一个commit会产生实质作用，导致本地和gerrit不一致
+  4. 如果执行rewrite history操作
+
+      则：
+  * 两次amend，第二次amend 修改了 commit message，在gerrit 对应两个change，前一个chang在用amend 修改了 commit message前已经submit并且merge，第二个change会和前一个change conflict，因为他们parent change是同一个(而在git上是下一个依赖上一个）
+  *  本地执行amend 后，git log 中会有两个commit，后一条commit的父亲是前一条，但在gerrit上后面一条的父亲和前面一条commit的父亲是同一个。如果在本地git做rewrite history操作，会导致和gerrit不一致。
+  * 已经在gerrit上merge了的commit就不能再amend了，不然在gerrit上下一个change的父亲和在本地git上下一个commit（change）的父亲会不一致，导致冲突（见图二图三）
+
+
 ``````````git amend section```````````````````
 
 https://www.mediawiki.org/wiki/Gerrit/Troubleshooting
