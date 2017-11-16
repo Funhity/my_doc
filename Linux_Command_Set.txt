@@ -1030,6 +1030,7 @@ sudo docker run -i -t ubuntu /bin/bash
      docker exec -it "desperate_saha"   bash
      docker exec      silly_aryabhata   ps -ef
 ``````docker container section``````````
+docker rename  nifty_neumann   gerrit
 sudo docker ps
 sudo docker ps -a
 sudo docker stop  nostalgic_morse
@@ -2709,7 +2710,7 @@ find '/cygdrive/c/Program Files (x86)/sbt/'  -path ".sbt*"  #搜索.sbt时要加
 
 `````cygwin telnet section````````````
 telnet: 装inetutils 模块
-```````````````````````````````
+`````````````cygwin paste section``````````````````
 getclip putclip : 装cygutils-extra模块
 git ls-tree -r master --name-only |putclip.exe
 =======================  cygwin ansible  ========================
@@ -9243,7 +9244,11 @@ sudo route del -net default gw 10.0.1.1 dev eth0   # and delete old default rout
 sudo docker ps | grep uberga | awk '{print $NF}' |xargs -I{} sudo docker stop {}
 
 
-======gerrit section===gerrit conflict===git conflict section=
+======gerrit section=
+version:
+ssh wujunrog-username@192.168.56.17 -p 29418  gerrit version
+
+`````gerrit conflict````git conflict section```
 操作流程：
 流程一
 https://www.entropywins.wtf/blog/2013/07/01/resolving-a-merge-conflict-on-gerrit/
@@ -9333,6 +9338,14 @@ git review -R  --yes
   git review -R  --yes
 ```gerrit command setion`````
 ssh -p <port> <host> gerrit review --restore <change-id>
+
+``````````gerrit plugin`````
+#https://docs.bazel.build/versions/master/install-redhat.html
+wget -O /etc/yum.repos.d/vbatts-bazel-epel-7.repo  https://copr.fedorainfracloud.org/coprs/vbatts/bazel/repo/epel-7/vbatts-bazel-epel-7.repo
+yum -y install bazel
+
+git clone https://gerrit.googlesource.com/plugins/replication
+cd replication
 
 ==========dash section========- section======standard output section===
 
