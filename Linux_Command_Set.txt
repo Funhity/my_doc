@@ -1413,7 +1413,7 @@ ENV http_proxy http://172.17.42.1:8080/
 You should optionally clear the cache from time to time.
 
 export http_proxy='http://hiss11210042:Hiss123@170.95.94.38:8080/'
-
+export https_proxy='https://127.0.0.1:58833/'
 
 ======================= squid  proxy section ========================
 /etc/init.d/squid3  restart
@@ -5488,11 +5488,13 @@ sudo tcpdump -i lo -A udp and port 514
 
 tcpdump -n host 192.168.1.1
 tcpdump -n net 192.168.1.0/24
-
+tcpdump -n src host 192.168.1.1
 tcpdump -n dst port 23 # 能收到请求消息，响应消息不显示
 tcpdump -n dst port 5000
 
 tcpdump -nni bridge0 icmp  #在bridge0监听ping消息
+tcpdump -nli bridge0  host 10.0.1.25  and 10.0.1.190
+
 =================ubuntu section=====================
 检查版本号
 lsb_release -a
