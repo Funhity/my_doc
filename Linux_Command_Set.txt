@@ -9345,10 +9345,12 @@ ssh -p <port> <host> gerrit review --restore <change-id>
 ``````````gerrit plugin`````
 #gerrit replication plugin
 #https://docs.bazel.build/versions/master/install-redhat.html
+#docker run --name gerrit -d -v ~/gerrit_volume:/var/gerrit/review_site -p 8081:8080 -p 29418:29418 --restart=always  10.0.1.198:5000/pwc/gerrit:20171011
+
 wget -O /etc/yum.repos.d/vbatts-bazel-epel-7.repo  https://copr.fedorainfracloud.org/coprs/vbatts/bazel/repo/epel-7/vbatts-bazel-epel-7.repo
 yum -y install bazel
-mkdir plugins
-cd plugins
+cd /root/gerrit_volume/plugins
+
 git clone https://gerrit.googlesource.com/plugins/replication
 touch WORKSPACE  #解决The 'build' command is only supported from within a workspace
 bazel build plugins/replication:replication

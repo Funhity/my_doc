@@ -2334,7 +2334,7 @@ docker run -d -ti --name jenkins -p 8080:8080 -p 50000:50000 --env JAVA_OPTS="-D
 
 
 docker run --name gerrit -d -v ~/gerrit_volume:/var/gerrit/review_site -p 8081:8080 -p 29418:29418 --restart=always  10.0.1.198:5000/pwc/gerrit:20171011
-docker run --name gerrit -d -p 8081:8080 -p 29418:29418 10.0.1.198:5000/pwc/gerrit:20171011
+docker run --name gerrit -d -p 8081:8080 -p 29418:29418  --restart=always 10.0.1.198:5000/pwc/gerrit:20171011
 docker run --name spark --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro  -v /var/share:/var/share -p 18082:18080 -p 81:80 -p 222:22 -p 8082:8080 pwc/spark:20171027
 `````````spark scala section for linux````````````````
 
