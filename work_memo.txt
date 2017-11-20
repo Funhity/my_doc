@@ -2439,10 +2439,10 @@ In case of errorneous report, this check can be disabled in the compiler prefere
  步骤一：
  cd /cygdrive/c/work/PwC/hadoop-spark/scala-devops
  sbt package  #把class文件打包成jar文件
- 步骤二：用eclipse编译
- eclipse build 路径：设置为 target/scala-2.11/simple-project_2.11-1.0.jar
-  If you want to change the location of this directory for whatever reason, right-click any Java project, Project > Properties->select "Build Path" -> "Configure Build Path". The location   of the output directory is specified in the "Source" tab. 
- 步骤三
+#步骤二：用eclipse编译
+# eclipse build 路径：设置为 target/scala-2.11/simple-project_2.11-1.0.jar
+#  If you want to change the location of this directory for whatever reason, right-click any Java project, Project > Properties->select "Build Path" -> "Configure Build Path". The location   of the output directory is specified in the "Source" tab. 
+# 步骤三
     cat > /tmp/report_template.html<<EOF
     <style>
     body{

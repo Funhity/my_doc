@@ -361,6 +361,7 @@ nmtui
   sudo iptables  -n -L -v
   sudo iptables  -n -L -v --line-number
   sudo iptables -t nat -n -L -v
+  sudo iptables -t mangle -n -L -v
   service iptables save
   cat  /etc/sysconfig/iptables
   sudo yum remove  iptables-services
@@ -9250,8 +9251,17 @@ sudo docker ps | grep uberga | awk '{print $NF}' |xargs -I{} sudo docker stop {}
 version:
 ssh wujunrog-username@192.168.56.17 -p 29418  gerrit version
 #https://gerrit-releases.storage.googleapis.com/index.html
+`````gerrit install section ``````
+方法一：
 wget --no-check-certificate https://www.gerritcodereview.com/download/gerrit-2.14.5.1.war
 java -jar gerrit.war init --batch -d ~/gerrit_testsite
+
+方法二：
+GIT_SSL_NO_VERIFY=true  git clone --recursive https://gerrit.googlesource.com/gerrit replication-plugin
+ cd  replication-plugin
+ git branch -r
+ git checkout -b stable-2.10  origin/stable-2.10
+```````
 
 `````gerrit conflict````git conflict section```
 操作流程：
@@ -9346,9 +9356,11 @@ ssh -p <port> <host> gerrit review --restore <change-id>
 
 ``````````gerrit plugin`````
 #gerrit replication plugin
+https://groups.google.com/forum/#!topic/repo-discuss/m_PWqJ9iHaQ
 #https://docs.bazel.build/versions/master/install-redhat.html
 #docker run --name gerrit -d -v ~/gerrit_volume:/var/gerrit/review_site -p 8081:8080 -p 29418:29418 --restart=always  10.0.1.198:5000/pwc/gerrit:20171011
 
+#bazel build方式：
 wget -O /etc/yum.repos.d/vbatts-bazel-epel-7.repo  https://copr.fedorainfracloud.org/coprs/vbatts/bazel/repo/epel-7/vbatts-bazel-epel-7.repo
 yum -y install bazel
 cd /root/gerrit_volume/plugins
@@ -9356,6 +9368,30 @@ cd /root/gerrit_volume/plugins
 git clone https://gerrit.googlesource.com/plugins/replication
 touch WORKSPACE  #解决The 'build' command is only supported from within a workspace
 bazel build plugins/replication:replication
+````````````````````````
+#buck build方式
+    #Oracle Java Development Kit
+    #Apache Ant 1.9 (or newer)
+    #Python 2.7
+    #Git
+    #Watchman
+
+#buck https://buckbuild.com/setup/getting_started.html
+git clone https://github.com/facebook/buck.git
+
+#············ant section············
+wget http://mirrors.tuna.tsinghua.edu.cn/apache//ant/binaries/apache-ant-1.10.1-bin.zip
+export ANT_HOME=/root/apache-ant-1.10.1    #/usr/local/ant
+#export JAVA_HOME=/usr/local/jdk1.7.0_51
+export PATH=${PATH}:${ANT_HOME}/bin
+
+#············Watchman section··········
+git clone https://github.com/facebook/watchman.git && cd watchman
+yum -y groupinstall "Development Tools"
+sudo yum install openssl-devel python-devel
+./autogen.sh && ./configure && make
+make install
+
 
 ==========dash section========- section======standard output section===
 
