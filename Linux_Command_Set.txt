@@ -9360,40 +9360,58 @@ https://groups.google.com/forum/#!topic/repo-discuss/m_PWqJ9iHaQ
 #https://docs.bazel.build/versions/master/install-redhat.html
 #docker run --name gerrit -d -v ~/gerrit_volume:/var/gerrit/review_site -p 8081:8080 -p 29418:29418 --restart=always  10.0.1.198:5000/pwc/gerrit:20171011
 
-#bazel build方式：
+#方案一：bazel build方式：
 wget -O /etc/yum.repos.d/vbatts-bazel-epel-7.repo  https://copr.fedorainfracloud.org/coprs/vbatts/bazel/repo/epel-7/vbatts-bazel-epel-7.repo
 yum -y install bazel
 cd /root/gerrit_volume/plugins
 
 git clone https://gerrit.googlesource.com/plugins/replication
+git clone --recursive https://gerrit.googlesource.com/gerrit replication-plugin
+   #https://groups.google.com/forum/#!topic/repo-discuss/m_PWqJ9iHaQ
+   #On master:  bazel build plugins/replication
+   #On stable-2.13 and earlier: buck build plugins/replication
+
+
+
 touch WORKSPACE  #解决The 'build' command is only supported from within a workspace
 bazel build plugins/replication:replication
 ````````````````````````
-#buck build方式
+#方案二：buck build方式
+#总体：
+
     #Oracle Java Development Kit
     #Apache Ant 1.9 (or newer)
     #Python 2.7
     #Git
     #Watchman
 
-#buck https://buckbuild.com/setup/getting_started.html
-git clone https://github.com/facebook/buck.git
-
 #············ant section············
+步骤一：
 wget http://mirrors.tuna.tsinghua.edu.cn/apache//ant/binaries/apache-ant-1.10.1-bin.zip
 export ANT_HOME=/root/apache-ant-1.10.1    #/usr/local/ant
 #export JAVA_HOME=/usr/local/jdk1.7.0_51
 export PATH=${PATH}:${ANT_HOME}/bin
 
 #············Watchman section··········
+步骤二：
 git clone https://github.com/facebook/watchman.git && cd watchman
 yum -y groupinstall "Development Tools"
 sudo yum install openssl-devel python-devel
 ./autogen.sh && ./configure && make
 make install
 
+步骤三
+#buck https://buckbuild.com/setup/getting_started.html
 
-==========dash section========- section======standard output section===
+    git clone https://github.com/facebook/buck.git
+    cd buck
+    #view README.md,包含安装方法
+    #buck version 和 gerrit关系是一一对应的，http://gerrit-documentation.storage.googleapis.com/Documentation/2.13.7/dev-buck.html#_installation
+    git checkout $(cat ../gerrit/.buckversion)
+    ant
+    ./bin/buck --help
+    
+=========dash section========- section======standard output section===
 
 find . -type f -print0 | tar -czvf backup.tar.gz --null -T -
 https://gerrit-documentation.storage.googleapis.com/Documentation/2.14.3/cmd-set-account.html
