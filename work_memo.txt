@@ -2931,3 +2931,7 @@ branch.master.merge=refs/heads/master
 remote.gerrit.url=ssh://wujunrog-username@192.168.56.17:29418/hadoop-spark.git
 remote.gerrit.fetch=+refs/heads/*:refs/remotes/gerrit/*
 ====================
+
+git init --bare  spark-server.git
+sudo su -c 'ssh mirror1.us.some.org echo' gerrit2
+git clone git+ssh://root@192.168.56.17:222/root/git-repository/spark-server.git
