@@ -2298,7 +2298,7 @@ windows:
          #http://192.168.56.17:81/linux-spark.html
 
 spark-linux:
-         /usr/local/spark/sbin/start-history-server.sh
+         docker exec -ti spark  /usr/local/spark/sbin/start-history-server.sh
 
 ············
 docker run -d -p 5000:5000 --restart=always --name registry registry:latest
@@ -2947,11 +2947,11 @@ branch.master.remote=origin
 branch.master.merge=refs/heads/master
 remote.gerrit.url=ssh://wujunrog-username@192.168.56.17:29418/hadoop-spark.git
 remote.gerrit.fetch=+refs/heads/*:refs/remotes/gerrit/*
-```````
+````demo git section`````gerrit replication`````
 git init --bare  spark-server.git
 sudo su -c 'ssh mirror1.us.some.org echo' gerrit2
 git clone git+ssh://root@192.168.56.17:222/root/git-repository/spark-server.git
-
+ssh -p 29418  wujunrog-username@192.168.56.17 gerrit plugin reload replication
 
 ``````gerrit plugin section`````gerrit build`````
 #http://www.ingeniousmalarkey.com/2013/12/how-to-build-gerrit-replication-plugin.html

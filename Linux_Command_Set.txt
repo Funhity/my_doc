@@ -4648,7 +4648,7 @@ ssh -vvv root@192.168.129.76
 ssh-keygen -t rsa  
 或：ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
 ssh-copy-id -i ~/.ssh/id_rsa.pub $remote_user@$remote_host
-ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.56.17 -p222
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.56.17 -p222   #ssh key section
 ssh-agent bash #rsa文件密码自动输入
 ssh-add ~/.ssh/id_rsa
 #the private key is used for the opposite operation, in these examples to decrypt ciphertext or to create a digital signature. 
@@ -9355,6 +9355,9 @@ Edit your [auth] statement in gerrit.config to look like this:
 type = development_become_any_account
 And then force login as the admin, grant yourself access and then restore the [auth] config.
 
+
+······gerrit logs section···········
+/var/gerrit/review_site/logs
 
 ```````````gerrit ssh section`````gerrit key`````
 在网页become某个用户后，点击右上角setting功能，在左边点profile选项，会出现两个名字
