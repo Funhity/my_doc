@@ -361,6 +361,7 @@ nmtui
   sudo iptables  -n -L -v
   sudo iptables  -n -L -v --line-number
   sudo iptables -t nat -n -L -v
+  sudo iptables -t mangle -n -L -v
   service iptables save
   cat  /etc/sysconfig/iptables
   sudo yum remove  iptables-services
@@ -1413,7 +1414,7 @@ ENV http_proxy http://172.17.42.1:8080/
 You should optionally clear the cache from time to time.
 
 export http_proxy='http://hiss11210042:Hiss123@170.95.94.38:8080/'
-
+export https_proxy='https://127.0.0.1:58833/'
 
 ======================= squid  proxy section ========================
 /etc/init.d/squid3  restart
@@ -5488,11 +5489,13 @@ sudo tcpdump -i lo -A udp and port 514
 
 tcpdump -n host 192.168.1.1
 tcpdump -n net 192.168.1.0/24
-
+tcpdump -n src host 192.168.1.1
 tcpdump -n dst port 23 # 能收到请求消息，响应消息不显示
 tcpdump -n dst port 5000
 
 tcpdump -nni bridge0 icmp  #在bridge0监听ping消息
+tcpdump -nli bridge0  host 10.0.1.25  and 10.0.1.190
+
 =================ubuntu section=====================
 检查版本号
 lsb_release -a
@@ -9248,8 +9251,17 @@ sudo docker ps | grep uberga | awk '{print $NF}' |xargs -I{} sudo docker stop {}
 version:
 ssh wujunrog-username@192.168.56.17 -p 29418  gerrit version
 #https://gerrit-releases.storage.googleapis.com/index.html
+`````gerrit install section ``````
+方法一：
 wget --no-check-certificate https://www.gerritcodereview.com/download/gerrit-2.14.5.1.war
 java -jar gerrit.war init --batch -d ~/gerrit_testsite
+
+方法二：
+GIT_SSL_NO_VERIFY=true  git clone --recursive https://gerrit.googlesource.com/gerrit replication-plugin
+ cd  replication-plugin
+ git branch -r
+ git checkout -b stable-2.14  origin/stable-2.14
+```````
 
 `````gerrit conflict````git conflict section```
 操作流程：
@@ -9294,9 +9306,26 @@ https://www.mediawiki.org/wiki/Gerrit/Troubleshooting
 #gerrit注意点：
 用git review -R 提交前要git pull，这样git review能正确显示要提交的change，否则
   repository中可能有新的提交，这个新的提交和当前的修改有冲突（以当前master为基准的修改）
+  
   用git amend -m 修改commit内容会新产生一个change，
   a) change的内容和前面的一致
   b) 两个change都有同一个父change(一个submit了，另一个就会conflict)，这和git是串行的是不同的
+
+
+
+  1. 用amend修改一次commit message，本地git上对应2个commit，这两个commit是串行的（一个是另一个的父亲），在gerrit上对应2个change，但这两个change的父亲是是同一个change
+  2. 凡是要修改commit修改历史的（https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History），要检查相关commit是否已经提交到gerrit，如果已经提交到gerrit了，rewrite history会使gerrit和本地不一致，如果不清楚就不建议操作
+  3. git commit --amend --no-edit（执行一次修改） ,在gerrit上对应一个change set和二个patch，在gerrit中的2个patch只有最后一个patch有效，但在git中2个commit都有效，如果rewriting history，前一个commit会产生实质作用，导致本地和gerrit不一致
+  4. 如果执行rewrite history操作
+
+      则：
+
+  * 两次amend，第二次amend 修改了 commit message，在gerrit 对应两个change，前一个chang在用amend 修改了 commit message前已经submit并且merge，第二个change会和前一个change conflict，因为他们parent change是同一个(而在git上是下一个依赖上一个）
+  *  本地执行amend 后，git log 中会有两个commit，后一条commit的父亲是前一条，但在gerrit上后面一条的父亲和前面一条commit的父亲是同一个。如果在本地git做rewrite history操作，会导致和gerrit不一致。
+  * 已经在gerrit上merge了的commit就不能再amend了，不然在gerrit上下一个change的父亲和在本地git上下一个commit（change）的父亲会不一致，导致冲突（见图二图三）
+
+
+
 
 
 #git注意点：
@@ -9326,6 +9355,14 @@ Edit your [auth] statement in gerrit.config to look like this:
 type = development_become_any_account
 And then force login as the admin, grant yourself access and then restore the [auth] config.
 
+
+```````````gerrit ssh section`````gerrit key`````
+在网页become某个用户后，点击右上角setting功能，在左边点profile选项，会出现两个名字
+Username ：wujur-unique-username
+Full Name：wujr
+ssh用的是Username，网页中常用的是Full Name
+ssh wujur-unique-username@192.168.56.17 -p 29418  gerrit version
+
 ······gerrit workflow·······
 git commit -a -m "aaa"
 git review -R  --yes
@@ -9344,18 +9381,63 @@ ssh -p <port> <host> gerrit review --restore <change-id>
 
 ``````````gerrit plugin`````
 #gerrit replication plugin
+https://groups.google.com/forum/#!topic/repo-discuss/m_PWqJ9iHaQ
 #https://docs.bazel.build/versions/master/install-redhat.html
 #docker run --name gerrit -d -v ~/gerrit_volume:/var/gerrit/review_site -p 8081:8080 -p 29418:29418 --restart=always  10.0.1.198:5000/pwc/gerrit:20171011
 
+#方案一：bazel build方式：
 wget -O /etc/yum.repos.d/vbatts-bazel-epel-7.repo  https://copr.fedorainfracloud.org/coprs/vbatts/bazel/repo/epel-7/vbatts-bazel-epel-7.repo
 yum -y install bazel
 cd /root/gerrit_volume/plugins
 
 git clone https://gerrit.googlesource.com/plugins/replication
+git clone --recursive https://gerrit.googlesource.com/gerrit replication-plugin
+   #https://groups.google.com/forum/#!topic/repo-discuss/m_PWqJ9iHaQ
+   #On master:  bazel build plugins/replication
+   #On stable-2.13 and earlier: buck build plugins/replication
+
+
+
 touch WORKSPACE  #解决The 'build' command is only supported from within a workspace
 bazel build plugins/replication:replication
+````````````````````````
+#方案二：buck build方式
+#总体：
 
-==========dash section========- section======standard output section===
+    #Oracle Java Development Kit
+    #Apache Ant 1.9 (or newer)
+    #Python 2.7
+    #Git
+    #Watchman
+
+#············ant section············
+步骤一：
+wget http://mirrors.tuna.tsinghua.edu.cn/apache//ant/binaries/apache-ant-1.10.1-bin.zip
+vi ~/.bash_profile #设置如下PATH
+export ANT_HOME=/root/apache-ant-1.10.1    #/usr/local/ant
+#export JAVA_HOME=/usr/local/jdk1.7.0_51
+export PATH=${PATH}:${ANT_HOME}/bin
+
+#············Watchman section··········
+步骤二：
+git clone https://github.com/facebook/watchman.git && cd watchman
+yum -y groupinstall "Development Tools"
+sudo yum install openssl-devel python-devel
+./autogen.sh && ./configure && make
+make install
+
+步骤三
+#buck https://buckbuild.com/setup/getting_started.html
+
+    git clone https://github.com/facebook/buck.git
+    cd buck
+    #view README.md,包含安装方法
+    #buck version 和 gerrit关系是一一对应的，http://gerrit-documentation.storage.googleapis.com/Documentation/2.13.7/dev-buck.html#_installation
+    git checkout $(cat ../gerrit/.buckversion)
+    ant
+    ./bin/buck --help
+    
+=========dash section========- section======standard output section===
 
 find . -type f -print0 | tar -czvf backup.tar.gz --null -T -
 https://gerrit-documentation.storage.googleapis.com/Documentation/2.14.3/cmd-set-account.html

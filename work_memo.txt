@@ -2283,7 +2283,24 @@ ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
 
 
 `````demo section````pwc demo backup section`````pwc demo section````
+·············
+host:
+          echo 1 > /proc/sys/net/ipv4/ip_forward
+jira:
+          /opt/atlassian/jira/bin/start-jira.sh
+windows:
+         cd /cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7
+         ./bin/spark-class.cmd org.apache.spark.deploy.history.HistoryServer
 
+         cd /cygdrive/c/work/PwC/hadoop-spark/scala-devops
+         /cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7/bin/spark-submit.cmd  --class "SimpleApp"   --master local[4]   target/scala-2.11/simple-project_2.11-1.0.jar>/tmp/       spark.html 
+         abc=`cat /tmp/spark.html` ; sed s/template/"$abc"/  /tmp/report_template.html >/tmp/report_windows.html
+         #http://192.168.56.17:81/linux-spark.html
+
+spark-linux:
+         /usr/local/spark/sbin/start-history-server.sh
+
+············
 docker run -d -p 5000:5000 --restart=always --name registry registry:latest
 #步骤一：在源机器上执行：
 docker inspect 58e872eebcd3 |less -i
@@ -2439,10 +2456,10 @@ In case of errorneous report, this check can be disabled in the compiler prefere
  步骤一：
  cd /cygdrive/c/work/PwC/hadoop-spark/scala-devops
  sbt package  #把class文件打包成jar文件
- 步骤二：用eclipse编译
- eclipse build 路径：设置为 target/scala-2.11/simple-project_2.11-1.0.jar
-  If you want to change the location of this directory for whatever reason, right-click any Java project, Project > Properties->select "Build Path" -> "Configure Build Path". The location   of the output directory is specified in the "Source" tab. 
- 步骤三
+#步骤二：用eclipse编译
+# eclipse build 路径：设置为 target/scala-2.11/simple-project_2.11-1.0.jar
+#  If you want to change the location of this directory for whatever reason, right-click any Java project, Project > Properties->select "Build Path" -> "Configure Build Path". The location   of the output directory is specified in the "Source" tab. 
+# 步骤三
     cat > /tmp/report_template.html<<EOF
     <style>
     body{
@@ -2930,4 +2947,32 @@ branch.master.remote=origin
 branch.master.merge=refs/heads/master
 remote.gerrit.url=ssh://wujunrog-username@192.168.56.17:29418/hadoop-spark.git
 remote.gerrit.fetch=+refs/heads/*:refs/remotes/gerrit/*
-====================
+```````
+git init --bare  spark-server.git
+sudo su -c 'ssh mirror1.us.some.org echo' gerrit2
+git clone git+ssh://root@192.168.56.17:222/root/git-repository/spark-server.git
+
+
+``````gerrit plugin section`````gerrit build`````
+#http://www.ingeniousmalarkey.com/2013/12/how-to-build-gerrit-replication-plugin.html
+
+  1. git clone --recursive https://gerrit.googlesource.com/gerrit
+
+    * You need the --recursive here because the plugins are actually git submodules and won't otherwise be cloned along with your repo.
+    * If you're already cloned, you can run `git submodule init; git submodule update`
+  2. cd gerrit
+  3. git checkout -b stable-2.7 origin/stable-2.7
+  4. mvn install -DskipTests=true -Dmaven.javadoc.skip=true
+
+    * It's not necessary to skip the tests or generating Java Doc, but it will greatly improve your compile time and decrease the amount of memory maven uses
+  5. cd gerrit-plugin-api
+  6. mvn package -Dmaven.javadoc.skip=true
+
+    * This creates the jar that will be necessary for the replication plugin to get built
+  7. cd plugins/replication
+  8. mvn package -Dmaven.javadoc.skip=true
+  9. At this point, you have compiled and packaged the replication jar! All you need to do now is register it with your Gerrit server. For simplicity, I'll pretend your gerrit server is running at gerrit.example.com.
+  10. scp target/replication-2.7.jar gerrit.example.com:/tmp/
+  11. ssh -p 29418 gerrit.example.com gerrit plugin install -n replication /tmp/replication-2.7.jar
+
+```````````````````````````
