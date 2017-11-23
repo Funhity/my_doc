@@ -386,7 +386,7 @@ sudo iptables  -n -L -v --line-number
 步骤二：在其他table创建规则，使得数据包跳到LOGGING table
         sudo iptables -A INPUT -j LOGGING
         sudo iptables -A OUTPUT -j LOGGING
-        sudo iptables -I INPUT 32 -j LOGGING   #其中32行是reject 规则所在的行
+        sudo iptables -I INPUT 32 -j LOGGING   #在32行添加log规则，原32行是reject 规则所在的行
         sudo iptables -I FORWARD 2 -j LOGGING
         sudo iptables -I FORWARD 2 -i virbr1 -o bridge0  -j ACCEPT
 步骤三：log日志相关设置
