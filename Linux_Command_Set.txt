@@ -9343,10 +9343,12 @@ Use local directory as the gerrit site storage.
 mkdir ~/gerrit_volume
 
     Initialize and start gerrit using the local directory created above.
-
+··································
 docker run -d -v ~/gerrit_volume:/var/gerrit/review_site -p 8080:8080 -p 29418:29418 openfrontier/gerrit
 
-
+docker commit   -c "EXPOSE 29418"   -c "EXPOSE 8080"  gerrit   pwc/gerrit:20171124
+docker run --name gerrit -d -p 8080:8080 -p 29418:29418 -e GERRIT_INIT_ARGS='--install-plugin=replication --install-plugin=download-commands' --restart=always pwc/gerrit:20171124
+·············
 
 #vi /var/gerrit/review_site/etc/gerrit.config
 The easiest way is to temporarily disable authenticated logins.

@@ -2313,7 +2313,7 @@ docker commit   -c "EXPOSE 80"      -c "EXPOSE 8080"  jira           pwc/jira:20
 
 docker commit   --change='CMD ["/usr/sbin/init"]'  --change='VOLUME [ "/sys/fs/cgroup" ]' -c "EXPOSE 4040"  -c "EXPOSE 18080"   -c "EXPOSE 8080"  -c "EXPOSE 80"  -c "EXPOSE 22"  spark pwc/spark:20171027
 
-docker commit   -c "EXPOSE 29418"   -c "EXPOSE 8080"  nifty_neumann   pwc/gerrit:20171011
+docker commit   -c "EXPOSE 29418"   -c "EXPOSE 8080"  gerrit   pwc/gerrit:20171011
 
 
 docker tag pwc/gerrit:20171011  10.0.1.198:5000/pwc/gerrit:20171011
@@ -2353,6 +2353,8 @@ docker run -d -ti --name jenkins -p 8080:8080 -p 50000:50000 --env JAVA_OPTS="-D
 docker run --name gerrit -d -v ~/gerrit_volume:/var/gerrit/review_site -p 8081:8080 -p 29418:29418 --restart=always  10.0.1.198:5000/pwc/gerrit:20171011
 docker run --name gerrit -d -p 8081:8080 -p 29418:29418  --restart=always 10.0.1.198:5000/pwc/gerrit:20171011
 docker run --name gerrit -d -p 8080:8080 -p 29418:29418 -e GERRIT_INIT_ARGS='--install-plugin=replication' --restart=always 10.0.1.198:5000/pwc/gerrit:20171011
+docker run --name gerrit -d -p 8080:8080 -p 29418:29418 -e GERRIT_INIT_ARGS='--install-plugin=replication --install-plugin=download-commands' --restart=always pwc/gerrit:20171124
+
 docker run --name spark --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro  -v /var/share:/var/share -p 18082:18080 -p 81:80 -p 222:22 -p 8082:8080 pwc/spark:20171027
 `````````spark scala section for linux````````````````
 
