@@ -1047,7 +1047,7 @@ docker inspect --format="{{json .Config.ExposedPorts }}"  pwc_jenkins
 docker update --restart=always <CONTAINER ID>
 more /var/log/docker 
 To detach the tty without exiting the shell, use the escape sequence Ctrl+p + Ctrl+q.
-```````docker images section````
+```````docker images section````docker cp````
 sudo docker save -o /home/matrix/matrix-data.tar matrix-data
 sudo docker load -i <path to copied image file>
 docker save centos:latest |ssh 10.0.1.8 docker load
@@ -1074,10 +1074,10 @@ cat /root/start.sh
     #!/bin/bash
     /root/apache-tomcat-6.0.45/bin/startup.sh&&bash
 	
-````````````
+`````docker command section```````
 docker run --volumes-from dbdata -v $(pwd):/backup ubuntu tar cvf /backup/backup.tar /dbdata
-
-
+docker history pwc/gerrit:20171124
+docker container restart   gerrit
 ``````docker repository section````docker private repository`
 步骤一：在第一台机器上安装private repository
        [root@docker1 ~]# docker run -d -p 5000:5000 --restart=always --name registry registry:2
@@ -9344,10 +9344,11 @@ mkdir ~/gerrit_volume
 
     Initialize and start gerrit using the local directory created above.
 ··································
-docker run -d -v ~/gerrit_volume:/var/gerrit/review_site -p 8080:8080 -p 29418:29418 openfrontier/gerrit
+官方启动：docker run -d -v ~/gerrit_volume:/var/gerrit/review_site -p 8080:8080 -p 29418:29418 openfrontier/gerrit
+备份    ：bash-4.3# scp -r /var/gerrit/review_site/   192.168.56.17:/root/
 
 docker commit   -c "EXPOSE 29418"   -c "EXPOSE 8080"  gerrit   pwc/gerrit:20171124
-docker run --name gerrit -d -p 8080:8080 -p 29418:29418 -e GERRIT_INIT_ARGS='--install-plugin=replication --install-plugin=download-commands' --restart=always pwc/gerrit:20171124
+docker run --name gerrit -v ~/gerrit_volume:/var/gerrit/review_site -d -p 8080:8080 -p 29418:29418 -e GERRIT_INIT_ARGS='--install-plugin=replication --install-plugin=download-commands' --restart=always pwc/gerrit:20171124
 ·············
 
 #vi /var/gerrit/review_site/etc/gerrit.config
@@ -9389,6 +9390,7 @@ ssh -p <port> <host> gerrit review --restore <change-id>
 https://groups.google.com/forum/#!topic/repo-discuss/m_PWqJ9iHaQ
 #https://docs.bazel.build/versions/master/install-redhat.html
 #docker run --name gerrit -d -v ~/gerrit_volume:/var/gerrit/review_site -p 8081:8080 -p 29418:29418 --restart=always  10.0.1.198:5000/pwc/gerrit:20171011
+ssh -p 29418  wujunrog-username@192.168.56.17 gerrit plugin reload replication
 
 #方案一：bazel build方式：
 wget -O /etc/yum.repos.d/vbatts-bazel-epel-7.repo  https://copr.fedorainfracloud.org/coprs/vbatts/bazel/repo/epel-7/vbatts-bazel-epel-7.repo
