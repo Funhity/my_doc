@@ -7394,7 +7394,7 @@ NEXUS_HOME=/usr/local/nexus
 chown    wujunrong:wujunrong /usr/local/nexus
 chown -R wujunrong:wujunrong /usr/local/nexus-3.0.0-03/
 
-`````````
+````su section`````
 vi /root/start.sh
 su - wujunrong -c "cd /usr/local/nexus && ./bin/nexus start"
 ``````````
@@ -9473,4 +9473,8 @@ display: flex;
 <h1>template</h1>
 </html>
 EOF
-=========
+======regular expression section===
+#http://www.regular-expressions.info/lookaround.html
+su(?!do).*-c 
+
+============================
