@@ -2888,6 +2888,7 @@ docker run --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro  --name jira 
 chmod 600 /root/.ssh/id_rsa
 cat ~/.ssh/id_rsa.pub| ssh frank@192.168.56.17 -p 29418 gerrit create-account jira --email jira@pwc.com --full-name JIRA --ssh-key -
 
+#上述是为本机添加用户，这条是为远端另一台机器添加用户:ssh -p 222 root@192.168.56.17 cat /root/.ssh/id_rsa.pub|ssh -p 29418  wujunrog-username@192.168.56.17  gerrit create-account --ssh-key - gerrit_replication_user2 --email publicwu-replication@163.com --full-name replication
 
 
 https://github.com/MeetMe/jira-gerrit-plugin

@@ -9390,7 +9390,9 @@ ssh -p <port> <host> gerrit review --restore <change-id>
 https://groups.google.com/forum/#!topic/repo-discuss/m_PWqJ9iHaQ
 #https://docs.bazel.build/versions/master/install-redhat.html
 #docker run --name gerrit -d -v ~/gerrit_volume:/var/gerrit/review_site -p 8081:8080 -p 29418:29418 --restart=always  10.0.1.198:5000/pwc/gerrit:20171011
-ssh -p 29418  wujunrog-username@192.168.56.17 gerrit plugin reload replication
+
+重启replication：ssh -p 29418  wujunrog-username@192.168.56.17 gerrit plugin reload replication
+添加用户       ：ssh -p 222 root@192.168.56.17 cat /root/.ssh/id_rsa.pub|ssh -p 29418  wujunrog-username@192.168.56.17  gerrit create-account --ssh-key - gerrit_replication_user2 --email publicwu-replication@163.com --full-name replication
 
 #方案一：bazel build方式：
 wget -O /etc/yum.repos.d/vbatts-bazel-epel-7.repo  https://copr.fedorainfracloud.org/coprs/vbatts/bazel/repo/epel-7/vbatts-bazel-epel-7.repo
