@@ -9382,8 +9382,6 @@ git review -R  --yes
   git commit -a --amend
   或者git commit --amend
   git review -R  --yes
-```gerrit command setion`````
-ssh -p <port> <host> gerrit review --restore <change-id>
 
 ``````````gerrit plugin`````
 #gerrit replication plugin
@@ -9398,6 +9396,15 @@ https://groups.google.com/forum/#!topic/repo-discuss/m_PWqJ9iHaQ
                    ssh -p 222 root@192.168.56.17 cat /root/.ssh/id_rsa.pub|ssh -p 29418  wujunrog-username@192.168.56.17  gerrit create-account --ssh-key - gerrit_replication_user2 --email publicwu-replication@163.com --full-name replication
 修改用户设置   ：   
                    ssh  root@192.168.56.17 cat /root/.ssh/id_rsa.pub|ssh -p 29418  wujunrog-username@192.168.56.17  gerrit set-account --add-ssh-key -  --full-name replication  gerrit_replication_user2
+
+ssh -p 29418  wujunrog-username@192.168.56.17 gerrit logging set-level debug
+sudo su -c 'ssh root@192.168.56.17 echo' gerrit2
+ssh -p <port> <host> gerrit review --restore <change-id>
+
+su -c "ssh-keygen -f /var/gerrit/.ssh/id_rsa -t rsa -N '' " gerrit2
+su -c 'ssh-copy-id -i /var/gerrit/.ssh/id_rsa.pub root@192.168.56.17  ' gerrit2
+su -c 'ssh-copy-id -i /var/gerrit/.ssh/id_rsa.pub root@192.168.56.17 -p222 ' gerrit2
+
 ·······································
 
 #方案一：bazel build方式：
