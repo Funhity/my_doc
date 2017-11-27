@@ -9383,7 +9383,7 @@ git review -R  --yes
   或者git commit --amend
   git review -R  --yes
 
-``````````gerrit plugin`````
+``````````gerrit plugin section`````
 #gerrit replication plugin
 https://groups.google.com/forum/#!topic/repo-discuss/m_PWqJ9iHaQ
 #https://docs.bazel.build/versions/master/install-redhat.html
@@ -9398,10 +9398,14 @@ https://groups.google.com/forum/#!topic/repo-discuss/m_PWqJ9iHaQ
                    ssh  root@192.168.56.17 cat /root/.ssh/id_rsa.pub|ssh -p 29418  wujunrog-username@192.168.56.17  gerrit set-account --add-ssh-key -  --full-name replication  gerrit_replication_user2
 
 ssh -p 29418  wujunrog-username@192.168.56.17 gerrit logging set-level debug
-sudo su -c 'ssh root@192.168.56.17 echo' gerrit2
+sudo su -c 'ssh root@192.168.56.17 echo aaaaaa' gerrit2
 ssh -p <port> <host> gerrit review --restore <change-id>
 
-su -c "ssh-keygen -f /var/gerrit/.ssh/id_rsa -t rsa -N '' " gerrit2
+#replication plugin用老的方式加密known_hosts
+su -c "ssh-keygen  -f /var/gerrit/.ssh/id_rsa -t rsa -N '' "   gerrit2
+su -c 'ssh-keygen  -R 192.168.56.17 -f     ~/.ssh/known_hosts' gerrit2
+su -c 'ssh-keyscan -t rsa 192.168.56.17 >> ~/.ssh/known_hosts' gerrit2
+
 su -c 'ssh-copy-id -i /var/gerrit/.ssh/id_rsa.pub root@192.168.56.17  ' gerrit2
 su -c 'ssh-copy-id -i /var/gerrit/.ssh/id_rsa.pub root@192.168.56.17 -p222 ' gerrit2
 
