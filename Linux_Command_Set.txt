@@ -652,8 +652,8 @@ docker run -ti
 #说明：routing mesh模式，文档中说创建network要用--ingress参数
 docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' f6f9b5a4ebe5
 `````docker link section`````
+理解：link用环境变量获得另一个container的expose的信息
     --link <name or id>:alias
-
 
     $ docker run --rm --name web2 --link db:db training/webapp env
 
@@ -665,6 +665,10 @@ docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}
     DB_PORT_5432_TCP_PORT=5432
     DB_PORT_5432_TCP_ADDR=172.17.0.5
     . . .
+    #查询rb中有哪些link：
+    sudo  docker inspect -f "{{ .HostConfig.Links }}" rb
+    sudo docker exec -ti rb  env
+
 ``````docker swarm section ```````
 service = container image  +  commands to execute
 task    =  commands to run inside the container(atomic scheduling unit of swarm)
