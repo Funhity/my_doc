@@ -1,5 +1,6 @@
 git 账号：webloginwu
 登入方法：unarywu@gmail.com/Rub
+docker hub weakfrankwu
 ===kernel version section ====
 uname -r
 2.6.32-431.11.2.el6.x86_64
@@ -563,13 +564,12 @@ listen_addresses = '*'
 standard_conforming_strings = off
  
 =======ubuntu docker section=======
+
 sudo apt-get install \
     apt-transport-https \
     ca-certificates \
     curl \
     software-properties-common
-
-
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo apt-key fingerprint 0EBFCD88
 
@@ -577,6 +577,15 @@ sudo add-apt-repository \
    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
    $(lsb_release -cs) \
    stable"
+
+sudo apt-get update
+sudo apt-get install docker-ce
+````````````````````
+#查询库中包含的版本：
+apt-cache madison docker-ce
+#安装特定版本：
+sudo apt-get install docker-ce=<VERSION>
+
 
 
 
@@ -605,6 +614,8 @@ docker pull centos:6
 
 docker info
 docker search centos
+sudo du -sh /var/lib/docker/containers/*
+
 ````````docker run section```````````
 docker run -ti
        -t, --tty=true|false
@@ -640,7 +651,10 @@ docker run -ti
                       my-multihost-network
 #说明：routing mesh模式，文档中说创建network要用--ingress参数
 docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' f6f9b5a4ebe5
-`````docker link`````
+`````docker link section`````
+    --link <name or id>:alias
+
+
     $ docker run --rm --name web2 --link db:db training/webapp env
 
     . . .
@@ -6702,6 +6716,13 @@ $ chown -R apache /var/www/reviews.example.com/data
 ln -s /var/www/html/reviews.example.com/apache-wsgi.conf /etc/httpd/conf.d/reviewboard-sitename.conf/etc/httpd/conf.d/reviewboard-sitename.conf
 vi /etc/httpd/conf.d/reviewboard-sitename.conf ,virtual machine 参数改成服务器ip地址
 重启 httpd服务
+
+```````````````reviewboard section```````````````````````
+ 
+  sudo docker run -d --name rb-postgres -e POSTGRES_USER=reviewboard postgres:alpine
+  sudo docker run --name rb-memcached -d -p 11211 memcached:alpine
+  sudo docker run -v /root/.ssh -v /media --name rb-data busybox true
+  sudo docker run -it --link rb-postgres:pg --link rb-memcached:memcached --volumes-from rb-data -p 8000:8000 ikatson/reviewboard
 
 ===========awk section===========
 awk -v ps_cri_ch=$page_space_usage_critical_threshold  -v ps_ch=$page_space_usage_threshold '{if($5<ps_cri_ch && $5>=ps_ch) print "Swap space usage rate " $5 "% exceeds threshold on "$1" "$2" " $3 }'
