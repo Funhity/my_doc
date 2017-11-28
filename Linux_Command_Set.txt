@@ -81,8 +81,17 @@ sudo discoveryutil mdnsflushcache
 
 ================ network section =========================
 ubuntu: /etc/network/interfaces
+`````top section``````````
 
-yum -y install iftop
+网络带宽：
+   每个网卡占用带宽：
+   yum -y install iftop
+   iftop   
+   每个进程暂用带宽
+   sudo yum install nethogs -y
+   sudo nethogs
+磁盘占用：
+   iotop
 
 ``````
 centos7:
