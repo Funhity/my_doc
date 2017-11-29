@@ -2981,4 +2981,6 @@ ssh -p 29418  wujunrog-username@192.168.56.17 gerrit plugin reload replication
   10. scp target/replication-2.7.jar gerrit.example.com:/tmp/
   11. ssh -p 29418 gerrit.example.com gerrit plugin install -n replication /tmp/replication-2.7.jar
 
-```````````````````````````
+=========reviewboard section============
+git push  git+ssh://root@10.0.0.4:522/root/git-repository/
+
