@@ -4867,6 +4867,8 @@ rsync -av /srv/     /tmp/wujunrong/backup/srv/     --exclude   salt/xinxindai_to
 rsync -avh ./hadoop-spark --exclude '*/target/*'  frank@52.191.119.111:/home/frank/demo-src --delete-excluded   --delete
 
 ``````````断点续传 section````````````
+#https://stackoverflow.com/questions/20860896/is-there-a-way-to-continue-broken-scp-secure-copy-command-process-in-linux
+#https://www.cyberciti.biz/tips/linux-use-rsync-transfer-mirror-files-directories.html
 sudo docker save  pwc/spark:20171128 -o /tmp/spark.tar
 rsync --partial --progress --rsh=ssh /tmp/spark.tar  frank@52.191.119.111:/tmp/
 `````````````````````````````````````
@@ -6753,11 +6755,21 @@ vi /etc/httpd/conf.d/reviewboard-sitename.conf ,virtual machine 参数改成服�
   sudo docker run -it --link rb-postgres:pg --link rb-memcached:memcached --volumes-from rb-data -p 8000:8000 ikatson/reviewboard
 
 `````gitweb section```
+方案一：
 yum -y install lighttpd
 git instaweb
 git instaweb  --stop
 git instaweb  --start
 
+方案二：
+#https://gofedora.com/how-to-install-configure-gitweb/
+#https://serverfault.com/questions/72732/how-to-set-up-gitweb
+yum install gitweb
+cp -r /var/www/git/   /root/gitweb-home/
+vi /etc/gitweb.conf
+vi  /etc/httpd/conf.d/git.conf
+cp -r git-repository/     gitweb-home/spark.git
+mv /etc/httpd/conf.d/welcome.conf /root/
 ===========awk section===========
 awk -v ps_cri_ch=$page_space_usage_critical_threshold  -v ps_ch=$page_space_usage_threshold '{if($5<ps_cri_ch && $5>=ps_ch) print "Swap space usage rate " $5 "% exceeds threshold on "$1" "$2" " $3 }'
 awk '($3~/U/)&&($4~/H/){print $0;}'

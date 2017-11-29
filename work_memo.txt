@@ -2984,3 +2984,4 @@ ssh -p 29418  wujunrog-username@192.168.56.17 gerrit plugin reload replication
 =========reviewboard section============
 git push  git+ssh://root@10.0.0.4:522/root/git-repository/
 
+sudo docker run --name centos --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro  -v /var/share:/var/share -p 1234:1234 -p 58080:8080 -p 580:80 -p 522:22 -p 58000:8000 centos7/systemd:20171129
