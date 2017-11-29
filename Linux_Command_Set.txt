@@ -6184,9 +6184,11 @@ A refspec is specified as [+]<src>:<dst>. The <src> parameter is the source bran
 `````````````
 创建中心仓库，是空仓库，然后用push往仓库中添加
 1、服务器端，创建空仓库，然后通过客户端，用push往仓库中添加
-   git --bare init  #bare repositories (by definition) don't have a working tree attached to them, so you can't easily add files to them as you would in a normal non-bare repository (e.g. with git add <file> and a subsequent git commit.)
-                  You almost always update a bare repository by pushing to it (using git push) from another repository.
-   或 git init --bare  jenkins-test.git
+   git --bare init  
+                  #bare repositories (by definition) don't have a working tree attached to them, so you can't easily add files to them as you would in a normal non-bare repository (e.g. with git add <file> and a subsequent git commit.)
+                  #You almost always update a bare repository by pushing to it (using git push) from another repository.
+                  #不像下面创建目录jenkins-test.git，此命令git把当前目录当做存放git仓库信息的目录
+   或 git init --bare  jenkins-test.git  #会创建目录jenkins-test.git，git仓库信息都在这个目录下
 2、首个客户端，上传要版本管理的文件到服务器
    git init
    git add work_memo.txt
@@ -6209,8 +6211,9 @@ git rev-parse HEAD
 git rev-parse origin/master
 git rev-parse testing
 
-git merge-base branch2 branch3
+git merge-base branch2 branch3  #three way merge的公共节点
 
+git push  git+ssh://root@10.0.0.4:522/root/git-repository/
 `````````
         git archive   --format=tar --remote=/srv/git/xxd_code_repo.git/           master                    | tar -xf -
 子目录：git archive   --format=tar --remote=ssh://remote_server/remote_repository master path1/ path2/      | tar -xv
