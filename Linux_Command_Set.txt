@@ -4858,11 +4858,12 @@ rsync -avzh  /var/www/html/cm5   root@192.168.38.119:/var/www/html/centos6-cm5.5
 rsync -avzh 192.168.1.148:/home/frank/docker-share/  ./   --checksum
 --checksum also modifies the file-times-and-sizes heuristic, but here it ignores times and examines only sizes. Files on the source and destination sides that differ in size are transferred, since they are obviously different. Files with the same size are checksummed (with MD5 in rsync version 3.0.0+, or with MD4 in earlier versions), and those found to have differing sums are also transferred.
 
-
-备份样例
+````rsync delete``rsync exclude````
+#备份样例
 rsync -av /srv/     /tmp/wujunrong/backup/srv/     --exclude   salt/xinxindai_tomcat/files/v6_packages    --exclude=*.zip  --exclude=*.jpg   --exclude=*.png    --cvs-exclude    --exclude=*.apk   --exclude=*.bin  --exclude=*.gz  --exclude=*.jsp  --exclude=*.js  --exclude=*.rpm    --exclude=*.class  --exclude=.*  --exclude=*.txt
-
-
+#同步时，去掉target目录（可能在某个子目录下），并且delete掉上次同步的target目录
+rsync -avh ./hadoop-spark --exclude '*/target/*'  frank@52.191.119.111:/home/frank/demo-src --delete-excluded   --delete
+```````````
 使rsync服务使用selinux保护机制 配置方法：
 semanage fcontext -a -t initrc_exec_t "/etc/rc.d/init.d/rsyncd"
 grep rsync /etc/selinux/targeted/contexts/files/file_contexts.local
