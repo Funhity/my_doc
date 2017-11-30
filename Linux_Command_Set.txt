@@ -1082,7 +1082,7 @@ docker update --restart=always <CONTAINER ID>
 more /var/log/docker 
 To detach the tty without exiting the shell, use the escape sequence Ctrl+p + Ctrl+q.
 ```````docker images section````docker cp````
-sudo docker save -o /home/matrix/matrix-data.tar matrix-data
+sudo docker save -o /home/matrix/matrix-data.tar matrix-data/xxx:xxx
 sudo docker load -i <path to copied image file>
 docker save centos:latest |ssh 10.0.1.8 docker load
 
@@ -6765,11 +6765,57 @@ git instaweb  --start
 #https://gofedora.com/how-to-install-configure-gitweb/
 #https://serverfault.com/questions/72732/how-to-set-up-gitweb
 yum install gitweb
-cp -r /var/www/git/   /root/gitweb-home/
-vi /etc/gitweb.conf
-vi  /etc/httpd/conf.d/git.conf
-cp -r git-repository/     gitweb-home/spark.git
+
+#把gitweb软件的cgi脚本拷贝到 getweb的根目录下，生成gitweb根目录
+cp -r /var/www/git/   /root/gitweb-home/git/
+
+#gitweb配置文件：
+cat >/etc/gitweb.conf<<EOF
+# Change This
+$projectroot = '/root/gitweb-home/git';
+# Change This
+$site_name = "wujunrong's git trees.";
+# Don't Change the variables below
+$my_uri = "/";
+$home_link = '/';
+@stylesheets = ("/gitweb.css");
+$favicon = "/git-favicon.png";
+$logo = "/git-logo.png";
+EOF
+
+#httpd配置文件：
+#/root/gitweb-home/git 是http服务在这个目录寻找gitweb.cgi文件
+cat >  /etc/httpd/conf.d/git.conf<<EOF
+DocumentRoot "/root/gitweb-home/git"
+<Directory "/root/gitweb-home/git">
+SetEnv  GITWEB_CONFIG  /etc/gitweb.conf
+DirectoryIndex gitweb.cgi
+Allow from all
+#AllowOverride all
+Order Deny,Allow
+Options +ExecCGI
+AddHandler cgi-script .cgi
+<Files gitweb.cgi>
+  SetHandler cgi-script
+</Files>
+RewriteEngine on
+RewriteRule ^[a-zA-Z0-9_-]+.git/?(\?.)?$ /gitweb.cgi%{REQUESTURI} [L,PT]
+LogLevel debug
+</Directory>
+EOF
+
+vi  /etc/httpd/conf/httpd.conf
+注释掉如下内容
+<Directory />
+    #AllowOverride none
+    #Require all denied
+</Directory>
+
+#把git repository拷贝到gitweb根目录下
+cp -r /root/git-repository/     /root/gitweb-home/git/spark.git
 mv /etc/httpd/conf.d/welcome.conf /root/
+最后一步：
+systemctl restart httpd
 ===========awk section===========
 awk -v ps_cri_ch=$page_space_usage_critical_threshold  -v ps_ch=$page_space_usage_threshold '{if($5<ps_cri_ch && $5>=ps_ch) print "Swap space usage rate " $5 "% exceeds threshold on "$1" "$2" " $3 }'
 awk '($3~/U/)&&($4~/H/){print $0;}'
@@ -9555,4 +9601,51 @@ EOF
 #http://www.regular-expressions.info/lookaround.html
 su(?!do).*-c 
 
-============================
+=====httpd section=======================
+Allow from all
+说明：
+The Allow directive affects which hosts can access an area of the server. Access can be controlled by hostname, IP address, IP address range, or by other characteristics of the client request captured in environment variables.
+``````
+Order Deny,Allow
+说明：
+https://stackoverflow.com/questions/9943042/htaccess-order-deny-allow-deny
+the Order keyword and his relation with Deny and Allow Directives is a real nightmare. It would be quite interesting to understand how we ended up with such configuration solutions, which is a least non intuitive.
+
+    The first important point is that the Order keyword will have a big impact on how Allow and Deny directives are used.
+    The second point is that Deny and Allow directives are not applied in the order they are written, it must be seen as two blocks of directives (one the for Deny, one for the Allow) where all lines are applied.
+    The third point is that it does not apply like firewall rules, not at all, especially, rules are all read and the process is not stopping at the first match
+
+Now you have to main modes:
+The Order-Deny-Allow-mode, or Allow-anyone-except-this-list-or-maybe-not
+
+Order Deny,Allow
+
+    This is an allow by default mode. Where you will give optionnaly a list of Deny rules.
+    Then the Deny rules are checked, to reject requests based on theses rules.
+    If someone gets rejected by one of the Deny rules you can maybe get him back with an Allow rule.
+
+I would call it
+
+Policy Allow
+Rule Deny
+     list of Deny rules
+Exception
+     list of Allow rules
+
+The Order-Allow-Deny-mode, or Reject-everyone-except-this-list-or-maybe-not
+
+Order Allow,Deny
+
+    This is a Deny by default mode. Where you will give optionnaly a list of Allow rules.
+    Then the Allow rules are checked, And someone willing access must match at least one rule.
+    If someone gets allowed by one of the Allow rules you can still reject him with a Deny rule.
+
+In the simplified form:
+
+Policy Deny
+Rule Allow
+     list of Allow rules
+Exception
+     list of Deny rules
+`````````````````````````````````````````````
+==========
