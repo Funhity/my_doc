@@ -6244,7 +6244,44 @@ The basic Git workflow goes something like this:
 git commit -a -m 'added new benchmarks'   #Skipping the Staging Area
 
 
-······git rebase conflict······git rebase section······
+···git rebase section······
+范例一：
+#https://stackoverflow.com/questions/11856141/how-to-git-commit-amend-a-commit-thats-the-base-of-a-branch
+git rebase --onto master master@{1} foo  #把master@{1}开始到foo分支结束这段分支，把master的最新的commit引入进来
+                                         
+·····
+范例二：
+git rebase [-i | --interactive] [options] [--exec <cmd>] [--onto <newbase>] [<upstream> [<branch>]]
+           upstream可以是commit id，即从这个commit id 到 [<branch>]]的所有commit
+           [<upstream> [<branch>]]
+git rebase master         topic     #等同于git checkout topic followed by git rebase master.
+                                    #修改当前topic分支，把master到当前分支，把maser有，但topic分支没有的内容引入到topic分支
+····················       
+范例三：
+       First let’s assume your topic is based on branch next. For example, a feature developed in topic
+       depends on some functionality which is found in next.
+
+               o---o---o---o---o  master
+                    \
+                     o---o---o---o---o  next
+                                      \
+                                       o---o---o  topic
+
+       We want to make topic forked from branch master; for example, because the functionality on which
+       topic depends was merged into the more stable master branch. We want our tree to look like this:
+
+               o---o---o---o---o  master
+                   |            \
+                   |             o'--o'--o'  topic
+                    \
+                     o---o---o---o---o  next
+
+       We can get this using the following command:
+
+           git rebase --onto master next topic
+
+······git rebase conflict···
+
 https://help.github.com/articles/resolving-merge-conflicts-after-a-git-rebase/
 方案一：git rebase --abort
 方案二： git rebase --skip
@@ -6785,6 +6822,8 @@ EOF
 
 #httpd配置文件：
 #/root/gitweb-home/git 是http服务在这个目录寻找gitweb.cgi文件
+#LogLevel debug是新增的debug信息
+
 cat >  /etc/httpd/conf.d/git.conf<<EOF
 DocumentRoot "/root/gitweb-home/git"
 <Directory "/root/gitweb-home/git">
@@ -6816,6 +6855,13 @@ cp -r /root/git-repository/     /root/gitweb-home/git/spark.git
 mv /etc/httpd/conf.d/welcome.conf /root/
 最后一步：
 systemctl restart httpd
+
+
+`````
+reviewboard中增加repository，用key方式认证配置成功
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.0.0.4 -p522
+ssh://10.0.0.4:522/root/gitweb-home/git/spark.git
+
 ===========awk section===========
 awk -v ps_cri_ch=$page_space_usage_critical_threshold  -v ps_ch=$page_space_usage_threshold '{if($5<ps_cri_ch && $5>=ps_ch) print "Swap space usage rate " $5 "% exceeds threshold on "$1" "$2" " $3 }'
 awk '($3~/U/)&&($4~/H/){print $0;}'

@@ -2954,10 +2954,12 @@ branch.master.merge=refs/heads/master
 remote.gerrit.url=ssh://wujunrog-username@192.168.56.17:29418/hadoop-spark.git
 remote.gerrit.fetch=+refs/heads/*:refs/remotes/gerrit/*
 ````demo git section`````gerrit replication`````
+
 git init --bare  spark-server.git
 sudo su -c 'ssh mirror1.us.some.org echo' gerrit2
 git clone git+ssh://root@192.168.56.17:222/root/git-repository/spark-server.git
 ssh -p 29418  wujunrog-username@192.168.56.17 gerrit plugin reload replication
+git clone ssh://10.0.0.4:522/root/gitweb-home/git/spark.git
 
 ``````gerrit plugin section`````gerrit build`````
 #http://www.ingeniousmalarkey.com/2013/12/how-to-build-gerrit-replication-plugin.html
