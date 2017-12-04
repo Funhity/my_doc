@@ -2987,3 +2987,44 @@ git clone ssh://10.0.0.4:522/root/gitweb-home/git/spark.git
 git push  git+ssh://root@10.0.0.4:522/root/git-repository/
 
 sudo docker run --name centos --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro  -v /var/share:/var/share -p 1234:1234 -p 58080:8080 -p 580:80 -p 522:22 -p 58000:8000 centos7/systemd:20171129
+
+=========blockchian section========
+#https://hyperledger-fabric.readthedocs.io/en/release/prereqs.html
+sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo apt-key fingerprint 0EBFCD88
+
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+
+sudo apt-get update
+sudo apt-get install docker-ce
+sudo apt install docker-compose
+``````
+wget https://redirector.gvt1.com/edgedl/go/go1.9.2.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.9.2.linux-amd64.tar.gz
+
+sudo cp /etc/profile /etc/profile.bak
+sudo sh -c "echo 'GOPATH=/usr/local/go' >> ~/.profile"
+sudo sh -c "echo 'PATH=\$PATH:\$GOPATH/bin' >>  ~/.profile"
+. ~/.profile
+echo $GOPATH
+````
+sudo apt-get install npm
+npm version
+npm install npm@3.10.10 -g
+````
+#Node.js - version 6.9.x or greater
+#Node.js version 7.x is not supported at this time.
+sudo curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+sudo apt-get install nodejs
+
+````````````
+
+sudo curl -sSL https://goo.gl/5ftp2f | sudo bash

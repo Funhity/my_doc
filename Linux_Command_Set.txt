@@ -595,9 +595,9 @@ apt-cache madison docker-ce
 #安装特定版本：
 sudo apt-get install docker-ce=<VERSION>
 
-
-
-
+```````````````
+sudo apt install docker-compose
+docker-compose --version
 =====================  docker section  =========================================
 docker hub accout :weakfrankwu  wuj*rong**
 docker 基础软件
@@ -6254,8 +6254,10 @@ git rebase --onto master master@{1} foo  #把master@{1}开始到foo分支结束�
 git rebase [-i | --interactive] [options] [--exec <cmd>] [--onto <newbase>] [<upstream> [<branch>]]
            upstream可以是commit id，即从这个commit id 到 [<branch>]]的所有commit
            [<upstream> [<branch>]]
-git rebase master         topic     #等同于git checkout topic followed by git rebase master.
+git rebase master         topic     #等同于 = git checkout topic followed by git rebase master.
                                     #修改当前topic分支，把master到当前分支，把maser有，但topic分支没有的内容引入到topic分支
+git checkout my-branch-2
+git rebase my-branch-1              #把my-branch-1上的commit引入当前分支   
 ····················       
 范例三：
        First let’s assume your topic is based on branch next. For example, a feature developed in topic
@@ -8966,13 +8968,11 @@ native zone使用 rsyslog 7  版本的日志服务:
    /opt/local/etc/rsyslog.conf
    svcadm disable svc:/pkgsrc/rsyslog:default
 
-=========== npm section ============
-npm install -g cnpm --registry=https://registry.npm.taobao.org
-npm install --registry  npm.briphant.cn
-=========== npm section ============
-npm install -g cnpm --registry=https://registry.npm.taobao.org
-npm install --registry  npm.briphant.cn
 
+=========== npm section ============
+npm install -g cnpm --registry=https://registry.npm.taobao.org
+npm install --registry  npm.briphant.cn
+sudo apt-get install npm
 ====screen section====
 sudo yum -y install screen
 1. type screen command
@@ -9694,4 +9694,11 @@ Rule Allow
 Exception
      list of Deny rules
 `````````````````````````````````````````````
-==========
+
+
+
+
+
+
+
+
