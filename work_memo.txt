@@ -3028,3 +3028,42 @@ sudo apt-get install nodejs
 ````````````
 
 sudo curl -sSL https://goo.gl/5ftp2f | sudo bash
+
+
+
+
+
+`````
+===================== Channel "mychannel" is created successfully ===================== 
+===================== Channel "mychannel" is created successfully ===================== 
+===================== PEER0 joined on the channel "mychannel" ===================== 
+===================== PEER0 joined on the channel "mychannel" ===================== 
+===================== PEER1 joined on the channel "mychannel" ===================== 
+===================== PEER1 joined on the channel "mychannel" ===================== 
+===================== PEER2 joined on the channel "mychannel" ===================== 
+===================== PEER2 joined on the channel "mychannel" ===================== 
+===================== PEER3 joined on the channel "mychannel" ===================== 
+===================== PEER3 joined on the channel "mychannel" ===================== 
+===================== Anchor peers for org "Org1MSP" on "mychannel" is updated successfully ===================== 
+===================== Anchor peers for org "Org1MSP" on "mychannel" is updated successfully ===================== 
+===================== Anchor peers for org "Org2MSP" on "mychannel" is updated successfully ===================== 
+===================== Anchor peers for org "Org2MSP" on "mychannel" is updated successfully ===================== 
+===================== Chaincode is installed on remote peer PEER0 ===================== 
+===================== Chaincode is installed on remote peer PEER0 ===================== 
+===================== Chaincode is installed on remote peer PEER2 ===================== 
+===================== Chaincode is installed on remote peer PEER2 ===================== 
+===================== Chaincode Instantiation on PEER2 on channel 'mychannel' is successful ===================== 
+===================== Chaincode Instantiation on PEER2 on channel 'mychannel' is successful ===================== 
+===================== Querying on PEER0 on channel 'mychannel'... ===================== 
+===================== Querying on PEER0 on channel 'mychannel'... ===================== 
+===================== Query on PEER0 on channel 'mychannel' is successful ===================== 
+===================== Query on PEER0 on channel 'mychannel' is successful ===================== 
+===================== Invoke transaction on PEER0 on channel 'mychannel' is successful ===================== 
+===================== Invoke transaction on PEER0 on channel 'mychannel' is successful ===================== 
+===================== Chaincode is installed on remote peer PEER3 ===================== 
+===================== Chaincode is installed on remote peer PEER3 ===================== 
+===================== Querying on PEER3 on channel 'mychannel'... ===================== 
+===================== Querying on PEER3 on channel 'mychannel'... ===================== 
+===================== Query on PEER3 on channel 'mychannel' is successful ===================== 
+===================== Query on PEER3 on channel 'mychannel' is successful ===================== 
+
