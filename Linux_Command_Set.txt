@@ -1557,7 +1557,8 @@ vboxmanage internalcommands sethduuid  '/media/frank/3172e678-9cfa-4781-9900-0d7
 
 "%programfiles%\Oracle\VirtualBox\VBoxHeadless" --startvm "Debian"
 "%programfiles%\Oracle\VirtualBox\VBoxHeadless" --startvm "CentOS7 副本2"
-
+````````````````````
+pressing Fn + Ctrl + LeftArrow jumps to begin of document, .. + RightArrow to the end!
 ====virtualbox usb section=============
 
   1. Close virtualbox
