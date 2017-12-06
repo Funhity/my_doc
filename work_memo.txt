@@ -2287,13 +2287,13 @@ ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
 host:
           echo 1 > /proc/sys/net/ipv4/ip_forward
 jira:
-          /opt/atlassian/jira/bin/start-jira.sh
+          docker exec -ti jira /opt/atlassian/jira/bin/start-jira.sh
 windows:
          cd /cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7
          ./bin/spark-class.cmd org.apache.spark.deploy.history.HistoryServer
 
          cd /cygdrive/c/work/PwC/hadoop-spark/scala-devops
-         /cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7/bin/spark-submit.cmd  --class "SimpleApp"   --master local[4]   target/scala-2.11/simple-project_2.11-1.0.jar>/tmp/       spark.html 
+         /cygdrive/c/work/PwC/spark-2.2.0-bin-hadoop2.7/bin/spark-submit.cmd  --class "SimpleApp"   --master local[4]   target/scala-2.11/simple-project_2.11-1.0.jar>/tmp/spark.html 
          abc=`cat /tmp/spark.html` ; sed s/template/"$abc"/  /tmp/report_template.html >/tmp/report_windows.html
          #http://192.168.56.17:81/linux-spark.html
 
