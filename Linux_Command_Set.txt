@@ -9366,7 +9366,7 @@ sudo systemd-tmpfiles --prefix=/sys --create
 ====os section ===init section===centos section==os init===docker init===
 yum -y install epel-release wget curl telnet lrzsz aria2 openssh-clients openssh-server iotop net-tools lsof tcpdump tree tcpdump zip unzip less dos2unix git iproute bind-utils
 
-
+sudo apt install tree
 ====firefox section=====
 用Ctrl+Tab切换tab页
 

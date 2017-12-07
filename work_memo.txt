@@ -2989,8 +2989,22 @@ git push  git+ssh://root@10.0.0.4:522/root/git-repository/
 sudo docker run --name centos --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro  -v /var/share:/var/share -p 1234:1234 -p 58080:8080 -p 580:80 -p 522:22 -p 58000:8000 centos7/systemd:20171129
 
 =========blockchian section========
+步骤一：
+安装docker：
+https://docs.docker.com/docker-for-mac/install/#download-docker-for-mac
+包含docker和docker compose
+步骤二：
+安装go语言
+https://golang.org/dl/
+步骤三：
+安装nodejs
+https://nodejs.org/dist/v6.9.5/
+node -v
+
+``blockchian ubuntu```
+
 #https://hyperledger-fabric.readthedocs.io/en/release/prereqs.html
-sudo apt-get install \
+sudo apt-get -y install \
     apt-transport-https \
     ca-certificates \
     curl \
@@ -3003,9 +3017,9 @@ sudo add-apt-repository \
    $(lsb_release -cs) \
    stable"
 
-sudo apt-get update
-sudo apt-get install docker-ce
-sudo apt install docker-compose
+sudo apt-get -y update
+sudo apt-get -y install docker-ce
+sudo apt-get -y install docker-compose
 ``````
 wget https://redirector.gvt1.com/edgedl/go/go1.9.2.linux-amd64.tar.gz
 sudo tar -C /usr/local -xzf go1.9.2.linux-amd64.tar.gz
@@ -3016,7 +3030,7 @@ sudo sh -c "echo 'PATH=\$PATH:\$GOPATH/bin' >>  ~/.profile"
 . ~/.profile
 echo $GOPATH
 ````
-sudo apt-get install npm
+sudo apt-get -y install npm
 npm version
 npm install npm@3.10.10 -g
 ````
@@ -3065,3 +3079,16 @@ sudo  ./byfn.sh -m up
 ===================== Querying on PEER3 on channel 'mychannel'... ===================== 
 ===================== Query on PEER3 on channel 'mychannel' is successful ===================== 
 ===================== Query on PEER3 on channel 'mychannel' is successful ===================== 
+
+
+```````````````````````````````````````
+主程序：        
+        /home/org1/fabric-samples/first-network/byfn.sh
+
+Crypto Generator:                     
+       /home/org1/fabric-samples/bin/cryptogen generate --config=/home/org1/fabric-samples/first-network/crypto-config.yaml
+
+#manipulating Hyperledger Fabric channel configuration.
+#https://hyperledger-fabric.readthedocs.io/en/release/configtxgen.html
+Configuration Transaction Generator:  /home/org1/fabric-samples/first-network/configtx.yaml
+      ../bin/configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/genesis.block
