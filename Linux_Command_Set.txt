@@ -6945,6 +6945,14 @@ vim /etc/mail.rc
   diskutil unmountDisk /dev/disk2
   sudo dd if=./ubuntu15.img.dmg of=/dev/disk2
 
+=====mac section===
+
+Jump to beginning of a line – Command+Left Arrow.
+Jump to end of a line – Command+Right Arrow.
+Jump to beginning of current word – Option+Right Arrow.
+Jump to end of current word – Option+Right Arrow.
+Jump to beginning of all text – Command+Up Arrow.
+
 ====cobbler section===
 rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 或 sudo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
