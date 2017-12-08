@@ -9123,7 +9123,17 @@ sudo openvpn --config ~/Documents/briphant_office_sh_new
  ctl+shift+ -> 或 <-
 
  view->wordwrap 把一行显示成两行
+
+`````安装copy on select 插件````
+步骤一：打开sublime的console
+       The console is accessed via the ctrl+` shortcut or the View > Show Console menu.
+步骤二：在console中执行一段代码，代码在 https://packagecontrol.io/installation 上面
+步骤三：安装插件
+1.Package Control is driven by the Command Palette. To open the palette, press ctrl+shift+p (Win, Linux) or cmd+shift+p (OS X).
+2.在输入界面中输入package,找到package control : install package,在列表中选择 copy on select，https://packagecontrol.io/docs/usage
+
 ========string section==========chenge file name=========
+
 
 ${string/pattern/replacement}
 ls *.new |xargs -I {} sh -c 'a={};b=${a/new/0.7};mv {}  $b'  #把.new文件改成.0.7文件

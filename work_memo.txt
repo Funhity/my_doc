@@ -3000,7 +3000,11 @@ https://golang.org/dl/
 安装nodejs
 https://nodejs.org/dist/v6.9.5/
 node -v
-
+git clone https://github.com/hyperledger/fabric-samples.git
+cd fabric-samples
+curl -sSL https://goo.gl/5ftp2f |  bash
+cd first-network
+sudo  ./byfn.sh -m up
 ``blockchian ubuntu```
 
 #https://hyperledger-fabric.readthedocs.io/en/release/prereqs.html
