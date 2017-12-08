@@ -3046,7 +3046,66 @@ sudo curl -sSL https://goo.gl/5ftp2f | sudo bash
 cd first-network
 sudo  ./byfn.sh -m up
 `````
+ue (y/n)? y
+proceeding ...
+/Users/fwu066/Documents/share/blockchian/Fabric_Samples/fabric-samples/first-network/../bin/cryptogen
 
+##########################################################
+##### Generate certificates using cryptogen tool #########
+##########################################################
+org1.example.com
+org2.example.com
+
+/Users/fwu066/Documents/share/blockchian/Fabric_Samples/fabric-samples/first-network/../bin/configtxgen
+##########################################################
+#########  Generating Orderer Genesis block ##############
+##########################################################
+2017-12-07 21:11:21.943 CST [common/configtx/tool] main -> INFO 001 Loading configuration
+2017-12-07 21:11:21.966 CST [common/configtx/tool] doOutputBlock -> INFO 002 Generating genesis block
+2017-12-07 21:11:21.967 CST [common/configtx/tool] doOutputBlock -> INFO 003 Writing genesis block
+
+#################################################################
+### Generating channel configuration transaction 'channel.tx' ###
+#################################################################
+2017-12-07 21:11:21.985 CST [common/configtx/tool] main -> INFO 001 Loading configuration
+2017-12-07 21:11:21.990 CST [common/configtx/tool] doOutputChannelCreateTx -> INFO 002 Generating new channel configtx
+2017-12-07 21:11:21.990 CST [common/configtx/tool] doOutputChannelCreateTx -> INFO 003 Writing new channel tx
+
+#################################################################
+#######    Generating anchor peer update for Org1MSP   ##########
+#################################################################
+2017-12-07 21:11:22.010 CST [common/configtx/tool] main -> INFO 001 Loading configuration
+2017-12-07 21:11:22.014 CST [common/configtx/tool] doOutputAnchorPeersUpdate -> INFO 002 Generating anchor peer update
+2017-12-07 21:11:22.014 CST [common/configtx/tool] doOutputAnchorPeersUpdate -> INFO 003 Writing anchor peer update
+
+#################################################################
+#######    Generating anchor peer update for Org2MSP   ##########
+#################################################################
+2017-12-07 21:11:22.035 CST [common/configtx/tool] main -> INFO 001 Loading configuration
+2017-12-07 21:11:22.038 CST [common/configtx/tool] doOutputAnchorPeersUpdate -> INFO 002 Generating anchor peer update
+2017-12-07 21:11:22.039 CST [common/configtx/tool] doOutputAnchorPeersUpdate -> INFO 003 Writing anchor peer update
+
+Creating network "net_byfn" with the default driver
+Creating peer0.org1.example.com ... 
+Creating peer0.org2.example.com ... 
+Creating peer1.org1.example.com ... 
+Creating orderer.example.com ... 
+Creating peer1.org2.example.com ... 
+Creating peer1.org1.example.com
+Creating peer0.org1.example.com
+Creating peer0.org2.example.com
+Creating orderer.example.com
+Creating orderer.example.com ... done
+Creating cli ... 
+Creating cli ... done
+
+ ____    _____      _      ____    _____ 
+/ ___|  |_   _|    / \    |  _ \  |_   _|
+\___ \    | |     / _ \   | |_) |   | |  
+ ___) |   | |    / ___ \  |  _ <    | |  
+|____/    |_|   /_/   \_\ |_| \_\   |_|  
+
+Build your first network (BYFN) end-to-end test
 ===================== Channel "mychannel" is created successfully ===================== 
 ===================== Channel "mychannel" is created successfully ===================== 
 ===================== PEER0 joined on the channel "mychannel" ===================== 
