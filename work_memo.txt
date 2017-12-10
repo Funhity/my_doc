@@ -3048,7 +3048,9 @@ git clone https://github.com/hyperledger/fabric-samples.git
 cd fabric-samples
 sudo curl -sSL https://goo.gl/5ftp2f | sudo bash
 cd first-network
+
 sudo  ./byfn.sh -m up
+./byfn.sh -m down
 `````
 ue (y/n)? y
 proceeding ...
@@ -3143,7 +3145,16 @@ Build your first network (BYFN) end-to-end test
 ===================== Query on PEER3 on channel 'mychannel' is successful ===================== 
 ===================== Query on PEER3 on channel 'mychannel' is successful ===================== 
 
-
+wu066mac:first-network fwu066$ docker ps
+CONTAINER ID        IMAGE                                                                                                  COMMAND                  CREATED              STATUS              PORTS                                              NAMES
+dcfb9af20938        dev-peer1.org2.example.com-mycc-1.0-26c2ef32838554aac4f7ad6f100aca865e87959c9a126e86d764c8d01f8346ab   "chaincode -peer.a..."   48 seconds ago       Up 47 seconds                                                          dev-peer1.org2.example.com-mycc-1.0
+5aeb42b37c24        dev-peer0.org1.example.com-mycc-1.0-384f11f484b9302df90b453200cfb25174305fce8f53f4e94d45ee3b6cab0ce9   "chaincode -peer.a..."   About a minute ago   Up About a minute                                                      dev-peer0.org1.example.com-mycc-1.0
+5b2e05537c23        dev-peer0.org2.example.com-mycc-1.0-15b571b3ce849066b7ec74497da3b27e54e0df1345daff3951b94245ce09c42b   "chaincode -peer.a..."   About a minute ago   Up About a minute                                                      dev-peer0.org2.example.com-mycc-1.0
+cf81cb6e2411        hyperledger/fabric-peer                                                                                "peer node start"        2 minutes ago        Up 2 minutes        0.0.0.0:8051->7051/tcp, 0.0.0.0:8053->7053/tcp     peer1.org1.example.com
+b9e71f131fc8        hyperledger/fabric-orderer                                                                             "orderer"                2 minutes ago        Up 2 minutes        0.0.0.0:7050->7050/tcp                             orderer.example.com
+dd698dd9e790        hyperledger/fabric-peer                                                                                "peer node start"        2 minutes ago        Up 2 minutes        0.0.0.0:10051->7051/tcp, 0.0.0.0:10053->7053/tcp   peer1.org2.example.com
+78bc60f7dd26        hyperledger/fabric-peer                                                                                "peer node start"        2 minutes ago        Up 2 minutes        0.0.0.0:9051->7051/tcp, 0.0.0.0:9053->7053/tcp     peer0.org2.example.com
+b0b5f4ec4817        hyperledger/fabric-peer                                                                                "peer node start"        2 minutes ago        Up 2 minutes        0.0.0.0:7051->7051/tcp, 0.0.0.0:7053->7053/tcp     peer0.org1.example.com
 ```````````````````````````````````````
 主程序：        
         /home/org1/fabric-samples/first-network/byfn.sh
