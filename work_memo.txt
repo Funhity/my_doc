@@ -3155,6 +3155,10 @@ b9e71f131fc8        hyperledger/fabric-orderer                                  
 dd698dd9e790        hyperledger/fabric-peer                                                                                "peer node start"        2 minutes ago        Up 2 minutes        0.0.0.0:10051->7051/tcp, 0.0.0.0:10053->7053/tcp   peer1.org2.example.com
 78bc60f7dd26        hyperledger/fabric-peer                                                                                "peer node start"        2 minutes ago        Up 2 minutes        0.0.0.0:9051->7051/tcp, 0.0.0.0:9053->7053/tcp     peer0.org2.example.com
 b0b5f4ec4817        hyperledger/fabric-peer                                                                                "peer node start"        2 minutes ago        Up 2 minutes        0.0.0.0:7051->7051/tcp, 0.0.0.0:7053->7053/tcp     peer0.org1.example.com
+
+
+ln -s docker-compose-cli.yaml docker-compose.yaml;sudo docker-compose ps
+
 ```````````````````````````````````````
 主程序：        
         /home/org1/fabric-samples/first-network/byfn.sh

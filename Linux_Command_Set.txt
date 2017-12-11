@@ -1156,6 +1156,16 @@ $ docker run -d \
   -v /mnt/registry:/var/lib/registry \
   registry:2
 用docker inspect 22a00f4b2dbb| less查看/var/lib/registry被mount到哪个目录
+````````docker log section````
+#https://docs.docker.com/engine/admin/logging/overview/#configure-the-default-logging-driver
+#https://docs.docker.com/engine/admin/logging/view_container_logs/
+#docker logs shows the command’s STDOUT and STDERR. 
+
+docker logs 
+docker service logs
+docker info |grep 'Logging Driver'
+docker run -it --log-driver none alpine ash
+docker inspect -f '{{.HostConfig.LogConfig.Type}}' <CONTAINER>
 
 ======================  yum section and apt-get section dpkg section====================
 yum install yum-plugin-fastestmirror
@@ -9124,7 +9134,7 @@ sudo openvpn --config ~/Documents/briphant_office_sh_new
 功能：行显示
      view->wordwrap 把一行显示成两行
 功能：列车函数列表
-     Ctrl+R
+     Ctrl+R  command+R
 
 `````安装copy on select 插件````
 步骤一：打开sublime的console
@@ -9351,9 +9361,10 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 `````
 docker-compose up -d
-
 docker-compose ps
 docker-compose stop
+
+
 ```````
 sudo yum remove docker-ce
 sudo rm -rf /var/lib/docker
