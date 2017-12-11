@@ -1112,6 +1112,20 @@ cat /root/start.sh
 docker run --volumes-from dbdata -v $(pwd):/backup ubuntu tar cvf /backup/backup.tar /dbdata
 docker history pwc/gerrit:20171124
 docker container restart   gerrit
+
+#查询docker ps 中 的command 参数
+sudo docker inspect  -f "{{.Name}} {{.Config.Cmd}}" $(sudo docker ps -a -q)
+/dev-peer1.org2.example.com-mycc-1.0 [chaincode -peer.address=peer1.org2.example.com:7051]
+/dev-peer0.org1.example.com-mycc-1.0 [chaincode -peer.address=peer0.org1.example.com:7051]
+/dev-peer0.org2.example.com-mycc-1.0 [chaincode -peer.address=peer0.org2.example.com:7051]
+/cli [/bin/bash -c ./scripts/script.sh mychannel 3; sleep 10]
+/peer1.org2.example.com [peer node start]
+/peer0.org2.example.com [peer node start]
+/peer0.org1.example.com [peer node start]
+/orderer.example.com [orderer]
+/peer1.org1.example.com [peer node start]
+
+
 ``````docker repository section````docker private repository`
 步骤一：在第一台机器上安装private repository
        [root@docker1 ~]# docker run -d -p 5000:5000 --restart=always --name registry registry:2
