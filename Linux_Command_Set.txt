@@ -4940,11 +4940,14 @@ C-f Move forward one character.
 Ctrl-a to get to the beginning 
 Ctrl-e 到最后
 
-````````````
+```meta section`````````
 M-b and M-f for moving backwards and forwards to the current word,
 xshell meta key
 File -> Properties -> Terminal -> Keyboard
 把 "Use Alt as Meta key" 这个选项勾上
+
+iterm2:
+: Go to Preferences->Profiles tab. Select your profile on the left, and then open the Keyboard tab. At the bottom is a set of buttons that lets you select the behavior of the Option key. For most users, Esc+ will be the best choice.
  
 ```````````````dash section```````````````
 参数"-"代表 standard input
@@ -9411,6 +9414,9 @@ docker-compose -f app-docker-compose.yaml start   app
 #查询docker ps 中 的command 参数
 mac:
     docker inspect  -f "{{.Name}} {{.Config.Cmd}}" $( docker ps -a -q)
+    docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' container_name_or_id
+win:
+sudo docker inspect  -f "{{.Name}} {{.Config.Cmd}}" $( sudo docker ps -a -q)
 ```````
 sudo yum remove docker-ce
 sudo rm -rf /var/lib/docker
