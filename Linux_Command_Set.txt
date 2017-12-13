@@ -1115,6 +1115,7 @@ docker container restart   gerrit
 
 #查询docker ps 中 的command 参数
 sudo docker inspect  -f "{{.Name}} {{.Config.Cmd}}" $(sudo docker ps -a -q)
+
 /dev-peer1.org2.example.com-mycc-1.0 [chaincode -peer.address=peer1.org2.example.com:7051]
 /dev-peer0.org1.example.com-mycc-1.0 [chaincode -peer.address=peer0.org1.example.com:7051]
 /dev-peer0.org2.example.com-mycc-1.0 [chaincode -peer.address=peer0.org2.example.com:7051]
@@ -4722,7 +4723,30 @@ curl  -s http://192.168.10.56:5000/devops/megatron/raw/master/RabbitMQ/install.s
 ````ssh file section````
 cat file | ssh remoteuser@ip.address.of.remote.machine "cat > remote"
 ssh remoteuser@ip.address.of.remote.machine "cat > remote" < file
+``````ssh config section````````
+cat ~/.ssh/config
+Host org1-AT
+        HostName 23.102.236.94
+        IdentityFile ~/.ssh/id_rsa
+        User org1
+        AddKeysToAgent yes
+##        UseKeychain yes
 
+Host org2-AT
+        HostName 13.75.46.103
+        IdentityFile ~/.ssh/id_rsa
+        User org2
+        AddKeysToAgent yes
+##        UseKeychain yes
+
+Host org3-AT
+        HostName 23.102.237.22
+        IdentityFile /Users/fwu066/Documents/share/company/ssh/id_rsa
+        User org3
+        AddKeysToAgent yes
+##        UseKeychain yes
+
+ssh org3-AT
 ``````ssh proxy````
 ssh -R 9000:localhost:3000 user@example.com
 ssh -R     1977:127.0.0.1:3389   frank@139.219.100.43
@@ -9373,12 +9397,20 @@ sudo chmod +x /usr/local/bin/docker-compose
     sudo yum  -y  upgrade python*
 #Please note that service names should not include underscores.https://convox.com/docs/docker-compose-file/
 
-`````
+````docker compose section```````
+
+ln app-docker-compose.yaml docker-compose.yaml
 docker-compose up -d
 docker-compose ps
 docker-compose stop
 
-
+docker-compose -f app-docker-compose.yaml restart
+docker-compose -f app-docker-compose.yaml restart app
+docker-compose -f app-docker-compose.yaml stop    app
+docker-compose -f app-docker-compose.yaml start   app
+#查询docker ps 中 的command 参数
+mac:
+    docker inspect  -f "{{.Name}} {{.Config.Cmd}}" $( docker ps -a -q)
 ```````
 sudo yum remove docker-ce
 sudo rm -rf /var/lib/docker
