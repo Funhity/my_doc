@@ -2765,6 +2765,9 @@ netstat -anp |grep 2181   #查看谁 连到 2181
 netstat -anp --inet       #查看谁 连到 谁
 netstat -tulpn
 ss -napt | grep 3260 
+
+mac:
+lsof -n -i4TCP:$PORT | grep LISTEN
 =======================  cygwin section  ========================     
   windows:  netstat -an
   配置ssh:  ssh-host-config
@@ -3776,7 +3779,7 @@ rpm -q jdk  #remove jdk
 ``````````tar section```````
 
 tar   zxvf jdk-8uversion-linux-x64.tar.gz
-tar   -cf config_file_credit.tar   ./test_v6_mobile/   ./stage_v6_mobile/ 
+tar   -zcf config_file_credit.tar   ./test_v6_mobile/   ./stage_v6_mobile/ 
 zip   abc.zip *
 
 tar -xzf rebol.tar.gz
@@ -9400,7 +9403,7 @@ sudo chmod +x /usr/local/bin/docker-compose
     sudo yum  -y  upgrade python*
 #Please note that service names should not include underscores.https://convox.com/docs/docker-compose-file/
 
-````docker compose section```````
+````````````````
 
 ln app-docker-compose.yaml docker-compose.yaml
 docker-compose up -d
@@ -9411,6 +9414,10 @@ docker-compose -f app-docker-compose.yaml restart
 docker-compose -f app-docker-compose.yaml restart app
 docker-compose -f app-docker-compose.yaml stop    app
 docker-compose -f app-docker-compose.yaml start   app
+
+ls docker*yaml |xargs -I{} sh -c 'rm -f docker-compose.yaml;   echo ==== {} ====;ln -s {} docker-compose.yaml;sudo   docker-compose ps; rm -f docker-compose.yaml'
+ln -s docker-compose-cli.yaml docker-compose.yaml
+
 #查询docker ps 中 的command 参数
 mac:
     docker inspect  -f "{{.Name}} {{.Config.Cmd}}" $( docker ps -a -q)
@@ -9455,7 +9462,7 @@ sudo systemd-tmpfiles --prefix=/sys --create
 ====os section ===init section===centos section==os init===docker init===
 yum -y install epel-release wget curl telnet lrzsz aria2 openssh-clients openssh-server iotop net-tools lsof tcpdump tree tcpdump zip unzip less dos2unix git iproute bind-utils
 
-sudo apt install tree
+sudo apt-get -y install tree lrzsz
 ====firefox section=====
 用Ctrl+Tab切换tab页
 
