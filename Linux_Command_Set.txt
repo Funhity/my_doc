@@ -5108,6 +5108,10 @@ du  --max-depth  0  -ah  /var/lib/docker/volumes/181f8ba1f76f6d6f132ae91f9c9fff2
 ```````````ls section``````````````````````````
 ls -ltr
 # ls -ld /home/jerry
+
+ls -lct
+shows the ctime of each file, sorted with the most recent first.
+
 ```file section````````
 stat ./v6_tomcat_webservice01-catalina.out
 file -bi [filename]  #utf-8
@@ -6414,6 +6418,7 @@ git stash drop stash@{0}
 
 git log salt-office/master --stat
 git log -2
+git log --oneline #simple output
 ·········
 git log --graph --oneline --decorate --all 
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h %s %ci %h %b'
@@ -9179,6 +9184,25 @@ sudo openvpn --config ~/Documents/briphant_office_sh_new
      view->wordwrap 把一行显示成两行
 功能：列车函数列表
      Ctrl+R  command+R
+
+````Column Selection ```````
+Different mouse buttons are used on each platform:
+OS X
+
+    Left Mouse Button + Option
+    OR: Middle Mouse Button 
+
+    Add to selection: Command
+    Subtract from selection: Command+Shift 
+
+Windows
+
+    Right Mouse Button + Shift
+    OR: Middle Mouse Button 
+
+    Add to selection: Ctrl
+    Subtract from selection: Alt 
+
 
 `````安装copy on select 插件````
 步骤一：打开sublime的console

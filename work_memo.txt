@@ -3213,5 +3213,8 @@ Configuration Transaction Generator:  /home/org1/fabric-samples/first-network/co
  command: mongod --bind_ip_all --smallfiles --logpath=/dev/null --port 27017 # --quiet
  command: sh -c 'npm config set strict-ssl false && npm install && npm rebuild grpc  && echo "before start dev" && npm run withnodemon' #on app
 
+ sudo scp -F ~/.ssh/config -r org2-AT:/home/org2/air-trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org2.example.com/  /home/org1/air-trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/
 
+ 
 
+ docker exec -it mongodb_keystore mongo --eval "db.getCollection('cryptokeystores').find({})"
