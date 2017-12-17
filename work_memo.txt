@@ -3215,6 +3215,26 @@ Configuration Transaction Generator:  /home/org1/fabric-samples/first-network/co
 
  sudo scp -F ~/.ssh/config -r org2-AT:/home/org2/air-trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org2.example.com/  /home/org1/air-trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/
 
- 
+ `````mongodb section`````
 
  docker exec -it mongodb_keystore mongo --eval "db.getCollection('cryptokeystores').find({})"
+ docker exec -it mongodb_keystore mongo --help
+ docker exec -it mongodb_keystore mongo --eval "db.help()"
+ docker exec -it mongodb_keystore mongo --eval "db.adminCommand('listDatabases')"
+ docker exec -it mongodb_keystore mongo --eval "db.getSiblingDB('air_trace').getCollection('cryptokeystores').find({})"
+
+
+docker exec -it mongodb_keystore mongo shell
+> use air_trace
+switched to db air_trace
+> show collections
+cryptokeystores
+keystores
+
+
+> use air_trace
+switched to db air_trace
+> db.air_trace.getCollection('cryptokeystores')
+
+
+
