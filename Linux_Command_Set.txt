@@ -871,6 +871,7 @@ docker commit --change='CMD ["apachectl", "-DFOREGROUND"]'                      
 docker commit --change='CMD ["/root/start.sh"]'   --change='ENTRYPOINT ["/tini", "--"]'  -c "EXPOSE 8080"  pensive_austin     xxd-tomcat:final
 docker commit   -c "EXPOSE 50000"   -c "EXPOSE 8080"  187b27435067  pwc/jenkins:lts
 
+sudo docker tag marc/test marc/test:1
 ```````docker volume section````docker storage```````````
 
 
@@ -2924,6 +2925,16 @@ Cmnd_Alias SALTCMD = /usr/bin/salt, /usr/bin/salt-key, /usr/bin/salt-run, /usr/b
 wujunrong ALL = NOPASSWD: SALTCMD
 
 或: wujunrong ALL=(ALL) NOPASSWD:ALL
+
+```````
+#mac: 在/etc/sudoers 中增加 fwu066          ALL = (ALL) NOPASSWD: ALL
+sudo vi /etc/sudoers
+# root and users in group wheel can run anything on any machine as any user
+root            ALL = (ALL) ALL
+%admin          ALL = (ALL) ALL
+fwu066          ALL = (ALL) NOPASSWD: ALL
+
+
 =======================suid section,sgid section  ======================
 sgid:  chmod g+s ./test_list_date.sh
 suid:  chmod u+s ./test_list_date.sh
@@ -4679,6 +4690,10 @@ ct-stage-tomcat-partener02   ansible_ssh_host=192.168.31.91  ansible_connection=
 ````ansible debug``````````````
 ANSIBLE_DEBUG=1 ansible test_server1  -m ping -vvv
 
+
+ansible AirTrace-org3 -m synchronize -a "src=/Users/fwu066/Documents/share/blockchian/doc dest=~  delete=yes recursive=yes"
+
+
 ````````````````
 #Let’s run a playbook using a parallelism level of 10:
 ansible-playbook playbook.yml -f 10
@@ -5073,8 +5088,10 @@ sudo apt-get install build-essential
   
   cat v6_nginx01-tomcat_access-2016-06-07-14_05_01.log |   gawk -F@  '{print $1 $5  $9}' |  grep -E "[[:space:]]+/[[:space:]]*$" |  gawk -F@  '{print $1 $5 $9 $17}'
 
+  反向搜索：
   grep -v 'adoring_dubinsky\|NAMES'
   grep -E -v "^[[:space:]]*$"  #去空行
+  find / -ipath "*ansible.cfg" 2>&1 | grep -v 'Permission'
 ··········smartos grep section········      
   ls |  /usr/xpg4/bin/grep  -v -E 'wujunrong_9d58adc6-499b-11e6-9ea7-437c859dc16b.*|ffed9526-999d-11e6-93ae-bfa56012d3b9'
 ``````````````````````````````
@@ -7041,7 +7058,8 @@ Set up Triggers in iTerm 2 like so:
     Action: Run Silent Coprocess
     Parameters: /usr/local/bin/iterm2-recv-zmodem.sh
     Instant: checked
-
+步骤四：
+ssh org1-AT sz ~/air-trace/deliver_CA_certificate.sh
 `````````````````````
 
 ====cobbler section===
@@ -8583,6 +8601,13 @@ ansible 'ci*:!ci19'  -m raw -a "/opt/local/sbin/pkg_add -U /var/db/pkgin/cache/p
 ````````````````````
 按照hosts文件中的服务器顺序一个个执行，列出smartos上的硬盘
 ansible qinghua -f 1 -m raw -a " format < /dev/null | sed -n 's/.*\(<.*>\).*/\1/p' "
+
+=====mac ansible section=====
+#http://docs.ansible.com/ansible/latest/intro_installation.html
+sudo easy_install pip
+sudo pip install ansible
+sudo wget -O /etc/ansible/ansible.cfg https://raw.githubusercontent.com/ansible/ansible/devel/examples/ansible.cfg
+
 =====smartos salt section=====
 
 /opt/salt/bin/salt-minion -l debug
