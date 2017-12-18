@@ -7018,6 +7018,32 @@ Jump to beginning of current word – Option+Right Arrow.
 Jump to end of current word – Option+Right Arrow.
 Jump to beginning of all text – Command+Up Arrow.
 
+`````brew section```lrzsz section````
+步骤一
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew install lrzsz
+步骤二：
+wget -O /usr/local/bin/iterm2-recv-zmodem.sh  https://raw.githubusercontent.com/mmastrac/iterm2-zmodem/master/iterm2-recv-zmodem.sh
+wget -O /usr/local/bin/iterm2-send-zmodem.sh  https://raw.githubusercontent.com/mmastrac/iterm2-zmodem/master/iterm2-send-zmodem.sh
+chmod +x /usr/local/bin/iterm2-send-zmodem.sh  /usr/local/bin/iterm2-recv-zmodem.sh
+
+步骤三：
+#https://github.com/mmastrac/iterm2-zmodem
+Install lrzsz on OSX: brew install lrzsz
+Save the iterm2-send-zmodem.sh and iterm2-recv-zmodem.sh scripts in /usr/local/bin/
+Set up Triggers in iTerm 2 like so:
+    Regular expression: waiting to receive.\*\*B0100
+    Action: Run Silent Coprocess
+    Parameters: /usr/local/bin/iterm2-send-zmodem.sh
+    Instant: checked
+
+    Regular expression: \*\*B00000000000000
+    Action: Run Silent Coprocess
+    Parameters: /usr/local/bin/iterm2-recv-zmodem.sh
+    Instant: checked
+
+`````````````````````
+
 ====cobbler section===
 rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 或 sudo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm

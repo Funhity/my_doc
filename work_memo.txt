@@ -3215,6 +3215,7 @@ Configuration Transaction Generator:  /home/org1/fabric-samples/first-network/co
 
  sudo scp -F ~/.ssh/config -r org2-AT:/home/org2/air-trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org2.example.com/  /home/org1/air-trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/
 
+sudo docker pull hyperledger/fabric-ca:x86_64-1.0.4
  `````mongodb section`````
 
  docker exec -it mongodb_keystore mongo --eval "db.getCollection('cryptokeystores').find({})"
