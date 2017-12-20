@@ -3053,7 +3053,7 @@ echo $GOPATH
 ````
 sudo apt-get -y install npm  tree lrzsz
 npm version
-npm install npm@3.10.10 -g
+sudo npm install npm@3.10.10 -g
 ````
 #Node.js - version 6.9.x or greater
 #Node.js version 7.x is not supported at this time.
@@ -3216,10 +3216,31 @@ Configuration Transaction Generator:  /home/org1/fabric-samples/first-network/co
  sudo scp -F ~/.ssh/config -r org2-AT:/home/org2/air-trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org2.example.com/  /home/org1/air-trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/
 
  sudo docker pull hyperledger/fabric-ca:x86_64-1.0.4
- 
+ ``````
  ansible AirTrace-org3 -m synchronize -a "src=/Users/fwu066/Documents/share/repository_air_trace dest=~  delete=yes recursive=yes"
 
- 
+ sudo scp -F ~/.ssh/config -r ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/ordererOrganizations  AirTrace-org4:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/
+
+
+`````
+#开放本端权限
+sudo chown org1 -R /home/org1/
+#开放远端权限
+ssh AirTrace-org4 sudo chmod 777 -R /home/org4/repository_air_trace/
+#copy certificate
+
+sudo scp -F ~/.ssh/config -r ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/*  AirTrace-org4:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/
+#程序：
+sudo SDK_SERVER=http://localhost:4000/ TARGET_NETWORK=docker-DevOps-Test  MONGO_DB_URI='mongodb://localhost/air_trace_dev' node prepareDB.js
+```````````````
+prepareDB.js
+
+    var ORGS = require(sdkPath + '/app/network-config' + (process.env.TARGET_NETWORK ? '-' + process.env.TARGET_NETWORK : '') + '.json')['network-config'];
+
+network-config.json
+
+
+
  `````mongodb section`````
  command: mongod --bind_ip_all --smallfiles --logpath=/dev/null --port 27017 --quiet
 

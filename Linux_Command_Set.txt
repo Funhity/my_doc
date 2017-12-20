@@ -4735,7 +4735,7 @@ cat ./ansible-svn.sh
 #!/bin/bash
 svn list  http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/    --username wujunrong| grep  ansible |xargs -I {} svn export  http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/{} --force  /etc/ansible/hosts
 
-
+ansible-playbook release.yml --extra-vars "version=1.23.45 other_variable=foo" #https://stackoverflow.com/questions/30662069/how-can-i-pass-variable-to-ansible-playbook-in-the-command-line
 ````````xshell section````````````
 /etc/ansible/hosts->xshell 配置文件
 cat /etc/ansible/hosts| grep -E -v "^[[:space:]]*$"  | grep -v -E "\[.*\]" | grep -v "^#.*" | grep -v localhost | awk '{system("echo -ne "$1" \",\"  ; echo -ne "$2" | cut -d = -f 2- | tr -d \"\n\" ; echo -ne \",\" ssh ;echo -ne \",\" 22 \",\"; echo  -ne "$4" | cut -d = -f 2-  | tr -d \"\n\"   ;echo -ne \",\" ;  echo -e   "$5" | cut -d = -f 2-  ")}' |sed  's/\\//g' |sed 's/ //g'>./xshell.csv
