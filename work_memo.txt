@@ -3238,7 +3238,27 @@ prepareDB.js
     var ORGS = require(sdkPath + '/app/network-config' + (process.env.TARGET_NETWORK ? '-' + process.env.TARGET_NETWORK : '') + '.json')['network-config'];
 
 network-config.json
+````````ansible rsync section`````````````````````
+- hosts: AirTrace-org2
+  become: yes
+#  become_user: org2
+  tasks:
+    - name: test connection
+      synchronize:
+        mode: push
+#       src: "/tmp/wujunrong/"
+        src: "/home/org1/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
+        #dest: "{{ ansible_env.HOME }}/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
+        dest: "/home/allorgs/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
 
+#        dest: "/tmp/wujunrong/"
+        recursive: true
+        delete: true
+      delegate_to: AirTrace-org1
+  
+  #ansible-playbook rsync_two_remote.yaml
+ 
+  #ansible 'AirTrace-org1' -m shell -a "sudo scp -F ~/.ssh/config -r ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/*  AirTrace-org2:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
 
 
  `````mongodb section`````
