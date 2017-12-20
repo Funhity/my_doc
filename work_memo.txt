@@ -3215,8 +3215,13 @@ Configuration Transaction Generator:  /home/org1/fabric-samples/first-network/co
 
  sudo scp -F ~/.ssh/config -r org2-AT:/home/org2/air-trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org2.example.com/  /home/org1/air-trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/
 
-sudo docker pull hyperledger/fabric-ca:x86_64-1.0.4
+ sudo docker pull hyperledger/fabric-ca:x86_64-1.0.4
+ 
+ ansible AirTrace-org3 -m synchronize -a "src=/Users/fwu066/Documents/share/repository_air_trace dest=~  delete=yes recursive=yes"
+
+ 
  `````mongodb section`````
+ command: mongod --bind_ip_all --smallfiles --logpath=/dev/null --port 27017 --quiet
 
  docker exec -it mongodb_keystore mongo --eval "db.getCollection('cryptokeystores').find({})"
  docker exec -it mongodb_keystore mongo --help

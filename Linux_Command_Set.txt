@@ -4671,8 +4671,11 @@ www[01:50].example.com
 10.0.0.1 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=myrootpassword
 [databases]
 db-[a:f].example.com
+
 ansible *pxe[1-4]_fifo -m raw -a  ....
 ansible  'ci*:!ci19'  -m raw -a "cat /etc/release| head -1"  #exclude ci19
+ansible '*-org[1-2]*' -m shell -a "ls ~/repos*"
+
 
 [stage_v6_tradew]
 stage_v6_tradew01 ansible_ssh_host=192.168.31.54  ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=test
@@ -4692,7 +4695,9 @@ ANSIBLE_DEBUG=1 ansible test_server1  -m ping -vvv
 
 
 ansible AirTrace-org3 -m synchronize -a "src=/Users/fwu066/Documents/share/blockchian/doc dest=~  delete=yes recursive=yes"
-
+ansible 'AirTrace-org2' -m shell -a "id" --become #become root user
+AirTrace-org2 | SUCCESS | rc=0 >>
+uid=0(root) gid=0(root) groups=0(root)
 
 ````````````````
 #Let’s run a playbook using a parallelism level of 10:
@@ -4701,8 +4706,29 @@ ansible-playbook playbook.yml -f 10
 按照hosts文件中的服务器顺序一个个执行，列出smartos上的硬盘
 ansible qinghua -f 1 -m raw -a " format < /dev/null | sed -n 's/.*\(<.*>\).*/\1/p' "
 
+`````
+setup - Gathers facts about remote hosts #https://docs.ansible.com/ansible/latest/setup_module.html
 
 
+````ansible template section``````
+Place Templating expressions inside of quotes, as above.
+方案一：Use the --vars-file option to provide the path of a file containing variable definitions, 
+ ansible-container --vars-file devel.yaml build
+
+1. Before the build command can be executed, Jinja is called to perform template rendering. 
+2. Ansible Container reads the contents of the variable file, devel.yaml and passes it to Jinja along with a copy of container.yml. 
+3. Jinja performs the transformation, returning a copy of container.yml with all of the expressions replaced by actual values
+方案二：
+Variable files can also be specified using the vars_files directive under settings in container.yml. For example:
+Variable files can also be specified using the vars_files directive under settings in container.yml. For example
+
+方案三：
+Passing environment variables
+方案四：
+Top-level defaults
+各种方案优先级：
+* first to environment variables, then variable files, and finally to top-level defaults.
+* At the service level, role variables and role metadata come into play. Precedence is given first to values defined for the service in container.yml, then to the role’s metadata found in meta/container.yml, then to role defaults in defaults/meta.yml, and finally to global variables.
 ``````````````````
 从svn中取出ansible配置文件
 cat ./ansible-svn.sh 
@@ -9865,12 +9891,10 @@ Rule Allow
      list of Allow rules
 Exception
      list of Deny rules
+
 `````````````````````````````````````````````
+=====visualstudio section======
 
-
-
-
-
-
+快捷键：command+／
 
 
