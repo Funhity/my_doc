@@ -3260,7 +3260,19 @@ network-config.json
  
   #ansible 'AirTrace-org1' -m shell -a "sudo scp -F ~/.ssh/config -r ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/*  AirTrace-org2:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
 
+````blockchain ssh```
+ansible 'AirTrace-org[1:2]*' -m shell -a  'bc_home=~;rsync -azh -e "ssh -F $bc_home/.ssh/config"  AirTrace-org4:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/  ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/'
 
+ansible org1* -m shell -a "sed 's/\/Users.*d_rsa/~\/repository_air_trace\/frank_id_rsa/g'   ~/repository_air_trace/frank_ssh_config>\$HOME/.ssh/config"
+ansible 'test' -m shell -a "sudo chown \${HOME#/home/}:\${HOME#/home/} -R \$HOME"
+echo "sync file from local machine ..."
+ansible  'test' -m synchronize -a "src=/Users/fwu066/Documents/share/repository_air_trace dest=~  delete=yes recursive=yes" #--become
+
+
+证书互传前要设置ssh互联
+scp /home/org1/.ssh/config  AirTrace-org2:/home/allorgs/.ssh/
+scp /home/org1/repository_air_trace/frank_id_rsa  AirTrace-org2:/home/allorgs/repository_air_trace/frank_id_rsa
+chmod 700 /home/org4/repository_air_trace/frank_id_rsa
  `````mongodb section`````
  command: mongod --bind_ip_all --smallfiles --logpath=/dev/null --port 27017 --quiet
 
