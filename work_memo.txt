@@ -3285,7 +3285,7 @@ ansible 'AirTrace-org1' -m shell -a "sudo scp -F ~/.ssh/config -r ~/repository_a
 ansible 'AirTrace-org[1:2]*' -m shell -a  'bc_home=~;rsync -azh -e "ssh -F $bc_home/.ssh/config"  AirTrace-org4:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/  ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/'
 ansible 'AirTrace-org[1:4]*' -m shell -a   'bc_home=~;rsync -azh -e "ssh -F $bc_home/.ssh/config"  AirTrace-org2:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/  ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/'
 
-
+alias fabric-ca-client="docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca fabric-ca-client"
  `````mongodb section`````
  command: mongod --bind_ip_all --smallfiles --logpath=/dev/null --port 27017 --quiet
 
