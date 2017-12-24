@@ -3285,7 +3285,26 @@ ansible 'AirTrace-org1' -m shell -a "sudo scp -F ~/.ssh/config -r ~/repository_a
 ansible 'AirTrace-org[1:2]*' -m shell -a  'bc_home=~;rsync -azh -e "ssh -F $bc_home/.ssh/config"  AirTrace-org4:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/  ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/'
 ansible 'AirTrace-org[1:4]*' -m shell -a   'bc_home=~;rsync -azh -e "ssh -F $bc_home/.ssh/config"  AirTrace-org2:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/  ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/'
 
+
+`````blockchain client section`````blockchain cli section``````````
 alias fabric-ca-client="docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca fabric-ca-client"
+
+文档：http://hyperledger-fabric-ca.readthedocs.io/en/latest/users-guide.html#fabric-ca-client
+Then run fabric-ca-client enroll command to enroll the identity. For example, following command enrolls an identity whose ID is admin and password is adminpw by calling Fabric CA server that is running locally at 7054 port.
+export FABRIC_CA_CLIENT_HOME=$HOME/fabric-ca/clients/admin
+fabric-ca-client enroll -u http://admin:adminpw@localhost:7054
+
+实例：fabric-ca-client
+alias fabric-ca-client="docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca fabric-ca-client"
+fabric-ca-client  enroll -u http://admin:adminpw@23.102.236.94:7054
+
+fabric-ca-client  enroll -u https://admin:adminpw@ca.org1.example.com:7054 --tls.certfiles ./repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org4.example.com/ca/ca.org4.example.com-cert.pem
+
+
+docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  ca.org1.example.com >> /etc/hosts; fabric-ca-client enroll -u https://admin:adminpw@ca.org1.example.com:7054 --tls.certfiles ./repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem'
+
+docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u https://admin:adminpw@fabric-ca-server:7054 --tls.certfiles ./repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem'
+
  `````mongodb section`````
  command: mongod --bind_ip_all --smallfiles --logpath=/dev/null --port 27017 --quiet
 
@@ -3308,5 +3327,22 @@ keystores
 switched to db air_trace
 > db.air_trace.getCollection('cryptokeystores')
 
+```````ca section``````
+cd
+brew install libtool
+go get -u github.com/hyperledger/fabric-ca/cmd/...
+/Users/fwu066/go/bin/fabric-ca-server start -b admin:adminpw
+
+2017/12/25 01:13:03 [INFO] Created default configuration file at /Users/fwu066/fabric-ca-server-config.yaml
+2017/12/25 01:13:03 [INFO] Starting server in home directory: /Users/fwu066
+2017/12/25 01:13:03 [INFO] generating key: &{A:ecdsa S:256}
+2017/12/25 01:13:03 [INFO] encoded CSR
+2017/12/25 01:13:03 [INFO] signed certificate with serial number 82007427048041228215860745886709415556006294888
+2017/12/25 01:13:03 [INFO] The CA key and certificate were generated for CA
+2017/12/25 01:13:03 [INFO] The key was stored by BCCSP provider 'SW'
+2017/12/25 01:13:03 [INFO] The certificate is at: /Users/fwu066/ca-cert.pem
+2017/12/25 01:13:04 [INFO] Initialized sqlite3 database at /Users/fwu066/fabric-ca-server.db
+2017/12/25 01:13:04 [INFO] Home directory for default CA: /Users/fwu066
+2017/12/25 01:13:04 [INFO] Listening on http://0.0.0.0:7054
 
 

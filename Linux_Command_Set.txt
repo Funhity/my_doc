@@ -4789,8 +4789,9 @@ Host org3-AT
         User org3
         AddKeysToAgent yes
 ##        UseKeychain yes
-
+················
 ssh org3-AT
+/Users/fwu066/Documents/share/company/ssh/id_rsa是私钥
 ``````ssh proxy````
 ssh -R 9000:localhost:3000 user@example.com
 ssh -R     1977:127.0.0.1:3389   frank@139.219.100.43
