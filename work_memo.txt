@@ -3294,7 +3294,7 @@ Then run fabric-ca-client enroll command to enroll the identity. For example, fo
 export FABRIC_CA_CLIENT_HOME=$HOME/fabric-ca/clients/admin
 fabric-ca-client enroll -u http://admin:adminpw@localhost:7054
 
-实例：fabric-ca-client
+实例：通过container使用fabric-ca-client
 alias fabric-ca-client="docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca fabric-ca-client"
 fabric-ca-client  enroll -u http://admin:adminpw@23.102.236.94:7054
 
@@ -3327,7 +3327,7 @@ keystores
 switched to db air_trace
 > db.air_trace.getCollection('cryptokeystores')
 
-```````ca section``````
+========ca section======
 cd
 brew install libtool
 go get -u github.com/hyperledger/fabric-ca/cmd/...
@@ -3345,4 +3345,14 @@ go get -u github.com/hyperledger/fabric-ca/cmd/...
 2017/12/25 01:13:04 [INFO] Home directory for default CA: /Users/fwu066
 2017/12/25 01:13:04 [INFO] Listening on http://0.0.0.0:7054
 
+`````CA config``````
+
+优先级：
+1. CLI flags
+2. Environment variables
+   环境变量 以 FABIRC_CA_CLIENT  开头
+             FABRIC_CA_SERVER 开头
+3. Configuration file
+在docker中的配置文件：
+docker exec -ti f032a6df8904 cat /etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml|less
 

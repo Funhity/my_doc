@@ -195,8 +195,8 @@ fi
   nmap -T4 -A -v 10.75.1.15
   nmap -sP 192.168.56.0/24
   ansible host* -m shell -a  "virsh list --all| grep -E 'running'  | awk '{print \$2}'   |xargs  -I '{}' sudo virsh domiflist  '{}' " | grep -B 50  "52:54:00:80:c4:07"
-  
-  zenmap
+  端口：
+  nmap -p 80 192.168.1.1
   ===============  xwindows section  ===============================
 yum groupinstall -y 'Desktop'
 yum groupinstall -y 'X Window System'
@@ -9574,10 +9574,10 @@ w /sys/devices/platform/i8042/serio1/serio2/sensitivity - - - - 175
 EOF
 sudo systemd-tmpfiles --prefix=/sys --create
 
-====os section ===init section===centos section==os init===docker init===
+====os section ===init section===centos section==os init section===docker init===
 yum -y install epel-release wget curl telnet lrzsz aria2 openssh-clients openssh-server iotop net-tools lsof tcpdump tree tcpdump zip unzip less dos2unix git iproute bind-utils
 
-sudo apt-get -y install tree lrzsz
+sudo apt-get -y install tree lrzsz dos2unix
 ====firefox section=====
 用Ctrl+Tab切换tab页
 
