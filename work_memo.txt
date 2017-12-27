@@ -3402,13 +3402,13 @@ docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca 
 
 Post https://fabric-ca-server:7054/enroll: x509: certificate signed by unknown authority
 
-#如果显示格式有问题，就重新调整终端的大小
+#如果显示格式有问题，就重新调整终端窗口的大小
 docker exec -ti f032a6df8904 cat /etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml |less
 
 
 `````ca server section1`````````
 配置信息：
 sudo docker exec -ti ca_peerOrg1 ls /etc/hyperledger/fabric-ca-server
-sudo docker exec -ti ca_peerOrg1 cat /etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml |less  #若格式不对，调整一下xshell的大小即可
+sudo docker exec -ti ca_peerOrg1 cat /etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml |less  #若格式不对，调整一下xshell窗口大小即可
 
 
