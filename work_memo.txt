@@ -3408,7 +3408,46 @@ docker exec -ti f032a6df8904 cat /etc/hyperledger/fabric-ca-server/fabric-ca-ser
 
 `````ca server section1`````````
 配置信息：
-sudo docker exec -ti ca_peerOrg1 ls /etc/hyperledger/fabric-ca-server
+sudo docker exec -ti ca_peerOrg1 ls /etc/hyperledger/fabric-ca-server  #包含ca-cert.pem  ca-key.pem  fabric-ca-server-config.yaml  fabric-ca-server.db  msp
 sudo docker exec -ti ca_peerOrg1 cat /etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml |less  #若格式不对，调整一下xshell窗口大小即可
-
+                     #############################################################################
+                     #  TLS section for the server's listening port
+                     #
+                     #  The following types are supported for client authentication: NoClientCert,
+                     #  RequestClientCert, RequireAnyClientCert, VerifyClientCertIfGiven,
+                     #  and RequireAndVerifyClientCert.
+                     #
+                     #  Certfiles is a list of root certificate authorities that the server uses
+                     #  when verifying client certificates.
+                     #############################################################################
+                     tls:
+                       # Enable TLS (default: false)
+                       enabled: false
+                       # TLS for the server's listening port
+                       certfile: ca-cert.pem
+                       keyfile: ca-key.pem
+                       clientauth:
+                         type: noclientcert
+                         certfiles:
+                     
+                     #############################################################################
+                     #  The CA section contains information related to the Certificate Authority
+                     #  including the name of the CA, which should be unique for all members
+                     #  of a blockchain network.  It also includes the key and certificate files
+                     #  used when issuing enrollment certificates (ECerts) and transaction
+                     #  certificates (TCerts).
+                     #  The chainfile (if it exists) contains the certificate chain which
+                     #  should be trusted for this CA, where the 1st in the chain is always the
+                     #  root CA certificate.
+                     #############################################################################
+                     ca:
+                       # Name of this CA
+                       name:
+                       # Key file (default: ca-key.pem)
+                       keyfile: ca-key.pem
+                       # Certificate file (default: ca-cert.pem)
+                       certfile: ca-cert.pem
+                       # Chain file (default: chain-cert.pem)
+                       chainfile: ca-chain.pem
+                     
 
