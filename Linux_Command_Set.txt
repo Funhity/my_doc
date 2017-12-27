@@ -195,8 +195,8 @@ fi
   nmap -T4 -A -v 10.75.1.15
   nmap -sP 192.168.56.0/24
   ansible host* -m shell -a  "virsh list --all| grep -E 'running'  | awk '{print \$2}'   |xargs  -I '{}' sudo virsh domiflist  '{}' " | grep -B 50  "52:54:00:80:c4:07"
-  
-  zenmap
+  端口：
+  nmap -p 80 192.168.1.1
   ===============  xwindows section  ===============================
 yum groupinstall -y 'Desktop'
 yum groupinstall -y 'X Window System'
@@ -871,6 +871,7 @@ docker commit --change='CMD ["apachectl", "-DFOREGROUND"]'                      
 docker commit --change='CMD ["/root/start.sh"]'   --change='ENTRYPOINT ["/tini", "--"]'  -c "EXPOSE 8080"  pensive_austin     xxd-tomcat:final
 docker commit   -c "EXPOSE 50000"   -c "EXPOSE 8080"  187b27435067  pwc/jenkins:lts
 
+sudo docker tag marc/test marc/test:1
 ```````docker volume section````docker storage```````````
 
 
@@ -1115,6 +1116,7 @@ docker container restart   gerrit
 
 #查询docker ps 中 的command 参数
 sudo docker inspect  -f "{{.Name}} {{.Config.Cmd}}" $(sudo docker ps -a -q)
+
 /dev-peer1.org2.example.com-mycc-1.0 [chaincode -peer.address=peer1.org2.example.com:7051]
 /dev-peer0.org1.example.com-mycc-1.0 [chaincode -peer.address=peer0.org1.example.com:7051]
 /dev-peer0.org2.example.com-mycc-1.0 [chaincode -peer.address=peer0.org2.example.com:7051]
@@ -2764,6 +2766,9 @@ netstat -anp |grep 2181   #查看谁 连到 2181
 netstat -anp --inet       #查看谁 连到 谁
 netstat -tulpn
 ss -napt | grep 3260 
+
+mac:
+lsof -n -i4TCP:$PORT | grep LISTEN
 =======================  cygwin section  ========================     
   windows:  netstat -an
   配置ssh:  ssh-host-config
@@ -2920,6 +2925,16 @@ Cmnd_Alias SALTCMD = /usr/bin/salt, /usr/bin/salt-key, /usr/bin/salt-run, /usr/b
 wujunrong ALL = NOPASSWD: SALTCMD
 
 或: wujunrong ALL=(ALL) NOPASSWD:ALL
+
+```````
+#mac: 在/etc/sudoers 中增加 fwu066          ALL = (ALL) NOPASSWD: ALL
+sudo vi /etc/sudoers
+# root and users in group wheel can run anything on any machine as any user
+root            ALL = (ALL) ALL
+%admin          ALL = (ALL) ALL
+fwu066          ALL = (ALL) NOPASSWD: ALL
+
+
 =======================suid section,sgid section  ======================
 sgid:  chmod g+s ./test_list_date.sh
 suid:  chmod u+s ./test_list_date.sh
@@ -3775,7 +3790,7 @@ rpm -q jdk  #remove jdk
 ``````````tar section```````
 
 tar   zxvf jdk-8uversion-linux-x64.tar.gz
-tar   -cf config_file_credit.tar   ./test_v6_mobile/   ./stage_v6_mobile/ 
+tar   -zcf config_file_credit.tar   ./test_v6_mobile/   ./stage_v6_mobile/ 
 zip   abc.zip *
 
 tar -xzf rebol.tar.gz
@@ -4656,8 +4671,11 @@ www[01:50].example.com
 10.0.0.1 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=myrootpassword
 [databases]
 db-[a:f].example.com
+
 ansible *pxe[1-4]_fifo -m raw -a  ....
 ansible  'ci*:!ci19'  -m raw -a "cat /etc/release| head -1"  #exclude ci19
+ansible '*-org[1-2]*' -m shell -a "ls ~/repos*"
+
 
 [stage_v6_tradew]
 stage_v6_tradew01 ansible_ssh_host=192.168.31.54  ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=test
@@ -4675,6 +4693,12 @@ ct-stage-tomcat-partener02   ansible_ssh_host=192.168.31.91  ansible_connection=
 ````ansible debug``````````````
 ANSIBLE_DEBUG=1 ansible test_server1  -m ping -vvv
 
+
+ansible AirTrace-org3 -m synchronize -a "src=/Users/fwu066/Documents/share/blockchian/doc dest=~  delete=yes recursive=yes"
+ansible 'AirTrace-org2' -m shell -a "id" --become #become root user
+AirTrace-org2 | SUCCESS | rc=0 >>
+uid=0(root) gid=0(root) groups=0(root)
+
 ````````````````
 #Let’s run a playbook using a parallelism level of 10:
 ansible-playbook playbook.yml -f 10
@@ -4682,15 +4706,36 @@ ansible-playbook playbook.yml -f 10
 按照hosts文件中的服务器顺序一个个执行，列出smartos上的硬盘
 ansible qinghua -f 1 -m raw -a " format < /dev/null | sed -n 's/.*\(<.*>\).*/\1/p' "
 
+`````
+setup - Gathers facts about remote hosts #https://docs.ansible.com/ansible/latest/setup_module.html
 
 
+````ansible template section``````
+Place Templating expressions inside of quotes, as above.
+方案一：Use the --vars-file option to provide the path of a file containing variable definitions, 
+ ansible-container --vars-file devel.yaml build
+
+1. Before the build command can be executed, Jinja is called to perform template rendering. 
+2. Ansible Container reads the contents of the variable file, devel.yaml and passes it to Jinja along with a copy of container.yml. 
+3. Jinja performs the transformation, returning a copy of container.yml with all of the expressions replaced by actual values
+方案二：
+Variable files can also be specified using the vars_files directive under settings in container.yml. For example:
+Variable files can also be specified using the vars_files directive under settings in container.yml. For example
+
+方案三：
+Passing environment variables
+方案四：
+Top-level defaults
+各种方案优先级：
+* first to environment variables, then variable files, and finally to top-level defaults.
+* At the service level, role variables and role metadata come into play. Precedence is given first to values defined for the service in container.yml, then to the role’s metadata found in meta/container.yml, then to role defaults in defaults/meta.yml, and finally to global variables.
 ``````````````````
 从svn中取出ansible配置文件
 cat ./ansible-svn.sh 
 #!/bin/bash
 svn list  http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/    --username wujunrong| grep  ansible |xargs -I {} svn export  http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/{} --force  /etc/ansible/hosts
 
-
+ansible-playbook release.yml --extra-vars "version=1.23.45 other_variable=foo" #https://stackoverflow.com/questions/30662069/how-can-i-pass-variable-to-ansible-playbook-in-the-command-line
 ````````xshell section````````````
 /etc/ansible/hosts->xshell 配置文件
 cat /etc/ansible/hosts| grep -E -v "^[[:space:]]*$"  | grep -v -E "\[.*\]" | grep -v "^#.*" | grep -v localhost | awk '{system("echo -ne "$1" \",\"  ; echo -ne "$2" | cut -d = -f 2- | tr -d \"\n\" ; echo -ne \",\" ssh ;echo -ne \",\" 22 \",\"; echo  -ne "$4" | cut -d = -f 2-  | tr -d \"\n\"   ;echo -ne \",\" ;  echo -e   "$5" | cut -d = -f 2-  ")}' |sed  's/\\//g' |sed 's/ //g'>./xshell.csv
@@ -4722,7 +4767,31 @@ curl  -s http://192.168.10.56:5000/devops/megatron/raw/master/RabbitMQ/install.s
 ````ssh file section````
 cat file | ssh remoteuser@ip.address.of.remote.machine "cat > remote"
 ssh remoteuser@ip.address.of.remote.machine "cat > remote" < file
+``````ssh config section````````
+cat ~/.ssh/config
+Host org1-AT
+        HostName 23.102.236.94
+        IdentityFile ~/.ssh/id_rsa
+        User org1
+        AddKeysToAgent yes
+##        UseKeychain yes
 
+Host org2-AT
+        HostName 13.75.46.103
+        IdentityFile ~/.ssh/id_rsa
+        User org2
+        AddKeysToAgent yes
+##        UseKeychain yes
+
+Host org3-AT
+        HostName 23.102.237.22
+        IdentityFile /Users/fwu066/Documents/share/company/ssh/id_rsa
+        User org3
+        AddKeysToAgent yes
+##        UseKeychain yes
+················
+ssh org3-AT
+/Users/fwu066/Documents/share/company/ssh/id_rsa是私钥
 ``````ssh proxy````
 ssh -R 9000:localhost:3000 user@example.com
 ssh -R     1977:127.0.0.1:3389   frank@139.219.100.43
@@ -4897,6 +4966,19 @@ rsync -av /srv/     /tmp/wujunrong/backup/srv/     --exclude   salt/xinxindai_to
 #同步时，去掉target目录（可能在某个子目录下），并且delete掉上次同步的target目录
 rsync -avh ./hadoop-spark --exclude '*/target/*'  frank@52.191.119.111:/home/frank/demo-src --delete-excluded   --delete
 
+
+
+`````
+
+ansible 'AirTrace-org1' -m shell -a "sudo scp -F ~/.ssh/config -r ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/*  AirTrace-org4:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
+ansible 'AirTrace-org1' -m shell -a "sudo scp -F ~/.ssh/config -r ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/*  AirTrace-org2:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
+
+#ansible rsync section
+
+ansible 'AirTrace-org[1:4]*' -m shell -a   'bc_home=~;rsync -azh -e "ssh -F $bc_home/.ssh/config"  AirTrace-org2:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/  ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/'
+
+执行1和4，而不是1、2、3、4
+
 ``````````断点续传 section````````````
 #https://stackoverflow.com/questions/20860896/is-there-a-way-to-continue-broken-scp-secure-copy-command-process-in-linux
 #https://www.cyberciti.biz/tips/linux-use-rsync-transfer-mirror-files-directories.html
@@ -4916,11 +4998,14 @@ C-f Move forward one character.
 Ctrl-a to get to the beginning 
 Ctrl-e 到最后
 
-````````````
+```meta section`````````
 M-b and M-f for moving backwards and forwards to the current word,
 xshell meta key
 File -> Properties -> Terminal -> Keyboard
 把 "Use Alt as Meta key" 这个选项勾上
+
+iterm2:
+: Go to Preferences->Profiles tab. Select your profile on the left, and then open the Keyboard tab. At the bottom is a set of buttons that lets you select the behavior of the Option key. For most users, Esc+ will be the best choice.
  
 ```````````````dash section```````````````
 参数"-"代表 standard input
@@ -5043,8 +5128,10 @@ sudo apt-get install build-essential
   
   cat v6_nginx01-tomcat_access-2016-06-07-14_05_01.log |   gawk -F@  '{print $1 $5  $9}' |  grep -E "[[:space:]]+/[[:space:]]*$" |  gawk -F@  '{print $1 $5 $9 $17}'
 
+  反向搜索：
   grep -v 'adoring_dubinsky\|NAMES'
   grep -E -v "^[[:space:]]*$"  #去空行
+  find / -ipath "*ansible.cfg" 2>&1 | grep -v 'Permission'
 ··········smartos grep section········      
   ls |  /usr/xpg4/bin/grep  -v -E 'wujunrong_9d58adc6-499b-11e6-9ea7-437c859dc16b.*|ffed9526-999d-11e6-93ae-bfa56012d3b9'
 ``````````````````````````````
@@ -5078,6 +5165,10 @@ du  --max-depth  0  -ah  /var/lib/docker/volumes/181f8ba1f76f6d6f132ae91f9c9fff2
 ```````````ls section``````````````````````````
 ls -ltr
 # ls -ld /home/jerry
+
+ls -lct
+shows the ctime of each file, sorted with the most recent first.
+
 ```file section````````
 stat ./v6_tomcat_webservice01-catalina.out
 file -bi [filename]  #utf-8
@@ -6384,6 +6475,7 @@ git stash drop stash@{0}
 
 git log salt-office/master --stat
 git log -2
+git log --oneline #simple output
 ·········
 git log --graph --oneline --decorate --all 
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h %s %ci %h %b'
@@ -6982,6 +7074,33 @@ Jump to end of a line – Command+Right Arrow.
 Jump to beginning of current word – Option+Right Arrow.
 Jump to end of current word – Option+Right Arrow.
 Jump to beginning of all text – Command+Up Arrow.
+
+`````brew section```lrzsz section````
+步骤一
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew install lrzsz
+步骤二：
+wget -O /usr/local/bin/iterm2-recv-zmodem.sh  https://raw.githubusercontent.com/mmastrac/iterm2-zmodem/master/iterm2-recv-zmodem.sh
+wget -O /usr/local/bin/iterm2-send-zmodem.sh  https://raw.githubusercontent.com/mmastrac/iterm2-zmodem/master/iterm2-send-zmodem.sh
+chmod +x /usr/local/bin/iterm2-send-zmodem.sh  /usr/local/bin/iterm2-recv-zmodem.sh
+
+步骤三：
+#https://github.com/mmastrac/iterm2-zmodem
+Install lrzsz on OSX: brew install lrzsz
+Save the iterm2-send-zmodem.sh and iterm2-recv-zmodem.sh scripts in /usr/local/bin/
+Set up Triggers in iTerm 2 like so:
+    Regular expression: waiting to receive.\*\*B0100
+    Action: Run Silent Coprocess
+    Parameters: /usr/local/bin/iterm2-send-zmodem.sh
+    Instant: checked
+
+    Regular expression: \*\*B00000000000000
+    Action: Run Silent Coprocess
+    Parameters: /usr/local/bin/iterm2-recv-zmodem.sh
+    Instant: checked
+步骤四：
+ssh org1-AT sz ~/air-trace/deliver_CA_certificate.sh
+`````````````````````
 
 ====cobbler section===
 rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
@@ -8522,6 +8641,13 @@ ansible 'ci*:!ci19'  -m raw -a "/opt/local/sbin/pkg_add -U /var/db/pkgin/cache/p
 ````````````````````
 按照hosts文件中的服务器顺序一个个执行，列出smartos上的硬盘
 ansible qinghua -f 1 -m raw -a " format < /dev/null | sed -n 's/.*\(<.*>\).*/\1/p' "
+
+=====mac ansible section=====
+#http://docs.ansible.com/ansible/latest/intro_installation.html
+sudo easy_install pip
+sudo pip install ansible
+sudo wget -O /etc/ansible/ansible.cfg https://raw.githubusercontent.com/ansible/ansible/devel/examples/ansible.cfg
+
 =====smartos salt section=====
 
 /opt/salt/bin/salt-minion -l debug
@@ -9150,6 +9276,25 @@ sudo openvpn --config ~/Documents/briphant_office_sh_new
 功能：列车函数列表
      Ctrl+R  command+R
 
+````Column Selection ```````
+Different mouse buttons are used on each platform:
+OS X
+
+    Left Mouse Button + Option
+    OR: Middle Mouse Button 
+
+    Add to selection: Command
+    Subtract from selection: Command+Shift 
+
+Windows
+
+    Right Mouse Button + Shift
+    OR: Middle Mouse Button 
+
+    Add to selection: Ctrl
+    Subtract from selection: Alt 
+
+
 `````安装copy on select 插件````
 步骤一：打开sublime的console
        The console is accessed via the ctrl+` shortcut or the View > Show Console menu.
@@ -9373,12 +9518,27 @@ sudo chmod +x /usr/local/bin/docker-compose
     sudo yum  -y  upgrade python*
 #Please note that service names should not include underscores.https://convox.com/docs/docker-compose-file/
 
-`````
+````````````````
+
+ln app-docker-compose.yaml docker-compose.yaml
 docker-compose up -d
 docker-compose ps
 docker-compose stop
 
+docker-compose -f app-docker-compose.yaml restart
+docker-compose -f app-docker-compose.yaml restart app
+docker-compose -f app-docker-compose.yaml stop    app
+docker-compose -f app-docker-compose.yaml start   app
 
+ls docker*yaml |xargs -I{} sh -c 'rm -f docker-compose.yaml;   echo ==== {} ====;ln -s {} docker-compose.yaml;sudo   docker-compose ps; rm -f docker-compose.yaml'
+ln -s docker-compose-cli.yaml docker-compose.yaml
+
+#查询docker ps 中 的command 参数
+mac:
+    docker inspect  -f "{{.Name}} {{.Config.Cmd}}" $( docker ps -a -q)
+    docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' container_name_or_id
+win:
+sudo docker inspect  -f "{{.Name}} {{.Config.Cmd}}" $( sudo docker ps -a -q)
 ```````
 sudo yum remove docker-ce
 sudo rm -rf /var/lib/docker
@@ -9414,10 +9574,10 @@ w /sys/devices/platform/i8042/serio1/serio2/sensitivity - - - - 175
 EOF
 sudo systemd-tmpfiles --prefix=/sys --create
 
-====os section ===init section===centos section==os init===docker init===
+====os section ===init section===centos section==os init section===docker init===
 yum -y install epel-release wget curl telnet lrzsz aria2 openssh-clients openssh-server iotop net-tools lsof tcpdump tree tcpdump zip unzip less dos2unix git iproute bind-utils
 
-sudo apt install tree
+sudo apt-get -y install tree lrzsz dos2unix
 ====firefox section=====
 用Ctrl+Tab切换tab页
 
@@ -9745,12 +9905,10 @@ Rule Allow
      list of Allow rules
 Exception
      list of Deny rules
+
 `````````````````````````````````````````````
+=====visualstudio section======
 
-
-
-
-
-
+快捷键：command+／
 
 
