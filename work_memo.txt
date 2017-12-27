@@ -3048,10 +3048,10 @@ git clone https://github.com/hyperledger/fabric-samples.git
 cd fabric-samples
 sudo curl -sSL https://goo.gl/5ftp2f | sudo bash
 cd first-network
-
+```````````````````````````````
 sudo  ./byfn.sh -m up
-./byfn.sh -m down
-`````
+sudo  ./byfn.sh -m down
+``````````blockchain example section``````````````````
 ue (y/n)? y
 proceeding ...
 /Users/fwu066/Documents/share/blockchian/Fabric_Samples/fabric-samples/first-network/../bin/cryptogen
@@ -3158,6 +3158,18 @@ b0b5f4ec4817        hyperledger/fabric-peer                                     
 
 
 ln -s docker-compose-cli.yaml docker-compose.yaml;sudo docker-compose ps
+frank@DevOps2:~/fabric-samples/first-network$ sudo docker-compose ps  
+WARNING: The CHANNEL_NAME variable is not set. Defaulting to a blank string.
+WARNING: The DELAY variable is not set. Defaulting to a blank string.
+WARNING: The TIMEOUT variable is not set. Defaulting to a blank string.
+         Name                       Command               State                         Ports                       
+-------------------------------------------------------------------------------------------------------------------
+cli                      /bin/bash -c ./scripts/scr ...   Exit 0                                                    
+orderer.example.com      orderer                          Up       0.0.0.0:7050->7050/tcp                           
+peer0.org1.example.com   peer node start                  Up       0.0.0.0:7051->7051/tcp, 0.0.0.0:7053->7053/tcp   
+peer0.org2.example.com   peer node start                  Up       0.0.0.0:9051->7051/tcp, 0.0.0.0:9053->7053/tcp   
+peer1.org1.example.com   peer node start                  Up       0.0.0.0:8051->7051/tcp, 0.0.0.0:8053->7053/tcp   
+peer1.org2.example.com   peer node start                  Up       0.0.0.0:10051->7051/tcp, 0.0.0.0:10053->7053/tcp 
 
 ```````````````````````````````````````
 主程序：        
@@ -3165,8 +3177,15 @@ ln -s docker-compose-cli.yaml docker-compose.yaml;sudo docker-compose ps
 
 Crypto Generator:                     
        /home/org1/fabric-samples/bin/cryptogen generate --config=/home/org1/fabric-samples/first-network/crypto-config.yaml
-
+····
 #manipulating Hyperledger Fabric channel configuration.
 #https://hyperledger-fabric.readthedocs.io/en/release/configtxgen.html
 Configuration Transaction Generator:  /home/org1/fabric-samples/first-network/configtx.yaml
       ../bin/configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/genesis.block
+
+····chaincode section·······
+
+view ./fabric-samples/chaincode-docker-devmode/docker-compose-simple.yaml
+cd /home/frank/fabric-samples/chaincode-docker-devmode
+ln -s docker-compose-simple.yaml docker-compose.yaml;sudo docker-compose ps
+sudo docker inspect  -f "{{.Name}} {{.Config.Cmd}}" $(sudo docker ps -a -q)
