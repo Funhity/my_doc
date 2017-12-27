@@ -3345,7 +3345,7 @@ go get -u github.com/hyperledger/fabric-ca/cmd/...
 2017/12/25 01:13:04 [INFO] Home directory for default CA: /Users/fwu066
 2017/12/25 01:13:04 [INFO] Listening on http://0.0.0.0:7054
 
-`````CA config``````
+`````CA config section``````
 
 优先级：
 1. CLI flags
@@ -3355,4 +3355,39 @@ go get -u github.com/hyperledger/fabric-ca/cmd/...
 3. Configuration file
 在docker中的配置文件：
 docker exec -ti f032a6df8904 cat /etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml|less
+
+http://hyperledger-fabric-ca.readthedocs.io/en/latest/users-guide.html#registering-a-new-identity
+client $HOME 环境变量
+The Fabric CA client’s home directory is determined as follows:
+* if the –home command line option is set, use its value
+* otherwise, if the FABRIC_CA_CLIENT_HOME environment variable is set, use its value
+* otherwise, if the FABRIC_CA_HOME environment variable is set, use its value
+* otherwise, if the CA_CFG_PATH environment variable is set, use its value
+* otherwise, use $HOME/.fabric-ca-client
+
+````CA client section`````
+http://hyperledger-fabric-ca.readthedocs.io/en/latest/users-guide.html#registering-a-new-identity
+步骤一：在配置文件中设置初始用户
+First, if needed, customize the CSR (Certificate Signing Request) section in the client configuration file. Note that csr.cn field must be set to the ID of the bootstrap identity. 
+
+export FABRIC_CA_CLIENT_HOME=$HOME/fabric-ca/clients/admin
+fabric-ca-client enroll -u http://admin:adminpw@localhost:7054
+
+步骤二：初始用户被enroll后才能注册新的用户
+The identity performing the register request must be currently enrolled
+
+
+实例：
+docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u https://admin:adminpw@fabric-ca-server:7054 --tls.certfiles ./repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/fabric-ca-server/ca/ca.fabric-ca-server-cert.pem'
+
+
+Post https://fabric-ca-server:7054/enroll: x509: certificate signed by unknown authority
+
+#如果显示格式有问题，就重新调整终端的大小
+docker exec -ti f032a6df8904 cat /etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml |less
+
+
+
+
+
 
