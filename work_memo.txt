@@ -3450,4 +3450,27 @@ sudo docker exec -ti ca_peerOrg1 cat /etc/hyperledger/fabric-ca-server/fabric-ca
                        # Chain file (default: chain-cert.pem)
                        chainfile: ca-chain.pem
                      
+关闭tls后可以通过网络enroll admin
 
+
+services:
+
+  ca.org1.example.com:
+    image: hyperledger/fabric-ca:x86_64-1.0.4
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+#      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem
+      - FABRIC_CA_SERVER_CA_CERTFILE=/home/org1/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/org1ca_sk
+      - FABRIC_CA_SERVER_TLS_ENABLED=false
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/org1ca_sk
+    ports:
+      - "7054:7054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+    volumes:
+      - ./channel/crypto-config/peerOrganizations/org1.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    container_name: ca_peerOrg1
+
+
+docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u http://admin:adminpw@fabric-ca-server:7054 '
