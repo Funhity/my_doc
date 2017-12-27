@@ -3406,4 +3406,9 @@ Post https://fabric-ca-server:7054/enroll: x509: certificate signed by unknown a
 docker exec -ti f032a6df8904 cat /etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml |less
 
 
+`````ca server section1`````````
+配置信息：
+sudo docker exec -ti ca_peerOrg1 ls /etc/hyperledger/fabric-ca-server
+sudo docker exec -ti ca_peerOrg1 cat /etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml |less  #若格式不对，调整一下xshell的大小即可
+
 
