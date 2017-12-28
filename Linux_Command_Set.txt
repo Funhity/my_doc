@@ -2911,7 +2911,7 @@ Esc to apply your change (or alternately Ctrl+c)
 let's highlight a block of text starting with v command
 and then moving the cursor.
 We now delete it with the d command.
-``````````````````````
+```````vi replace section```````````````
 
 vim scp://root@cloudera-agent1///etc/yum.repos.d/my-cloudera-manager.repo
 
@@ -7074,6 +7074,8 @@ Jump to end of a line – Command+Right Arrow.
 Jump to beginning of current word – Option+Right Arrow.
 Jump to end of current word – Option+Right Arrow.
 Jump to beginning of all text – Command+Up Arrow.
+
+open ~/.ssh/config
 
 `````brew section```lrzsz section````
 步骤一

@@ -3406,10 +3406,12 @@ Post https://fabric-ca-server:7054/enroll: x509: certificate signed by unknown a
 docker exec -ti f032a6df8904 cat /etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml |less
 
 
-`````ca server section1`````````
+`````ca server section1```
+
+···········ca config section·········
 配置信息：
 sudo docker exec -ti ca_peerOrg1 ls /etc/hyperledger/fabric-ca-server  #包含ca-cert.pem  ca-key.pem  fabric-ca-server-config.yaml  fabric-ca-server.db  msp
-sudo docker exec -ti ca_peerOrg1 cat /etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml |less  #若格式不对，调整一下xshell窗口大小即可
+sudo docker exec -ti ca_peerOrg1 cat /etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml |less  #若格式不对，调整一下xshell窗口大小即可,或重新下一页再上一页
                      #############################################################################
                      #  TLS section for the server's listening port
                      #
@@ -3449,7 +3451,46 @@ sudo docker exec -ti ca_peerOrg1 cat /etc/hyperledger/fabric-ca-server/fabric-ca
                        certfile: ca-cert.pem
                        # Chain file (default: chain-cert.pem)
                        chainfile: ca-chain.pem
+
+
+                       ###########################################################################
+                       #  Certificate Signing Request (CSR) section.
+                       #  This controls the creation of the root CA certificate.
+                       #  The expiration for the root CA certificate is configured with the
+                       #  "ca.expiry" field below, whose default value is "131400h" which is
+                       #  15 years in hours.
+                       #  The pathlength field is used to limit CA certificate hierarchy as described
+                       #  in section 4.2.1.9 of RFC 5280.
+                       #  Examples:
+                       #  1) No pathlength value means no limit is requested.
+                       #  2) pathlength == 1 means a limit of 1 is requested which is the default for
+                       #     a root CA.  This means the root CA can issue intermediate CA certificates,
+                       #     but these intermediate CAs may not in turn issue other CA certificates
+                       #     though they can still issue end entity certificates.
+                       #  3) pathlength == 0 means a limit of 0 is requested;
+                       #     this is the default for an intermediate CA, which means it can not issue
+                       #     CA certificates though it can still issue end entity certificates.
+                       ###########################################################################
+                       csr:
+                          cn: fabric-ca-server
+                          names:
+                             - C: US
+                               ST: "North Carolina"
+                               L:
+                               O: Hyperledger
+                               OU: Fabric
+                          hosts:
+                            - 5b4ff912f345
+                            - localhost
+                          ca:
+                             expiry: 131400h
+                             pathlength: 1                       
                      
+#If custom values for the CSR are required, you may customize the configuration file, delete the files specified by the ca.certfile and ca-keyfile configuration items, and then run the fabric-ca-server init -b admin:adminpw command again.
+
+
+
+···············································································
 关闭tls后可以通过网络enroll admin
 
 
@@ -3472,5 +3513,11 @@ services:
       - ./channel/crypto-config/peerOrganizations/org1.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
     container_name: ca_peerOrg1
 
-
+远程enroll user实例：
 docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u http://admin:adminpw@fabric-ca-server:7054 '
+
+
+
+
+
+
