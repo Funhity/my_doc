@@ -3397,13 +3397,23 @@ The identity performing the register request must be currently enrolled
 
 
 实例：
-docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u https://admin:adminpw@fabric-ca-server:7054 --tls.certfiles ./repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/fabric-ca-server/ca/ca.fabric-ca-server-cert.pem'
-
-
-Post https://fabric-ca-server:7054/enroll: x509: certificate signed by unknown authority
-
-#如果显示格式有问题，就重新调整终端窗口的大小
-docker exec -ti f032a6df8904 cat /etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml |less
+    docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u https://    admin:adminpw@fabric-ca-server:7054 --tls.certfiles ./repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/fabric-ca-server/ca/ca.fabric-ca-server-cert.pem'
+    
+    
+    Post https://fabric-ca-server:7054/enroll: x509: certificate signed by unknown authority
+    
+    
+    
+    docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u https://    admin:adminpw@fabric-ca-server:7054 --tls.certfiles ./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem  --myhost org1.example.com     --tls.client.keyfile ./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/org1ca_sk --tls.client.certfile=./AT_node_sdk/artifacts/channel/crypto-config/    peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem'
+    
+    docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client getcacert --tls.certfiles ./    AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem'
+    2017/12/28 09:56:53 [INFO] Configuration file location: /work/fabric-ca-client-config.yaml
+    2017/12/28 09:56:53 [INFO] TLS Enabled
+    Error: POST failure of request: POST https://fabric-ca-server:7054/cainfo
+    {}: Post https://fabric-ca-server:7054/cainfo: x509: certificate signed by unknown authority
+    
+    #如果显示格式有问题，就重新调整终端窗口的大小
+    docker exec -ti f032a6df8904 cat /etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml |less
 
 
 `````ca server section1```
