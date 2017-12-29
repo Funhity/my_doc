@@ -2888,6 +2888,14 @@ d^ (d caret, not CTRL d) Delete to beginning of line
 You need to use the \c escape sequence. So:
 /\ccopyright
 
+
+
+````vi color section`````
+ls /usr/share/vim/vimNN/colors/
+open vim, then enter :color desert and enter.
+#列出所有颜色
+ls /usr/share/vim/vimNN/colors/ 
+``````
 #man uses less to display man pages.
 #https://unix.stackexchange.com/questions/101295/case-insensitive-search-in-man-pages
 man -i virsh
@@ -4853,6 +4861,18 @@ proxychains apt-get -y install docker-ce
 
 
 ===pip section===shadowsocks section===vpn section===
+
+#mac:
+     #https://shadowsocks.org/en/download/clients.html
+     brew install shadowsocks-libev
+
+     
+     To have launchd start shadowsocks-libev now and restart at login:
+       brew services start shadowsocks-libev
+     Or, if you don't want/need a background service you can just run:
+       /usr/local/opt/shadowsocks-libev/bin/ss-local -c /usr/local/etc/shadowsocks-libev.json -u
+         
+```
 yum -y install python
 yum -y install python-setuptools && easy_install pip
 #wget https://bootstrap.pypa.io/get-pip.py

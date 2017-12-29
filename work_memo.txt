@@ -3364,6 +3364,8 @@ go get -u github.com/hyperledger/fabric-ca/cmd/...
 2017/12/25 01:13:04 [INFO] Home directory for default CA: /Users/fwu066
 2017/12/25 01:13:04 [INFO] Listening on http://0.0.0.0:7054
 
+
+/Users/fwu066//go/bin/fabric-ca-server --help
 `````CA config section``````
 
 优先级：
@@ -3385,6 +3387,11 @@ The Fabric CA client’s home directory is determined as follows:
 * otherwise, use $HOME/.fabric-ca-client
 
 ````CA client section`````
+/Users/fwu066//go/bin/fabric-ca-client --help
+#配置文件，在执行fabric-ca-client enroll命令时会自动生成
+less   fabric-ca-client-config.yaml
+
+
 http://hyperledger-fabric-ca.readthedocs.io/en/latest/users-guide.html#registering-a-new-identity
 步骤一：在配置文件中设置初始用户
 First, if needed, customize the CSR (Certificate Signing Request) section in the client configuration file. Note that csr.cn field must be set to the ID of the bootstrap identity. 
@@ -3397,15 +3404,19 @@ The identity performing the register request must be currently enrolled
 
 
 实例：
-    docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u https://    admin:adminpw@fabric-ca-server:7054 --tls.certfiles ./repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/fabric-ca-server/ca/ca.fabric-ca-server-cert.pem'
+    docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u https://admin:adminpw@fabric-ca-server:7054 --tls.certfiles ./repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/fabric-ca-server/ca/ca.fabric-ca-server-cert.pem'
     
     
     Post https://fabric-ca-server:7054/enroll: x509: certificate signed by unknown authority
     
     
     
-    docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u https://    admin:adminpw@fabric-ca-server:7054 --tls.certfiles ./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem  --myhost org1.example.com     --tls.client.keyfile ./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/org1ca_sk --tls.client.certfile=./AT_node_sdk/artifacts/channel/crypto-config/    peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem'
+    docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u https://admin:adminpw@fabric-ca-server:7054 --tls.certfiles ./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem  --myhost org1.example.com     --tls.client.keyfile ./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/org1ca_sk --tls.client.certfile=./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem --caname Org1 -d'
     
+docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u https://admin:adminpw@fabric-ca-server:7054 --tls.certfiles ./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem   --caname Org1 -d'
+
+
+    #Get CA certificate chain
     docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client getcacert --tls.certfiles ./    AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem'
     2017/12/28 09:56:53 [INFO] Configuration file location: /work/fabric-ca-client-config.yaml
     2017/12/28 09:56:53 [INFO] TLS Enabled
@@ -3417,7 +3428,7 @@ The identity performing the register request must be currently enrolled
 
 
 `````ca server section1```
-
+/Users/fwu066//go/bin/fabric-ca-server --help
 ···········ca config section·········
 配置信息：
 sudo docker exec -ti ca_peerOrg1 ls /etc/hyperledger/fabric-ca-server  #包含ca-cert.pem  ca-key.pem  fabric-ca-server-config.yaml  fabric-ca-server.db  msp
