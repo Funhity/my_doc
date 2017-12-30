@@ -3388,9 +3388,34 @@ The Fabric CA client’s home directory is determined as follows:
 
 ````CA client section`````
 /Users/fwu066//go/bin/fabric-ca-client --help
-#配置文件，在执行fabric-ca-client enroll命令时会自动生成
+#配置文件：
+#在执行fabric-ca-client enroll命令时会自动生成,fabric-ca-client程序当前目录
 less   fabric-ca-client-config.yaml
-
+        #############################################################################
+        #  Certificate Signing Request section for generating the CSR for
+        #  an enrollment certificate (ECert)
+        #
+        #  cn - Used by CAs to determine which domain the certificate is to be generated for
+        #  names -  A list of name objects. Each name object should contain at least one
+        #  "C", "L", "O", "OU", or "ST" value (or any combination of these). These values are:
+        #      "C": country
+        #      "L": locality or municipality (such as city or town name)
+        #      "O": organisation
+        #      "OU": organisational unit, such as the department responsible for owning the key;
+        #      it can also be used for a "Doing Business As" (DBS) name
+        #      "ST": the state or province
+        #  hosts - A list of space-separated host names which the certificate should be valid for
+        #
+        #  NOTE: The serialnumber field below, if specified, becomes part of the issued
+        #  certificate's DN (Distinguished Name).  For example, one use case for this is
+        #  a company with its own CA (Certificate Authority) which issues certificates
+        #  to its employees and wants to include the employee's serial number in the DN
+        #  of its issued certificates.
+        #
+        #  WARNING: This serialnumber field should not be confused with the certificate's
+        #  serial number which is set by the CA but is not a component of the
+        #  certificate's DN.
+        #############################################################################
 
 http://hyperledger-fabric-ca.readthedocs.io/en/latest/users-guide.html#registering-a-new-identity
 步骤一：在配置文件中设置初始用户
@@ -3537,8 +3562,8 @@ services:
 远程enroll user实例：
 docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u http://admin:adminpw@fabric-ca-server:7054 '
 
+`````openssl section`````
 
-
-
+openssl x509 -text -noout -in ./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem
 
 
