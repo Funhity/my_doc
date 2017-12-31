@@ -3452,8 +3452,15 @@ docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca 
     docker exec -ti f032a6df8904 cat /etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml |less
 
 
-`````ca server section1```
+`````ca server section```
 /Users/fwu066//go/bin/fabric-ca-server --help
+ -n, --ca.name string                            Certificate Authority name
+
+
+http://hyperledger-fabric-ca.readthedocs.io/en/latest/users-guide.html#starting-the-server
+The fabric-ca-server init command generates a self-signed CA certificate unless the -u <parent-fabric-ca-server-URL> option is specified. 
+
+
 ···········ca config section·········
 配置信息：
 sudo docker exec -ti ca_peerOrg1 ls /etc/hyperledger/fabric-ca-server  #包含ca-cert.pem  ca-key.pem  fabric-ca-server-config.yaml  fabric-ca-server.db  msp
@@ -3566,4 +3573,16 @@ docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca 
 
 openssl x509 -text -noout -in ./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem
 
+      Certificate:
+          Data:
+              Version: 3 (0x2)
+              Serial Number:
+                  bd:68:70:15:cc:ac:72:69:0c:45:97:26:4d:a5:94:ae
+          Signature Algorithm: ecdsa-with-SHA256
+              Issuer: C=US, ST=California, L=San Francisco, O=org1.example.com, CN=ca.org1.example.com
+              Validity
+                  Not Before: Dec 19 03:36:33 2017 GMT
+                  Not After : Dec 17 03:36:33 2027 GMT
+              Subject: C=US, ST=California, L=San Francisco, O=org1.example.com, CN=ca.org1.example.com
+              Subject Public Key Info:
 
