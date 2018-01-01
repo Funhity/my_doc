@@ -9572,7 +9572,7 @@ docker cp  nginx_web_1:/etc/nginx/nginx.conf /etc/nginx/nginx.conf
 docker cp  nginx_web_1:/etc/nginx   /tmp
 docker cp compassionate_bohr:/opt/softether.ovpn  .
 docker cp Dockerfile youthful_albattani:/tmp/
-`````
+````nginx ssl section`````
 sudo mkdir /etc/nginx/ssl
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt
 
