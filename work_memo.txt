@@ -3024,6 +3024,10 @@ ng serve
 
 ``blockchian ubuntu section```
 
+
+
+
+cat > /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/install_basic_package_on_ubuntu.sh <<EOF
 #https://hyperledger-fabric.readthedocs.io/en/release/prereqs.html
 sudo apt-get -y install \
     apt-transport-https \
@@ -3041,7 +3045,7 @@ sudo add-apt-repository \
 sudo apt-get -y update
 sudo apt-get -y install docker-ce
 sudo apt-get -y install docker-compose
-``````
+#``````
 wget https://redirector.gvt1.com/edgedl/go/go1.9.2.linux-amd64.tar.gz
 sudo tar -C /usr/local -xzf go1.9.2.linux-amd64.tar.gz
 
@@ -3050,22 +3054,27 @@ sudo sh -c "echo 'GOPATH=/usr/local/go' >> ~/.profile"
 sudo sh -c "echo 'PATH=\$PATH:\$GOPATH/bin' >>  ~/.profile"
 . ~/.profile
 echo $GOPATH
-````
+#````
 sudo apt-get -y install npm  tree lrzsz
 npm version
 sudo npm install npm@3.10.10 -g
-````
+#````
 #Node.js - version 6.9.x or greater
 #Node.js version 7.x is not supported at this time.
 sudo curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 sudo apt-get -y install nodejs
 
+
+EOF
+
+
 ````````````
+#install example
 git clone https://github.com/hyperledger/fabric-samples.git
 cd fabric-samples
 sudo curl -sSL https://goo.gl/5ftp2f | sudo bash
 cd first-network
-```````````````````````````````
+#```````````````````````````````
 sudo  ./byfn.sh -m up
 sudo  ./byfn.sh -m down
 ``````````blockchain example section``````````````````
@@ -3461,7 +3470,7 @@ http://hyperledger-fabric-ca.readthedocs.io/en/latest/users-guide.html#starting-
 The fabric-ca-server init command generates a self-signed CA certificate unless the -u <parent-fabric-ca-server-URL> option is specified. 
 
 
-···········ca config section·········
+···········ca server config section·········
 配置信息：
 sudo docker exec -ti ca_peerOrg1 ls /etc/hyperledger/fabric-ca-server  #包含ca-cert.pem  ca-key.pem  fabric-ca-server-config.yaml  fabric-ca-server.db  msp
 sudo docker exec -ti ca_peerOrg1 cat /etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml |less  #若格式不对，调整一下xshell窗口大小即可,或重新下一页再上一页
@@ -3543,7 +3552,7 @@ sudo docker exec -ti ca_peerOrg1 cat /etc/hyperledger/fabric-ca-server/fabric-ca
 
 
 
-···············································································
+···············ca server docker section································································
 关闭tls后可以通过网络enroll admin
 
 
