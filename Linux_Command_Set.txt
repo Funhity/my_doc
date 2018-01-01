@@ -4866,7 +4866,7 @@ proxychains apt-get -y install docker-ce
      #https://shadowsocks.org/en/download/clients.html
      brew install shadowsocks-libev
 
-     
+
      To have launchd start shadowsocks-libev now and restart at login:
        brew services start shadowsocks-libev
      Or, if you don't want/need a background service you can just run:
@@ -9575,6 +9575,17 @@ docker cp Dockerfile youthful_albattani:/tmp/
 `````
 sudo mkdir /etc/nginx/ssl
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt
+
+     -x509:  这个参数要求直接产生certificate 而不是 CSR
+
+========openssl section==========
+* https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/apache-selfsigned.key -out /etc/ssl/certs/apache-selfsigned.crt
+
+    -x509:  这个参数要求直接产生certificate 而不是 CSR，下面命令是产生CSR
+https://www.digicert.com/csr-ssl-installation/ubuntu-server-with-apache2-openssl.htm
+openssl req –new –newkey rsa:2048 –nodes –keyout server.key –out server.csr                        
+                    
 ===========bridge section===================
 apt-get install bridge-utils
 yum -y install bridge-utils
