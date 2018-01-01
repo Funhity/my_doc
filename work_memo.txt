@@ -3289,7 +3289,7 @@ network-config.json
   #ansible 'AirTrace-org1' -m shell -a "sudo scp -F ~/.ssh/config -r ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/*  AirTrace-org2:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
 
 ````blockchain ssh```
-#证书互传
+#证书互传-版本1
 ansible 'AirTrace-org[1:2]*' -m shell -a  'bc_home=~;rsync -azh -e "ssh -F $bc_home/.ssh/config"  AirTrace-org4:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/  ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/'
 
 #证书互传前要设置ssh互联
@@ -3304,7 +3304,7 @@ scp /home/org1/repository_air_trace/frank_id_rsa  AirTrace-org2:/home/allorgs/re
 chmod 700 /home/org4/repository_air_trace/frank_id_rsa
 
 ``````
-
+#证书互传-版本2
 echo copy certificate ...
 
 ansible 'AirTrace-org1' -m shell -a "sudo scp -F ~/.ssh/config -r ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/*  AirTrace-org4:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
