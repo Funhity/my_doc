@@ -6189,13 +6189,13 @@ end1
 ====sed section awk section========
 awk '{print $NF}' #获得最后一列 
 
-
+````````
 #Only return the matched string in sed
 echo "atestb" | sed -n 's/.*\(test\).*/\1/p'
 echo "atestb" | sed 's/.*\(test\).*/\1/'
-#要用backreference \1 前面必须要用括号把要引用的括起来，例如：
+#要用backreference \1 前面必须要用括号把要引用的括起来，例如：http://languor.us/sed-invalid-reference-1-s-commands-rhs
 ansible org1-AT -m shell -a "sudo docker ps | sed -n 's/.*\(ca_peerOrg[0-9]\).*/\1/p'|xargs -I{} sudo docker restart {}"
-
+````````
 
 sed -e "s/stage_/\/stage/g" -e "s/v6_webservice/\/webservice\//g"
 删除最后一行：
