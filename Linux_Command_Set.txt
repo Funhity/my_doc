@@ -2972,10 +2972,15 @@ wget --user=briphant --password='the_password' ftp://10.16.2.130/cloud/v7.1.0/fl
 
 pgrep -a fk.sh| tee ./fk.log| wc -l
 crontab -l | tee crontab-backup.txt | sed 's/old/new/' | crontab –
+
+````Process substitution`````
 使用tee命令，在标准输出和日志文件中同时输出：
 exec &> >(tee "$log_file")
 # $log_file will contain the output of the script and any subprocesses, and the output will also be printed to the screen.
 #  >(...) starts the process ... and returns a file representing its standard input. exec &> ... redirects both standard output and standard error into ... for the remainder of the script (use just exec > ... for stdout only). tee -a appends its standard input to the file, and also prints it to the screen.
+
+
+diff <(salt 'stage_v6_nginx01' cmd.run "cat /root/install.sh")   <(salt 'stage_v6_nginx02' cmd.run "cat /root/install.sh")
 
 ======================  nginx section   =========================
 To set up the yum repository for RHEL/CentOS, create the file named /etc/yum.repos.d/nginx.repo with the following contents:
@@ -6188,6 +6193,9 @@ awk '{print $NF}' #获得最后一列
 #Only return the matched string in sed
 echo "atestb" | sed -n 's/.*\(test\).*/\1/p'
 echo "atestb" | sed 's/.*\(test\).*/\1/'
+#要用backreference \1 前面必须要用括号把要引用的括起来，例如：
+ansible org1-AT -m shell -a "sudo docker ps | sed -n 's/.*\(ca_peerOrg[0-9]\).*/\1/p'|xargs -I{} sudo docker restart {}"
+
 
 sed -e "s/stage_/\/stage/g" -e "s/v6_webservice/\/webservice\//g"
 删除最后一行：
@@ -9614,19 +9622,32 @@ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/
      -x509:  这个参数要求直接产生certificate 而不是 CSR
 
 ========openssl section======ca section===ssl section=====
-* https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04
-sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/apache-selfsigned.key -out /etc/ssl/certs/apache-selfsigned.crt
-
-    -x509:  这个参数要求直接产生certificate 而不是 CSR，下面命令是产生CSR
-https://www.digicert.com/csr-ssl-installation/ubuntu-server-with-apache2-openssl.htm
-openssl req –new –newkey rsa:2048 –nodes –keyout server.key –out server.csr                        
+#生成certificate：
+     * https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04
+     sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/apache-selfsigned.key -out /etc/ssl/certs/apache-selfsigned.crt
      
+         -x509:  这个参数要求直接产生certificate 而不是 CSR，下面命令是产生CSR
+     https://www.digicert.com/csr-ssl-installation/ubuntu-server-with-apache2-openssl.htm
+     openssl req –new –newkey rsa:2048 –nodes –keyout server.key –out server.csr                        
+     
+#检查ssl服务器
+ 方法一：
+   openssl s_client                                    -connect 23.102.236.94:7054 -tls1_2
+   openssl s_client -cipher  ECDH-ECDSA-AES128-SHA256  -connect localhost:7054     -tls1_2
+   openssl s_client                                    -connect localhost:7054     -tls1_2
+ 方法二：
+   nmap --script ssl-enum-ciphers -p 7054  23.102.236.94       
 
-openssl s_client                                    -connect 23.102.236.94:7054 -tls1_2
-openssl s_client -cipher  ECDH-ECDSA-AES128-SHA256  -connect localhost:7054     -tls1_2
-openssl s_client                                    -connect localhost:7054     -tls1_2
 
-nmap --script ssl-enum-ciphers -p 7054  23.102.236.94               
+#检查certificate
+  openssl x509 -in ./org1.example.com/ca/ca.org1.example.com-cert.pem  -text -noout   
+
+
+实例：
+ sudo docker inspect -f '{{ .Mounts }}' ca_peerOrg1
+ cd /home/org1/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca
+ openssl x509 -in ./ca.org1.example.com-cert.pem  -text -noout
+ sudo docker restart ca_peerOrg1
 ===========bridge section===================
 apt-get install bridge-utils
 yum -y install bridge-utils

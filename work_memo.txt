@@ -3375,6 +3375,17 @@ go get -u github.com/hyperledger/fabric-ca/cmd/...
 
 
 /Users/fwu066//go/bin/fabric-ca-server --help
+
+````check ca server section````
+#实例：
+ sudo docker inspect -f '{{ .Mounts }}' ca_peerOrg1
+ cd /home/org1/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca
+ openssl x509 -in ./ca.org1.example.com-cert.pem  -text -noout
+ sudo docker restart ca_peerOrg1
+ sudo docker exec -ti  ca_peerOrg1 sh -c "cat  \$FABRIC_CA__CA_CERTFILE" | openssl x509   -text -noout|less
+ openssl s_client                                    -connect 23.102.236.94:7054 -tls1_2
+
+
 `````CA config section``````
 
 优先级：
