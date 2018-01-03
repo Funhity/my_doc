@@ -3447,7 +3447,11 @@ The identity performing the register request must be currently enrolled
     
     docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u https://admin:adminpw@fabric-ca-server:7054 --tls.certfiles ./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem  --myhost org1.example.com     --tls.client.keyfile ./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/org1ca_sk --tls.client.certfile=./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem --caname Org1 -d'
     
-docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u https://admin:adminpw@fabric-ca-server:7054 --tls.certfiles ./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem   --caname Org1 -d'
+    docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u https://    admin:adminpw@fabric-ca-server:7054 --tls.certfiles ./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem   --caname Org1 -d'
+    
+    docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u https://    admin:adminpw@fabric-ca-server:7054 --tls.certfiles ./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/msp/tlscacerts/tlsca.org1.example.com-cert.pem  -d'
+    
+    docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u https://admin:adminpw@fabric-ca-server:7054 --tls.certfiles ./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem  -d'
 
 
     #Get CA certificate chain

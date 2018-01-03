@@ -79,6 +79,8 @@ dig youtube.com   @8.8.8.8
 ping -a w.x.y.z
 sudo discoveryutil mdnsflushcache
 
+ubuntu:
+sudo apt-get install dnsutils
 ================ network section =========================
 ubuntu: /etc/network/interfaces
 `````top section``````````
@@ -642,7 +644,8 @@ docker run -ti
  docker service inspect --pretty centos7_centos7-docker-swarm | grep -i networks
 
  docker network ls
- docker network inspect bridge  #用Containers键值可查看bridge被哪些container使用了
+ docker network inspect bridge             #用Containers键值可查看bridge被哪些container使用了
+ docker network inspect artifacts_default  #用Containers键值可查看bridge被哪些container使用了
 
  docker network create --subnet 172.30.0.0/16  \
                        --opt com.docker.network.bridge.name=docker_gwbridge \
@@ -901,7 +904,8 @@ docker volume prune
                                                  其中，/var/lib/docker/volumes/是固定的，
                                                       jenkins_home对应冒号的左边（jenkins_home:/var/jenkins_home）
                                                                       冒号的右边是/var/jenkins_home（在container内） 
-
+检查volume设置：
+sudo docker inspect -f '{{ .Mounts }}' ca_peerOrg1
 ````````docker systemd section``````docker centos7`````
 Dockerfile for systemd base image
 ··········
@@ -9199,7 +9203,7 @@ http://10.0.1.99:8200/
 systemctl start minidlna
 [frank@hp ~]$ sudo iptables -I INPUT 1 -p tcp --dport 8200    -j ACCEPT  #在表前面加
 [frank@hp ~]$ sudo iptables -I INPUT 1 -p udp --dport 1900    -j ACCEPT  #在表前面加
-========jobs section===========
+========jobs section=======bg section=fg section=backgroud section==
     如何使得命令进入后台
 	方法一： Appending an ampersand ( & ) to the command runs the job in the background.
 	  find / -ctime -1 > /tmp/changed-file-list.txt &
@@ -9540,8 +9544,39 @@ sudo chmod +x /usr/local/bin/docker-compose
     sudo yum  -y  upgrade python*
 #Please note that service names should not include underscores.https://convox.com/docs/docker-compose-file/
 
-````````````````
+````````docker compose network````````
+https://docs.docker.com/compose/networking/#use-a-pre-existing-network
+Configure the default network
 
+Instead of (or as well as) specifying your own networks, you can also change the settings of the app-wide default network by defining an entry under networks named default:
+
+version: "3"
+services:
+
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+  db:
+    image: postgres
+
+networks:
+  default:
+    # Use a custom driver
+    driver: custom-driver-1
+
+Use a pre-existing network
+
+If you want your containers to join a pre-existing network, use the external option:
+
+networks:
+  default:
+    external:
+      name: my-pre-existing-network
+
+Instead of attempting to create a network called [projectname]_default, Compose will look for a network called my-pre-existing-network and connect your app’s containers to it.
+documentation, docs, docker, compose, orchestration, containers, networking
+````````````````````````````````
 ln app-docker-compose.yaml docker-compose.yaml
 docker-compose up -d
 docker-compose ps
@@ -9578,14 +9613,20 @@ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/
 
      -x509:  这个参数要求直接产生certificate 而不是 CSR
 
-========openssl section==========
+========openssl section======ca section===ssl section=====
 * https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/apache-selfsigned.key -out /etc/ssl/certs/apache-selfsigned.crt
 
     -x509:  这个参数要求直接产生certificate 而不是 CSR，下面命令是产生CSR
 https://www.digicert.com/csr-ssl-installation/ubuntu-server-with-apache2-openssl.htm
 openssl req –new –newkey rsa:2048 –nodes –keyout server.key –out server.csr                        
-                    
+     
+
+openssl s_client                                    -connect 23.102.236.94:7054 -tls1_2
+openssl s_client -cipher  ECDH-ECDSA-AES128-SHA256  -connect localhost:7054     -tls1_2
+openssl s_client                                    -connect localhost:7054     -tls1_2
+
+nmap --script ssl-enum-ciphers -p 7054  23.102.236.94               
 ===========bridge section===================
 apt-get install bridge-utils
 yum -y install bridge-utils
@@ -9942,6 +9983,7 @@ Exception
 `````````````````````````````````````````````
 =====visualstudio section======
 
-快捷键：command+／
+快捷键：command + ／ 增加或去掉注释
+       command + p  搜索打开文件
 
-
+  
