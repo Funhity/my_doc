@@ -3615,3 +3615,13 @@ ng serve --host 0.0.0.0 --port 4200 --disable-host-check &
 
 cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_client
 ng build
+````````blockchain code section``````````
+rsync  -avhz /Users/fwu066/Documents/share/repository_air_trace/ all-AT:/home/allorgs/repository_air_trace/
+
+1.服务端检查客户端在浏览器中输入的ip地址
+https://github.com/angular/angular-cli/issues/803
+rsync  -avhz /Users/fwu066/Documents/share/repository_air_trace//AT_node_server/index.js  all-AT:/home/allorgs/repository_air_trace//AT_node_server/index.js
+
+2.change IP address of 8000 port for client side visisting
+rsync  -avhz /Users/fwu066/Documents/share/repository_air_trace/AT_node_client/src/environments/environment.ts  all-AT:/home/allorgs/repository_air_trace/AT_node_client/src/environments/environment.ts
+

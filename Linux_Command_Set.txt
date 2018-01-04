@@ -9232,7 +9232,7 @@ systemctl start minidlna
 	2. fg command. When executed without arguments, it will take the most recent background job to the foreground.
 	   # fg %1
 	   # kill %2
-     sudo kill "$(jobs -p %1)"
+    sudo kill "$(jobs -p %1)"
 ==========================
 查询网卡状态
 # sudo ethtool eth25s0	   
@@ -9246,14 +9246,14 @@ systemctl start minidlna
               d   Disable (wake on nothing).   This  option  clears  all
                   previous options.
 设置网卡状态
-# sudo ethtool -s eth25s0 wol g		
+# sudo ethtool -s eth25s0 wol g
 ========trim section===========
 centos7
 # sudo systemctl enable fstrim.timer
 # systemctl is-enabled  fstrim.service
 static
-		  
-				  
+
+
 npm install --registry  npm.briphant.cn
 
 ==route section==
