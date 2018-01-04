@@ -3378,11 +3378,17 @@ go get -u github.com/hyperledger/fabric-ca/cmd/...
 
 ````check ca server section````
 #实例：
+ #检查证书合法性：
+ 步骤一：
  sudo docker inspect -f '{{ .Mounts }}' ca_peerOrg1
  cd /home/org1/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca
- openssl x509 -in ./ca.org1.example.com-cert.pem  -text -noout
+ 步骤二：
  sudo docker restart ca_peerOrg1
+ 步骤三：
  sudo docker exec -ti  ca_peerOrg1 sh -c "cat  \$FABRIC_CA__CA_CERTFILE" | openssl x509   -text -noout|less
+ sudo docker exec -ti  ca_peerOrg4 sh -c "cat  \$FABRIC_CA_SERVER_CA_CERTFILE" | openssl x509   -text -noout|less 
+ openssl x509 -in ./ca.org4.example.com-cert.pem  -text -noout
+ #从客户端检查服务端
  openssl s_client                                    -connect 23.102.236.94:7054 -tls1_2
 
 
