@@ -3609,4 +3609,9 @@ openssl x509 -text -noout -in ./AT_node_sdk/artifacts/channel/crypto-config/peer
                   Not After : Dec 17 03:36:33 2027 GMT
               Subject: C=US, ST=California, L=San Francisco, O=org1.example.com, CN=ca.org1.example.com
               Subject Public Key Info:
+``````angular section```````
+npm rebuild node-sass --force
+ng serve --host 0.0.0.0 --port 4200 --disable-host-check &
 
+cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_client
+ng build

@@ -9232,6 +9232,7 @@ systemctl start minidlna
 	2. fg command. When executed without arguments, it will take the most recent background job to the foreground.
 	   # fg %1
 	   # kill %2
+     sudo kill "$(jobs -p %1)"
 ==========================
 查询网卡状态
 # sudo ethtool eth25s0	   
