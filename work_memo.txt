@@ -3385,12 +3385,13 @@ go get -u github.com/hyperledger/fabric-ca/cmd/...
  步骤二：
  sudo docker restart ca_peerOrg1
  步骤三：
- sudo docker exec -ti  ca_peerOrg1 sh -c "cat  \$FABRIC_CA__CA_CERTFILE" | openssl x509   -text -noout|less
  sudo docker exec -ti  ca_peerOrg4 sh -c "cat  \$FABRIC_CA_SERVER_CA_CERTFILE" | openssl x509   -text -noout|less 
  openssl x509 -in ./ca.org4.example.com-cert.pem  -text -noout
  #从客户端检查服务端
  openssl s_client                                    -connect 23.102.236.94:7054 -tls1_2
 
+
+ diff <(ansible 'org1-AT' -a "openssl x509 -in ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt  -text -noout") <( ansible 'org3-AT' -a "openssl x509 -in /home/org3/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt -text -noout")
 
 `````CA config section``````
 

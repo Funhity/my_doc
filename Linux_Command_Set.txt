@@ -2251,9 +2251,11 @@ chunter_rsyslog:
   
   
 
-·····················salt diff····························
+·····················salt diff············ansilbe diff················
   diff <(salt 'stage_v6_nginx01' cmd.run "cat /root/install.sh")   <(salt 'stage_v6_nginx02' cmd.run "cat /root/install.sh")
   diff ./application.properties    <( salt 'stage_v6_batch01' cmd.run "cat /opt/webserver/v6_tomcat/webapps/xxdai_batch/WEB-INF/classes/application.properties"|sed '1d'| cut -d " " -f   5- )
+
+ diff <(ansible 'org1-AT' -a "openssl x509 -in ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt  -text -noout") <( ansible 'org3-AT' -a "openssl x509 -in /home/org3/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt -text -noout")
 ·····························································
 
   删除前2列
