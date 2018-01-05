@@ -3620,8 +3620,12 @@ openssl x509 -text -noout -in ./AT_node_sdk/artifacts/channel/crypto-config/peer
 npm rebuild node-sass --force
 ng serve --host 0.0.0.0 --port 4200 --disable-host-check &
 
+网站建立：
+步骤一：
 cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_client
+步骤二：
 ng build
+把生产的文件放到nginx服务器网站服务目录上，其中有index文件
 ````````blockchain code section``````````
 rsync  -avhz /Users/fwu066/Documents/share/repository_air_trace/ all-AT:/home/allorgs/repository_air_trace/
 
