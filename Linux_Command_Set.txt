@@ -2790,6 +2790,10 @@ telnet: 装inetutils 模块
 `````````````cygwin paste section``````````````````
 getclip putclip : 装cygutils-extra模块
 git ls-tree -r master --name-only |putclip.exe
+
+=============paste section==========
+mac: paste
+windows:Ditto-cp
 =======================  cygwin ansible  ========================
 Ansible – Using Ansible on Windows via Cygwin
 步骤一：
@@ -4840,7 +4844,7 @@ ssh -R     3389:127.0.0.1:3389   frank@139.219.100.43   #在公司机器上运�
             公司访问家里windows用3389端口
 
 
-·····ssh proxy dynamic section···ssh proxy section····aliyun section····dynamic proxy··
+·····ssh proxy dynamic section···ssh proxy section····aliyun section····dynamic proxy·······sock5 proxy··sock proxy···········
 
 #https://www.codeproject.com/Tips/634228/How-to-Use-Proxychains-Forwarding-Ports
 #proxy traffic from one application on your local computer through another application on your local computer. That's what proxychains does. 
@@ -4856,16 +4860,17 @@ edit the port number on the last line
 socks4  127.0.0.1 8000
 
 步驟二：配置ssh
+sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.factory-defaults
 in /etc/ssh/sshd_config on the server, AllowTcpForwarding is enabled, as like below.
 Code:
 AllowTcpForwarding yes
 
 service sshd restart
-
+或sudo systemctl restart ssh
 步驟三：
 ssh -D 1080 root@139.196.102.159
 
-
+打开firefox选项：Proxy DNS when using SOCKS v5
 步骤四 
 #使用代理安装程序,注意用proxychains开头
 proxychains apt-get -y install docker-ce 
