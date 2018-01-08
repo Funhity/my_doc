@@ -5688,7 +5688,11 @@ sudo tcpdump -i lo -A udp and port 514
 
 tcpdump -n host 192.168.1.1
 tcpdump -n net 192.168.1.0/24
-tcpdump -n src host 192.168.1.1
+     
+     tcpdump -n src host 192.168.1.1
+sudo tcpdump -n dst host 13.75.43.35
+
+
 tcpdump -n dst port 23 # 能收到请求消息，响应消息不显示
 tcpdump -n dst port 5000
 
@@ -6293,6 +6297,23 @@ git rebase在当前分支的head上重新commit，机制不一样
 
 .git/config                                   #1:Specific to that single repository
                                               #2:定义了从remote下载哪些分支
+`````git ingore section````````````````
+#检查为什么会被忽略
+git check-ignore -v testCloudArtifacts/org*/channel/*.yaml
+
+
+logs/
+!logs/important.log    
+
+--
+logs/debug.log
+logs/important.log    
+
+--
+
+ Wait a minute! Shouldn't logs/important.log be negated in the example on the left
+Nope! Due to a performance-related quirk in Git, you can not negate a file that is ignored due to a pattern matching a directory
+
 
 ``````````初始化 git``````````
 svn mkdir <url> -m <msg>
@@ -6544,8 +6565,12 @@ git diff HEAD^  HEAD  Linux_Command_Set.txt  当前版本和上一版本的区�
 git diff HEAD^^ HEAD main.c
 git diff HEAD^^..HEAD -- main.c
 git diff HEAD~2 HEAD -- main.c
+
 #本地文件和本地master中的文件比较，显示修改内容
  git diff master:Linux_Command_Set.txt -- Linux_Command_Set.txt 
+#比较两个分支中同一个文件是否被修改
+git diff  testCloud  master -- ./artifacts/channel/configtx.yaml
+
 # what change was introduced to origin/master in the last 4 commits?
 git diff origin/master origin/master~3
 
@@ -7775,6 +7800,9 @@ f: /home/frank
  drwxr-xr-x root  root  /
  drwxr-xr-x root  root  home
  drwxr-xr-x frank frank frank
+
+
+ls ../../*/channel/
 ========node.js section========
 npm install <Module Name>
 npm install   express
@@ -9669,7 +9697,7 @@ nginx 配置文件：
 
 #检查certificate
   openssl x509 -in ./org1.example.com/ca/ca.org1.example.com-cert.pem  -text -noout   
-
+  openssl x509 -in ./repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem -text -noout
 
 实例：
  sudo docker inspect -f '{{ .Mounts }}' ca_peerOrg1
@@ -9982,6 +10010,8 @@ EOF
 #http://www.regular-expressions.info/lookaround.html
 su(?!do).*-c 
 
+#https://www.atlassian.com/git/tutorials/gitignore
+.gitignore uses globbing patterns to match against file names
 =====httpd section=======================
 Allow from all
 说明：
@@ -10034,5 +10064,7 @@ Exception
 
 快捷键：command + ／ 增加或去掉注释
        command + p  搜索打开文件
-
-  
+列出所有函数：
+Cmd+Shift+o (Command + Shift + o (letter o, not zero)) on Mac,
+ctrl+Shift+o on Windows. 
+       
