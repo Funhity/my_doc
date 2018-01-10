@@ -4734,7 +4734,7 @@ ansible qinghua -f 1 -m raw -a " format < /dev/null | sed -n 's/.*\(<.*>\).*/\1/
 setup - Gathers facts about remote hosts #https://docs.ansible.com/ansible/latest/setup_module.html
 
 
-````ansible template section``````
+````ansible template section````ansilbe jinja``
 Place Templating expressions inside of quotes, as above.
 方案一：Use the --vars-file option to provide the path of a file containing variable definitions, 
  ansible-container --vars-file devel.yaml build
@@ -4757,9 +4757,12 @@ Top-level defaults
 
 ·············
 ansible test_nginx    -m fetch  -a "src=/var/log/nginx/bigdata_pv.log     dest=/opt/logs/share/{{ inventory_hostname }}.bigdata_pv.log  flat=yes"
+
 ansible 'org1-AT' -m template -a "src=/Users/fwu066/Documents/share/tmp/test.j2  dest=/tmp/wujunrong/test.txt"
-cat /Users/fwu066/Documents/share/tmp/test.j2
-aa {{ inventory_hostname }} bbb
+  cat /Users/fwu066/Documents/share/tmp/test.j2
+  aa {{ inventory_hostname }} bbb
+ansible org1-AT -a "sh -c 'cat ~/repository_air_trace/frank_ssh_config | grep  {{ inventory_hostname }}' "
+
 
 ``````````````````
 从svn中取出ansible配置文件
@@ -6594,6 +6597,9 @@ git diff HEAD~2 HEAD -- main.c
 #比较两个分支中同一个文件是否被修改
 git diff  testCloud  master -- ./artifacts/channel/configtx.yaml
 
+#当前HEAD和master分支的区别
+git diff master
+
 # what change was introduced to origin/master in the last 4 commits?
 git diff origin/master origin/master~3
 
@@ -7088,9 +7094,12 @@ reviewboard中增加repository，用key方式认证配置成功
 ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.0.0.4 -p522
 ssh://10.0.0.4:522/root/gitweb-home/git/spark.git
 
-===========awk section===========
+===========awk section========ansible awk===
 awk -v ps_cri_ch=$page_space_usage_critical_threshold  -v ps_ch=$page_space_usage_threshold '{if($5<ps_cri_ch && $5>=ps_ch) print "Swap space usage rate " $5 "% exceeds threshold on "$1" "$2" " $3 }'
 awk '($3~/U/)&&($4~/H/){print $0;}'
+
+
+ansible 'org1-AT' -m shell  -a "airtrace={{ inventory_hostname }}; cat ~/repository_air_trace/frank_ssh_config | awk '{ if (\$2 == \"org1-AT\") print \$0 }' "
 =====tail section=========
 tail -f v6_webservice01-catalina.out -f v6_front03-catalina.out
 
