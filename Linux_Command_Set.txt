@@ -4753,6 +4753,14 @@ Top-level defaults
 各种方案优先级：
 * first to environment variables, then variable files, and finally to top-level defaults.
 * At the service level, role variables and role metadata come into play. Precedence is given first to values defined for the service in container.yml, then to the role’s metadata found in meta/container.yml, then to role defaults in defaults/meta.yml, and finally to global variables.
+
+
+·············
+ansible test_nginx    -m fetch  -a "src=/var/log/nginx/bigdata_pv.log     dest=/opt/logs/share/{{ inventory_hostname }}.bigdata_pv.log  flat=yes"
+ansible 'org1-AT' -m template -a "src=/Users/fwu066/Documents/share/tmp/test.j2  dest=/tmp/wujunrong/test.txt"
+cat /Users/fwu066/Documents/share/tmp/test.j2
+aa {{ inventory_hostname }} bbb
+
 ``````````````````
 从svn中取出ansible配置文件
 cat ./ansible-svn.sh 
