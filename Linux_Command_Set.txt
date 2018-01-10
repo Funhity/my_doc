@@ -4698,7 +4698,8 @@ db-[a:f].example.com
 ansible *pxe[1-4]_fifo -m raw -a  ....
 ansible  'ci*:!ci19'  -m raw -a "cat /etc/release| head -1"  #exclude ci19
 ansible '*-org[1-2]*' -m shell -a "ls ~/repos*"
-
+#http://ansible.pickle.io/post/86598332429/running-ansible-playbook-in-localhost
+ansible all -i "localhost," -c local -m shell -a 'echo hello world'
 
 [stage_v6_tradew]
 stage_v6_tradew01 ansible_ssh_host=192.168.31.54  ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=test
@@ -4759,6 +4760,10 @@ cat ./ansible-svn.sh
 svn list  http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/    --username wujunrong| grep  ansible |xargs -I {} svn export  http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/{} --force  /etc/ansible/hosts
 
 ansible-playbook release.yml --extra-vars "version=1.23.45 other_variable=foo" #https://stackoverflow.com/questions/30662069/how-can-i-pass-variable-to-ansible-playbook-in-the-command-line
+````ansible grains section````ansible facts````
+#获取ip相关的信息：
+ansible org1-AT -m setup -a 'filter=ansible_eth[0-2]'
+
 ````````xshell section````````````
 /etc/ansible/hosts->xshell 配置文件
 cat /etc/ansible/hosts| grep -E -v "^[[:space:]]*$"  | grep -v -E "\[.*\]" | grep -v "^#.*" | grep -v localhost | awk '{system("echo -ne "$1" \",\"  ; echo -ne "$2" | cut -d = -f 2- | tr -d \"\n\" ; echo -ne \",\" ssh ;echo -ne \",\" 22 \",\"; echo  -ne "$4" | cut -d = -f 2-  | tr -d \"\n\"   ;echo -ne \",\" ;  echo -e   "$5" | cut -d = -f 2-  ")}' |sed  's/\\//g' |sed 's/ //g'>./xshell.csv
@@ -6286,9 +6291,10 @@ git commit -a -m "about github"
 ============git section=====
 
 git for mac
-https://git-scm.com/download/mac
-用安装包安装
-
+方法一：
+用安装包安装,https://git-scm.com/download/mac
+方法二：
+brew install git
 ```````````````
 
 理解：
@@ -6433,6 +6439,8 @@ The basic Git workflow goes something like this:
 git commit -a -m 'added new benchmarks'   #Skipping the Staging Area
 
 
+#用我方的代码来解决冲突
+git checkout --ours ./artifacts/base.yaml
 ···git rebase section······
 范例一：
 #https://stackoverflow.com/questions/11856141/how-to-git-commit-amend-a-commit-thats-the-base-of-a-branch
@@ -6652,16 +6660,30 @@ git branch -d hotfix #删除本地分支
 #注意：if your working directory or staging area has uncommitted changes that conflict with the branch you’re checking out, Git won’t let you switch branches.
 git checkout testing   #To switch to an existing branch
 git checkout master
-``````
-git merge 操作步骤：
-git checkout master
-git merge iss53   #如果master只是落后几个commit的话，这个操作就是fast-forward 
-git merge --abort #取消merge
-git status
-git add #解决conflict后执行
-git mergetool
-$ git config --global merge.tool "meld"
-$ git config --global mergetool.meld.path "C:\Program Files (x86)\Meld\Meld.exe"
+``````git merge section`````
+场景一：
+    git merge 操作步骤：
+    git checkout master
+    git merge iss53   #如果master只是落后几个commit的话，这个操作就是fast-forward 
+    git merge --abort #取消merge
+    git status
+    git add #解决conflict后执行
+    git mergetool
+    $ git config --global merge.tool "meld"
+    $ git config --global mergetool.meld.path "C:\Program Files (x86)\Meld\Meld.exe"
+
+场景二：
+   # 在分支中合入master中merge最新的code
+   步骤一：
+         fwu066mac:AT_node_sdk fwu066$ git branch
+           master
+           testBanch
+   * testCloud
+   步骤二：
+         git merge master
+
+
+git checkout --ours ./artifacts/base.yaml
 
 #git rebase理解：
 分支路径消失（git branch切到分支上后，看到的是master分支上的内容），分支上的commit，被放到master分支上。
