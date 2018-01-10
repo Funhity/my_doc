@@ -7094,15 +7094,20 @@ reviewboard中增加repository，用key方式认证配置成功
 ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.0.0.4 -p522
 ssh://10.0.0.4:522/root/gitweb-home/git/spark.git
 
-===========awk section========ansible awk===
+===========awk section======
 awk -v ps_cri_ch=$page_space_usage_critical_threshold  -v ps_ch=$page_space_usage_threshold '{if($5<ps_cri_ch && $5>=ps_ch) print "Swap space usage rate " $5 "% exceeds threshold on "$1" "$2" " $3 }'
 awk '($3~/U/)&&($4~/H/){print $0;}'
 
+awk '$1 == "findtext" {print $3}'
 
+`````ansible awk`````
+打印~/.ssh/config文件中，inventory name对应的IP地址
 ansible 'org1-AT' -m shell  -a "airtrace={{ inventory_hostname }}; cat ~/repository_air_trace/frank_ssh_config | awk '{ if (\$2 == \"org1-AT\") print \$0 }' "
+ansible 'org1-AT' -m shell  -a "airtrace={{ inventory_hostname }}; cat ~/repository_air_trace/frank_ssh_config | awk '/"org1-AT"/ {getline;print \$2;}'
+ansible 'org1-AT' -m shell  -a "export airtrace={{ inventory_hostname }}; echo \$airtrace ;cat ~/repository_air_trace/frank_ssh_config | awk -v org=\$airtrace  ' \$0 ~ org {getline;print \$2}' "
 =====tail section=========
 tail -f v6_webservice01-catalina.out -f v6_front03-catalina.out
-
+docker logs -f app
 ======cisco section======
 Cisco VPN Client for Windows 8 and 10
 1:Cisco VPN Client Fix for Windows 8 and 10 (64-bit)
