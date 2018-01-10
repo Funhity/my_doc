@@ -6284,6 +6284,13 @@ git clone git+ssh://git@github.com/webloginwu/code_example
 git commit -a -m "about github"
 
 ============git section=====
+
+git for mac
+https://git-scm.com/download/mac
+用安装包安装
+
+```````````````
+
 理解：
 git merge 和git rebase的区别：
 git merge 会在当前所在的分支上新产生一个commit（three-way merge，合并时会找共同的父亲，在父亲之前的commit忽略），
