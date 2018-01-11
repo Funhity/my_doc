@@ -5204,7 +5204,22 @@ diff -qr directory-1/ directory-2/
 $ sudo apt install meld  [Debian/Ubuntu systems]
 $ sudo yum install meld  [RHEL/CentOS systems]
 $ sudo dnf install meld  [Fedora 22+]
-meld
+·············
+#meld for mac:安装步骤
+export HOMEBREW_NO_ENV_FILTERING=1
+brew install caskroom/cask/meld
+
+cat /usr/local/bin/git-meld <<EOF
+#!/bin/bash
+meld $2 $5
+EOF
+chmod +x usr/local/bin/git-meld
+·············
+ git diff HEAD^ HEAD
+
+
+
+
 ```````````du section``````````size section``````````
 du -ah /root
 du -ak /root

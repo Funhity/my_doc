@@ -3636,3 +3636,23 @@ rsync  -avhz /Users/fwu066/Documents/share/repository_air_trace//AT_node_server/
 2.change IP address of 8000 port for client side visisting
 rsync  -avhz /Users/fwu066/Documents/share/repository_air_trace/AT_node_client/src/environments/environment.ts  all-AT:/home/allorgs/repository_air_trace/AT_node_client/src/environments/environment.ts
 
+``````blockchain code section````````````````
+#client side 初始化
+cd ~/repository_air_trace/AT_node_client; \
+npm -v;sudo npm install -g npm@5.3.0; sudo  npm install -g @angular/cli@1.2.0 ;sudo npm install; \
+npm rebuild node-sass --force; \
+sudo ng serve --host 0.0.0.0 --port 4200 --disable-host-check &
+ansible test -m shell -a 'jobs;sudo kill "$(jobs -p %1)" '
+
+ansible 'test' -m shell  -a "export airtrace={{ inventory_hostname }};  \
+                            echo \$airtrace ;SERVER_IP_FOR_CORS=\`cat ~/repository_air_trace/frank_ssh_config |  \
+                            awk -v org=\$airtrace  ' \$0 ~ org {getline;print \$2}' \` ;  \
+                            echo \$SERVER_IP_FOR_CORS;  \
+                            cd ~/repository_air_trace/AT_node_server && sudo docker-compose -f docker-compose.yml up -d "
+
+·····
+生成jason格式的
+example.yaml
+cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_server/test
+npm i yamljs
+node yamlRead.js #生成jason file的内容，取文件最后一部分
