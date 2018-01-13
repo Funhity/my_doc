@@ -3656,3 +3656,13 @@ example.yaml
 cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_server/test
 npm i yamljs
 node yamlRead.js #生成jason file的内容，取文件最后一部分
+
+read joined channels from a peer
+   http://23.102.236.94:4000/channels?username=fsadf&org=org3&peer=peer0
+read installed chaincodes from peer (the channelname here can be any random name) 
+   http://23.102.236.94:4000/chaincodes/mychannel555?username=fsadf&org=org3&peer=peer0&type=installed
+read instantiated chaincodes from a channel
+   http://23.102.236.94:4000/chaincodes/mychannel555?username=fsadf&org=org3&peer=peer0&type=instantiated
+
+
+
