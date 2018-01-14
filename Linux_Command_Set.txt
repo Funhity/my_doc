@@ -4831,6 +4831,12 @@ Host org3-AT
 ················
 ssh org3-AT
 /Users/fwu066/Documents/share/company/ssh/id_rsa是私钥
+
+
+`````second ssh server``
+#https://access.redhat.com/solutions/1166283
+
+
 ``````ssh proxy````
 ssh -R 9000:localhost:3000 user@example.com
 ssh -R     1977:127.0.0.1:3389   frank@139.219.100.43
@@ -5739,7 +5745,7 @@ boot: Not enough free disk space when upgrading
 方法一：sudo apt-get purge $(dpkg -l linux-{image,headers}-"[0-9]*" | awk '/ii/{print $2}' | grep -ve "$(uname -r | sed -r 's/-[a-z]+//')")
 方法二：A more concise command to purge all old kernels is: sudo apt-get autoremove --purge
 
-````ubuntu ssh section```lantern section`
+````ubuntu ssh section```lantern section````` ssh section ubuntu````
  apt-get update
  apt-get install openssh-server
  systemctl start ssh 
@@ -5749,6 +5755,30 @@ boot: Not enough free disk space when upgrading
  apt-cache search libappindicator3
  apt-get install libappindicator3-1
 
+````````second ssh server`````````````````
+#https://access.redhat.com/solutions/1166283
+#ubuntu:
+cp /etc/ssh/sshd{,-second}_config
+sudo vi /etc/ssh/sshd-second_config
+  Port 22220
+  PidFile /var/run/sshd-second.pid
+sudo cp /etc/systemd/system/sshd.service  /etc/systemd/system/sshd-second.service
+
+sudo vi /etc/systemd/system/sshd-second.service
+
+
+      modify Description
+      Description=OpenSSH server second instance daemon
+
+      add sshd.service to After, so that the second instance starts only after the first one has started, which includes key generation      
+      After=syslog.target network.target auditd.service sshd.service
+
+
+
+systemctl list-units      --type service
+sudo systemctl enable   sshd-second.service
+sudo systemctl status   sshd-second.service
+ssh -p 22220 user@server
 
 `````ubuntu network section`````
 
