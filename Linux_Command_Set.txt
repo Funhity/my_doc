@@ -7150,16 +7150,27 @@ reviewboard中增加repository，用key方式认证配置成功
 ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.0.0.4 -p522
 ssh://10.0.0.4:522/root/gitweb-home/git/spark.git
 
-===========awk section======
+===========awk section=========awk regular expression section=====
+环境变量传递：
 awk -v ps_cri_ch=$page_space_usage_critical_threshold  -v ps_ch=$page_space_usage_threshold '{if($5<ps_cri_ch && $5>=ps_ch) print "Swap space usage rate " $5 "% exceeds threshold on "$1" "$2" " $3 }'
 awk '($3~/U/)&&($4~/H/){print $0;}'
 
 awk '$1 == "findtext" {print $3}'
 
-sudo docker ps | awk '$NF ~ ".*ca.*peer.*" { print $NF }'
+`````can use both regexp and string constants to describe regular expressions``````
+https://www.gnu.org/software/gawk/manual/html_node/Computed-Regexps.html#Computed-Regexps
+# 类型一：regexp constant（推荐使用）
+     $0 ~ /foo/ 
+                                             
+# 类型二：string constant,
+# you have to understand that the string is, in essence, scanned twice: the first time when awk reads your program, and the second time when it goes to match the string on the lefthand side of the operator with the pattern on the right. This is true of any string-valued expression (such as digits_regexp, shown in the previous example), not just string constants. 
+     sudo docker ps | awk '$NF ~ ".*ca.*peer.*" { print $NF }'
+```````regexp constant`````````````
 https://www.gnu.org/software/gawk/manual/html_node/Expression-Patterns.html
 awk '$1 ~ /li/ { print $2 }' mail-list
+awk '! /li/'                 mail-list
 awk '/edu/ && /li/' mail-list
+awk '/edu/ || /li/' mail-list
 
 `````ansible awk`````
 打印~/.ssh/config文件中，inventory name对应的IP地址
