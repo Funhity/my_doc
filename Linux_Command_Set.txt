@@ -1091,6 +1091,7 @@ sudo docker save -o /home/matrix/matrix-data.tar matrix-data/xxx:xxx
 sudo docker load -i <path to copied image file>
 docker save centos:latest |ssh 10.0.1.8 docker load
 
+sudo docker image inspect mongo|less
 ````````````````
 docker stop $(docker ps -a -q)
 docker rm   $(docker ps -a -q)
@@ -1182,6 +1183,7 @@ $ docker run -d \
 #docker logs shows the command’s STDOUT and STDERR. 
 
 docker logs 
+sudo docker logs peer0.org3.example.com 2>&1 | less # https://github.com/moby/moby/issues/9508
 docker service logs
 docker info |grep 'Logging Driver'
 docker run -it --log-driver none alpine ash
@@ -6622,6 +6624,8 @@ git log --oneline #simple output
 git log --graph --oneline --decorate --all 
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h %s %ci %h %b'
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %s, %ci, %b'
+git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %cr, %b %C(bold green)%s' --author="frank wu"   # 作者
+git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %cr, %b %C(bold green)%s'                       #'%cr': committer date, relative 相对日期
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci, %b %C(bold green)%s'
 git rev-list --left-right --boundary --pretty=oneline HEAD...origin/master
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci)%s'      --left-right --boundary  HEAD...origin/master
