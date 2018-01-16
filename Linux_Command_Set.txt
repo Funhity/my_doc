@@ -6614,7 +6614,7 @@ git stash branch <branch-name>
                            applies the latest one.
 git stash drop stash@{0}
 ``git log section```git graph section````
-
+  
 git log salt-office/master --stat
 git log -2
 git log --oneline #simple output
@@ -7268,7 +7268,11 @@ open ~/.ssh/config
 `````brew section```lrzsz section````
 步骤一
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-brew install lrzsz
+
+#xcrun: error: invalid active developer path,
+#http://tips.tutorialhorizon.com/2015/10/01/xcrun-error-invalid-active-developer-path-library-developer-commandline-tools-missing-xcrun/
+   xcode-select --install 
+   brew install lrzsz telnet
 步骤二：
 wget -O /usr/local/bin/iterm2-recv-zmodem.sh  https://raw.githubusercontent.com/mmastrac/iterm2-zmodem/master/iterm2-recv-zmodem.sh
 wget -O /usr/local/bin/iterm2-send-zmodem.sh  https://raw.githubusercontent.com/mmastrac/iterm2-zmodem/master/iterm2-send-zmodem.sh
