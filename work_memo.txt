@@ -3664,5 +3664,5 @@ read installed chaincodes from peer (the channelname here can be any random name
 read instantiated chaincodes from a channel
    http://23.102.236.94:4000/chaincodes/mychannel555?username=fsadf&org=org3&peer=peer0&type=instantiated
 
-
+rsync  -avhz  /Users/fwu066/Documents/share/repository_air_trace//AT_node_server/testhtml/user.html  org1-AT:~/repository_air_trace//AT_node_server/testhtml/user.html
 
