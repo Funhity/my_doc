@@ -1183,7 +1183,11 @@ $ docker run -d \
 #docker logs shows the command’s STDOUT and STDERR. 
 
 docker logs 
-sudo docker logs peer0.org3.example.com 2>&1 | less # https://github.com/moby/moby/issues/9508
+# https://github.com/moby/moby/issues/9508
+# https://superuser.com/questions/117841/get-colors-in-less-or-more
+  sudo docker logs peer0.org3.example.com 2>&1 | less -i -R
+
+
 docker service logs
 docker info |grep 'Logging Driver'
 docker run -it --log-driver none alpine ash
