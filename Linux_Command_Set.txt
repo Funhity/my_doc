@@ -5216,26 +5216,6 @@ diff -qr directory-1/ directory-2/
 $ sudo apt install meld  [Debian/Ubuntu systems]
 $ sudo yum install meld  [RHEL/CentOS systems]
 $ sudo dnf install meld  [Fedora 22+]
-·······git diff section······
-http://blog.deadlypenguin.com/blog/2011/05/03/using-meld-with-git-diff/
-
-步骤一：
-      #meld for mac:安装
-      export HOMEBREW_NO_ENV_FILTERING=1
-      brew install caskroom/cask/meld
-      
-      cat /usr/local/bin/git-meld <<EOF
-      #!/bin/bash
-      meld $2 $5
-EOF
-chmod +x usr/local/bin/git-meld
-步骤二：
-     Now add the following to your ~/.gitconfig file
-     
-         [diff] external = git-meld
-·············
- git diff HEAD^ HEAD
-
 
 
 
@@ -6404,6 +6384,10 @@ svn co <url> .
 svn add <files etc>
 svn commit -m <msg>
 ```````git config section````````````````````````````
+设置方法一：
+      ~/.gitconfig #man git-config:User-specific configuration file. Also called "global" configuration file.
+方法二：echo '[diff] external = git-meld' >> ~/.gitconfig
+
 
 git config --list
 git config user.name
@@ -6649,11 +6633,37 @@ git log  origin/master
 git blame ./scala-devops/src/main/scala/SimpleApp.scala
 ```git diff section``
 
-git diff                 #working目录和stage中的差别，即add后再次修改，尚未再次执行add
-git diff --staged        #stage和本地repository的差别，即在stage中，但还没有提交到repository，(--staged and --cached are synonyms)
- 
+git difftool --tool=meld  HEAD HEAD^
+
+git diff                       #working目录和stage中的差别，即add后再次修改，尚未再次执行add
+git diff --staged              #stage和本地repository的差别，即在stage中，但还没有提交到repository，(--staged and --cached are synonyms)
+git diff --cached FETCH_HEAD   #git diff between staged changed and HEAD repository,https://stackoverflow.com/questions/33825236/git-diff-between-staged-changed-and-head-repository
+
+
 #white space check
 git diff --check  
+
+········meld section······
+http://blog.deadlypenguin.com/blog/2011/05/03/using-meld-with-git-diff/
+
+      #meld for mac:安装
+      export HOMEBREW_NO_ENV_FILTERING=1
+      brew install caskroom/cask/meld
+
+方案二：
+      git difftool --tool=meld  HEAD HEAD^   #https://makandracards.com/makandra/42757-how-to-git-diff-with-a-graphical-diff-tool      
+方案一：
+     步骤一：
+           cat /usr/local/bin/git-meld <<EOF
+           #!/bin/bash
+           meld $2 $5
+     EOF
+     chmod +x usr/local/bin/git-meld
+     步骤二：     
+          Now add the following to your ~/.gitconfig file
+          
+              [diff] external = git-meld
+
 
 ````````````
 版本区别：
