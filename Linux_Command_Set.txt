@@ -6618,7 +6618,14 @@ git log --oneline #simple output
 git log --graph --oneline --decorate --all 
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h %s %ci %h %b'
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %s, %ci, %b'
-git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %cr, %b %C(bold green)%s' --author="frank wu"   # 作者
+
+      #场景：某个人改的，在哪个commit改的，改了哪些文件，改的内容是什么？
+            git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %cr, %b %C(bold green)%s' --author="frank wu"   # 作者
+            commitId=cb1223a
+            git show --pretty="" --name-only $commitId
+            git difftool -y --tool=meld $commitId "$commitId"^              #或： 
+            git difftool -y --tool=meld $commitId "$commitId"^ -- index.js
+
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %cr, %b %C(bold green)%s'                       #'%cr': committer date, relative 相对日期
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci, %b %C(bold green)%s'
 git rev-list --left-right --boundary --pretty=oneline HEAD...origin/master
@@ -6634,7 +6641,10 @@ git blame ./scala-devops/src/main/scala/SimpleApp.scala
 ```git diff section``
 
 git difftool --tool=meld  HEAD HEAD^
-
+··························
+git diff HEAD^  HEAD --name-only
+git diff --diff-filter=ad master..
+········································
 git diff                       #working目录和stage中的差别，即add后再次修改，尚未再次执行add
 git diff --staged              #stage和本地repository的差别，即在stage中，但还没有提交到repository，(--staged and --cached are synonyms)
 git diff --cached FETCH_HEAD   #git diff between staged changed and HEAD repository,https://stackoverflow.com/questions/33825236/git-diff-between-staged-changed-and-head-repository
@@ -6690,7 +6700,7 @@ git diff origin/master~4
 #fetch 和 checkout的关系
  git fetch origin                             #只能获得origin/serverfix，但没有本地分支，可以通过merge到本地分支的方法来继续工作
  git checkout -b serverfix origin/serverfix   #能获得本地分支serverfix，可以在此分支上修改;checkout只和本地分支有关
-```````````````````````
+```````````git remote section````````````
 git remote add pb https://github.com/paulboone/ticgit
 git fetch  pb
 git push   origin   master
