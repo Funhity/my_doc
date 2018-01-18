@@ -376,9 +376,6 @@ with open("simple_config.yaml") as simple:
 
 
 type(simple)
-
-
-
 simple
 
 
@@ -390,6 +387,20 @@ template = ENV.get_template("simple_cisco.j2")
 print (template.render(simple=simple))   #左边是yaml文件，右边是字典
 
 
+with open('docker-compose.j2') as the_file:
+    print (the_file.read())
 
+template = ENV.get_template("docker-compose.j2")
+print (template.render(org_name='xxxx'))
+
+import sys
+template = ENV.get_template("docker-compose.j2")
+sys.stdout = open("docker-compose.yaml", "w")
+print (template.render(org_name='xxxx'))
+print (template.render(org_name='zzz'))
+sys.stdout.flush()
+print (template.render(org_name='yyyyy'))
+sys.stdout.flush()
+sys.stdout = sys.__stdout__
 ==========
 

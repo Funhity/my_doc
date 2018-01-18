@@ -9576,20 +9576,38 @@ Set a key to undefined to remove it
 
 看 man json 获得更多帮助
 `````````````json section`````````node.js section````````````````
-在linux中使用json命令：
+ 方案一：
+    在linux中使用json命令：
+    
+    docker 命令行方式：
+    docker pull node
+    docker run -i --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest node --version
+    curl -L https://github.com/trentm/json/raw/master/lib/json.js > json.js
+    echo '{"one": 1, "two": 2}'  | docker run -i --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest node json.js  -e 'this.one=undefined'
+    echo '{"name":"trent","age":38}'   | docker run -i --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest node json.js    -e 'this.age++
+    
+    ````
+    docker bash方式：
+    docker run -it --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest /bin/bash
+    npm install -g json
+    json --version
 
-docker 命令行方式：
-docker pull node
-docker run -i --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest node --version
-curl -L https://github.com/trentm/json/raw/master/lib/json.js > json.js
-echo '{"one": 1, "two": 2}'  | docker run -i --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest node json.js  -e 'this.one=undefined'
-echo '{"name":"trent","age":38}'   | docker run -i --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest node json.js    -e 'this.age++
+方案二：
+    brew install jq
+方案三：
+    #https://hub.docker.com/r/jlordiales/jyparser/
+    docker pull jlordiales/jyparser
+    cat test.json | docker run -i --rm jlordiales/jyparser get ".menu.id"
 
-````
-docker bash方式：
-docker run -it --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest /bin/bash
-npm install -g json
-json --version
+`````json diff section``````
+diff  <(jq -S . network-config-testCloud.json)  <(jq -S . wu.json)  
+meld  <(jq -S . network-config-testCloud.json)  <(jq -S . wu.json)  
+======json 2 yaml====j2y==
+
+docker run --rm wildducktheories/y2j y2j.sh installer /usr/local/bin | sudo bash
+/usr/local/bin/{y2j.sh,y2j,j2y,yq}
+echo '{ "foo": [ { "id": 1 } , {"id": 2 }] }' |ssh  'frank@52.191.215.51'  j2y
+
 =======windows section=============
 
 ````screenshot section```
