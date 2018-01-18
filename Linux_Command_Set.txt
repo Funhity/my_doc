@@ -2777,6 +2777,8 @@ lsof -OnP | grep LISTEN
 netstat -anp |grep 2181   #查看谁 连到 2181
 netstat -anp --inet       #查看谁 连到 谁
 netstat -tulpn
+fuser 7000/tcp   #https://www.cyberciti.biz/faq/what-process-has-open-linux-port/
+
 ss -napt | grep 3260 
 
 mac:
@@ -4991,9 +4993,11 @@ THREAD DISPLAY
 -L Show threads, possibly with LWP and NLWP columns
 -T Show threads, possibly with SPID column
 -m Show threads after processes
-
-
-
+``````
+#process 启动时间：
+#https://stackoverflow.com/questions/5731234/how-to-get-the-start-time-of-a-long-running-linux-process
+netstat -antup | grep 4200
+ps -eo pid,lstart,cmd | grep 91209
 ============= 翻墙 ================
 
 lantern :sudo apt-get install libappindicator3-1
@@ -6637,7 +6641,14 @@ git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(
 ·······
 git log  gerrit/master
 git log  origin/master
+
 git blame ./scala-devops/src/main/scala/SimpleApp.scala
+#View the change history of a file using Git versioning
+#https://stackoverflow.com/questions/278192/view-the-change-history-of-a-file-using-git-versioning
+  gitk [filename]
+  or to follow filename past renames
+  gitk --follow [filename]
+
 ```git diff section``
 
 git difftool --tool=meld  HEAD HEAD^
@@ -7215,6 +7226,8 @@ awk '/edu/ || /li/' mail-list
 =====tail section=========
 tail -f v6_webservice01-catalina.out -f v6_front03-catalina.out
 docker logs -f app
+#永远等待
+CMD ["sh", "-c", "tail -f /dev/null"]  
 ======cisco section======
 Cisco VPN Client for Windows 8 and 10
 1:Cisco VPN Client Fix for Windows 8 and 10 (64-bit)
@@ -7965,6 +7978,9 @@ f: /home/frank
 
 
 ls ../../*/channel/
+
+start-stop-daemon  --background  --start   --quiet --pidfile /var/run/test                                               --exec /usr/bin/ng -- serve --host 0.0.0.0 --port 4200 --disable-host-check
+start-stop-daemon  --background  --start   --quiet --pidfile /var/run/test --chdir ~/repository_air_trace/AT_node_client --exec /usr/bin/ng -- serve --host 0.0.0.0 --port 4200 --disable-host-check
 ========node.js section========
 npm install <Module Name>
 npm install   express
