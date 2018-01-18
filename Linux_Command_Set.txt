@@ -1091,6 +1091,7 @@ sudo docker save -o /home/matrix/matrix-data.tar matrix-data/xxx:xxx
 sudo docker load -i <path to copied image file>
 docker save centos:latest |ssh 10.0.1.8 docker load
 
+sudo docker image inspect mongo|less
 ````````````````
 docker stop $(docker ps -a -q)
 docker rm   $(docker ps -a -q)
@@ -1182,6 +1183,11 @@ $ docker run -d \
 #docker logs shows the command’s STDOUT and STDERR. 
 
 docker logs 
+# https://github.com/moby/moby/issues/9508
+# https://superuser.com/questions/117841/get-colors-in-less-or-more
+  sudo docker logs peer0.org3.example.com 2>&1 | less -i -R
+
+
 docker service logs
 docker info |grep 'Logging Driver'
 docker run -it --log-driver none alpine ash
@@ -2780,6 +2786,8 @@ lsof -OnP | grep LISTEN
 netstat -anp |grep 2181   #查看谁 连到 2181
 netstat -anp --inet       #查看谁 连到 谁
 netstat -tulpn
+fuser 7000/tcp   #https://www.cyberciti.biz/faq/what-process-has-open-linux-port/
+
 ss -napt | grep 3260 
 
 mac:
@@ -4744,6 +4752,7 @@ setup - Gathers facts about remote hosts #https://docs.ansible.com/ansible/lates
 
 
 ````ansible template section````ansilbe jinja``
+#https://docs.ansible.com/ansible-container/container_yml/template.html
 Place Templating expressions inside of quotes, as above.
 方案一：Use the --vars-file option to provide the path of a file containing variable definitions, 
  ansible-container --vars-file devel.yaml build
@@ -4994,9 +5003,11 @@ THREAD DISPLAY
 -L Show threads, possibly with LWP and NLWP columns
 -T Show threads, possibly with SPID column
 -m Show threads after processes
-
-
-
+``````
+#process 启动时间：
+#https://stackoverflow.com/questions/5731234/how-to-get-the-start-time-of-a-long-running-linux-process
+netstat -antup | grep 4200
+ps -eo pid,lstart,cmd | grep 91209
 ============= 翻墙 ================
 
 lantern :sudo apt-get install libappindicator3-1
@@ -5219,20 +5230,6 @@ diff -qr directory-1/ directory-2/
 $ sudo apt install meld  [Debian/Ubuntu systems]
 $ sudo yum install meld  [RHEL/CentOS systems]
 $ sudo dnf install meld  [Fedora 22+]
-·············
-http://blog.deadlypenguin.com/blog/2011/05/03/using-meld-with-git-diff/
-#meld for mac:安装步骤
-export HOMEBREW_NO_ENV_FILTERING=1
-brew install caskroom/cask/meld
-
-cat /usr/local/bin/git-meld <<EOF
-#!/bin/bash
-meld $2 $5
-EOF
-chmod +x usr/local/bin/git-meld
-·············
- git diff HEAD^ HEAD
-
 
 
 
@@ -6401,6 +6398,10 @@ svn co <url> .
 svn add <files etc>
 svn commit -m <msg>
 ```````git config section````````````````````````````
+设置方法一：
+      ~/.gitconfig #man git-config:User-specific configuration file. Also called "global" configuration file.
+方法二：echo '[diff] external = git-meld' >> ~/.gitconfig
+
 
 git config --list
 git config user.name
@@ -6623,7 +6624,7 @@ git stash branch <branch-name>
                            applies the latest one.
 git stash drop stash@{0}
 ``git log section```git graph section````
-
+  
 git log salt-office/master --stat
 git log -2
 git log --oneline #simple output
@@ -6631,6 +6632,15 @@ git log --oneline #simple output
 git log --graph --oneline --decorate --all 
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h %s %ci %h %b'
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %s, %ci, %b'
+
+      #场景：某个人改的，在哪个commit改的，改了哪些文件，改的内容是什么？
+            git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %cr, %b %C(bold green)%s' --author="frank wu"   # 作者
+            commitId=cb1223a
+            git show --pretty="" --name-only $commitId
+            git difftool -y --tool=meld $commitId "$commitId"^              #或： 
+            git difftool -y --tool=meld $commitId "$commitId"^ -- index.js
+
+git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %cr, %b %C(bold green)%s'                       #'%cr': committer date, relative 相对日期
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci, %b %C(bold green)%s'
 git rev-list --left-right --boundary --pretty=oneline HEAD...origin/master
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci)%s'      --left-right --boundary  HEAD...origin/master
@@ -6641,14 +6651,50 @@ git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(
 ·······
 git log  gerrit/master
 git log  origin/master
+
 git blame ./scala-devops/src/main/scala/SimpleApp.scala
+#View the change history of a file using Git versioning
+#https://stackoverflow.com/questions/278192/view-the-change-history-of-a-file-using-git-versioning
+  gitk [filename]
+  or to follow filename past renames
+  gitk --follow [filename]
+
 ```git diff section``
 
-git diff                 #working目录和stage中的差别，即add后再次修改，尚未再次执行add
-git diff --staged        #stage和本地repository的差别，即在stage中，但还没有提交到repository，(--staged and --cached are synonyms)
- 
+git difftool --tool=meld  HEAD HEAD^
+··························
+git diff HEAD^  HEAD --name-only
+git diff --diff-filter=ad master..
+········································
+git diff                       #working目录和stage中的差别，即add后再次修改，尚未再次执行add
+git diff --staged              #stage和本地repository的差别，即在stage中，但还没有提交到repository，(--staged and --cached are synonyms)
+git diff --cached FETCH_HEAD   #git diff between staged changed and HEAD repository,https://stackoverflow.com/questions/33825236/git-diff-between-staged-changed-and-head-repository
+
+
 #white space check
 git diff --check  
+
+········meld section······
+http://blog.deadlypenguin.com/blog/2011/05/03/using-meld-with-git-diff/
+
+      #meld for mac:安装
+      export HOMEBREW_NO_ENV_FILTERING=1
+      brew install caskroom/cask/meld
+
+方案二：
+      git difftool --tool=meld  HEAD HEAD^   #https://makandracards.com/makandra/42757-how-to-git-diff-with-a-graphical-diff-tool      
+方案一：
+     步骤一：
+           cat /usr/local/bin/git-meld <<EOF
+           #!/bin/bash
+           meld $2 $5
+     EOF
+     chmod +x usr/local/bin/git-meld
+     步骤二：     
+          Now add the following to your ~/.gitconfig file
+          
+              [diff] external = git-meld
+
 
 ````````````
 版本区别：
@@ -6675,7 +6721,7 @@ git diff origin/master~4
 #fetch 和 checkout的关系
  git fetch origin                             #只能获得origin/serverfix，但没有本地分支，可以通过merge到本地分支的方法来继续工作
  git checkout -b serverfix origin/serverfix   #能获得本地分支serverfix，可以在此分支上修改;checkout只和本地分支有关
-```````````````````````
+```````````git remote section````````````
 git remote add pb https://github.com/paulboone/ticgit
 git fetch  pb
 git push   origin   master
@@ -7190,6 +7236,8 @@ awk '/edu/ || /li/' mail-list
 =====tail section=========
 tail -f v6_webservice01-catalina.out -f v6_front03-catalina.out
 docker logs -f app
+#永远等待
+CMD ["sh", "-c", "tail -f /dev/null"]  
 ======cisco section======
 Cisco VPN Client for Windows 8 and 10
 1:Cisco VPN Client Fix for Windows 8 and 10 (64-bit)
@@ -7277,7 +7325,11 @@ open ~/.ssh/config
 `````brew section```lrzsz section````
 步骤一
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-brew install lrzsz
+
+#xcrun: error: invalid active developer path,
+#http://tips.tutorialhorizon.com/2015/10/01/xcrun-error-invalid-active-developer-path-library-developer-commandline-tools-missing-xcrun/
+   xcode-select --install 
+   brew install lrzsz telnet
 步骤二：
 wget -O /usr/local/bin/iterm2-recv-zmodem.sh  https://raw.githubusercontent.com/mmastrac/iterm2-zmodem/master/iterm2-recv-zmodem.sh
 wget -O /usr/local/bin/iterm2-send-zmodem.sh  https://raw.githubusercontent.com/mmastrac/iterm2-zmodem/master/iterm2-send-zmodem.sh
@@ -7936,6 +7988,9 @@ f: /home/frank
 
 
 ls ../../*/channel/
+
+start-stop-daemon  --background  --start   --quiet --pidfile /var/run/test                                               --exec /usr/bin/ng -- serve --host 0.0.0.0 --port 4200 --disable-host-check
+start-stop-daemon  --background  --start   --quiet --pidfile /var/run/test --chdir ~/repository_air_trace/AT_node_client --exec /usr/bin/ng -- serve --host 0.0.0.0 --port 4200 --disable-host-check
 ========node.js section========
 npm install <Module Name>
 npm install   express
@@ -9530,20 +9585,38 @@ Set a key to undefined to remove it
 
 看 man json 获得更多帮助
 `````````````json section`````````node.js section````````````````
-在linux中使用json命令：
+ 方案一：
+    在linux中使用json命令：
+    
+    docker 命令行方式：
+    docker pull node
+    docker run -i --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest node --version
+    curl -L https://github.com/trentm/json/raw/master/lib/json.js > json.js
+    echo '{"one": 1, "two": 2}'  | docker run -i --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest node json.js  -e 'this.one=undefined'
+    echo '{"name":"trent","age":38}'   | docker run -i --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest node json.js    -e 'this.age++
+    
+    ````
+    docker bash方式：
+    docker run -it --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest /bin/bash
+    npm install -g json
+    json --version
 
-docker 命令行方式：
-docker pull node
-docker run -i --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest node --version
-curl -L https://github.com/trentm/json/raw/master/lib/json.js > json.js
-echo '{"one": 1, "two": 2}'  | docker run -i --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest node json.js  -e 'this.one=undefined'
-echo '{"name":"trent","age":38}'   | docker run -i --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest node json.js    -e 'this.age++
+方案二：
+    brew install jq
+方案三：
+    #https://hub.docker.com/r/jlordiales/jyparser/
+    docker pull jlordiales/jyparser
+    cat test.json | docker run -i --rm jlordiales/jyparser get ".menu.id"
 
-````
-docker bash方式：
-docker run -it --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest /bin/bash
-npm install -g json
-json --version
+`````json diff section``````
+diff  <(jq -S . network-config-testCloud.json)  <(jq -S . wu.json)  
+meld  <(jq -S . network-config-testCloud.json)  <(jq -S . wu.json)  
+======json 2 yaml====j2y==
+
+docker run --rm wildducktheories/y2j y2j.sh installer /usr/local/bin | sudo bash
+/usr/local/bin/{y2j.sh,y2j,j2y,yq}
+echo '{ "foo": [ { "id": 1 } , {"id": 2 }] }' |ssh  'frank@52.191.215.51'  j2y
+
 =======windows section=============
 
 ````screenshot section```

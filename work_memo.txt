@@ -3341,8 +3341,18 @@ docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca 
  docker exec -it mongodb_keystore mongo --eval "db.help()"
  docker exec -it mongodb_keystore mongo --eval "db.adminCommand('listDatabases')"
  docker exec -it mongodb_keystore mongo --eval "db.getSiblingDB('air_trace').getCollection('cryptokeystores').find({})"
+ sudo docker exec -it mongodb_keystore mongo localhost:27018/air-trace   --eval "db.getSiblingDB('air_trace').getCollection('cryptokeystores').find({})"
+ sudo docker exec -it mongodb_keystore mongo localhost:27018             --eval "db.getSiblingDB('air_trace').getCollection('cryptokeystores').find({})"
+··········
 
-
+sudo docker exec -ti mongodb_keystore sh -c "mongo localhost:27018"
+> show dbs
+> use air-trace
+> show collections
+cryptokeystores
+keystores
+> db.keystores.find()
+··········
 docker exec -it mongodb_keystore mongo shell
 > use air_trace
 switched to db air_trace
@@ -3663,6 +3673,6 @@ read installed chaincodes from peer (the channelname here can be any random name
    http://23.102.236.94:4000/chaincodes/mychannel555?username=fsadf&org=org3&peer=peer0&type=installed
 read instantiated chaincodes from a channel
    http://23.102.236.94:4000/chaincodes/mychannel555?username=fsadf&org=org3&peer=peer0&type=instantiated
-
-
-
+`````````blockchain command section```````
+rsync  -avhz  /Users/fwu066/Documents/share/repository_air_trace//AT_node_server/testhtml/user.html  org1-AT:~/repository_air_trace//AT_node_server/testhtml/user.html
+start-stop-daemon  --background  --start   --quiet --pidfile /var/run/test --chdir ~/repository_air_trace/AT_node_client --exec /usr/bin/ng -- serve --host 0.0.0.0 --port 4200 --disable-host-check
