@@ -3341,11 +3341,13 @@ docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca 
  docker exec -it mongodb_keystore mongo --eval "db.help()"
  docker exec -it mongodb_keystore mongo --eval "db.adminCommand('listDatabases')"
  docker exec -it mongodb_keystore mongo --eval "db.getSiblingDB('air_trace').getCollection('cryptokeystores').find({})"
+ sudo docker exec -it mongodb_keystore mongo localhost:27018/air-trace   --eval "db.getSiblingDB('air_trace').getCollection('cryptokeystores').find({})"
+ sudo docker exec -it mongodb_keystore mongo localhost:27018             --eval "db.getSiblingDB('air_trace').getCollection('cryptokeystores').find({})"
 ··········
 
 sudo docker exec -ti mongodb_keystore sh -c "mongo localhost:27018"
 > show dbs
-> use ait-trace
+> use air-trace
 > show collections
 cryptokeystores
 keystores

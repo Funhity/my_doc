@@ -311,3 +311,85 @@ sudo systemctl start docker
 sudo systemctl enable docker
 
 
+
+======jinja section====
+步骤一：
+cat simple_config.yaml
+hostname: testswitch
+
+ip: 10.101.0.221
+
+
+snmp:
+    read: supersecret
+    write: macdonald
+    syscontact: admin.lab.local
+    syslocation: lab
+    trap:
+    - {target: 10.101.0.200}
+    - {target: 10.101.0.201}
+    - {target: 10.101.0.202}
+
+
+
+vlans:
+- {description: management vlan, id: '10', name: management}
+- {description: users vlan, id: '15', name: users}
+- {description: phones vlan, id: '16', name: phones}
+- {description: servers vlan, id: '20', name: servers vlan }
+
+
+
+
+``````
+步骤二：
+cat simple_cisco.j2
+
+#hostname config
+hostname {{ simple['hostname'] }}
+#vlan config
+{% for vlan in simple['vlans'] -%}
+vlan {{ vlan['id'] }}
+    name {{ vlan['name'] }}
+    description {{ vlan['description'] }}
+{% endfor %}#snmp config
+snmp-server community {{ simple['snmp']['read'] }} RO
+snmp-server community {{ simple['snmp']['write'] }} RW
+snmp-server ifindex persist
+snmp-server location {{ simple['snmp']['syslocation'] }}
+snmp-server contact {{ simple['snmp']['syscontact'] }}
+{% for trap in simple['snmp']['trap'] -%}
+snmp-server host {{ trap['target'] }}  public
+{% endfor %}
+``````````````
+
+步骤三：
+import yaml
+from  jinja2  import Environment, FileSystemLoader, Template
+
+ENV = Environment(loader=FileSystemLoader('./'))
+with open('simple_config.yaml') as the_file:   
+ print (the_file.read())
+
+with open("simple_config.yaml") as simple:
+    simple =  yaml.load(simple)
+
+
+type(simple)
+
+
+
+simple
+
+
+with open('simple_cisco.j2') as the_file:
+    print (the_file.read())
+
+
+template = ENV.get_template("simple_cisco.j2")
+print (template.render(simple=simple))   #左边是yaml文件，右边是字典
+
+
+
+==========
+

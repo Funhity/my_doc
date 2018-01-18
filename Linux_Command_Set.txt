@@ -4743,6 +4743,7 @@ setup - Gathers facts about remote hosts #https://docs.ansible.com/ansible/lates
 
 
 ````ansible template section````ansilbe jinja``
+#https://docs.ansible.com/ansible-container/container_yml/template.html
 Place Templating expressions inside of quotes, as above.
 方案一：Use the --vars-file option to provide the path of a file containing variable definitions, 
  ansible-container --vars-file devel.yaml build
