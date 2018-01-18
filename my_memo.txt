@@ -395,12 +395,27 @@ print (template.render(org_name='xxxx'))
 
 import sys
 template = ENV.get_template("docker-compose.j2")
-sys.stdout = open("docker-compose.yaml", "w")
+
+f=open("docker-compose.yaml", "w")
+sys.stdout = f
 print (template.render(org_name='xxxx'))
+f.close()
+
+f=open("docker-compose.yaml", "w")
+sys.stdout = f
 print (template.render(org_name='zzz'))
 sys.stdout.flush()
-print (template.render(org_name='yyyyy'))
+f.close()
+
+
+template = ENV.get_template("certsUpdateChannel.j2")
+f=open("certsUpdateChannel.sh", "w")
+sys.stdout = f
+print (template.render(org_name='12'))
 sys.stdout.flush()
+f.close()
+
+
 sys.stdout = sys.__stdout__
 ==========
 
