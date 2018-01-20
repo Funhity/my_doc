@@ -6680,9 +6680,10 @@ git log  origin/master
   or to follow filename past renames
   gitk --follow [filename]
 
-```git diff section``
+```git diff section`````git diff tool section```
 
 git difftool --tool=meld  HEAD HEAD^
+git difftool -y --tool=meld  --staged -- app/helper.js
 ··························
 git diff HEAD^  HEAD --name-only
 git diff --diff-filter=ad master..
