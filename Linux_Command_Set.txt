@@ -6663,11 +6663,13 @@ git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(
 ····
 '%b': body
 '%C(…)': color specification
-·······
+···git file section····
 git log  gerrit/master
 git log  origin/master
 
 git blame ./scala-devops/src/main/scala/SimpleApp.scala
+
+
 #View the change history of a file using Git versioning
 #https://stackoverflow.com/questions/278192/view-the-change-history-of-a-file-using-git-versioning
   gitk [filename]
