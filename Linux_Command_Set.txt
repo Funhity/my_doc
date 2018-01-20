@@ -1490,9 +1490,18 @@ export https_proxy='https://127.0.0.1:58833/'
 /etc/init.d/squid3  restart
 dns_nameservers 8.8.8.8 8.8.4.4 192.168.39.21 192.168.39.22
 http_access allow  all
-
-
 aptitude install squid3 squid3-common
+
+`````
+apt-get -y install apache2 squid
+sudo cp  /etc/squid/squid.conf /etc/squid/squid.conf.bak
+sudo vi /etc/squid/squid.conf
+        http_access allow  all
+        aptitude install squid3 squid3-common
+
+sudo systemctl restart squid
+sudo systemctl status squid
+sudo systemctl stop squid
 ======================= ftp section ========================
 sftp username@hostname:remoteFileName localFileName
 sftp kyle@kylesserver:/tmp/myLogFile.log /tmp/fileNameToUseLocally.log
