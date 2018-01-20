@@ -2561,6 +2561,21 @@ u'Hello World!'
 >>> t.render()
 u'My favorite numbers: 1 2 3 4 5 6 7 8 9 '
 
+```````````jinja json section``````````
+#https://groups.google.com/d/topic/salt-users/4ZIZlFjM1e8
+#json file每一块的逗号怎么产生
+{
+   "foo": [
+   {%- for foo in pillar['foo'] -%}
+     "{{ foo|replace('"', '\\"') }}"
+     {%- if not loop.last -%}
+       ,
+     {%- endif -%}
+   {%- endfor -%}
+   ]
+}
+``````
+
 ======================= svn section========================  
 #a new caret (^) notation, Note that this URL syntax works only when your current working directory is a 
 working copy—the command-line client knows the repository's root URL by looking at the working copy's metadata
