@@ -6828,7 +6828,13 @@ git checkout master
    * testCloud
    步骤二：
          git merge master
+·······························
+git checkout feature
+git merge master
 
+等价于
+git merge master feature
+·······························
 
 git checkout --ours ./artifacts/base.yaml
 
