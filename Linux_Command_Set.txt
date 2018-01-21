@@ -6533,7 +6533,23 @@ git commit -a -m 'added new benchmarks'   #Skipping the Staging Area
 
 #用我方的代码来解决冲突
 git checkout --ours ./artifacts/base.yaml
+
 ···git rebase section······
+#https://www.atlassian.com/git/tutorials/merging-vs-rebasing
+The golden rule of git rebase is to never use it on public branches.
+Merging is a safe option that preserves the entire history of your repository, while rebasing creates a linear history by moving your feature branch onto the tip of master.
+
+#https://git-scm.com/book/en/v2/Git-Branching-Rebasing
+It works by going to the common ancestor of the two branches (the one you’re on and the one you’re rebasing onto), getting the diff introduced by each commit of the branch you’re on, saving those diffs to temporary files, resetting the current branch to the same commit as the branch you are rebasing onto, and finally applying each change in turn.
+
+#work flow:   https://git-scm.com/book/en/v2/Git-Branching-Rebasing
+          $ git checkout experiment
+          $ git rebase master
+          First, rewinding head to replay your work on top of it...
+          Applying: added staged command
+          $ git checkout master
+          $ git merge experiment
+
 范例一：
 #https://stackoverflow.com/questions/11856141/how-to-git-commit-amend-a-commit-thats-the-base-of-a-branch
 git rebase --onto master master@{1} foo  #把master@{1}开始到foo分支结束这段分支，把master的最新的commit引入进来
@@ -6779,7 +6795,7 @@ git tag -a v1.2     9fceb02    #you specify the commit checksum (or part of it) 
 git push origin   v1.5
 git push origin --tags
 
-`````
+`````git branch section``````
 #创建本地分支，再checkout
 git checkout -b [branchname] [tagname]:
 git checkout -b version2     v2.0.0
@@ -6808,6 +6824,11 @@ git branch -d hotfix #删除本地分支
 git checkout testing   #To switch to an existing branch
 git checkout master
 ``````git merge section`````
+
+git merge-base branch2 branch3
+
+
+
 场景一：
     git merge 操作步骤：
     git checkout master
@@ -6828,22 +6849,27 @@ git checkout master
    * testCloud
    步骤二：
          git merge master
-·······························
+``````git rebase section``````
+#https://www.atlassian.com/git/tutorials/merging-vs-rebasing
+
+git merge-base branch2 branch3
+git merge-base feature master    
+#returns the commit ID of the original base, which you can then pass to git rebase. it only affects local branches. The only thing other developers will see is your finished product, which should be a clean, easy-to-follow feature branch history.But again, this only works for private feature branches. If you’re collaborating with other developers via the same feature branch, that branch is public, and you’re not allowed to re-write its history.
+
+
 git checkout feature
 git merge master
 
 等价于
 git merge master feature
-·······························
 
-git checkout --ours ./artifacts/base.yaml
+对应的rebase
+git checkout feature
+git rebase master #或 git rebase -i master
+#或
+git rebase master         topic  #永远在自己的分支上进行rebase，https://www.atlassian.com/git/tutorials/merging-vs-rebasing
 
-#git rebase理解：
-分支路径消失（git branch切到分支上后，看到的是master分支上的内容），分支上的commit，被放到master分支上。
-
-git merge-base branch2 branch3
-
-````````git tags ```git release````````````````
+````````git tags section ```git release section````````````````
 方法一：
 git clone git://git.openssl.org/openssl.git
 cd openssl
@@ -6881,6 +6907,8 @@ git rev-list --all --remotes --pretty=oneline foo.txt
                                            #https://stackoverflow.com/questions/6311226/query-git-reflog-for-all-commits-to-a-specific-file
 git rev-list -n 5 HEAD -- <file_path>      #Find the last commit that affected the given path. As the file isn't in the HEAD commit, this commit must have deleted it.
                                            #https://stackoverflow.com/questions/953481/find-and-restore-a-deleted-file-in-a-git-repository
+
+git-bisect - Use binary search to find the commit that introduced a bug
 ===========zabbix section===========
 zabbix_server --version
 zabbix-server-mysql.x86_64 : Zabbix server compiled to use MySQL database
