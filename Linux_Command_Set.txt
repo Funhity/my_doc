@@ -6382,6 +6382,9 @@ git clone git+ssh://git@github.com/webloginwu/my_doc.git
 git clone git+ssh://git@github.com/webloginwu/code_example
 git commit -a -m "about github"
 
+
+ git remote set-url origin git+ssh://git@github.com/webloginwu/code_exampl
+ git remote set-url origin  git+ssh://git@github.com/webloginwu/my_doc.git
 ============git section=====
 
 git for mac
@@ -6786,6 +6789,7 @@ git push   origin   master
 git push origin --delete serverfix  #Deleting Remote Branches
 
 git remote show     origin
+git remote set-url origin  git+ssh://git@github.com/webloginwu/my_doc.git
 git remote rename   pb     paul
 git remote rm       paul
 git ls-remote --heads origin             #The --heads option lists only branch names
