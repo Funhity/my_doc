@@ -6542,6 +6542,9 @@ Merging is a safe option that preserves the entire history of your repository, w
 #https://git-scm.com/book/en/v2/Git-Branching-Rebasing
 It works by going to the common ancestor of the two branches (the one you’re on and the one you’re rebasing onto), getting the diff introduced by each commit of the branch you’re on, saving those diffs to temporary files, resetting the current branch to the same commit as the branch you are rebasing onto, and finally applying each change in turn.
 
+by performing a rebase before the merge, you’re assured that the merge will be fast-forwarded, resulting in a perfectly linear history. This also gives you the chance to squash any follow-up commits added during a pull request.
+
+
 #work flow:   https://git-scm.com/book/en/v2/Git-Branching-Rebasing
           $ git checkout experiment
           $ git rebase master
