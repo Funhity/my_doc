@@ -2925,7 +2925,7 @@ dd Delete line
 d$ Delete to end of line
 d^ (d caret, not CTRL d) Delete to beginning of line
 
-```case section``
+```vi case section``
 #忽略大小写:
 You need to use the \c escape sequence. So:
 /\ccopyright
@@ -2969,6 +2969,13 @@ Searching and Replacing
 :%s/HOME=\/var\/lib\/zabbix/HOME=\/etc\/zabbix/g
 
 
+````vi record section`````
+Type: Esc q followed by a
+…
+Type: Control a
+…
+Type: q
+Type: 98@a
 =======================  sudo section   ========================   
 命令：visudo //press escape, then type ZZ
 Cmnd_Alias SALTCMD = /usr/bin/salt, /usr/bin/salt-key, /usr/bin/salt-run, /usr/bin/salt-ssh, /usr/bin/salt-cp
@@ -3021,6 +3028,15 @@ exec &> >(tee "$log_file")
 diff <(salt 'stage_v6_nginx01' cmd.run "cat /root/install.sh")   <(salt 'stage_v6_nginx02' cmd.run "cat /root/install.sh")
 
 ======================  nginx section   =========================
+
+nginx -v
+
+``````
+#https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-16-04
+sudo apt-get -y update
+sudo apt-get -y install nginx
+
+`````
 To set up the yum repository for RHEL/CentOS, create the file named /etc/yum.repos.d/nginx.repo with the following contents:
 
 [nginx]
