@@ -3010,7 +3010,7 @@ ConsortiumTest1中的org可以有orderer，每个order之间可以协调顺序�
 https://en.wikipedia.org/wiki/Byzantine_fault_tolerance
 实际的：
 practical byzantine fault tolerance
-
+https://kafka.apache.org/intro
 
     fourOrgsChannelUSA:
         Consortium: ConsortiumTest3
