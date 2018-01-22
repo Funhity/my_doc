@@ -2990,6 +2990,41 @@ sudo docker run --name centos --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgro
 
 =========blockchain section========
 
+`````configtx.yaml``````
+
+Profiles:
+    tenOrgsGenesis:
+        Orderer:
+            <<: *OrdererDefaults
+            Organizations:
+                - *OrdererOrg
+        Consortiums:
+            ConsortiumTest1:
+                Organizations:
+                    - *Org3
+                    - *Org7
+                    - *Org8
+
+ConsortiumTest1中的org可以有orderer，每个order之间可以协调顺序，协调方法如下
+理想的：
+https://en.wikipedia.org/wiki/Byzantine_fault_tolerance
+实际的：
+practical byzantine fault tolerance
+
+
+    fourOrgsChannelUSA:
+        Consortium: ConsortiumTest3
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *Org7
+                - *Org8
+                - *Org4
+                - *Org12
+
+在Organizations中的org可以执行endorsement，transaction等所有功能
+
+`````````````````
 #查询docker ps 中 的command 参数
 mac:
     docker inspect  -f "{{.Name}} {{.Config.Cmd}}" $( docker ps -a -q)
