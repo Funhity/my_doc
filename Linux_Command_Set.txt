@@ -5210,13 +5210,17 @@ git clone --branch 5.2.1  https://git.strongswan.org/strongswan.git
 sudo yum -y groupinstall  "Development Tools"
 sudo apt-get install build-essential
 ``````grep section````````````````
-  忽略大小写
+  #忽略大小写
   grep -inr "ramesh" *     #exclude case from a grep to make it not case sensitive – simply add -i
-  grep -I -n -H 忽略二进制文件
+
+  #忽略二进制文件
+  grep -I -n -H 
        -I -- process a binary file as if it did not contain matching data; 
        -n -- prefix each line of output with the 1-based line number within its input file
        -H -- print the file name for each match
   
+
+  grep -r "nginx.*conf\.d"  *
   
   find ./ -path "*.yml" |xargs -I {} grep -H owner=  {} 
   grep -e listen -e standard_conforming_strings
