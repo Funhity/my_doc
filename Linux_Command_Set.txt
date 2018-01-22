@@ -3030,7 +3030,7 @@ diff <(salt 'stage_v6_nginx01' cmd.run "cat /root/install.sh")   <(salt 'stage_v
 ======================  nginx section   =========================
 
 nginx -v
-
+cat /etc/nginx/sites-enabled/default
 ``````
 #https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-16-04
 sudo apt-get -y update
