@@ -3379,7 +3379,7 @@ docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca 
  sudo docker exec -it mongodb_keystore mongo localhost:27018/air-trace   --eval "db.getSiblingDB('air_trace').getCollection('cryptokeystores').find({})"
  sudo docker exec -it mongodb_keystore mongo localhost:27018             --eval "db.getSiblingDB('air_trace').getCollection('cryptokeystores').find({})"
 
-
+ansible org1-AT -m shell -a "sudo docker exec mongodb_keystore mongo localhost:27018        --eval 'db.getSiblingDB(\"air_trace\").getCollection(\"cryptokeystores\").find({})' "
 清空数据：
 sudo docker exec -it mongodb_keystore mongo localhost:27018
 > use air_trace
@@ -3772,8 +3772,7 @@ SDK_SERVER=http://localhost:4000/ TARGET_NETWORK=testCloud MONGO_DB_URI='mongodb
 
 http://23.102.236.94:8000/testhtml/user
 
-
-
+ansible test -m shell -a "sudo kill -9 \`ps -ef | grep angular | awk '{print \$2}'\`"
 `````````blockchain nginx```````
 cat /etc/nginx/conf.d/air-trace.conf
     server {

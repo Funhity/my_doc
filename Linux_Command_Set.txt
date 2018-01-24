@@ -3032,6 +3032,7 @@ diff <(salt 'stage_v6_nginx01' cmd.run "cat /root/install.sh")   <(salt 'stage_v
 nginx -v
 cat /etc/nginx/sites-enabled/default
 ``````
+#ubuntu:
 #https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-16-04
 sudo apt-get -y update
 sudo apt-get -y install nginx
@@ -5041,6 +5042,9 @@ THREAD DISPLAY
 #https://stackoverflow.com/questions/5731234/how-to-get-the-start-time-of-a-long-running-linux-process
 netstat -antup | grep 4200
 ps -eo pid,lstart,cmd | grep 91209
+
+#按启动时间排序：
+ps -ef --sort=start_time
 ============= 翻墙 ================
 
 lantern :sudo apt-get install libappindicator3-1
@@ -6856,6 +6860,9 @@ git checkout master
 
 git merge-base branch2 branch3
 
+#How to "merge" specific files from another branch , http://jasonrudolph.com/blog/2009/02/25/git-tip-how-to-merge-specific-files-from-another-branch/
+git checkout source_branch <path/file>...
+git checkout twitter_integration app/models/avatar.rb
 
 
 场景一：
@@ -8073,9 +8080,11 @@ f: /home/frank
 
 
 ls ../../*/channel/
-
+`````daemon section````
 start-stop-daemon  --background  --start   --quiet --pidfile /var/run/test                                               --exec /usr/bin/ng -- serve --host 0.0.0.0 --port 4200 --disable-host-check
 start-stop-daemon  --background  --start   --quiet --pidfile /var/run/test --chdir ~/repository_air_trace/AT_node_client --exec /usr/bin/ng -- serve --host 0.0.0.0 --port 4200 --disable-host-check
+
+nohup ng serve --host 0.0.0.0 --port 4200 --disable-host-check  </dev/null >/dev/null 2>&1 ß
 ========node.js section========
 npm install <Module Name>
 npm install   express

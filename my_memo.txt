@@ -417,5 +417,44 @@ f.close()
 
 
 sys.stdout = sys.__stdout__
-==========
+=====auto=====
+$('form .play-question').each((index, elem) => {
+ const question = $(elem).find('.question-title p').text();
+ $ajax(question, 'old', elem, index);
+ $ajax(question, 'new', elem, index);
+});
 
+function $ajax(question, searchType, parent, parentIndex) {
+ $.ajax({
+   url: 'https://search2018.herokuapp.com/question',
+   type: 'POST',
+   data: {
+     question: question.slice(0, 22),
+     searchType: searchType
+   },
+   success: (data) => {
+     const result = data.filter((item) => item.score === '10')[0];
+     if(result) {
+       const answers$ = $(parent).find('.answers-container label');
+       answers$.each((index, item) => {
+         result.results.forEach((answerInfo) => {
+           if(searchType === 'new') {
+             if( answerInfo.tag && $(item).text().trim() === answerInfo.result.trim()) {
+               $(item).find('input').attr('checked', true);
+               console.log('第' + (parentIndex + 1) + '道题回答完毕！');
+             }
+           }else {
+             if(answerInfo.trim() === $(item).text().trim()) {
+               $(item).find('input').attr('checked', true);
+               console.log('第' + (parentIndex + 1) + '道题回答完毕！')
+             }
+           }
+         });
+       });
+     }
+   },
+   error: (xhr, textStatus, err) => {
+     console.error('Something wrong')
+   }
+ });
+}
