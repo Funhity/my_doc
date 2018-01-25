@@ -2990,6 +2990,9 @@ sudo docker run --name centos --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgro
 
 =========blockchain section========
 
+创建channel时候：orderer用下面的certificat验证org10
+AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org10.example.com/msp/cacerts/ca.org10.example.com-cert.pem
+~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org10.example.com/ca/ca.org10.example.com-cert.pem
 `````configtx.yaml``````
 
 Profiles:

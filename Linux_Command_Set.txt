@@ -6736,6 +6736,7 @@ git difftool -y --tool=meld  --staged -- app/helper.js
 git diff HEAD^  HEAD --name-only
 git diff --diff-filter=ad master..
 ········································
+git diff HEAD                  #working copy 和 HEAD的差别
 git diff                       #working目录和stage中的差别，即add后再次修改，尚未再次执行add
 git diff --staged              #stage和本地repository的差别，即在stage中，但还没有提交到repository，(--staged and --cached are synonyms)
 git diff --cached FETCH_HEAD   #git diff between staged changed and HEAD repository,https://stackoverflow.com/questions/33825236/git-diff-between-staged-changed-and-head-repository
@@ -6860,10 +6861,12 @@ git checkout master
 
 git merge-base branch2 branch3
 
+
+·····git merge file section·······
 #How to "merge" specific files from another branch , http://jasonrudolph.com/blog/2009/02/25/git-tip-how-to-merge-specific-files-from-another-branch/
 git checkout source_branch <path/file>...
 git checkout twitter_integration app/models/avatar.rb
-
+··································
 
 场景一：
     git merge 操作步骤：
@@ -9977,7 +9980,7 @@ nginx 配置文件：
     }
 
 
-========openssl section======ca section===ssl section=====
+========openssl section======ca section===ssl section=====certificate section=====
 #生成certificate：
      * https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04
      sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/apache-selfsigned.key -out /etc/ssl/certs/apache-selfsigned.crt
@@ -9998,12 +10001,16 @@ nginx 配置文件：
 #检查certificate
   openssl x509 -in ./org1.example.com/ca/ca.org1.example.com-cert.pem  -text -noout   
   openssl x509 -in ./repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem -text -noout
+  openssl s_client -servername example.com -connect example.com:443     </dev/null 2>/dev/null | openssl x509 -text #https://stackoverflow.com/questions/7885785/using-openssl-to-get-the-certificate-from-a-server
+  openssl s_client                         -connect 23.102.236.94:7053  </dev/null 2>/dev/null | openssl x509 -text
 
 实例：
  sudo docker inspect -f '{{ .Mounts }}' ca_peerOrg1
  cd /home/org1/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca
  openssl x509 -in ./ca.org1.example.com-cert.pem  -text -noout
  sudo docker restart ca_peerOrg1
+
+
 ===========bridge section===================
 apt-get install bridge-utils
 yum -y install bridge-utils
