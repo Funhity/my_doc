@@ -10001,8 +10001,30 @@ nginx 配置文件：
 #检查certificate
   openssl x509 -in ./org1.example.com/ca/ca.org1.example.com-cert.pem  -text -noout   
   openssl x509 -in ./repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem -text -noout
+  
+#检查signature
   openssl s_client -servername example.com -connect example.com:443     </dev/null 2>/dev/null | openssl x509 -text #https://stackoverflow.com/questions/7885785/using-openssl-to-get-the-certificate-from-a-server
   openssl s_client                         -connect 23.102.236.94:7053  </dev/null 2>/dev/null | openssl x509 -text
+
+·············  
+  用标准输入当作文件来输入
+  openssl x509 -in /dev/stdin  -text -noou
+  输入样例
+-----BEGIN CERTIFICATE-----
+MIICRjCCAe2gAwIBAgIQGgI/g0rqOe782QXebuSohDAKBggqhkjOPQQDAjB1MQsw
+CQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZy
+YW5jaXNjbzEaMBgGA1UEChMRb3JnMTAuZXhhbXBsZS5jb20xHTAbBgNVBAMTFGNh
+Lm9yZzEwLmV4YW1wbGUuY29tMB4XDTE4MDEyNTA3MjUwN1oXDTI4MDEyMzA3MjUw
+N1owdTELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcT
+DVNhbiBGcmFuY2lzY28xGjAYBgNVBAoTEW9yZzEwLmV4YW1wbGUuY29tMR0wGwYD
+VQQDExRjYS5vcmcxMC5leGFtcGxlLmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEH
+A0IABELM98pHzsT+R4szeVOENHTXQk9XabL+++STB/hh4juNNSMNnZqX0dxuhK4l
+zAgS9wELF5j+Qx8v6OT1AAnvAt6jXzBdMA4GA1UdDwEB/wQEAwIBpjAPBgNVHSUE
+CDAGBgRVHSUAMA8GA1UdEwEB/wQFMAMBAf8wKQYDVR0OBCIEIHvFooPC6sh7xAzj
+hpo2vwS4BzFkQu5NLfTi2gmMMTdwMAoGCCqGSM49BAMCA0cAMEQCIG4PfUAA4Bwy
+WCruYJHHS9EVMnH6wlp/UK1QZesT6ZD2AiBtZh7W5uot1LGzoXHL7qjOhZt57QPq
+TWZvb8idMHCraA==
+·············
 
 实例：
  sudo docker inspect -f '{{ .Mounts }}' ca_peerOrg1
