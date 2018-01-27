@@ -5167,10 +5167,12 @@ unset HISTFILE
 tar xjvf strongswan-5.2.1.tar.bz2
 zipinfo conf_file.zip
 
-====sort section=====
+====sort section====uniq section=
 sort <file> | uniq -c            #计算重复次数
 sort <file> | uniq --count
 sort -k2,4 order.txt   #uses the second and fourth fields to sort the data.if the sorting is to be done on the basis of first 3 fields, it will be: '-k 1,3'
+#去掉重复的行
+sort file.log | uniq -u
 =====================
 
 pwdx <PID>  #Find out current working directory of a running process?
@@ -6714,6 +6716,10 @@ git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(
 
 git log  gerrit/master
 git log  origin/master
+
+#列出我commit过的所有文件
+git log --author="frank wu"  --oneline | grep -v  'Merge\|init branch' |awk '{print  $1}'|xargs -I {} sh -c 'git show --pretty="" --name-only {}'| sort | uniq -u
+
 ···git file section····git files sectio····
 场景一：列出一个commit的所有文件
         git diff-tree --no-commit-id --name-only -r bd61ad98
