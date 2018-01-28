@@ -6717,7 +6717,7 @@ git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(
 git log  gerrit/master
 git log  origin/master
 
-#列出我commit过的所有文件
+#列出我 frank commit过的所有文件
 git log --author="frank wu"  --oneline | grep -v  'Merge\|init branch' |awk '{print  $1}'|xargs -I {} sh -c 'git show --pretty="" --name-only {}'| sort | uniq -u
 
 ···git file section····git files sectio····
@@ -6773,7 +6773,7 @@ http://blog.deadlypenguin.com/blog/2011/05/03/using-meld-with-git-diff/
               [diff] external = git-meld
 
 
-````````````
+``````git diff file section``````
 版本区别：
 git diff HEAD^  HEAD  Linux_Command_Set.txt  当前版本和上一版本的区别
 git diff HEAD^^ HEAD main.c
@@ -6783,7 +6783,9 @@ git diff HEAD~2 HEAD -- main.c
 #本地文件和本地master中的文件比较，显示修改内容
  git diff master:Linux_Command_Set.txt -- Linux_Command_Set.txt 
 #比较两个分支中同一个文件是否被修改
-git diff  testCloud  master -- ./artifacts/channel/configtx.yaml
+git diff                     testCloud  master -- ./artifacts/channel/configtx.yaml
+git difftool -y --tool=meld  testCloud  master -- ./artifacts/channel/configtx.yaml
+
 
 #当前HEAD和master分支的区别
 git diff master
