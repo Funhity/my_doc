@@ -6876,6 +6876,7 @@ git merge-base branch2 branch3
 #How to "merge" specific files from another branch , http://jasonrudolph.com/blog/2009/02/25/git-tip-how-to-merge-specific-files-from-another-branch/
 git checkout source_branch <path/file>...
 git checkout twitter_integration app/models/avatar.rb
+git checkout testCloud   app-docker-compose.yaml runEverything.sh app-docker-compose.dev.yaml
 ··································
 
 场景一：
