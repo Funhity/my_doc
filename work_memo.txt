@@ -3777,7 +3777,7 @@ http://23.102.236.94:8000/testhtml/user
 
 ansible test -m shell -a "sudo kill -9 \`ps -ef | grep angular | awk '{print \$2}'\`"
 
-git log --author="frank wu"  --oneline | grep -v  'Merge\|init branch' |awk '{print  $1}'|xargs -I {} sh -c 'echo {} ;git show --pretty="" --name-only {}'
+git log --author="frank wu"  --oneline | grep -v  'Merge\|init branch' |awk '{print  $1}'|xargs -I {} sh -c 'git show --pretty="" --name-only {}'| sort | uniq -u -d
 git log --pretty=format:"%h %an %ad %s" --date=relative --author="frank wu"
 `````````blockchain nginx```````
 cat /etc/nginx/conf.d/air-trace.conf

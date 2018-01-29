@@ -6710,15 +6710,17 @@ git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(
 git rev-list --left-right --boundary --pretty=oneline HEAD...origin/master
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci)%s'      --left-right --boundary  HEAD...origin/master
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci)%s'      --left-right --boundary    71979fa...5ec0355
+
+
+#列出我 frank commit过的所有文件
+git log --author="frank wu"  --oneline | grep -v  'Merge\|init branch' |awk '{print  $1}'|xargs -I {} sh -c 'git show --pretty="" --name-only {}'| sort | uniq -u -d
+
 ····
 '%b': body
 '%C(…)': color specification
 
 git log  gerrit/master
 git log  origin/master
-
-#列出我 frank commit过的所有文件
-git log --author="frank wu"  --oneline | grep -v  'Merge\|init branch' |awk '{print  $1}'|xargs -I {} sh -c 'git show --pretty="" --name-only {}'| sort | uniq -u
 
 ···git file section····git files sectio····
 场景一：列出一个commit的所有文件
@@ -9898,6 +9900,9 @@ sudo chmod +x /usr/local/bin/docker-compose
     sudo pip install docker-compose
     sudo yum  -y  upgrade python*
 #Please note that service names should not include underscores.https://convox.com/docs/docker-compose-file/
+
+
+docker-compose ps
 
 ````````docker compose network````````
 https://docs.docker.com/compose/networking/#use-a-pre-existing-network
