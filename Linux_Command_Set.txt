@@ -4827,6 +4827,29 @@ ansible-playbook release.yml --extra-vars "version=1.23.45 other_variable=foo" #
 #获取ip相关的信息：
 ansible org1-AT -m setup -a 'filter=ansible_eth[0-2]'
 
+
+````````playbook shell section```````````
+- hosts: 'org10-AT'
+  gather_facts: no
+  tasks:
+    - name: start simple http server in background
+      shell: |
+        set -e
+        cd ~/repository_air_trace/AT_node_client
+        npm -v
+        sudo npm install   
+        echo wujunrong
+        sleep 30
+        sudo npm install -g npm@5.3.0; 
+        sudo  npm install -g @angular/cli@1.2.0 
+        ng build 
+        cp -r ~/repository_air_trace/AT_node_client/dist/*  ~/repository_air_trace/AT_node_server/public/
+        #(nohup ng serve --host 0.0.0.0 --port 4200 --disable-host-check  </dev/null >/dev/null 2>&1 ) &
+        
+        start-stop-daemon   --start  --background   --quiet --pidfile /var/run/test --chdir ~/repository_air_trace/AT_node_client --exec /usr/bin/ng -- serve --host 0.0.0.0 --port 4200 --disable-host-check
+        sleep 4
+      register: ps
+    - debug: var=ps.stdout_lines
 ````````xshell section````````````
 /etc/ansible/hosts->xshell 配置文件
 cat /etc/ansible/hosts| grep -E -v "^[[:space:]]*$"  | grep -v -E "\[.*\]" | grep -v "^#.*" | grep -v localhost | awk '{system("echo -ne "$1" \",\"  ; echo -ne "$2" | cut -d = -f 2- | tr -d \"\n\" ; echo -ne \",\" ssh ;echo -ne \",\" 22 \",\"; echo  -ne "$4" | cut -d = -f 2-  | tr -d \"\n\"   ;echo -ne \",\" ;  echo -e   "$5" | cut -d = -f 2-  ")}' |sed  's/\\//g' |sed 's/ //g'>./xshell.csv
@@ -6700,6 +6723,7 @@ git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %s,
 
       #场景：某个人改的，在哪个commit改的，改了哪些文件，改的内容是什么？
             git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %cr, %b %C(bold green)%s' --author="frank wu"   # 作者
+            git log --author="frank wu"  --oneline | grep -v  'Merge' |awk '{print  $1}'|xargs -I {} sh -c 'git show --pretty="" --name-only {}'| sort | uniq -u -d # 改了哪些文件，去除Merge的
             commitId=cb1223a
             git show --pretty="" --name-only $commitId
             git difftool -y --tool=meld $commitId "$commitId"^              #或： 
