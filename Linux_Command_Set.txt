@@ -6678,6 +6678,11 @@ git add CONTRIBUTING.md
 步骤3.  git add CONTRIBUTING.md  #think of it more as “add this content to the next commit” rather than “add this file to the project”.
 步骤4.  此时用git commit修改会进入本地repository
 ````````````````````````````
+#revert changes made to your working copy, https://stackoverflow.com/questions/1146973/how-do-i-revert-all-local-changes-in-git-managed-project-to-previous-state
+git checkout .
+git reset HEAD <file>..." to unstage)
+
+```````
 #Git - List all files currently under source control?列出被git管理的文件：
        git ls-tree -r master --name-only 
 `````git rename section `````
