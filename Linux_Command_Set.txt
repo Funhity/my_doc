@@ -6727,7 +6727,8 @@ git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %s,
             commitId=cb1223a
             git show --pretty="" --name-only $commitId
             git difftool -y --tool=meld $commitId "$commitId"^              #或： 
-            git difftool -y --tool=meld $commitId "$commitId"^ -- index.js
+            git difftool -y --tool=meld $commitId "$commitId"^ -- index.js  #或
+            git difftool -y --tool=meld  testCloud  master -- runEverything.sh
 
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %cr, %b %C(bold green)%s'                       #'%cr': committer date, relative 相对日期
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci, %b %C(bold green)%s'
@@ -10032,6 +10033,10 @@ nginx 配置文件：
    openssl s_client                                    -connect 23.102.236.94:7054 -tls1_2
    openssl s_client -cipher  ECDH-ECDSA-AES128-SHA256  -connect localhost:7054     -tls1_2
    openssl s_client                                    -connect localhost:7054     -tls1_2
+   完美打印certificate内容：
+   openssl s_client                         -connect 23.102.236.94:7053  </dev/null 2>/dev/null | openssl x509 -text
+
+
  方法二：
    nmap --script ssl-enum-ciphers -p 7054  23.102.236.94       
 
