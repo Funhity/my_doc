@@ -6442,12 +6442,21 @@ git rebase在当前分支的head上重新commit，机制不一样
 
 .git/config                                   #1:Specific to that single repository
                                               #2:定义了从remote下载哪些分支
-`````git ingore section````````````````
+
+`````````git ignore section``````
+# https://www.atlassian.com/git/tutorials/gitignore
+# .gitignore uses globbing patterns to match against file names
+
+# https://stackoverflow.com/questions/6380196/gitignore-does-not-work
+# A gitignore file specifies intentionally **untracked files** ，git rm file will stop track them.
+
+
+
 #检查为什么会被忽略
 git check-ignore -v testCloudArtifacts/org*/channel/*.yaml
 
 
-logs/
+logs/     #忽略目录
 !logs/important.log    
 
 --
@@ -10387,8 +10396,7 @@ EOF
 #http://www.regular-expressions.info/lookaround.html
 su(?!do).*-c 
 
-#https://www.atlassian.com/git/tutorials/gitignore
-.gitignore uses globbing patterns to match against file names
+
 =====httpd section=======================
 Allow from all
 说明：
