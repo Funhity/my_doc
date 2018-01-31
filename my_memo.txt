@@ -432,7 +432,32 @@ u'Hello World!'
 >>> t.render()
 u'My favorite numbers: 1 2 3 4 5 6 7 8 9 '
 
+``````jinja example``````
+# https://stackoverflow.com/questions/6036082/call-a-python-function-from-jinja2
 
+from jinja2 import Template
+
+def custom_function(a):
+    return a.replace('o', 'ay')
+
+template = 'Hey, my name is {{ custom_function(first_name) }}'
+jinga_html_template = Template(template)
+jinga_html_template.globals['custom_function'] = custom_function
+
+fields = {'first_name': 'Jo'}
+print jinga_html_template.render(**fields)
+
+``````jinja example``````
+from jinja2 import Template
+
+def clever_function(u):
+    return 'hello {}'.format(u)
+
+template = 'Hey, my name is {{ clever_function(8) }}'
+jinga_html_template = Template(template)
+jinga_html_template.globals['clever_function'] = clever_function
+
+print jinga_html_template.render()
 ==========
 #https://www.uipath.com/academy/certifications 考试，自动填写答案
 
