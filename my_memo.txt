@@ -388,7 +388,8 @@ with open('simple_cisco.j2') as the_file:
 template = ENV.get_template("simple_cisco.j2")
 print (template.render(simple=simple))   #左边是yaml文件，右边是字典
 
-
+····
+#项目使用案例
 with open('docker-compose.j2') as the_file:
     print (the_file.read())
 
