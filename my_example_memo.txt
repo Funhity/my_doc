@@ -363,6 +363,7 @@ sudo systemctl enable docker
 ``````````````
 # https://github.com/pallets/jinja/blob/master/jinja2/environment.py
 # 步骤三：
+      #python 主程序，输入参数，模版（j2文件）和数据（json文件）
       import yaml
       from  jinja2  import Environment, FileSystemLoader, Template
       
@@ -387,6 +388,8 @@ sudo systemctl enable docker
 
 ····
 #项目使用案例
+      #python 主程序
+
       with open('docker-compose.j2') as the_file:
           print (the_file.read())
       
@@ -419,7 +422,9 @@ sudo systemctl enable docker
       sys.stdout = sys.__stdout__
 
 ···········
-实际项目：
+#实际项目：
+      #python 主程序
+
       # convert json file to yaml 
       f = open('network-config-DynamicOrg.json', 'r')
       jsonData = json.load(f)
@@ -448,15 +453,17 @@ sudo systemctl enable docker
       
       sys.stdout = sys.__stdout__
 
-template：
+#template：
 
+     程序片断： 
+     
      {% for dict_item in simple['network-config'] %}
      
          {%- if dict_item == 'orderer' %} 
              {% continue %} 
          {% endif %}
      
-         cd "./crypto-config/peerOrganizations/{{ simple[dict_item]['domain'] }}/ca"
+         cd "./crypto-config/peerOrganizations/{{ simple['network-config'][dict_item]['domain'] }}/ca"
          file=$(ls *_sk)
          mv "${file}" {{ dict_item }}ca_sk
      
@@ -502,70 +509,70 @@ print jinga_html_template.render()
 
 ``````jinja example```jinja loop section```
 #在json中不包含list
-{
-"Website": {
-"color": "#16a085",
-"type": "module",
-"icon": "icon-globe"
-},
-"Core": {
-"color": "#589494",
-"type": "module",
-"system_manager": 1,
-"icon": "icon-cog"
-},
-"To Do": {
-"color": "#f1c40f",
-"doctype": "ToDo",
-"label": "To Do",
-"link": "List/ToDo",
-"type": "list",
-"icon": "icon-check"
-},
-"Setup": {
-"color": "#bdc3c7",
-"type": "module",
-"icon": "icon-wrench"
-},
-"Messages": {
-"color": "#9b59b6",
-"type": "page",
-"label": "Messages",
-"link": "messages",
-"icon": "icon-comments"
-},
-"Installer": {
-"color": "#888",
-"type": "page",
-"label": "Installer",
-"link": "applications",
-"icon": "icon-download"
-},
-"Calendar": {
-"color": "#2980b9",
-"type": "view",
-"label": "Calendar",
-"link": "Calendar/Event",
-"icon": "icon-calendar"
-}
-}
-      
-        
-import json
-python_data = json.loads(your_json_data_string)
-
-from jinja2 import Template
-
-template = Template('''
-    {% for mainkey in data %}
-    <h1>{{ mainkey }}</h1>
-
-    {% for key, value in data[mainkey].items() %}
-    <p><strong>{{ key }}</strong><span>{{ value }}</span></p>
-    {% endfor %}
-
-    {% endfor %}
-''')   
+    {
+    "Website": {
+    "color": "#16a085",
+    "type": "module",
+    "icon": "icon-globe"
+    },
+    "Core": {
+    "color": "#589494",
+    "type": "module",
+    "system_manager": 1,
+    "icon": "icon-cog"
+    },
+    "To Do": {
+    "color": "#f1c40f",
+    "doctype": "ToDo",
+    "label": "To Do",
+    "link": "List/ToDo",
+    "type": "list",
+    "icon": "icon-check"
+    },
+    "Setup": {
+    "color": "#bdc3c7",
+    "type": "module",
+    "icon": "icon-wrench"
+    },
+    "Messages": {
+    "color": "#9b59b6",
+    "type": "page",
+    "label": "Messages",
+    "link": "messages",
+    "icon": "icon-comments"
+    },
+    "Installer": {
+    "color": "#888",
+    "type": "page",
+    "label": "Installer",
+    "link": "applications",
+    "icon": "icon-download"
+    },
+    "Calendar": {
+    "color": "#2980b9",
+    "type": "view",
+    "label": "Calendar",
+    "link": "Calendar/Event",
+    "icon": "icon-calendar"
+    }
+    }
+          
+#template:        
+   import json
+   python_data = json.loads(your_json_data_string)
+   
+   from jinja2 import Template
+   
+   template = Template('''
+       {% for mainkey in data %}
+       <h1>{{ mainkey }}</h1>
+   
+       {% for key, value in data[mainkey].items() %}
+       <p><strong>{{ key }}</strong><span>{{ value }}</span></p>
+       {% endfor %}
+   
+       {% endfor %}
+   ''')   
   
 ==========
 
