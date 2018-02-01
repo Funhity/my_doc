@@ -7615,6 +7615,14 @@ f: /home/frank
  drwxr-xr-x root  root  /
  drwxr-xr-x root  root  home
  drwxr-xr-x frank frank frank
+````tar section````
+多个目录打包
+tar -cf myfile.tar /etc/dir1 /var/www/html /home/somedir
+tar -czf myfile.tar.gz /etc/dir1 /var/www/html /home/somedir
+查看tar.gz里面的内容
+zcat v6_mobile01_20151103.tar.gz| less
+tar xvf sshpass-1.06.tar.gz
+
 ========node.js section========
 npm install <Module Name>
 npm install   express
@@ -9373,6 +9381,8 @@ sudo chmod +x /usr/local/bin/docker-compose
     sudo yum  -y  upgrade python*
 #Please note that service names should not include underscores.https://convox.com/docs/docker-compose-file/
 
+
+docker-compose version
 `````
 docker-compose up -d
 docker-compose ps
