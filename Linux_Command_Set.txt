@@ -1386,13 +1386,18 @@ TO:
 PermitRootLogin yes
 
 invoke-rc.d ssh restart
-```````````````cp section``````````````````````
+```````````````cp section```````mv section```````````````
 
 方法一：
 unalias cp will abolish that for the current session, otherwise you can just remove it from your shell profile.
 
 方法二：
 yes | cp /home/share/cache/*
+
+·········
+mv channel  block-chain/                                              #把channel移动到block-chain/目录下，而不是修改目录名称
+cp -r DynamicOrg/  /Users/fwu066/Documents/share/git/code_example     #把DynamicOrg/下的所有文件，拷贝到/Users/fwu066/Documents/share/git/code_example下
+cp -r DynamicOrg   /Users/fwu066/Documents/share/git/code_example     #把DynamicOrg目录         拷贝到/Users/fwu066/Documents/share/git/code_example下,即code_example目录包含DynamicOrg目录
 
 ======================= mysql section======================================
 centos7: rpm -ivh http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
@@ -5144,7 +5149,8 @@ File -> Properties -> Terminal -> Keyboard
 
 iterm2:
 : Go to Preferences->Profiles tab. Select your profile on the left, and then open the Keyboard tab. At the bottom is a set of buttons that lets you select the behavior of the Option key. For most users, Esc+ will be the best choice.
- 
+
+
 ```````````````dash section```````````````
 参数"-"代表 standard input
 find . -type f -print0 | tar -czvf backup.tar.gz --null -T -
@@ -6493,7 +6499,6 @@ cat .git/config
  url = git@github.com:pwccnhk/AT_node_client.git #ssh地址获取方式（github 证书方式私有源）：先用github提供的ssh clone clone一次项目，在.git/config中获取ssh地址，再在github desktop上设置此ssh地址
 或 
  url = git+ssh://git@github.com/webloginwu/code_example 
-
 
 ````````初次使用git要设置```
  git config --list
