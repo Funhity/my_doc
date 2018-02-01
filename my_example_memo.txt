@@ -311,3 +311,311 @@ sudo systemctl start docker
 sudo systemctl enable docker
 
 
+
+======jinja section====
+
+`````jinja example``````
+步骤一：
+      cat simple_config.yaml
+      hostname: testswitch
+      
+      ip: 10.101.0.221
+      
+      
+      snmp:
+          read: supersecret
+          write: macdonald
+          syscontact: admin.lab.local
+          syslocation: lab
+          trap:
+          - {target: 10.101.0.200}
+          - {target: 10.101.0.201}
+          - {target: 10.101.0.202}
+      
+      
+      
+      vlans:
+      - {description: management vlan, id: '10', name: management}
+      - {description: users vlan, id: '15', name: users}
+      - {description: phones vlan, id: '16', name: phones}
+      - {description: servers vlan, id: '20', name: servers vlan }
+
+``````
+步骤二：
+      cat simple_cisco.j2
+      
+      #hostname config
+      hostname {{ simple['hostname'] }}
+      #vlan config
+      {% for vlan in simple['vlans'] -%}
+      vlan {{ vlan['id'] }}
+          name {{ vlan['name'] }}
+          description {{ vlan['description'] }}
+      {% endfor %}#snmp config
+      snmp-server community {{ simple['snmp']['read'] }} RO
+      snmp-server community {{ simple['snmp']['write'] }} RW
+      snmp-server ifindex persist
+      snmp-server location {{ simple['snmp']['syslocation'] }}
+      snmp-server contact {{ simple['snmp']['syscontact'] }}
+      {% for trap in simple['snmp']['trap'] -%}
+      snmp-server host {{ trap['target'] }}  public
+      {% endfor %}
+``````````````
+# https://github.com/pallets/jinja/blob/master/jinja2/environment.py
+# 步骤三：
+      #python 主程序，输入参数，模版（j2文件）和数据（json文件）
+      import yaml
+      from  jinja2  import Environment, FileSystemLoader, Template
+      
+      ENV = Environment(loader=FileSystemLoader('./'))
+      with open('simple_config.yaml') as the_file:   
+       print (the_file.read())
+      
+      with open("simple_config.yaml") as simple:
+          simple =  yaml.load(simple)
+      
+      
+      type(simple)
+      simple
+      
+      
+      with open('simple_cisco.j2') as the_file:
+          print (the_file.read())
+      
+      
+      template = ENV.get_template("simple_cisco.j2")
+      print (template.render(simple=simple))   #左边是yaml文件，右边是字典
+
+····
+#项目使用案例
+      #python 主程序
+
+      with open('docker-compose.j2') as the_file:
+          print (the_file.read())
+      
+      template = ENV.get_template("docker-compose.j2")
+      print (template.render(org_name='xxxx'))
+      
+      import sys
+      template = ENV.get_template("docker-compose.j2")
+      
+      f=open("docker-compose.yaml", "w")
+      sys.stdout = f
+      print (template.render(org_name='xxxx'))
+      f.close()
+      
+      f=open("docker-compose.yaml", "w")
+      sys.stdout = f
+      print (template.render(org_name='zzz'))
+      sys.stdout.flush()
+      f.close()
+      
+      
+      template = ENV.get_template("certsUpdateChannel.j2")
+      f=open("certsUpdateChannel.sh", "w")
+      sys.stdout = f
+      print (template.render(org_name='12'))
+      sys.stdout.flush()
+      f.close()
+      
+      
+      sys.stdout = sys.__stdout__
+
+···········
+#实际项目：
+      #python 主程序
+
+      # convert json file to yaml 
+      f = open('network-config-DynamicOrg.json', 'r')
+      jsonData = json.load(f)
+      f.close()
+      
+      ff = open('network-config-DynamicOrg.yaml', 'w+')
+      yaml.dump(jsonData, ff, allow_unicode=False)
+      f.close()
+      
+      ENV = Environment(loader=FileSystemLoader('./'))
+      ENV.add_extension('jinja2.ext.loopcontrols')
+      
+      with open("network-config-DynamicOrg.json") as simple:
+          simple =  json.load(simple)
+      type(simple)
+      simple
+      
+      
+      template = ENV.get_template("certsUpdateChannel.j2")
+      f=open("certsUpdateChannel.sh", "w")
+      sys.stdout = f
+      print (template.render(simple=simple))
+      sys.stdout.flush()
+      f.close()
+      
+      
+      sys.stdout = sys.__stdout__
+
+#template：
+
+     程序片断： 
+     
+     {% for dict_item in simple['network-config'] %}
+     
+         {%- if dict_item == 'orderer' %} 
+             {% continue %} 
+         {% endif %}
+     
+         cd "./crypto-config/peerOrganizations/{{ simple['network-config'][dict_item]['domain'] }}/ca"
+         file=$(ls *_sk)
+         mv "${file}" {{ dict_item }}ca_sk
+     
+     {% endfor %}
+
+``````jinja example``````
+
+>>> from jinja2 import Template
+>>> t = Template("Hello {{ something }}!")
+>>> t.render(something="World")
+u'Hello World!'
+>>>
+>>> t = Template("My favorite numbers: {% for n in range(1,10) %}{{n}} " "{% endfor %}")
+>>> t.render()
+u'My favorite numbers: 1 2 3 4 5 6 7 8 9 '
+
+``````jinja example``````
+# https://stackoverflow.com/questions/6036082/call-a-python-function-from-jinja2
+
+from jinja2 import Template
+
+def custom_function(a):
+    return a.replace('o', 'ay')
+
+template = 'Hey, my name is {{ custom_function(first_name) }}'
+jinga_html_template = Template(template)
+jinga_html_template.globals['custom_function'] = custom_function
+
+fields = {'first_name': 'Jo'}
+print jinga_html_template.render(**fields)
+
+``````jinja example``````
+from jinja2 import Template
+
+def clever_function(u):
+    return 'hello {}'.format(u)
+
+template = 'Hey, my name is {{ clever_function(8) }}'
+jinga_html_template = Template(template)
+jinga_html_template.globals['clever_function'] = clever_function
+
+print jinga_html_template.render()
+
+``````jinja example```jinja loop section```
+#在json中不包含list
+    {
+    "Website": {
+    "color": "#16a085",
+    "type": "module",
+    "icon": "icon-globe"
+    },
+    "Core": {
+    "color": "#589494",
+    "type": "module",
+    "system_manager": 1,
+    "icon": "icon-cog"
+    },
+    "To Do": {
+    "color": "#f1c40f",
+    "doctype": "ToDo",
+    "label": "To Do",
+    "link": "List/ToDo",
+    "type": "list",
+    "icon": "icon-check"
+    },
+    "Setup": {
+    "color": "#bdc3c7",
+    "type": "module",
+    "icon": "icon-wrench"
+    },
+    "Messages": {
+    "color": "#9b59b6",
+    "type": "page",
+    "label": "Messages",
+    "link": "messages",
+    "icon": "icon-comments"
+    },
+    "Installer": {
+    "color": "#888",
+    "type": "page",
+    "label": "Installer",
+    "link": "applications",
+    "icon": "icon-download"
+    },
+    "Calendar": {
+    "color": "#2980b9",
+    "type": "view",
+    "label": "Calendar",
+    "link": "Calendar/Event",
+    "icon": "icon-calendar"
+    }
+    }
+          
+#template:        
+   import json
+   python_data = json.loads(your_json_data_string)
+   
+   from jinja2 import Template
+   
+   template = Template('''
+       {% for mainkey in data %}
+       <h1>{{ mainkey }}</h1>
+   
+       {% for key, value in data[mainkey].items() %}
+       <p><strong>{{ key }}</strong><span>{{ value }}</span></p>
+       {% endfor %}
+   
+       {% endfor %}
+   ''')   
+  
+==========
+
+#考试，自动填写答案
+#https://www.uipath.com/academy/certifications 
+
+$('form .play-question').each((index, elem) => {
+ const question = $(elem).find('.question-title p').text();
+ $ajax(question, 'old', elem, index);
+ $ajax(question, 'new', elem, index);
+});
+
+function $ajax(question, searchType, parent, parentIndex) {
+ $.ajax({
+   url: 'https://search2018.herokuapp.com/question',
+   type: 'POST',
+   data: {
+     question: question.slice(0, 22),
+     searchType: searchType
+   },
+   success: (data) => {
+     const result = data.filter((item) => item.score === '10')[0];
+     if(result) {
+       const answers$ = $(parent).find('.answers-container label');
+       answers$.each((index, item) => {
+         result.results.forEach((answerInfo) => {
+           if(searchType === 'new') {
+             if( answerInfo.tag && $(item).text().trim() === answerInfo.result.trim()) {
+               $(item).find('input').attr('checked', true);
+               console.log('第' + (parentIndex + 1) + '道题回答完毕！');
+             }
+           }else {
+             if(answerInfo.trim() === $(item).text().trim()) {
+               $(item).find('input').attr('checked', true);
+               console.log('第' + (parentIndex + 1) + '道题回答完毕！')
+             }
+           }
+         });
+       });
+     }
+   },
+   error: (xhr, textStatus, err) => {
+     console.error('Something wrong')
+   }
+ });
+}

@@ -79,6 +79,8 @@ dig youtube.com   @8.8.8.8
 ping -a w.x.y.z
 sudo discoveryutil mdnsflushcache
 
+ubuntu:
+sudo apt-get install dnsutils
 ================ network section =========================
 ubuntu: /etc/network/interfaces
 `````top section``````````
@@ -195,8 +197,8 @@ fi
   nmap -T4 -A -v 10.75.1.15
   nmap -sP 192.168.56.0/24
   ansible host* -m shell -a  "virsh list --all| grep -E 'running'  | awk '{print \$2}'   |xargs  -I '{}' sudo virsh domiflist  '{}' " | grep -B 50  "52:54:00:80:c4:07"
-  
-  zenmap
+  端口：
+  nmap -p 80 192.168.1.1
   ===============  xwindows section  ===============================
 yum groupinstall -y 'Desktop'
 yum groupinstall -y 'X Window System'
@@ -642,7 +644,8 @@ docker run -ti
  docker service inspect --pretty centos7_centos7-docker-swarm | grep -i networks
 
  docker network ls
- docker network inspect bridge  #用Containers键值可查看bridge被哪些container使用了
+ docker network inspect bridge             #用Containers键值可查看bridge被哪些container使用了
+ docker network inspect artifacts_default  #用Containers键值可查看bridge被哪些container使用了
 
  docker network create --subnet 172.30.0.0/16  \
                        --opt com.docker.network.bridge.name=docker_gwbridge \
@@ -871,6 +874,7 @@ docker commit --change='CMD ["apachectl", "-DFOREGROUND"]'                      
 docker commit --change='CMD ["/root/start.sh"]'   --change='ENTRYPOINT ["/tini", "--"]'  -c "EXPOSE 8080"  pensive_austin     xxd-tomcat:final
 docker commit   -c "EXPOSE 50000"   -c "EXPOSE 8080"  187b27435067  pwc/jenkins:lts
 
+sudo docker tag marc/test marc/test:1
 ```````docker volume section````docker storage```````````
 
 
@@ -900,7 +904,8 @@ docker volume prune
                                                  其中，/var/lib/docker/volumes/是固定的，
                                                       jenkins_home对应冒号的左边（jenkins_home:/var/jenkins_home）
                                                                       冒号的右边是/var/jenkins_home（在container内） 
-
+检查volume设置：
+sudo docker inspect -f '{{ .Mounts }}' ca_peerOrg1
 ````````docker systemd section``````docker centos7`````
 Dockerfile for systemd base image
 ··········
@@ -1086,6 +1091,7 @@ sudo docker save -o /home/matrix/matrix-data.tar matrix-data/xxx:xxx
 sudo docker load -i <path to copied image file>
 docker save centos:latest |ssh 10.0.1.8 docker load
 
+sudo docker image inspect mongo|less
 ````````````````
 docker stop $(docker ps -a -q)
 docker rm   $(docker ps -a -q)
@@ -1115,6 +1121,7 @@ docker container restart   gerrit
 
 #查询docker ps 中 的command 参数
 sudo docker inspect  -f "{{.Name}} {{.Config.Cmd}}" $(sudo docker ps -a -q)
+
 /dev-peer1.org2.example.com-mycc-1.0 [chaincode -peer.address=peer1.org2.example.com:7051]
 /dev-peer0.org1.example.com-mycc-1.0 [chaincode -peer.address=peer0.org1.example.com:7051]
 /dev-peer0.org2.example.com-mycc-1.0 [chaincode -peer.address=peer0.org2.example.com:7051]
@@ -1176,6 +1183,11 @@ $ docker run -d \
 #docker logs shows the command’s STDOUT and STDERR. 
 
 docker logs 
+# https://github.com/moby/moby/issues/9508
+# https://superuser.com/questions/117841/get-colors-in-less-or-more
+  sudo docker logs peer0.org3.example.com 2>&1 | less -i -R
+
+
 docker service logs
 docker info |grep 'Logging Driver'
 docker run -it --log-driver none alpine ash
@@ -1478,9 +1490,18 @@ export https_proxy='https://127.0.0.1:58833/'
 /etc/init.d/squid3  restart
 dns_nameservers 8.8.8.8 8.8.4.4 192.168.39.21 192.168.39.22
 http_access allow  all
-
-
 aptitude install squid3 squid3-common
+
+`````
+apt-get -y install apache2 squid
+sudo cp  /etc/squid/squid.conf /etc/squid/squid.conf.bak
+sudo vi /etc/squid/squid.conf
+        http_access allow  all
+        aptitude install squid3 squid3-common
+
+sudo systemctl restart squid
+sudo systemctl status squid
+sudo systemctl stop squid
 ======================= ftp section ========================
 sftp username@hostname:remoteFileName localFileName
 sftp kyle@kylesserver:/tmp/myLogFile.log /tmp/fileNameToUseLocally.log
@@ -2245,9 +2266,11 @@ chunter_rsyslog:
   
   
 
-·····················salt diff····························
+·····················salt diff············ansilbe diff················
   diff <(salt 'stage_v6_nginx01' cmd.run "cat /root/install.sh")   <(salt 'stage_v6_nginx02' cmd.run "cat /root/install.sh")
   diff ./application.properties    <( salt 'stage_v6_batch01' cmd.run "cat /opt/webserver/v6_tomcat/webapps/xxdai_batch/WEB-INF/classes/application.properties"|sed '1d'| cut -d " " -f   5- )
+
+ diff <(ansible 'org1-AT' -a "openssl x509 -in ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt  -text -noout") <( ansible 'org3-AT' -a "openssl x509 -in /home/org3/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt -text -noout")
 ·····························································
 
   删除前2列
@@ -2547,6 +2570,21 @@ u'Hello World!'
 >>> t.render()
 u'My favorite numbers: 1 2 3 4 5 6 7 8 9 '
 
+```````````jinja json section``````````
+#https://groups.google.com/d/topic/salt-users/4ZIZlFjM1e8
+#json file每一块的逗号怎么产生
+{
+   "foo": [
+   {%- for foo in pillar['foo'] -%}
+     "{{ foo|replace('"', '\\"') }}"
+     {%- if not loop.last -%}
+       ,
+     {%- endif -%}
+   {%- endfor -%}
+   ]
+}
+``````
+
 ======================= svn section========================  
 #a new caret (^) notation, Note that this URL syntax works only when your current working directory is a 
 working copy—the command-line client knows the repository's root URL by looking at the working copy's metadata
@@ -2763,7 +2801,12 @@ lsof -OnP | grep LISTEN
 netstat -anp |grep 2181   #查看谁 连到 2181
 netstat -anp --inet       #查看谁 连到 谁
 netstat -tulpn
+fuser 7000/tcp   #https://www.cyberciti.biz/faq/what-process-has-open-linux-port/
+
 ss -napt | grep 3260 
+
+mac:
+lsof -n -i4TCP:$PORT | grep LISTEN
 =======================  cygwin section  ========================     
   windows:  netstat -an
   配置ssh:  ssh-host-config
@@ -2779,6 +2822,10 @@ telnet: 装inetutils 模块
 `````````````cygwin paste section``````````````````
 getclip putclip : 装cygutils-extra模块
 git ls-tree -r master --name-only |putclip.exe
+
+=============paste section==========
+mac: paste
+windows:Ditto-cp
 =======================  cygwin ansible  ========================
 Ansible – Using Ansible on Windows via Cygwin
 步骤一：
@@ -2878,11 +2925,19 @@ dd Delete line
 d$ Delete to end of line
 d^ (d caret, not CTRL d) Delete to beginning of line
 
-```case section``
+```vi case section``
 #忽略大小写:
 You need to use the \c escape sequence. So:
 /\ccopyright
 
+
+
+````vi color section`````
+ls /usr/share/vim/vimNN/colors/
+open vim, then enter :color desert and enter.
+#列出所有颜色
+ls /usr/share/vim/vimNN/colors/ 
+``````
 #man uses less to display man pages.
 #https://unix.stackexchange.com/questions/101295/case-insensitive-search-in-man-pages
 man -i virsh
@@ -2906,7 +2961,7 @@ Esc to apply your change (or alternately Ctrl+c)
 let's highlight a block of text starting with v command
 and then moving the cursor.
 We now delete it with the d command.
-``````````````````````
+```````vi replace section```````````````
 
 vim scp://root@cloudera-agent1///etc/yum.repos.d/my-cloudera-manager.repo
 
@@ -2914,12 +2969,29 @@ Searching and Replacing
 :%s/HOME=\/var\/lib\/zabbix/HOME=\/etc\/zabbix/g
 
 
+````vi record section`````
+Type: Esc q followed by a
+…
+Type: Control a
+…
+Type: q
+Type: 98@a
 =======================  sudo section   ========================   
 命令：visudo //press escape, then type ZZ
 Cmnd_Alias SALTCMD = /usr/bin/salt, /usr/bin/salt-key, /usr/bin/salt-run, /usr/bin/salt-ssh, /usr/bin/salt-cp
 wujunrong ALL = NOPASSWD: SALTCMD
 
 或: wujunrong ALL=(ALL) NOPASSWD:ALL
+
+```````
+#mac: 在/etc/sudoers 中增加 fwu066          ALL = (ALL) NOPASSWD: ALL
+sudo vi /etc/sudoers
+# root and users in group wheel can run anything on any machine as any user
+root            ALL = (ALL) ALL
+%admin          ALL = (ALL) ALL
+fwu066          ALL = (ALL) NOPASSWD: ALL
+
+
 =======================suid section,sgid section  ======================
 sgid:  chmod g+s ./test_list_date.sh
 suid:  chmod u+s ./test_list_date.sh
@@ -2945,12 +3017,27 @@ wget --user=briphant --password='the_password' ftp://10.16.2.130/cloud/v7.1.0/fl
 
 pgrep -a fk.sh| tee ./fk.log| wc -l
 crontab -l | tee crontab-backup.txt | sed 's/old/new/' | crontab –
+
+````Process substitution`````
 使用tee命令，在标准输出和日志文件中同时输出：
 exec &> >(tee "$log_file")
 # $log_file will contain the output of the script and any subprocesses, and the output will also be printed to the screen.
 #  >(...) starts the process ... and returns a file representing its standard input. exec &> ... redirects both standard output and standard error into ... for the remainder of the script (use just exec > ... for stdout only). tee -a appends its standard input to the file, and also prints it to the screen.
 
+
+diff <(salt 'stage_v6_nginx01' cmd.run "cat /root/install.sh")   <(salt 'stage_v6_nginx02' cmd.run "cat /root/install.sh")
+
 ======================  nginx section   =========================
+
+nginx -v
+cat /etc/nginx/sites-enabled/default
+``````
+#ubuntu:
+#https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-16-04
+sudo apt-get -y update
+sudo apt-get -y install nginx
+
+`````
 To set up the yum repository for RHEL/CentOS, create the file named /etc/yum.repos.d/nginx.repo with the following contents:
 
 [nginx]
@@ -3020,6 +3107,8 @@ vi /etc/nginx/nginx.conf
 mv  /etc/nginx/conf.d/default.conf /tmp/
 
 /etc/nginx/nginx.conf
+cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.$(date "+%b_%d_%Y_%H.%M.%S")
+
 /run/nginx.pid
 
 ```````nginx debug`````
@@ -3775,7 +3864,7 @@ rpm -q jdk  #remove jdk
 ``````````tar section```````
 
 tar   zxvf jdk-8uversion-linux-x64.tar.gz
-tar   -cf config_file_credit.tar   ./test_v6_mobile/   ./stage_v6_mobile/ 
+tar   -zcf config_file_credit.tar   ./test_v6_mobile/   ./stage_v6_mobile/ 
 zip   abc.zip *
 
 tar -xzf rebol.tar.gz
@@ -4656,8 +4745,12 @@ www[01:50].example.com
 10.0.0.1 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=myrootpassword
 [databases]
 db-[a:f].example.com
+
 ansible *pxe[1-4]_fifo -m raw -a  ....
 ansible  'ci*:!ci19'  -m raw -a "cat /etc/release| head -1"  #exclude ci19
+ansible '*-org[1-2]*' -m shell -a "ls ~/repos*"
+#http://ansible.pickle.io/post/86598332429/running-ansible-playbook-in-localhost
+ansible all -i "localhost," -c local -m shell -a 'echo hello world'
 
 [stage_v6_tradew]
 stage_v6_tradew01 ansible_ssh_host=192.168.31.54  ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=test
@@ -4675,6 +4768,12 @@ ct-stage-tomcat-partener02   ansible_ssh_host=192.168.31.91  ansible_connection=
 ````ansible debug``````````````
 ANSIBLE_DEBUG=1 ansible test_server1  -m ping -vvv
 
+
+ansible AirTrace-org3 -m synchronize -a "src=/Users/fwu066/Documents/share/blockchian/doc dest=~  delete=yes recursive=yes"
+ansible 'AirTrace-org2' -m shell -a "id" --become #become root user
+AirTrace-org2 | SUCCESS | rc=0 >>
+uid=0(root) gid=0(root) groups=0(root)
+
 ````````````````
 #Let’s run a playbook using a parallelism level of 10:
 ansible-playbook playbook.yml -f 10
@@ -4682,6 +4781,39 @@ ansible-playbook playbook.yml -f 10
 按照hosts文件中的服务器顺序一个个执行，列出smartos上的硬盘
 ansible qinghua -f 1 -m raw -a " format < /dev/null | sed -n 's/.*\(<.*>\).*/\1/p' "
 
+`````
+setup - Gathers facts about remote hosts #https://docs.ansible.com/ansible/latest/setup_module.html
+
+
+````ansible template section````ansilbe jinja``
+#https://docs.ansible.com/ansible-container/container_yml/template.html
+Place Templating expressions inside of quotes, as above.
+方案一：Use the --vars-file option to provide the path of a file containing variable definitions, 
+ ansible-container --vars-file devel.yaml build
+
+1. Before the build command can be executed, Jinja is called to perform template rendering. 
+2. Ansible Container reads the contents of the variable file, devel.yaml and passes it to Jinja along with a copy of container.yml. 
+3. Jinja performs the transformation, returning a copy of container.yml with all of the expressions replaced by actual values
+方案二：
+Variable files can also be specified using the vars_files directive under settings in container.yml. For example:
+Variable files can also be specified using the vars_files directive under settings in container.yml. For example
+
+方案三：
+Passing environment variables
+方案四：
+Top-level defaults
+各种方案优先级：
+* first to environment variables, then variable files, and finally to top-level defaults.
+* At the service level, role variables and role metadata come into play. Precedence is given first to values defined for the service in container.yml, then to the role’s metadata found in meta/container.yml, then to role defaults in defaults/meta.yml, and finally to global variables.
+
+
+·············
+ansible test_nginx    -m fetch  -a "src=/var/log/nginx/bigdata_pv.log     dest=/opt/logs/share/{{ inventory_hostname }}.bigdata_pv.log  flat=yes"
+
+ansible 'org1-AT' -m template -a "src=/Users/fwu066/Documents/share/tmp/test.j2  dest=/tmp/wujunrong/test.txt"
+  cat /Users/fwu066/Documents/share/tmp/test.j2
+  aa {{ inventory_hostname }} bbb
+ansible org1-AT -a "sh -c 'cat ~/repository_air_trace/frank_ssh_config | grep  {{ inventory_hostname }}' "
 
 
 ``````````````````
@@ -4690,7 +4822,34 @@ cat ./ansible-svn.sh
 #!/bin/bash
 svn list  http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/    --username wujunrong| grep  ansible |xargs -I {} svn export  http://192.168.38.230/YXITD/saltstack/trunk/wujunrong/{} --force  /etc/ansible/hosts
 
+ansible-playbook release.yml --extra-vars "version=1.23.45 other_variable=foo" #https://stackoverflow.com/questions/30662069/how-can-i-pass-variable-to-ansible-playbook-in-the-command-line
+````ansible grains section````ansible facts````
+#获取ip相关的信息：
+ansible org1-AT -m setup -a 'filter=ansible_eth[0-2]'
 
+
+````````playbook shell section```````````
+- hosts: 'org10-AT'
+  gather_facts: no
+  tasks:
+    - name: start simple http server in background
+      shell: |
+        set -e
+        cd ~/repository_air_trace/AT_node_client
+        npm -v
+        sudo npm install   
+        echo wujunrong
+        sleep 30
+        sudo npm install -g npm@5.3.0; 
+        sudo  npm install -g @angular/cli@1.2.0 
+        ng build 
+        cp -r ~/repository_air_trace/AT_node_client/dist/*  ~/repository_air_trace/AT_node_server/public/
+        #(nohup ng serve --host 0.0.0.0 --port 4200 --disable-host-check  </dev/null >/dev/null 2>&1 ) &
+        
+        start-stop-daemon   --start  --background   --quiet --pidfile /var/run/test --chdir ~/repository_air_trace/AT_node_client --exec /usr/bin/ng -- serve --host 0.0.0.0 --port 4200 --disable-host-check
+        sleep 4
+      register: ps
+    - debug: var=ps.stdout_lines
 ````````xshell section````````````
 /etc/ansible/hosts->xshell 配置文件
 cat /etc/ansible/hosts| grep -E -v "^[[:space:]]*$"  | grep -v -E "\[.*\]" | grep -v "^#.*" | grep -v localhost | awk '{system("echo -ne "$1" \",\"  ; echo -ne "$2" | cut -d = -f 2- | tr -d \"\n\" ; echo -ne \",\" ssh ;echo -ne \",\" 22 \",\"; echo  -ne "$4" | cut -d = -f 2-  | tr -d \"\n\"   ;echo -ne \",\" ;  echo -e   "$5" | cut -d = -f 2-  ")}' |sed  's/\\//g' |sed 's/ //g'>./xshell.csv
@@ -4722,6 +4881,36 @@ curl  -s http://192.168.10.56:5000/devops/megatron/raw/master/RabbitMQ/install.s
 ````ssh file section````
 cat file | ssh remoteuser@ip.address.of.remote.machine "cat > remote"
 ssh remoteuser@ip.address.of.remote.machine "cat > remote" < file
+``````ssh config section````````
+cat ~/.ssh/config
+Host org1-AT
+        HostName 23.102.236.94
+        IdentityFile ~/.ssh/id_rsa
+        User org1
+        AddKeysToAgent yes
+##        UseKeychain yes
+
+Host org2-AT
+        HostName 13.75.46.103
+        IdentityFile ~/.ssh/id_rsa
+        User org2
+        AddKeysToAgent yes
+##        UseKeychain yes
+
+Host org3-AT
+        HostName 23.102.237.22
+        IdentityFile /Users/fwu066/Documents/share/company/ssh/id_rsa
+        User org3
+        AddKeysToAgent yes
+##        UseKeychain yes
+················
+ssh org3-AT
+/Users/fwu066/Documents/share/company/ssh/id_rsa是私钥
+
+
+`````second ssh server``
+#https://access.redhat.com/solutions/1166283
+
 
 ``````ssh proxy````
 ssh -R 9000:localhost:3000 user@example.com
@@ -4752,7 +4941,7 @@ ssh -R     3389:127.0.0.1:3389   frank@139.219.100.43   #在公司机器上运�
             公司访问家里windows用3389端口
 
 
-·····ssh proxy dynamic section···ssh proxy section····aliyun section····dynamic proxy··
+·····ssh proxy dynamic section···ssh proxy section····aliyun section····dynamic proxy·······sock5 proxy··sock proxy···········
 
 #https://www.codeproject.com/Tips/634228/How-to-Use-Proxychains-Forwarding-Ports
 #proxy traffic from one application on your local computer through another application on your local computer. That's what proxychains does. 
@@ -4768,22 +4957,35 @@ edit the port number on the last line
 socks4  127.0.0.1 8000
 
 步驟二：配置ssh
+sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.factory-defaults
 in /etc/ssh/sshd_config on the server, AllowTcpForwarding is enabled, as like below.
 Code:
 AllowTcpForwarding yes
 
 service sshd restart
-
+或sudo systemctl restart ssh
 步驟三：
 ssh -D 1080 root@139.196.102.159
 
-
+打开firefox选项：Proxy DNS when using SOCKS v5
 步骤四 
 #使用代理安装程序,注意用proxychains开头
 proxychains apt-get -y install docker-ce 
 
 
 ===pip section===shadowsocks section===vpn section===
+
+#mac:
+     #https://shadowsocks.org/en/download/clients.html
+     brew install shadowsocks-libev
+
+
+     To have launchd start shadowsocks-libev now and restart at login:
+       brew services start shadowsocks-libev
+     Or, if you don't want/need a background service you can just run:
+       /usr/local/opt/shadowsocks-libev/bin/ss-local -c /usr/local/etc/shadowsocks-libev.json -u
+         
+```
 yum -y install python
 yum -y install python-setuptools && easy_install pip
 #wget https://bootstrap.pypa.io/get-pip.py
@@ -4858,9 +5060,14 @@ THREAD DISPLAY
 -L Show threads, possibly with LWP and NLWP columns
 -T Show threads, possibly with SPID column
 -m Show threads after processes
+``````
+#process 启动时间：
+#https://stackoverflow.com/questions/5731234/how-to-get-the-start-time-of-a-long-running-linux-process
+netstat -antup | grep 4200
+ps -eo pid,lstart,cmd | grep 91209
 
-
-
+#按启动时间排序：
+ps -ef --sort=start_time
 ============= 翻墙 ================
 
 lantern :sudo apt-get install libappindicator3-1
@@ -4897,6 +5104,19 @@ rsync -av /srv/     /tmp/wujunrong/backup/srv/     --exclude   salt/xinxindai_to
 #同步时，去掉target目录（可能在某个子目录下），并且delete掉上次同步的target目录
 rsync -avh ./hadoop-spark --exclude '*/target/*'  frank@52.191.119.111:/home/frank/demo-src --delete-excluded   --delete
 
+
+
+`````
+
+ansible 'AirTrace-org1' -m shell -a "sudo scp -F ~/.ssh/config -r ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/*  AirTrace-org4:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
+ansible 'AirTrace-org1' -m shell -a "sudo scp -F ~/.ssh/config -r ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/*  AirTrace-org2:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
+
+#ansible rsync section
+
+ansible 'AirTrace-org[1:4]*' -m shell -a   'bc_home=~;rsync -azh -e "ssh -F $bc_home/.ssh/config"  AirTrace-org2:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/  ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/'
+
+执行1和4，而不是1、2、3、4
+
 ``````````断点续传 section````````````
 #https://stackoverflow.com/questions/20860896/is-there-a-way-to-continue-broken-scp-secure-copy-command-process-in-linux
 #https://www.cyberciti.biz/tips/linux-use-rsync-transfer-mirror-files-directories.html
@@ -4916,11 +5136,14 @@ C-f Move forward one character.
 Ctrl-a to get to the beginning 
 Ctrl-e 到最后
 
-````````````
+```meta section`````````
 M-b and M-f for moving backwards and forwards to the current word,
 xshell meta key
 File -> Properties -> Terminal -> Keyboard
 把 "Use Alt as Meta key" 这个选项勾上
+
+iterm2:
+: Go to Preferences->Profiles tab. Select your profile on the left, and then open the Keyboard tab. At the bottom is a set of buttons that lets you select the behavior of the Option key. For most users, Esc+ will be the best choice.
  
 ```````````````dash section```````````````
 参数"-"代表 standard input
@@ -4967,10 +5190,12 @@ unset HISTFILE
 tar xjvf strongswan-5.2.1.tar.bz2
 zipinfo conf_file.zip
 
-====sort section=====
+====sort section====uniq section=
 sort <file> | uniq -c            #计算重复次数
 sort <file> | uniq --count
 sort -k2,4 order.txt   #uses the second and fourth fields to sort the data.if the sorting is to be done on the basis of first 3 fields, it will be: '-k 1,3'
+#去掉重复的行
+sort file.log | uniq -u
 =====================
 
 pwdx <PID>  #Find out current working directory of a running process?
@@ -5016,13 +5241,17 @@ git clone --branch 5.2.1  https://git.strongswan.org/strongswan.git
 sudo yum -y groupinstall  "Development Tools"
 sudo apt-get install build-essential
 ``````grep section````````````````
-  忽略大小写
+  #忽略大小写
   grep -inr "ramesh" *     #exclude case from a grep to make it not case sensitive – simply add -i
-  grep -I -n -H 忽略二进制文件
+
+  #忽略二进制文件
+  grep -I -n -H 
        -I -- process a binary file as if it did not contain matching data; 
        -n -- prefix each line of output with the 1-based line number within its input file
        -H -- print the file name for each match
   
+
+  grep -r "nginx.*conf\.d"  *
   
   find ./ -path "*.yml" |xargs -I {} grep -H owner=  {} 
   grep -e listen -e standard_conforming_strings
@@ -5043,8 +5272,10 @@ sudo apt-get install build-essential
   
   cat v6_nginx01-tomcat_access-2016-06-07-14_05_01.log |   gawk -F@  '{print $1 $5  $9}' |  grep -E "[[:space:]]+/[[:space:]]*$" |  gawk -F@  '{print $1 $5 $9 $17}'
 
+  反向搜索：
   grep -v 'adoring_dubinsky\|NAMES'
   grep -E -v "^[[:space:]]*$"  #去空行
+  find / -ipath "*ansible.cfg" 2>&1 | grep -v 'Permission'
 ··········smartos grep section········      
   ls |  /usr/xpg4/bin/grep  -v -E 'wujunrong_9d58adc6-499b-11e6-9ea7-437c859dc16b.*|ffed9526-999d-11e6-93ae-bfa56012d3b9'
 ``````````````````````````````
@@ -5065,7 +5296,9 @@ diff -qr directory-1/ directory-2/
 $ sudo apt install meld  [Debian/Ubuntu systems]
 $ sudo yum install meld  [RHEL/CentOS systems]
 $ sudo dnf install meld  [Fedora 22+]
-meld
+
+
+
 ```````````du section``````````size section``````````
 du -ah /root
 du -ak /root
@@ -5078,6 +5311,10 @@ du  --max-depth  0  -ah  /var/lib/docker/volumes/181f8ba1f76f6d6f132ae91f9c9fff2
 ```````````ls section``````````````````````````
 ls -ltr
 # ls -ld /home/jerry
+
+ls -lct
+shows the ctime of each file, sorted with the most recent first.
+
 ```file section````````
 stat ./v6_tomcat_webservice01-catalina.out
 file -bi [filename]  #utf-8
@@ -5561,7 +5798,11 @@ sudo tcpdump -i lo -A udp and port 514
 
 tcpdump -n host 192.168.1.1
 tcpdump -n net 192.168.1.0/24
-tcpdump -n src host 192.168.1.1
+     
+     tcpdump -n src host 192.168.1.1
+sudo tcpdump -n dst host 13.75.43.35
+
+
 tcpdump -n dst port 23 # 能收到请求消息，响应消息不显示
 tcpdump -n dst port 5000
 
@@ -5576,7 +5817,7 @@ boot: Not enough free disk space when upgrading
 方法一：sudo apt-get purge $(dpkg -l linux-{image,headers}-"[0-9]*" | awk '/ii/{print $2}' | grep -ve "$(uname -r | sed -r 's/-[a-z]+//')")
 方法二：A more concise command to purge all old kernels is: sudo apt-get autoremove --purge
 
-````ubuntu ssh section```lantern section`
+````ubuntu ssh section```lantern section````` ssh section ubuntu````
  apt-get update
  apt-get install openssh-server
  systemctl start ssh 
@@ -5586,6 +5827,30 @@ boot: Not enough free disk space when upgrading
  apt-cache search libappindicator3
  apt-get install libappindicator3-1
 
+````````second ssh server`````````````````
+#https://access.redhat.com/solutions/1166283
+#ubuntu:
+cp /etc/ssh/sshd{,-second}_config
+sudo vi /etc/ssh/sshd-second_config
+  Port 22220
+  PidFile /var/run/sshd-second.pid
+sudo cp /etc/systemd/system/sshd.service  /etc/systemd/system/sshd-second.service
+
+sudo vi /etc/systemd/system/sshd-second.service
+
+
+      modify Description
+      Description=OpenSSH server second instance daemon
+
+      add sshd.service to After, so that the second instance starts only after the first one has started, which includes key generation      
+      After=syslog.target network.target auditd.service sshd.service
+
+
+
+systemctl list-units      --type service
+sudo systemctl enable   sshd-second.service
+sudo systemctl status   sshd-second.service
+ssh -p 22220 user@server
 
 `````ubuntu network section`````
 
@@ -6069,10 +6334,13 @@ end1
 ====sed section awk section========
 awk '{print $NF}' #获得最后一列 
 
-
+````````
 #Only return the matched string in sed
 echo "atestb" | sed -n 's/.*\(test\).*/\1/p'
 echo "atestb" | sed 's/.*\(test\).*/\1/'
+#要用backreference \1 前面必须要用括号把要引用的括起来，例如：http://languor.us/sed-invalid-reference-1-s-commands-rhs
+ansible org1-AT -m shell -a "sudo docker ps | sed -n 's/.*\(ca_peerOrg[0-9]\).*/\1/p'|xargs -I{} sudo docker restart {}"
+````````
 
 sed -e "s/stage_/\/stage/g" -e "s/v6_webservice/\/webservice\//g"
 删除最后一行：
@@ -6149,7 +6417,18 @@ git clone git+ssh://git@github.com/webloginwu/my_doc.git
 git clone git+ssh://git@github.com/webloginwu/code_example
 git commit -a -m "about github"
 
+
+ git remote set-url origin git+ssh://git@github.com/webloginwu/code_exampl
+ git remote set-url origin  git+ssh://git@github.com/webloginwu/my_doc.git
 ============git section=====
+
+git for mac
+方法一：
+用安装包安装,https://git-scm.com/download/mac
+方法二：
+brew install git
+```````````````
+
 理解：
 git merge 和git rebase的区别：
 git merge 会在当前所在的分支上新产生一个commit（three-way merge，合并时会找共同的父亲，在父亲之前的commit忽略），
@@ -6164,6 +6443,32 @@ git rebase在当前分支的head上重新commit，机制不一样
 .git/config                                   #1:Specific to that single repository
                                               #2:定义了从remote下载哪些分支
 
+`````````git ignore section``````
+# https://www.atlassian.com/git/tutorials/gitignore
+# .gitignore uses globbing patterns to match against file names
+
+# https://stackoverflow.com/questions/6380196/gitignore-does-not-work
+# A gitignore file specifies intentionally **untracked files** ，git rm file will stop track them.
+
+
+
+#检查为什么会被忽略
+git check-ignore -v testCloudArtifacts/org*/channel/*.yaml
+
+
+logs/     #忽略目录
+!logs/important.log    
+
+--
+logs/debug.log
+logs/important.log    
+
+--
+
+ Wait a minute! Shouldn't logs/important.log be negated in the example on the left
+Nope! Due to a performance-related quirk in Git, you can not negate a file that is ignored due to a pattern matching a directory
+
+
 ``````````初始化 git``````````
 svn mkdir <url> -m <msg>
 cd <localdir>
@@ -6171,6 +6476,10 @@ svn co <url> .
 svn add <files etc>
 svn commit -m <msg>
 ```````git config section````````````````````````````
+设置方法一：
+      ~/.gitconfig #man git-config:User-specific configuration file. Also called "global" configuration file.
+方法二：echo '[diff] external = git-meld' >> ~/.gitconfig
+
 
 git config --list
 git config user.name
@@ -6178,6 +6487,14 @@ git config user.name
     git config --global user.email you@example.com
 
 A refspec is specified as [+]<src>:<dst>. The <src> parameter is the source branch in the local repository, and the <dst> parameter is the destination branch in the remote repository. The optional + sign is for forcing the remote repository to perform a non-fast-forward update.
+
+···github section·····
+cat .git/config
+ url = git@github.com:pwccnhk/AT_node_client.git #ssh地址获取方式（github 证书方式私有源）：先用github提供的ssh clone clone一次项目，在.git/config中获取ssh地址，再在github desktop上设置此ssh地址
+或 
+ url = git+ssh://git@github.com/webloginwu/code_example 
+
+
 ````````初次使用git要设置```
  git config --list
  git config --global user.name "wujunrong"
@@ -6269,13 +6586,44 @@ The basic Git workflow goes something like this:
 2、git add:       You stage the files, adding snapshots of them to your staging area.  
 3、git commit -m: You do a commit, which takes the files as they are in the staging area and stores that snapshot permanently to your Git directory.
 
+···········
+
+    git add -A stages All
+
+    git add . stages new and modified, without deleted
+
+    git add -u stages modified and deleted, without new
+
+········
+
  $ git show
  # check what would be pushed to Gerrit
 方法二：
 git commit -a -m 'added new benchmarks'   #Skipping the Staging Area
 
 
+#用我方的代码来解决冲突
+git checkout --ours ./artifacts/base.yaml
+
 ···git rebase section······
+#https://www.atlassian.com/git/tutorials/merging-vs-rebasing
+The golden rule of git rebase is to never use it on public branches.
+Merging is a safe option that preserves the entire history of your repository, while rebasing creates a linear history by moving your feature branch onto the tip of master.
+
+#https://git-scm.com/book/en/v2/Git-Branching-Rebasing
+It works by going to the common ancestor of the two branches (the one you’re on and the one you’re rebasing onto), getting the diff introduced by each commit of the branch you’re on, saving those diffs to temporary files, resetting the current branch to the same commit as the branch you are rebasing onto, and finally applying each change in turn.
+
+by performing a rebase before the merge, you’re assured that the merge will be fast-forwarded, resulting in a perfectly linear history. This also gives you the chance to squash any follow-up commits added during a pull request.
+
+
+#work flow:   https://git-scm.com/book/en/v2/Git-Branching-Rebasing
+          $ git checkout experiment
+          $ git rebase master
+          First, rewinding head to replay your work on top of it...
+          Applying: added staged command
+          $ git checkout master
+          $ git merge experiment
+
 范例一：
 #https://stackoverflow.com/questions/11856141/how-to-git-commit-amend-a-commit-thats-the-base-of-a-branch
 git rebase --onto master master@{1} foo  #把master@{1}开始到foo分支结束这段分支，把master的最新的commit引入进来
@@ -6347,6 +6695,11 @@ git add CONTRIBUTING.md
 步骤3.  git add CONTRIBUTING.md  #think of it more as “add this content to the next commit” rather than “add this file to the project”.
 步骤4.  此时用git commit修改会进入本地repository
 ````````````````````````````
+#revert changes made to your working copy, https://stackoverflow.com/questions/1146973/how-do-i-revert-all-local-changes-in-git-managed-project-to-previous-state
+git checkout .
+git reset HEAD <file>..." to unstage)
+
+```````
 #Git - List all files currently under source control?列出被git管理的文件：
        git ls-tree -r master --name-only 
 `````git rename section `````
@@ -6381,40 +6734,111 @@ git stash branch <branch-name>
                            applies the latest one.
 git stash drop stash@{0}
 ``git log section```git graph section````
-
+  
 git log salt-office/master --stat
 git log -2
+git log --oneline #simple output
 ·········
 git log --graph --oneline --decorate --all 
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h %s %ci %h %b'
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %s, %ci, %b'
+
+      #场景：某个人改的，在哪个commit改的，改了哪些文件，改的内容是什么？
+            git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %cr, %b %C(bold green)%s' --author="frank wu"   # 作者
+            git log --author="frank wu"  --oneline | grep -v  'Merge' |awk '{print  $1}'|xargs -I {} sh -c 'git show --pretty="" --name-only {}'| sort | uniq -u -d # 改了哪些文件，去除Merge的
+            commitId=cb1223a
+            git show --pretty="" --name-only $commitId
+            git difftool -y --tool=meld $commitId "$commitId"^              #或： 
+            git difftool -y --tool=meld $commitId "$commitId"^ -- index.js  #或
+            git difftool -y --tool=meld  testCloud  master -- runEverything.sh
+
+git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %cr, %b %C(bold green)%s'                       #'%cr': committer date, relative 相对日期
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci, %b %C(bold green)%s'
 git rev-list --left-right --boundary --pretty=oneline HEAD...origin/master
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci)%s'      --left-right --boundary  HEAD...origin/master
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci)%s'      --left-right --boundary    71979fa...5ec0355
+
+
+#列出我 frank commit过的所有文件
+git log --author="frank wu"  --oneline | grep -v  'Merge\|init branch' |awk '{print  $1}'|xargs -I {} sh -c 'git show --pretty="" --name-only {}'| sort | uniq -u -d
+
 ····
 '%b': body
 '%C(…)': color specification
-·······
+
 git log  gerrit/master
 git log  origin/master
-git blame ./scala-devops/src/main/scala/SimpleApp.scala
-```git diff section``
 
-git diff                 #working目录和stage中的差别，即add后再次修改，尚未再次执行add
-git diff --staged        #stage和本地repository的差别，即在stage中，但还没有提交到repository，(--staged and --cached are synonyms)
- 
+···git file section····git files sectio····
+场景一：列出一个commit的所有文件
+        git diff-tree --no-commit-id --name-only -r bd61ad98
+        git show --pretty="" --name-only bd61ad98
+场景二：列出一个文件中的所有commit
+        git blame ./scala-devops/src/main/scala/SimpleApp.scala
+
+场景三：列出一个文件中的所有commit
+#View the change history of a file using Git versioning
+#https://stackoverflow.com/questions/278192/view-the-change-history-of-a-file-using-git-versioning
+  gitk [filename]
+  or to follow filename past renames
+  gitk --follow [filename]
+
+```git diff section`````git diff tool section```
+
+git difftool --tool=meld  HEAD HEAD^
+git difftool -y --tool=meld  --staged -- app/helper.js
+··························
+git diff HEAD^  HEAD --name-only
+git diff --diff-filter=ad master..
+········································
+git diff HEAD                  #working copy 和 HEAD的差别
+git diff                       #working目录和stage中的差别，即add后再次修改，尚未再次执行add
+git diff --staged              #stage和本地repository的差别，即在stage中，但还没有提交到repository，(--staged and --cached are synonyms)
+git diff --cached FETCH_HEAD   #git diff between staged changed and HEAD repository,https://stackoverflow.com/questions/33825236/git-diff-between-staged-changed-and-head-repository
+
+
 #white space check
 git diff --check  
 
-````````````
+········meld section······
+http://blog.deadlypenguin.com/blog/2011/05/03/using-meld-with-git-diff/
+
+      #meld for mac:安装
+      export HOMEBREW_NO_ENV_FILTERING=1
+      brew install caskroom/cask/meld
+
+方案二：
+      git difftool --tool=meld  HEAD HEAD^   #https://makandracards.com/makandra/42757-how-to-git-diff-with-a-graphical-diff-tool      
+方案一：
+     步骤一：
+           cat /usr/local/bin/git-meld <<EOF
+           #!/bin/bash
+           meld $2 $5
+     EOF
+     chmod +x usr/local/bin/git-meld
+     步骤二：     
+          Now add the following to your ~/.gitconfig file
+          
+              [diff] external = git-meld
+
+
+``````git diff file section``````
 版本区别：
 git diff HEAD^  HEAD  Linux_Command_Set.txt  当前版本和上一版本的区别
 git diff HEAD^^ HEAD main.c
 git diff HEAD^^..HEAD -- main.c
 git diff HEAD~2 HEAD -- main.c
+
 #本地文件和本地master中的文件比较，显示修改内容
  git diff master:Linux_Command_Set.txt -- Linux_Command_Set.txt 
+#比较两个分支中同一个文件是否被修改
+git diff                     testCloud  master -- ./artifacts/channel/configtx.yaml
+git difftool -y --tool=meld  testCloud  master -- ./artifacts/channel/configtx.yaml
+
+
+#当前HEAD和master分支的区别
+git diff master
+
 # what change was introduced to origin/master in the last 4 commits?
 git diff origin/master origin/master~3
 
@@ -6425,7 +6849,7 @@ git diff origin/master~4
 #fetch 和 checkout的关系
  git fetch origin                             #只能获得origin/serverfix，但没有本地分支，可以通过merge到本地分支的方法来继续工作
  git checkout -b serverfix origin/serverfix   #能获得本地分支serverfix，可以在此分支上修改;checkout只和本地分支有关
-```````````````````````
+```````````git remote section````````````
 git remote add pb https://github.com/paulboone/ticgit
 git fetch  pb
 git push   origin   master
@@ -6433,6 +6857,7 @@ git push   origin   master
 git push origin --delete serverfix  #Deleting Remote Branches
 
 git remote show     origin
+git remote set-url origin  git+ssh://git@github.com/webloginwu/my_doc.git
 git remote rename   pb     paul
 git remote rm       paul
 git ls-remote --heads origin             #The --heads option lists only branch names
@@ -6461,7 +6886,7 @@ git tag -a v1.2     9fceb02    #you specify the commit checksum (or part of it) 
 git push origin   v1.5
 git push origin --tags
 
-`````
+`````git branch section``````
 #创建本地分支，再checkout
 git checkout -b [branchname] [tagname]:
 git checkout -b version2     v2.0.0
@@ -6489,23 +6914,59 @@ git branch -d hotfix #删除本地分支
 #注意：if your working directory or staging area has uncommitted changes that conflict with the branch you’re checking out, Git won’t let you switch branches.
 git checkout testing   #To switch to an existing branch
 git checkout master
-``````
-git merge 操作步骤：
-git checkout master
-git merge iss53   #如果master只是落后几个commit的话，这个操作就是fast-forward 
-git merge --abort #取消merge
-git status
-git add #解决conflict后执行
-git mergetool
-$ git config --global merge.tool "meld"
-$ git config --global mergetool.meld.path "C:\Program Files (x86)\Meld\Meld.exe"
-
-#git rebase理解：
-分支路径消失（git branch切到分支上后，看到的是master分支上的内容），分支上的commit，被放到master分支上。
+``````git merge section`````
 
 git merge-base branch2 branch3
 
-````````git tags ```git release````````````````
+
+·····git merge file section·······
+#How to "merge" specific files from another branch , http://jasonrudolph.com/blog/2009/02/25/git-tip-how-to-merge-specific-files-from-another-branch/
+git checkout source_branch <path/file>...
+git checkout twitter_integration app/models/avatar.rb
+git checkout testCloud   app-docker-compose.yaml runEverything.sh app-docker-compose.dev.yaml
+··································
+
+场景一：
+    git merge 操作步骤：
+    git checkout master
+    git merge iss53   #如果master只是落后几个commit的话，这个操作就是fast-forward 
+    git merge --abort #取消merge
+    git status
+    git add #解决conflict后执行
+    git mergetool
+    $ git config --global merge.tool "meld"
+    $ git config --global mergetool.meld.path "C:\Program Files (x86)\Meld\Meld.exe"
+
+场景二：
+   # 在分支中合入master中merge最新的code
+   步骤一：
+         fwu066mac:AT_node_sdk fwu066$ git branch
+           master
+           testBanch
+   * testCloud
+   步骤二：
+         git merge master
+``````git rebase section``````
+#https://www.atlassian.com/git/tutorials/merging-vs-rebasing
+
+git merge-base branch2 branch3
+git merge-base feature master    
+#returns the commit ID of the original base, which you can then pass to git rebase. it only affects local branches. The only thing other developers will see is your finished product, which should be a clean, easy-to-follow feature branch history.But again, this only works for private feature branches. If you’re collaborating with other developers via the same feature branch, that branch is public, and you’re not allowed to re-write its history.
+
+
+git checkout feature
+git merge master
+
+等价于
+git merge master feature
+
+对应的rebase
+git checkout feature
+git rebase master #或 git rebase -i master
+#或
+git rebase master         topic  #永远在自己的分支上进行rebase，https://www.atlassian.com/git/tutorials/merging-vs-rebasing
+
+````````git tags section ```git release section````````````````
 方法一：
 git clone git://git.openssl.org/openssl.git
 cd openssl
@@ -6543,6 +7004,8 @@ git rev-list --all --remotes --pretty=oneline foo.txt
                                            #https://stackoverflow.com/questions/6311226/query-git-reflog-for-all-commits-to-a-specific-file
 git rev-list -n 5 HEAD -- <file_path>      #Find the last commit that affected the given path. As the file isn't in the HEAD commit, this commit must have deleted it.
                                            #https://stackoverflow.com/questions/953481/find-and-restore-a-deleted-file-in-a-git-repository
+
+git-bisect - Use binary search to find the commit that introduced a bug
 ===========zabbix section===========
 zabbix_server --version
 zabbix-server-mysql.x86_64 : Zabbix server compiled to use MySQL database
@@ -6895,12 +7358,39 @@ reviewboard中增加repository，用key方式认证配置成功
 ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.0.0.4 -p522
 ssh://10.0.0.4:522/root/gitweb-home/git/spark.git
 
-===========awk section===========
+===========awk section=========awk regular expression section=====
+环境变量传递：
 awk -v ps_cri_ch=$page_space_usage_critical_threshold  -v ps_ch=$page_space_usage_threshold '{if($5<ps_cri_ch && $5>=ps_ch) print "Swap space usage rate " $5 "% exceeds threshold on "$1" "$2" " $3 }'
 awk '($3~/U/)&&($4~/H/){print $0;}'
+
+awk '$1 == "findtext" {print $3}'
+
+`````can use both regexp and string constants to describe regular expressions``````
+https://www.gnu.org/software/gawk/manual/html_node/Computed-Regexps.html#Computed-Regexps
+# 类型一：regexp constant（推荐使用）
+     $0 ~ /foo/ 
+                                             
+# 类型二：string constant,
+# you have to understand that the string is, in essence, scanned twice: the first time when awk reads your program, and the second time when it goes to match the string on the lefthand side of the operator with the pattern on the right. This is true of any string-valued expression (such as digits_regexp, shown in the previous example), not just string constants. 
+     sudo docker ps | awk '$NF ~ ".*ca.*peer.*" { print $NF }'
+```````regexp constant`````````````
+https://www.gnu.org/software/gawk/manual/html_node/Expression-Patterns.html
+awk '$1 ~ /li/ { print $2 }' mail-list
+awk '! /li/'                 mail-list
+awk '/edu/ && /li/' mail-list
+awk '/edu/ || /li/' mail-list
+
+`````ansible awk`````
+打印~/.ssh/config文件中，inventory name对应的IP地址
+   ansible 'org1-AT' -m shell  -a "airtrace={{ inventory_hostname }}; cat ~/repository_air_trace/frank_ssh_config | awk '{ if (\$2 == \"org1-AT\") print \$0 }' "
+   ansible 'org1-AT' -m shell  -a "airtrace={{ inventory_hostname }}; cat ~/repository_air_trace/frank_ssh_config | awk '/"org1-AT"/ {getline;print \$2;}'
+   ansible 'org1-AT' -m shell  -a "export airtrace={{ inventory_hostname }}; echo \$airtrace ;cat ~/repository_air_trace/frank_ssh_config | awk -v org=\$airtrace  ' \$0 ~ org {getline;print \$2}' "
+   ansible 'test' -m shell  -a "export airtrace={{ inventory_hostname }}; echo \$airtrace ;SERVER_IP_FOR_CORS=\`cat ~/repository_air_trace/frank_ssh_config | awk -v org=\$airtrace  ' \$0 ~ org    {getline;print \$2}' \` ;echo \$SERVER_IP_FOR_CORS"
 =====tail section=========
 tail -f v6_webservice01-catalina.out -f v6_front03-catalina.out
-
+docker logs -f app
+#永远等待
+CMD ["sh", "-c", "tail -f /dev/null"]  
 ======cisco section======
 Cisco VPN Client for Windows 8 and 10
 1:Cisco VPN Client Fix for Windows 8 and 10 (64-bit)
@@ -6982,6 +7472,39 @@ Jump to end of a line – Command+Right Arrow.
 Jump to beginning of current word – Option+Right Arrow.
 Jump to end of current word – Option+Right Arrow.
 Jump to beginning of all text – Command+Up Arrow.
+
+open ~/.ssh/config
+
+`````brew section```lrzsz section````
+步骤一
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+#xcrun: error: invalid active developer path,
+#http://tips.tutorialhorizon.com/2015/10/01/xcrun-error-invalid-active-developer-path-library-developer-commandline-tools-missing-xcrun/
+   xcode-select --install 
+   brew install lrzsz telnet
+步骤二：
+wget -O /usr/local/bin/iterm2-recv-zmodem.sh  https://raw.githubusercontent.com/mmastrac/iterm2-zmodem/master/iterm2-recv-zmodem.sh
+wget -O /usr/local/bin/iterm2-send-zmodem.sh  https://raw.githubusercontent.com/mmastrac/iterm2-zmodem/master/iterm2-send-zmodem.sh
+chmod +x /usr/local/bin/iterm2-send-zmodem.sh  /usr/local/bin/iterm2-recv-zmodem.sh
+
+步骤三：
+#https://github.com/mmastrac/iterm2-zmodem
+Install lrzsz on OSX: brew install lrzsz
+Save the iterm2-send-zmodem.sh and iterm2-recv-zmodem.sh scripts in /usr/local/bin/
+Set up Triggers in iTerm 2 like so:
+    Regular expression: waiting to receive.\*\*B0100
+    Action: Run Silent Coprocess
+    Parameters: /usr/local/bin/iterm2-send-zmodem.sh
+    Instant: checked
+
+    Regular expression: \*\*B00000000000000
+    Action: Run Silent Coprocess
+    Parameters: /usr/local/bin/iterm2-recv-zmodem.sh
+    Instant: checked
+步骤四：
+ssh org1-AT sz ~/air-trace/deliver_CA_certificate.sh
+`````````````````````
 
 ====cobbler section===
 rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
@@ -7615,6 +8138,7 @@ f: /home/frank
  drwxr-xr-x root  root  /
  drwxr-xr-x root  root  home
  drwxr-xr-x frank frank frank
+<<<<<<< HEAD
 ````tar section````
 多个目录打包
 tar -cf myfile.tar /etc/dir1 /var/www/html /home/somedir
@@ -7623,6 +8147,16 @@ tar -czf myfile.tar.gz /etc/dir1 /var/www/html /home/somedir
 zcat v6_mobile01_20151103.tar.gz| less
 tar xvf sshpass-1.06.tar.gz
 
+=======
+
+
+ls ../../*/channel/
+`````daemon section````
+start-stop-daemon  --background  --start   --quiet --pidfile /var/run/test                                               --exec /usr/bin/ng -- serve --host 0.0.0.0 --port 4200 --disable-host-check
+start-stop-daemon  --background  --start   --quiet --pidfile /var/run/test --chdir ~/repository_air_trace/AT_node_client --exec /usr/bin/ng -- serve --host 0.0.0.0 --port 4200 --disable-host-check
+
+nohup ng serve --host 0.0.0.0 --port 4200 --disable-host-check  </dev/null >/dev/null 2>&1 ß
+>>>>>>> f15539faa32bb9145596a4bf238ae0177031a0d9
 ========node.js section========
 npm install <Module Name>
 npm install   express
@@ -8530,6 +9064,13 @@ ansible 'ci*:!ci19'  -m raw -a "/opt/local/sbin/pkg_add -U /var/db/pkgin/cache/p
 ````````````````````
 按照hosts文件中的服务器顺序一个个执行，列出smartos上的硬盘
 ansible qinghua -f 1 -m raw -a " format < /dev/null | sed -n 's/.*\(<.*>\).*/\1/p' "
+
+=====mac ansible section=====
+#http://docs.ansible.com/ansible/latest/intro_installation.html
+sudo easy_install pip
+sudo pip install ansible
+sudo wget -O /etc/ansible/ansible.cfg https://raw.githubusercontent.com/ansible/ansible/devel/examples/ansible.cfg
+
 =====smartos salt section=====
 
 /opt/salt/bin/salt-minion -l debug
@@ -9059,7 +9600,7 @@ http://10.0.1.99:8200/
 systemctl start minidlna
 [frank@hp ~]$ sudo iptables -I INPUT 1 -p tcp --dport 8200    -j ACCEPT  #在表前面加
 [frank@hp ~]$ sudo iptables -I INPUT 1 -p udp --dport 1900    -j ACCEPT  #在表前面加
-========jobs section===========
+========jobs section=======bg section=fg section=backgroud section==
     如何使得命令进入后台
 	方法一： Appending an ampersand ( & ) to the command runs the job in the background.
 	  find / -ctime -1 > /tmp/changed-file-list.txt &
@@ -9080,6 +9621,7 @@ systemctl start minidlna
 	2. fg command. When executed without arguments, it will take the most recent background job to the foreground.
 	   # fg %1
 	   # kill %2
+    sudo kill "$(jobs -p %1)"
 ==========================
 查询网卡状态
 # sudo ethtool eth25s0	   
@@ -9093,14 +9635,14 @@ systemctl start minidlna
               d   Disable (wake on nothing).   This  option  clears  all
                   previous options.
 设置网卡状态
-# sudo ethtool -s eth25s0 wol g		
+# sudo ethtool -s eth25s0 wol g
 ========trim section===========
 centos7
 # sudo systemctl enable fstrim.timer
 # systemctl is-enabled  fstrim.service
 static
-		  
-				  
+
+
 npm install --registry  npm.briphant.cn
 
 ==route section==
@@ -9158,6 +9700,25 @@ sudo openvpn --config ~/Documents/briphant_office_sh_new
 功能：列车函数列表
      Ctrl+R  command+R
 
+````Column Selection ```````
+Different mouse buttons are used on each platform:
+OS X
+
+    Left Mouse Button + Option
+    OR: Middle Mouse Button 
+
+    Add to selection: Command
+    Subtract from selection: Command+Shift 
+
+Windows
+
+    Right Mouse Button + Shift
+    OR: Middle Mouse Button 
+
+    Add to selection: Ctrl
+    Subtract from selection: Alt 
+
+
 `````安装copy on select 插件````
 步骤一：打开sublime的console
        The console is accessed via the ctrl+` shortcut or the View > Show Console menu.
@@ -9190,20 +9751,38 @@ Set a key to undefined to remove it
 
 看 man json 获得更多帮助
 `````````````json section`````````node.js section````````````````
-在linux中使用json命令：
+ 方案一：
+    在linux中使用json命令：
+    
+    docker 命令行方式：
+    docker pull node
+    docker run -i --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest node --version
+    curl -L https://github.com/trentm/json/raw/master/lib/json.js > json.js
+    echo '{"one": 1, "two": 2}'  | docker run -i --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest node json.js  -e 'this.one=undefined'
+    echo '{"name":"trent","age":38}'   | docker run -i --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest node json.js    -e 'this.age++
+    
+    ````
+    docker bash方式：
+    docker run -it --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest /bin/bash
+    npm install -g json
+    json --version
 
-docker 命令行方式：
-docker pull node
-docker run -i --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest node --version
-curl -L https://github.com/trentm/json/raw/master/lib/json.js > json.js
-echo '{"one": 1, "two": 2}'  | docker run -i --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest node json.js  -e 'this.one=undefined'
-echo '{"name":"trent","age":38}'   | docker run -i --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest node json.js    -e 'this.age++
+方案二：
+    brew install jq
+方案三：
+    #https://hub.docker.com/r/jlordiales/jyparser/
+    docker pull jlordiales/jyparser
+    cat test.json | docker run -i --rm jlordiales/jyparser get ".menu.id"
 
-````
-docker bash方式：
-docker run -it --rm --name json  -v "$PWD":/usr/src/app -w /usr/src/app node:latest /bin/bash
-npm install -g json
-json --version
+`````json diff section``````
+diff  <(jq -S . network-config-testCloud.json)  <(jq -S . wu.json)  
+meld  <(jq -S . network-config-testCloud.json)  <(jq -S . wu.json)  
+======json 2 yaml====j2y==
+
+docker run --rm wildducktheories/y2j y2j.sh installer /usr/local/bin | sudo bash
+/usr/local/bin/{y2j.sh,y2j,j2y,yq}
+echo '{ "foo": [ { "id": 1 } , {"id": 2 }] }' |ssh  'frank@52.191.215.51'  j2y
+
 =======windows section=============
 
 ````screenshot section```
@@ -9382,13 +9961,65 @@ sudo chmod +x /usr/local/bin/docker-compose
 #Please note that service names should not include underscores.https://convox.com/docs/docker-compose-file/
 
 
+<<<<<<< HEAD
 docker-compose version
 `````
+=======
+docker-compose ps
+
+````````docker compose network````````
+https://docs.docker.com/compose/networking/#use-a-pre-existing-network
+Configure the default network
+
+Instead of (or as well as) specifying your own networks, you can also change the settings of the app-wide default network by defining an entry under networks named default:
+
+version: "3"
+services:
+
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+  db:
+    image: postgres
+
+networks:
+  default:
+    # Use a custom driver
+    driver: custom-driver-1
+
+Use a pre-existing network
+
+If you want your containers to join a pre-existing network, use the external option:
+
+networks:
+  default:
+    external:
+      name: my-pre-existing-network
+
+Instead of attempting to create a network called [projectname]_default, Compose will look for a network called my-pre-existing-network and connect your app’s containers to it.
+documentation, docs, docker, compose, orchestration, containers, networking
+````````````````````````````````
+ln app-docker-compose.yaml docker-compose.yaml
+>>>>>>> f15539faa32bb9145596a4bf238ae0177031a0d9
 docker-compose up -d
 docker-compose ps
 docker-compose stop
 
+docker-compose -f app-docker-compose.yaml restart
+docker-compose -f app-docker-compose.yaml restart app
+docker-compose -f app-docker-compose.yaml stop    app
+docker-compose -f app-docker-compose.yaml start   app
 
+ls docker*yaml |xargs -I{} sh -c 'rm -f docker-compose.yaml;   echo ==== {} ====;ln -s {} docker-compose.yaml;sudo   docker-compose ps; rm -f docker-compose.yaml'
+ln -s docker-compose-cli.yaml docker-compose.yaml
+
+#查询docker ps 中 的command 参数
+mac:
+    docker inspect  -f "{{.Name}} {{.Config.Cmd}}" $( docker ps -a -q)
+    docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' container_name_or_id
+win:
+sudo docker inspect  -f "{{.Name}} {{.Config.Cmd}}" $( sudo docker ps -a -q)
 ```````
 sudo yum remove docker-ce
 sudo rm -rf /var/lib/docker
@@ -9400,9 +10031,89 @@ docker cp  nginx_web_1:/etc/nginx/nginx.conf /etc/nginx/nginx.conf
 docker cp  nginx_web_1:/etc/nginx   /tmp
 docker cp compassionate_bohr:/opt/softether.ovpn  .
 docker cp Dockerfile youthful_albattani:/tmp/
-`````
+````nginx ssl section````nginx certificate section``````
+https://www.digitalocean.com/community/tutorials/how-to-create-an-ssl-certificate-on-nginx-for-ubuntu-14-04
 sudo mkdir /etc/nginx/ssl
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt
+
+     -x509:  这个参数要求直接产生certificate 而不是 CSR
+nginx 配置文件：
+    server {
+            listen 80 default_server;
+            listen [::]:80 default_server ipv6only=on;
+    
+            listen 443 ssl;
+    
+            root /usr/share/nginx/html;
+            index index.html index.htm;
+    
+            server_name your_domain.com;
+            ssl_certificate /etc/nginx/ssl/nginx.crt;
+            ssl_certificate_key /etc/nginx/ssl/nginx.key;
+    
+            location / {
+                    try_files $uri $uri/ =404;
+            }
+    }
+
+
+========openssl section======ca section===ssl section=====certificate section=====
+#生成certificate：
+     * https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04
+     sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/apache-selfsigned.key -out /etc/ssl/certs/apache-selfsigned.crt
+     
+         -x509:  这个参数要求直接产生certificate 而不是 CSR，下面命令是产生CSR
+     https://www.digicert.com/csr-ssl-installation/ubuntu-server-with-apache2-openssl.htm
+     openssl req –new –newkey rsa:2048 –nodes –keyout server.key –out server.csr                        
+     
+#检查ssl服务器
+ 方法一：
+   openssl s_client                                    -connect 23.102.236.94:7054 -tls1_2
+   openssl s_client -cipher  ECDH-ECDSA-AES128-SHA256  -connect localhost:7054     -tls1_2
+   openssl s_client                                    -connect localhost:7054     -tls1_2
+   完美打印certificate内容：
+   openssl s_client                         -connect 23.102.236.94:7053  </dev/null 2>/dev/null | openssl x509 -text
+
+
+ 方法二：
+   nmap --script ssl-enum-ciphers -p 7054  23.102.236.94       
+
+
+#检查certificate
+  openssl x509 -in ./org1.example.com/ca/ca.org1.example.com-cert.pem  -text -noout   
+  openssl x509 -in ./repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem -text -noout
+  
+#检查signature
+  openssl s_client -servername example.com -connect example.com:443     </dev/null 2>/dev/null | openssl x509 -text #https://stackoverflow.com/questions/7885785/using-openssl-to-get-the-certificate-from-a-server
+  openssl s_client                         -connect 23.102.236.94:7053  </dev/null 2>/dev/null | openssl x509 -text
+
+·············  
+  用标准输入当作文件来输入
+  openssl x509 -in /dev/stdin  -text -noou
+  输入样例
+-----BEGIN CERTIFICATE-----
+MIICRjCCAe2gAwIBAgIQGgI/g0rqOe782QXebuSohDAKBggqhkjOPQQDAjB1MQsw
+CQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZy
+YW5jaXNjbzEaMBgGA1UEChMRb3JnMTAuZXhhbXBsZS5jb20xHTAbBgNVBAMTFGNh
+Lm9yZzEwLmV4YW1wbGUuY29tMB4XDTE4MDEyNTA3MjUwN1oXDTI4MDEyMzA3MjUw
+N1owdTELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcT
+DVNhbiBGcmFuY2lzY28xGjAYBgNVBAoTEW9yZzEwLmV4YW1wbGUuY29tMR0wGwYD
+VQQDExRjYS5vcmcxMC5leGFtcGxlLmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEH
+A0IABELM98pHzsT+R4szeVOENHTXQk9XabL+++STB/hh4juNNSMNnZqX0dxuhK4l
+zAgS9wELF5j+Qx8v6OT1AAnvAt6jXzBdMA4GA1UdDwEB/wQEAwIBpjAPBgNVHSUE
+CDAGBgRVHSUAMA8GA1UdEwEB/wQFMAMBAf8wKQYDVR0OBCIEIHvFooPC6sh7xAzj
+hpo2vwS4BzFkQu5NLfTi2gmMMTdwMAoGCCqGSM49BAMCA0cAMEQCIG4PfUAA4Bwy
+WCruYJHHS9EVMnH6wlp/UK1QZesT6ZD2AiBtZh7W5uot1LGzoXHL7qjOhZt57QPq
+TWZvb8idMHCraA==
+·············
+
+实例：
+ sudo docker inspect -f '{{ .Mounts }}' ca_peerOrg1
+ cd /home/org1/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca
+ openssl x509 -in ./ca.org1.example.com-cert.pem  -text -noout
+ sudo docker restart ca_peerOrg1
+
+
 ===========bridge section===================
 apt-get install bridge-utils
 yum -y install bridge-utils
@@ -9424,10 +10135,10 @@ w /sys/devices/platform/i8042/serio1/serio2/sensitivity - - - - 175
 EOF
 sudo systemd-tmpfiles --prefix=/sys --create
 
-====os section ===init section===centos section==os init===docker init===
+====os section ===init section===centos section==os init section===docker init===
 yum -y install epel-release wget curl telnet lrzsz aria2 openssh-clients openssh-server iotop net-tools lsof tcpdump tree tcpdump zip unzip less dos2unix git iproute bind-utils
 
-sudo apt install tree
+sudo apt-get -y install tree lrzsz dos2unix
 ====firefox section=====
 用Ctrl+Tab切换tab页
 
@@ -9709,6 +10420,7 @@ EOF
 #http://www.regular-expressions.info/lookaround.html
 su(?!do).*-c 
 
+
 =====httpd section=======================
 Allow from all
 说明：
@@ -9755,12 +10467,13 @@ Rule Allow
      list of Allow rules
 Exception
      list of Deny rules
+
 `````````````````````````````````````````````
+=====visualstudio section======
 
-
-
-
-
-
-
-
+快捷键：command + ／ 增加或去掉注释
+       command + p  搜索打开文件
+列出所有函数：
+Cmd+Shift+o (Command + Shift + o (letter o, not zero)) on Mac,
+ctrl+Shift+o on Windows. 
+       

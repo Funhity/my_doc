@@ -2988,7 +2988,53 @@ git push  git+ssh://root@10.0.0.4:522/root/git-repository/
 
 sudo docker run --name centos --privileged -d -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro  -v /var/share:/var/share -p 1234:1234 -p 58080:8080 -p 580:80 -p 522:22 -p 58000:8000 centos7/systemd:20171129
 
-=========blockchian section========
+=========blockchain section========
+
+创建channel时候：orderer用下面的certificat验证org10
+AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org10.example.com/msp/cacerts/ca.org10.example.com-cert.pem
+~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org10.example.com/ca/ca.org10.example.com-cert.pem
+`````configtx.yaml``````
+
+Profiles:
+    tenOrgsGenesis:
+        Orderer:
+            <<: *OrdererDefaults
+            Organizations:
+                - *OrdererOrg
+        Consortiums:
+            ConsortiumTest1:
+                Organizations:
+                    - *Org3
+                    - *Org7
+                    - *Org8
+
+ConsortiumTest1中的org可以有orderer，每个order之间可以协调顺序，协调方法如下
+理想的：
+https://en.wikipedia.org/wiki/Byzantine_fault_tolerance
+实际的：
+practical byzantine fault tolerance
+https://kafka.apache.org/intro
+
+    fourOrgsChannelUSA:
+        Consortium: ConsortiumTest3
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *Org7
+                - *Org8
+                - *Org4
+                - *Org12
+
+在Organizations中的org可以执行endorsement，transaction等所有功能
+
+`````````````````
+#查询docker ps 中 的command 参数
+mac:
+    docker inspect  -f "{{.Name}} {{.Config.Cmd}}" $( docker ps -a -q)
+    docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' container_name_or_id
+``blockchain mac section`````````
+
+
 步骤一：
 安装docker：
 https://docs.docker.com/docker-for-mac/install/#download-docker-for-mac
@@ -3005,8 +3051,21 @@ cd fabric-samples
 curl -sSL https://goo.gl/5ftp2f |  bash
 cd first-network
 sudo  ./byfn.sh -m up
-``blockchian ubuntu```
 
+
+cd
+sudo npm install -g npm@5.3.0 #密码和本地用户一样
+sudo npm install -g @angular/cli@1.2.0
+sudo npm install -g @angular/cli@1.2.0 --ensure
+npm install
+ng serve
+
+``blockchian ubuntu section```
+
+
+
+
+cat > /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/install_basic_package_on_ubuntu.sh <<EOF
 #https://hyperledger-fabric.readthedocs.io/en/release/prereqs.html
 sudo apt-get -y install \
     apt-transport-https \
@@ -3024,7 +3083,7 @@ sudo add-apt-repository \
 sudo apt-get -y update
 sudo apt-get -y install docker-ce
 sudo apt-get -y install docker-compose
-``````
+#``````
 wget https://redirector.gvt1.com/edgedl/go/go1.9.2.linux-amd64.tar.gz
 sudo tar -C /usr/local -xzf go1.9.2.linux-amd64.tar.gz
 
@@ -3033,25 +3092,30 @@ sudo sh -c "echo 'GOPATH=/usr/local/go' >> ~/.profile"
 sudo sh -c "echo 'PATH=\$PATH:\$GOPATH/bin' >>  ~/.profile"
 . ~/.profile
 echo $GOPATH
-````
-sudo apt-get -y install npm
+#````
+sudo apt-get -y install npm  tree lrzsz
 npm version
-npm install npm@3.10.10 -g
-````
+sudo npm install npm@3.10.10 -g
+#````
 #Node.js - version 6.9.x or greater
 #Node.js version 7.x is not supported at this time.
 sudo curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-sudo apt-get install nodejs
+sudo apt-get -y install nodejs
+
+
+EOF
+
 
 ````````````
+#install example
 git clone https://github.com/hyperledger/fabric-samples.git
 cd fabric-samples
 sudo curl -sSL https://goo.gl/5ftp2f | sudo bash
 cd first-network
-
+#```````````````````````````````
 sudo  ./byfn.sh -m up
-./byfn.sh -m down
-`````
+sudo  ./byfn.sh -m down
+``````````blockchain example section``````````````````
 ue (y/n)? y
 proceeding ...
 /Users/fwu066/Documents/share/blockchian/Fabric_Samples/fabric-samples/first-network/../bin/cryptogen
@@ -3162,6 +3226,16 @@ frank@DevOps2:~/fabric-samples/first-network$ sudo docker-compose ps
 WARNING: The CHANNEL_NAME variable is not set. Defaulting to a blank string.
 WARNING: The DELAY variable is not set. Defaulting to a blank string.
 WARNING: The TIMEOUT variable is not set. Defaulting to a blank string.
+实例一：
+         Name                       Command               State                         Ports                       
+-------------------------------------------------------------------------------------------------------------------
+cli                      /bin/bash -c ./scripts/scr ...   Exit 0                                                    
+orderer.example.com      orderer                          Up       0.0.0.0:7050->7050/tcp                           
+peer0.org1.example.com   peer node start                  Up       0.0.0.0:7051->7051/tcp, 0.0.0.0:7053->7053/tcp   
+peer0.org2.example.com   peer node start                  Up       0.0.0.0:9051->7051/tcp, 0.0.0.0:9053->7053/tcp   
+peer1.org1.example.com   peer node start                  Up       0.0.0.0:8051->7051/tcp, 0.0.0.0:8053->7053/tcp   
+peer1.org2.example.com   peer node start                  Up       0.0.0.0:10051->7051/tcp, 0.0.0.0:10053->7053/tcp 
+实例二：
           Name                     Command                     State                      Ports           
 ---------------------------------------------------------------------------------------------------------
 cli                        /bin/bash -c               Exit 0                                              
@@ -3176,14 +3250,571 @@ peer1.org1.example.com     peer node start            Up                        
 peer1.org2.example.com     peer node start            Up                         0.0.0.0:10051->7051/tcp, 
                                                                                  0.0.0.0:10053->7053/tcp
 
+
 ```````````````````````````````````````
 主程序：        
         /home/org1/fabric-samples/first-network/byfn.sh
 
 Crypto Generator:                     
        /home/org1/fabric-samples/bin/cryptogen generate --config=/home/org1/fabric-samples/first-network/crypto-config.yaml
-
+····
 #manipulating Hyperledger Fabric channel configuration.
 #https://hyperledger-fabric.readthedocs.io/en/release/configtxgen.html
 Configuration Transaction Generator:  /home/org1/fabric-samples/first-network/configtx.yaml
       ../bin/configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/genesis.block
+
+
+````````````````chaincode section```````````````
+
+view ./fabric-samples/chaincode-docker-devmode/docker-compose-simple.yaml
+cd /home/frank/fabric-samples/chaincode-docker-devmode
+ln -s docker-compose-simple.yaml docker-compose.yaml;sudo docker-compose ps
+sudo docker inspect  -f "{{.Name}} {{.Config.Cmd}}" $(sudo docker ps -a -q)
+``````````````````````````````
+
+
+
+ npm i #on host
+ MONGO_KEYSTORE_URI=mongodb://mongodb_keystore:27017/air_trace
+ command: mongod --bind_ip_all --smallfiles --logpath=/dev/null --port 27017 # --quiet
+ command: sh -c 'npm config set strict-ssl false && npm install && npm rebuild grpc  && echo "before start dev" && npm run withnodemon' #on app
+
+ sudo scp -F ~/.ssh/config -r org2-AT:/home/org2/air-trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org2.example.com/  /home/org1/air-trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/
+
+ sudo docker pull hyperledger/fabric-ca:x86_64-1.0.4
+ ``````
+ ansible AirTrace-org3 -m synchronize -a "src=/Users/fwu066/Documents/share/repository_air_trace dest=~  delete=yes recursive=yes"
+
+ sudo scp -F ~/.ssh/config -r ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/ordererOrganizations  AirTrace-org4:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/
+
+
+`````
+#开放本端权限
+sudo chown org1 -R /home/org1/
+#开放远端权限
+ssh AirTrace-org4 sudo chmod 777 -R /home/org4/repository_air_trace/
+#copy certificate
+
+sudo scp -F ~/.ssh/config -r ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/*  AirTrace-org4:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/
+#程序：
+sudo SDK_SERVER=http://localhost:4000/ TARGET_NETWORK=docker-DevOps-Test  MONGO_DB_URI='mongodb://localhost/air_trace_dev' node prepareDB.js
+```````````````
+prepareDB.js
+
+    var ORGS = require(sdkPath + '/app/network-config' + (process.env.TARGET_NETWORK ? '-' + process.env.TARGET_NETWORK : '') + '.json')['network-config'];
+
+network-config.json
+````````ansible rsync section`````````````````````
+- hosts: AirTrace-org2
+  become: yes
+#  become_user: org2
+  tasks:
+    - name: test connection
+      synchronize:
+        mode: push
+#       src: "/tmp/wujunrong/"
+        src: "/home/org1/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
+        #dest: "{{ ansible_env.HOME }}/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
+        dest: "/home/allorgs/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
+
+#        dest: "/tmp/wujunrong/"
+        recursive: true
+        delete: true
+      delegate_to: AirTrace-org1
+  
+  #ansible-playbook rsync_two_remote.yaml
+ 
+  #ansible 'AirTrace-org1' -m shell -a "sudo scp -F ~/.ssh/config -r ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/*  AirTrace-org2:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
+
+````blockchain ssh```
+#证书互传-版本1
+ansible 'AirTrace-org[1:2]*' -m shell -a  'bc_home=~;rsync -azh -e "ssh -F $bc_home/.ssh/config"  AirTrace-org4:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/  ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/'
+
+#证书互传前要设置ssh互联
+ansible org1* -m shell -a "sed 's/\/Users.*d_rsa/~\/repository_air_trace\/frank_id_rsa/g'   ~/repository_air_trace/frank_ssh_config>\$HOME/.ssh/config"
+ansible 'test' -m shell -a "sudo chown \${HOME#/home/}:\${HOME#/home/} -R \$HOME"
+echo "sync file from local machine ..."
+ansible  'test' -m synchronize -a "src=/Users/fwu066/Documents/share/repository_air_trace dest=~  delete=yes recursive=yes" #--become
+
+#原理：
+scp /home/org1/.ssh/config  AirTrace-org2:/home/allorgs/.ssh/
+scp /home/org1/repository_air_trace/frank_id_rsa  AirTrace-org2:/home/allorgs/repository_air_trace/frank_id_rsa
+chmod 700 /home/org4/repository_air_trace/frank_id_rsa
+
+``````
+#证书互传-版本2
+echo copy certificate ...
+
+ansible 'AirTrace-org1' -m shell -a "sudo scp -F ~/.ssh/config -r ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/*  AirTrace-org4:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
+ansible 'AirTrace-org1' -m shell -a "sudo scp -F ~/.ssh/config -r ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/*  AirTrace-org2:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
+
+ansible 'AirTrace-org[1:2]*' -m shell -a  'bc_home=~;rsync -azh -e "ssh -F $bc_home/.ssh/config"  AirTrace-org4:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/  ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/'
+ansible 'AirTrace-org[1:4]*' -m shell -a   'bc_home=~;rsync -azh -e "ssh -F $bc_home/.ssh/config"  AirTrace-org2:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/  ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/'
+
+
+`````blockchain client section`````blockchain cli section``````````
+alias fabric-ca-client="docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca fabric-ca-client"
+
+文档：http://hyperledger-fabric-ca.readthedocs.io/en/latest/users-guide.html#fabric-ca-client
+Then run fabric-ca-client enroll command to enroll the identity. For example, following command enrolls an identity whose ID is admin and password is adminpw by calling Fabric CA server that is running locally at 7054 port.
+export FABRIC_CA_CLIENT_HOME=$HOME/fabric-ca/clients/admin
+fabric-ca-client enroll -u http://admin:adminpw@localhost:7054
+
+实例：通过container使用fabric-ca-client
+alias fabric-ca-client="docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca fabric-ca-client"
+fabric-ca-client  enroll -u http://admin:adminpw@23.102.236.94:7054
+
+fabric-ca-client  enroll -u https://admin:adminpw@ca.org1.example.com:7054 --tls.certfiles ./repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org4.example.com/ca/ca.org4.example.com-cert.pem
+
+
+docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  ca.org1.example.com >> /etc/hosts; fabric-ca-client enroll -u https://admin:adminpw@ca.org1.example.com:7054 --tls.certfiles ./repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem'
+
+docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u https://admin:adminpw@fabric-ca-server:7054 --tls.certfiles ./repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem'
+
+ `````mongodb section`````
+ command: mongod --bind_ip_all --smallfiles --logpath=/dev/null --port 27017 --quiet
+
+ docker exec -it mongodb_keystore mongo --eval "db.getCollection('cryptokeystores').find({})"
+ docker exec -it mongodb_keystore mongo --help
+ docker exec -it mongodb_keystore mongo --eval "db.help()"
+ docker exec -it mongodb_keystore mongo --eval "db.adminCommand('listDatabases')"
+ docker exec -it mongodb_keystore mongo --eval "db.getSiblingDB('air_trace').getCollection('cryptokeystores').find({})"
+ sudo docker exec -it mongodb_keystore mongo localhost:27018/air-trace   --eval "db.getSiblingDB('air_trace').getCollection('cryptokeystores').find({})"
+ sudo docker exec -it mongodb_keystore mongo localhost:27018             --eval "db.getSiblingDB('air_trace').getCollection('cryptokeystores').find({})"
+
+ansible org1-AT -m shell -a "sudo docker exec mongodb_keystore mongo localhost:27018        --eval 'db.getSiblingDB(\"air_trace\").getCollection(\"cryptokeystores\").find({})' "
+清空数据：
+sudo docker exec -it mongodb_keystore mongo localhost:27018
+> use air_trace
+switched to db air_trace
+> db.shutdownServer(
+Display all 174 possibilities? (y or n)
+> db.get
+db.getCollection(       db.getLastError(        db.getLogComponents(    db.getPrevError(        db.getQueryOptions(     db.getRoles(            db.getSisterDB(         db.getUsers(
+db.getCollectionInfos(  db.getLastErrorCmd(     db.getMongo(            db.getProfilingLevel(   db.getReplicationInfo(  db.getSession(          db.getSlaveOk(          db.getWriteConcern(
+db.getCollectionNames(  db.getLastErrorObj(     db.getName(             db.getProfilingStatus(  db.getRole(             db.getSiblingDB(        db.getUser(
+> db.getCollectionNames()
+[ "cryptokeystores", "keystores" ]
+> db.cr
+db.createCollection(  db.createRole(        db.createUser(        db.createView(        db.cryptokeystores
+> db.cr
+db.createCollection(  db.createRole(        db.createUser(        db.createView(        db.cryptokeystores
+> db.cryptokeystores.drop()
+true
+> db.keystores.drop()
+true
+> exit
+bye
+
+··········
+
+sudo docker exec -ti mongodb_keystore sh -c "mongo localhost:27018"
+> show dbs
+> use air-trace
+> show collections
+cryptokeystores
+keystores
+> db.keystores.find()
+··········
+docker exec -it mongodb_keystore mongo shell
+> use air_trace
+switched to db air_trace
+> show collections
+cryptokeystores
+keystores
+
+
+> use air_trace
+switched to db air_trace
+> db.air_trace.getCollection('cryptokeystores')
+
+========ca section======
+cd
+brew install libtool
+go get -u github.com/hyperledger/fabric-ca/cmd/...
+/Users/fwu066/go/bin/fabric-ca-server start -b admin:adminpw
+
+2017/12/25 01:13:03 [INFO] Created default configuration file at /Users/fwu066/fabric-ca-server-config.yaml
+2017/12/25 01:13:03 [INFO] Starting server in home directory: /Users/fwu066
+2017/12/25 01:13:03 [INFO] generating key: &{A:ecdsa S:256}
+2017/12/25 01:13:03 [INFO] encoded CSR
+2017/12/25 01:13:03 [INFO] signed certificate with serial number 82007427048041228215860745886709415556006294888
+2017/12/25 01:13:03 [INFO] The CA key and certificate were generated for CA
+2017/12/25 01:13:03 [INFO] The key was stored by BCCSP provider 'SW'
+2017/12/25 01:13:03 [INFO] The certificate is at: /Users/fwu066/ca-cert.pem
+2017/12/25 01:13:04 [INFO] Initialized sqlite3 database at /Users/fwu066/fabric-ca-server.db
+2017/12/25 01:13:04 [INFO] Home directory for default CA: /Users/fwu066
+2017/12/25 01:13:04 [INFO] Listening on http://0.0.0.0:7054
+
+
+/Users/fwu066//go/bin/fabric-ca-server --help
+
+````check ca server section````
+#实例：
+ #检查证书合法性：
+ 步骤一：
+ sudo docker inspect -f '{{ .Mounts }}' ca_peerOrg1
+ cd /home/org1/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca
+ 步骤二：
+ sudo docker restart ca_peerOrg1
+ 步骤三：
+ sudo docker exec -ti  ca_peerOrg4 sh -c "cat  \$FABRIC_CA_SERVER_CA_CERTFILE" | openssl x509   -text -noout|less 
+ openssl x509 -in ./ca.org4.example.com-cert.pem  -text -noout
+ #从客户端检查服务端
+ openssl s_client                                    -connect 23.102.236.94:7054 -tls1_2
+
+
+ diff <(ansible 'org1-AT' -a "openssl x509 -in ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt  -text -noout") <( ansible 'org3-AT' -a "openssl x509 -in /home/org3/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt -text -noout")
+
+`````CA config section``````
+
+优先级：
+1. CLI flags
+2. Environment variables
+   环境变量 以 FABIRC_CA_CLIENT  开头
+             FABRIC_CA_SERVER 开头
+3. Configuration file
+在docker中的配置文件：
+docker exec -ti f032a6df8904 cat /etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml|less
+
+http://hyperledger-fabric-ca.readthedocs.io/en/latest/users-guide.html#registering-a-new-identity
+client $HOME 环境变量
+The Fabric CA client’s home directory is determined as follows:
+* if the –home command line option is set, use its value
+* otherwise, if the FABRIC_CA_CLIENT_HOME environment variable is set, use its value
+* otherwise, if the FABRIC_CA_HOME environment variable is set, use its value
+* otherwise, if the CA_CFG_PATH environment variable is set, use its value
+* otherwise, use $HOME/.fabric-ca-client
+
+````CA client section`````
+/Users/fwu066//go/bin/fabric-ca-client --help
+#配置文件：
+#在执行fabric-ca-client enroll命令时会自动生成,fabric-ca-client程序当前目录
+less   fabric-ca-client-config.yaml
+        #############################################################################
+        #  Certificate Signing Request section for generating the CSR for
+        #  an enrollment certificate (ECert)
+        #
+        #  cn - Used by CAs to determine which domain the certificate is to be generated for
+        #  names -  A list of name objects. Each name object should contain at least one
+        #  "C", "L", "O", "OU", or "ST" value (or any combination of these). These values are:
+        #      "C": country
+        #      "L": locality or municipality (such as city or town name)
+        #      "O": organisation
+        #      "OU": organisational unit, such as the department responsible for owning the key;
+        #      it can also be used for a "Doing Business As" (DBS) name
+        #      "ST": the state or province
+        #  hosts - A list of space-separated host names which the certificate should be valid for
+        #
+        #  NOTE: The serialnumber field below, if specified, becomes part of the issued
+        #  certificate's DN (Distinguished Name).  For example, one use case for this is
+        #  a company with its own CA (Certificate Authority) which issues certificates
+        #  to its employees and wants to include the employee's serial number in the DN
+        #  of its issued certificates.
+        #
+        #  WARNING: This serialnumber field should not be confused with the certificate's
+        #  serial number which is set by the CA but is not a component of the
+        #  certificate's DN.
+        #############################################################################
+
+http://hyperledger-fabric-ca.readthedocs.io/en/latest/users-guide.html#registering-a-new-identity
+步骤一：在配置文件中设置初始用户
+First, if needed, customize the CSR (Certificate Signing Request) section in the client configuration file. Note that csr.cn field must be set to the ID of the bootstrap identity. 
+
+export FABRIC_CA_CLIENT_HOME=$HOME/fabric-ca/clients/admin
+fabric-ca-client enroll -u http://admin:adminpw@localhost:7054
+
+步骤二：初始用户被enroll后才能注册新的用户
+The identity performing the register request must be currently enrolled
+
+
+实例：
+    docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u https://admin:adminpw@fabric-ca-server:7054 --tls.certfiles ./repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/fabric-ca-server/ca/ca.fabric-ca-server-cert.pem'
+    
+    
+    Post https://fabric-ca-server:7054/enroll: x509: certificate signed by unknown authority
+    
+    
+    
+    docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u https://admin:adminpw@fabric-ca-server:7054 --tls.certfiles ./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem  --myhost org1.example.com     --tls.client.keyfile ./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/org1ca_sk --tls.client.certfile=./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem --caname Org1 -d'
+    
+    docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u https://    admin:adminpw@fabric-ca-server:7054 --tls.certfiles ./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem   --caname Org1 -d'
+    
+    docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u https://    admin:adminpw@fabric-ca-server:7054 --tls.certfiles ./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/msp/tlscacerts/tlsca.org1.example.com-cert.pem  -d'
+    
+    docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u https://admin:adminpw@fabric-ca-server:7054 --tls.certfiles ./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem  -d'
+
+
+    #Get CA certificate chain
+    docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client getcacert --tls.certfiles ./    AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem'
+    2017/12/28 09:56:53 [INFO] Configuration file location: /work/fabric-ca-client-config.yaml
+    2017/12/28 09:56:53 [INFO] TLS Enabled
+    Error: POST failure of request: POST https://fabric-ca-server:7054/cainfo
+    {}: Post https://fabric-ca-server:7054/cainfo: x509: certificate signed by unknown authority
+    
+    #如果显示格式有问题，就重新调整终端窗口的大小
+    docker exec -ti f032a6df8904 cat /etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml |less
+
+
+`````ca server section```
+/Users/fwu066//go/bin/fabric-ca-server --help
+ -n, --ca.name string                            Certificate Authority name
+
+
+http://hyperledger-fabric-ca.readthedocs.io/en/latest/users-guide.html#starting-the-server
+The fabric-ca-server init command generates a self-signed CA certificate unless the -u <parent-fabric-ca-server-URL> option is specified. 
+
+
+···········ca server config section·········
+配置信息：
+sudo docker exec -ti ca_peerOrg1 ls /etc/hyperledger/fabric-ca-server  #包含ca-cert.pem  ca-key.pem  fabric-ca-server-config.yaml  fabric-ca-server.db  msp
+sudo docker exec -ti ca_peerOrg1 cat /etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml |less  #若格式不对，调整一下xshell窗口大小即可,或重新下一页再上一页
+                     #############################################################################
+                     #  TLS section for the server's listening port
+                     #
+                     #  The following types are supported for client authentication: NoClientCert,
+                     #  RequestClientCert, RequireAnyClientCert, VerifyClientCertIfGiven,
+                     #  and RequireAndVerifyClientCert.
+                     #
+                     #  Certfiles is a list of root certificate authorities that the server uses
+                     #  when verifying client certificates.
+                     #############################################################################
+                     tls:
+                       # Enable TLS (default: false)
+                       enabled: false
+                       # TLS for the server's listening port
+                       certfile: ca-cert.pem
+                       keyfile: ca-key.pem
+                       clientauth:
+                         type: noclientcert
+                         certfiles:
+                     
+                     #############################################################################
+                     #  The CA section contains information related to the Certificate Authority
+                     #  including the name of the CA, which should be unique for all members
+                     #  of a blockchain network.  It also includes the key and certificate files
+                     #  used when issuing enrollment certificates (ECerts) and transaction
+                     #  certificates (TCerts).
+                     #  The chainfile (if it exists) contains the certificate chain which
+                     #  should be trusted for this CA, where the 1st in the chain is always the
+                     #  root CA certificate.
+                     #############################################################################
+                     ca:
+                       # Name of this CA
+                       name:
+                       # Key file (default: ca-key.pem)
+                       keyfile: ca-key.pem
+                       # Certificate file (default: ca-cert.pem)
+                       certfile: ca-cert.pem
+                       # Chain file (default: chain-cert.pem)
+                       chainfile: ca-chain.pem
+
+
+                       ###########################################################################
+                       #  Certificate Signing Request (CSR) section.
+                       #  This controls the creation of the root CA certificate.
+                       #  The expiration for the root CA certificate is configured with the
+                       #  "ca.expiry" field below, whose default value is "131400h" which is
+                       #  15 years in hours.
+                       #  The pathlength field is used to limit CA certificate hierarchy as described
+                       #  in section 4.2.1.9 of RFC 5280.
+                       #  Examples:
+                       #  1) No pathlength value means no limit is requested.
+                       #  2) pathlength == 1 means a limit of 1 is requested which is the default for
+                       #     a root CA.  This means the root CA can issue intermediate CA certificates,
+                       #     but these intermediate CAs may not in turn issue other CA certificates
+                       #     though they can still issue end entity certificates.
+                       #  3) pathlength == 0 means a limit of 0 is requested;
+                       #     this is the default for an intermediate CA, which means it can not issue
+                       #     CA certificates though it can still issue end entity certificates.
+                       ###########################################################################
+                       csr:
+                          cn: fabric-ca-server
+                          names:
+                             - C: US
+                               ST: "North Carolina"
+                               L:
+                               O: Hyperledger
+                               OU: Fabric
+                          hosts:
+                            - 5b4ff912f345
+                            - localhost
+                          ca:
+                             expiry: 131400h
+                             pathlength: 1                       
+                     
+#If custom values for the CSR are required, you may customize the configuration file, delete the files specified by the ca.certfile and ca-keyfile configuration items, and then run the fabric-ca-server init -b admin:adminpw command again.
+
+
+
+···············ca server docker section································································
+关闭tls后可以通过网络enroll admin
+
+
+services:
+
+  ca.org1.example.com:
+    image: hyperledger/fabric-ca:x86_64-1.0.4
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+#      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem
+      - FABRIC_CA_SERVER_CA_CERTFILE=/home/org1/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/org1ca_sk
+      - FABRIC_CA_SERVER_TLS_ENABLED=false
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/org1ca_sk
+    ports:
+      - "7054:7054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+    volumes:
+      - ./channel/crypto-config/peerOrganizations/org1.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    container_name: ca_peerOrg1
+
+远程enroll user实例：
+docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca sh  -c ' echo 23.102.236.94  fabric-ca-server >> /etc/hosts; fabric-ca-client enroll -u http://admin:adminpw@fabric-ca-server:7054 '
+
+`````openssl section`````
+
+openssl x509 -text -noout -in ./AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem
+
+      Certificate:
+          Data:
+              Version: 3 (0x2)
+              Serial Number:
+                  bd:68:70:15:cc:ac:72:69:0c:45:97:26:4d:a5:94:ae
+          Signature Algorithm: ecdsa-with-SHA256
+              Issuer: C=US, ST=California, L=San Francisco, O=org1.example.com, CN=ca.org1.example.com
+              Validity
+                  Not Before: Dec 19 03:36:33 2017 GMT
+                  Not After : Dec 17 03:36:33 2027 GMT
+              Subject: C=US, ST=California, L=San Francisco, O=org1.example.com, CN=ca.org1.example.com
+              Subject Public Key Info:
+``````angular section```````
+npm rebuild node-sass --force
+ng serve --host 0.0.0.0 --port 4200 --disable-host-check &
+
+网站建立：
+步骤一：
+cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_client
+步骤二：
+ng build
+把生产的文件放到nginx服务器网站服务目录上，其中有index文件
+````````blockchain code section``````````
+rsync  -avhz /Users/fwu066/Documents/share/repository_air_trace/ all-AT:/home/allorgs/repository_air_trace/
+
+1.服务端检查客户端在浏览器中输入的ip地址
+https://github.com/angular/angular-cli/issues/803
+rsync  -avhz /Users/fwu066/Documents/share/repository_air_trace//AT_node_server/index.js  all-AT:/home/allorgs/repository_air_trace//AT_node_server/index.js
+
+2.change IP address of 8000 port for client side visisting
+rsync  -avhz /Users/fwu066/Documents/share/repository_air_trace/AT_node_client/src/environments/environment.ts  all-AT:/home/allorgs/repository_air_trace/AT_node_client/src/environments/environment.ts
+
+``````blockchain code section````````````````
+#client side 初始化
+cd ~/repository_air_trace/AT_node_client; \
+npm -v;sudo npm install -g npm@5.3.0; sudo  npm install -g @angular/cli@1.2.0 ;sudo npm install; \
+npm rebuild node-sass --force; \
+sudo ng serve --host 0.0.0.0 --port 4200 --disable-host-check &
+ansible test -m shell -a 'jobs;sudo kill "$(jobs -p %1)" '
+
+ansible 'test' -m shell  -a "export airtrace={{ inventory_hostname }};  \
+                            echo \$airtrace ;SERVER_IP_FOR_CORS=\`cat ~/repository_air_trace/frank_ssh_config |  \
+                            awk -v org=\$airtrace  ' \$0 ~ org {getline;print \$2}' \` ;  \
+                            echo \$SERVER_IP_FOR_CORS;  \
+                            cd ~/repository_air_trace/AT_node_server && sudo docker-compose -f docker-compose.yml up -d "
+
+·····
+生成jason格式的
+example.yaml
+cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_server/test
+npm i yamljs
+node yamlRead.js #生成jason file的内容，取文件最后一部分
+
+read joined channels from a peer
+   http://23.102.236.94:4000/channels?username=fsadf&org=org3&peer=peer0
+read installed chaincodes from peer (the channelname here can be any random name) 
+   http://23.102.236.94:4000/chaincodes/mychannel555?username=fsadf&org=org3&peer=peer0&type=installed
+read instantiated chaincodes from a channel
+   http://23.102.236.94:4000/chaincodes/mychannel555?username=fsadf&org=org3&peer=peer0&type=instantiated
+
+
+`````````blockchain command section```````
+rsync  -avhz  /Users/fwu066/Documents/share/repository_air_trace//AT_node_server/testhtml/user.html  org1-AT:~/repository_air_trace//AT_node_server/testhtml/user.html
+start-stop-daemon  --background  --start   --quiet --pidfile /var/run/test --chdir ~/repository_air_trace/AT_node_client --exec /usr/bin/ng -- serve --host 0.0.0.0 --port 4200 --disable-host-check
+ansible test -m shell -a "sudo docker ps " | grep peer[0-9].org[0-9].example.com |awk '{ print $NF }'
+
+curl -s 'http://23.102.236.94:4000/users' \
+     -H 'Content-Type: application/json' \
+     --data '{"username":"neueruser1","orgName":"org3"}'
+
+
+curl -s 'http://23.102.236.94:4000/channels' \
+    -H 'Content-Type: application/json'\
+    --data '{
+        "username":"neueruser1",
+        "org":"org3",
+        "channelName":"test7channel",
+        "profile":"eightOrgsChannel"
+    }'
+
+
+
+
+
+
+curl -s 'http://localhost:8000/user/register' \
+     -H 'Content-Type: application/json' \
+     --data '{"username":"adminorg1","password":"111111","org":"org1","email":"123@pwc.cpom","grouop":"admin"}'
+
+
+
+curl -s 'http://localhost:8000/user/register' \
+     -H 'Content-Type: application/json' \
+     --data '{"username":"adminorg1","password":"111111","org":"org12","email":"123@pwc.cpom","grouop":"admin"}'
+SDK_SERVER=http://localhost:4000/ TARGET_NETWORK=testCloud MONGO_DB_URI='mongodb://localhost/air_trace_dev' node prepareDB.js |less
+
+http://23.102.236.94:8000/testhtml/user
+
+ansible test -m shell -a "sudo kill -9 \`ps -ef | grep angular | awk '{print \$2}'\`"
+
+git log --author="frank wu"  --oneline | grep -v  'Merge\|init branch' |awk '{print  $1}'|xargs -I {} sh -c 'git show --pretty="" --name-only {}'| sort | uniq -u -d
+git log --pretty=format:"%h %an %ad %s" --date=relative --author="frank wu"
+
+
+
+ansible 'test' -m shell -a "cd ~/repository_air_trace/AT_Manufacturer/ && sudo docker-compose stop"
+ansible 'test' -m synchronize -a "src=/Users/fwu066/Documents/share/repository_air_trace/AT_Manufacturer dest=~/repository_air_trace/  recursive=yes " #--become
+
+`````````blockchain nginx```````
+cat /etc/nginx/conf.d/air-trace.conf
+    server {
+        error_log /var/log/nginx/error.log info;
+        rewrite_log on;
+
+        listen       4200 default_server;
+#        listen       [::]:80 default_server;
+        server_name  _;
+        root         ~/repository_air_trace/AT_node_server/public/;
+
+        # Load configuration files for the default server block.
+        include /etc/nginx/default.d/*.conf;
+
+        location / {
+                 index  index.html;
+                 error_log /var/log/nginx/location-error.log info;
+                 root  ~/repository_air_trace/AT_node_server/public/;
+                 try_files $uri $uri/index.html;
+                 autoindex on;
+        }
+
+
+        error_page 404 /404.html;
+            location = /40x.html {
+        }
+
+        error_page 500 502 503 504 /50x.html;
+            location = /50x.html {
+        }
+    }
+```````````
+
