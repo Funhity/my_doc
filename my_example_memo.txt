@@ -459,8 +459,78 @@ jinga_html_template = Template(template)
 jinga_html_template.globals['clever_function'] = clever_function
 
 print jinga_html_template.render()
+
+``````jinja example```jinja loop section```
+
+{
+"Website": {
+"color": "#16a085",
+"type": "module",
+"icon": "icon-globe"
+},
+"Core": {
+"color": "#589494",
+"type": "module",
+"system_manager": 1,
+"icon": "icon-cog"
+},
+"To Do": {
+"color": "#f1c40f",
+"doctype": "ToDo",
+"label": "To Do",
+"link": "List/ToDo",
+"type": "list",
+"icon": "icon-check"
+},
+"Setup": {
+"color": "#bdc3c7",
+"type": "module",
+"icon": "icon-wrench"
+},
+"Messages": {
+"color": "#9b59b6",
+"type": "page",
+"label": "Messages",
+"link": "messages",
+"icon": "icon-comments"
+},
+"Installer": {
+"color": "#888",
+"type": "page",
+"label": "Installer",
+"link": "applications",
+"icon": "icon-download"
+},
+"Calendar": {
+"color": "#2980b9",
+"type": "view",
+"label": "Calendar",
+"link": "Calendar/Event",
+"icon": "icon-calendar"
+}
+}
+      
+        
+import json
+python_data = json.loads(your_json_data_string)
+
+from jinja2 import Template
+
+template = Template('''
+    {% for mainkey in data %}
+    <h1>{{ mainkey }}</h1>
+
+    {% for key, value in data[mainkey].items() %}
+    <p><strong>{{ key }}</strong><span>{{ value }}</span></p>
+    {% endfor %}
+
+    {% endfor %}
+''')   
+  
 ==========
-#https://www.uipath.com/academy/certifications 考试，自动填写答案
+
+#考试，自动填写答案
+#https://www.uipath.com/academy/certifications 
 
 $('form .play-question').each((index, elem) => {
  const question = $(elem).find('.question-title p').text();
