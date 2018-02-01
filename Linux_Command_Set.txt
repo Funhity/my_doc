@@ -6488,11 +6488,11 @@ git config user.name
 
 A refspec is specified as [+]<src>:<dst>. The <src> parameter is the source branch in the local repository, and the <dst> parameter is the destination branch in the remote repository. The optional + sign is for forcing the remote repository to perform a non-fast-forward update.
 
-····
+···github section·····
 cat .git/config
- url = git+ssh://github.com/pwccnhk/AT_node_client.git
+ url = git@github.com:pwccnhk/AT_node_client.git #ssh地址获取方式（github 证书方式私有源）：先用github提供的ssh clone clone一次项目，在.git/config中获取ssh地址，再在github desktop上设置此ssh地址
 或 
- url = git+ssh://git@github.com/webloginwu/code_example
+ url = git+ssh://git@github.com/webloginwu/code_example 
 
 
 ````````初次使用git要设置```
