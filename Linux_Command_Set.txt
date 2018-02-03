@@ -5828,7 +5828,11 @@ tcpdump -nli bridge0  host 10.0.1.25  and 10.0.1.190
 =================ubuntu section=====================
 检查版本号
 lsb_release -a
-
+```
+#Fixing APT Hash Sum Mismatch: Consistent APT Repositories,https://blog.packagecloud.io/eng/2016/09/27/fixing-apt-hash-sum-mismatch-consistent-apt-repositories/
+apt-get clean
+sudo rm -fr /var/lib/apt/lists/*
+````
 boot: Not enough free disk space when upgrading
 方法一：sudo apt-get purge $(dpkg -l linux-{image,headers}-"[0-9]*" | awk '/ii/{print $2}' | grep -ve "$(uname -r | sed -r 's/-[a-z]+//')")
 方法二：A more concise command to purge all old kernels is: sudo apt-get autoremove --purge
