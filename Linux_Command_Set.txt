@@ -1388,13 +1388,18 @@ TO:
 PermitRootLogin yes
 
 invoke-rc.d ssh restart
-```````````````cp section``````````````````````
+```````````````cp section```````mv section```````````````
 
 方法一：
 unalias cp will abolish that for the current session, otherwise you can just remove it from your shell profile.
 
 方法二：
 yes | cp /home/share/cache/*
+
+·········
+mv channel  block-chain/                                              #把channel移动到block-chain/目录下，而不是修改目录名称
+cp -r DynamicOrg/  /Users/fwu066/Documents/share/git/code_example     #把DynamicOrg/下的所有文件，拷贝到/Users/fwu066/Documents/share/git/code_example下
+cp -r DynamicOrg   /Users/fwu066/Documents/share/git/code_example     #把DynamicOrg目录         拷贝到/Users/fwu066/Documents/share/git/code_example下,即code_example目录包含DynamicOrg目录
 
 ======================= mysql section======================================
 centos7: rpm -ivh http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
@@ -4829,6 +4834,29 @@ ansible-playbook release.yml --extra-vars "version=1.23.45 other_variable=foo" #
 #获取ip相关的信息：
 ansible org1-AT -m setup -a 'filter=ansible_eth[0-2]'
 
+
+````````playbook shell section```````````
+- hosts: 'org10-AT'
+  gather_facts: no
+  tasks:
+    - name: start simple http server in background
+      shell: |
+        set -e
+        cd ~/repository_air_trace/AT_node_client
+        npm -v
+        sudo npm install   
+        echo wujunrong
+        sleep 30
+        sudo npm install -g npm@5.3.0; 
+        sudo  npm install -g @angular/cli@1.2.0 
+        ng build 
+        cp -r ~/repository_air_trace/AT_node_client/dist/*  ~/repository_air_trace/AT_node_server/public/
+        #(nohup ng serve --host 0.0.0.0 --port 4200 --disable-host-check  </dev/null >/dev/null 2>&1 ) &
+        
+        start-stop-daemon   --start  --background   --quiet --pidfile /var/run/test --chdir ~/repository_air_trace/AT_node_client --exec /usr/bin/ng -- serve --host 0.0.0.0 --port 4200 --disable-host-check
+        sleep 4
+      register: ps
+    - debug: var=ps.stdout_lines
 ````````xshell section````````````
 /etc/ansible/hosts->xshell 配置文件
 cat /etc/ansible/hosts| grep -E -v "^[[:space:]]*$"  | grep -v -E "\[.*\]" | grep -v "^#.*" | grep -v localhost | awk '{system("echo -ne "$1" \",\"  ; echo -ne "$2" | cut -d = -f 2- | tr -d \"\n\" ; echo -ne \",\" ssh ;echo -ne \",\" 22 \",\"; echo  -ne "$4" | cut -d = -f 2-  | tr -d \"\n\"   ;echo -ne \",\" ;  echo -e   "$5" | cut -d = -f 2-  ")}' |sed  's/\\//g' |sed 's/ //g'>./xshell.csv
@@ -5123,7 +5151,16 @@ File -> Properties -> Terminal -> Keyboard
 
 iterm2:
 : Go to Preferences->Profiles tab. Select your profile on the left, and then open the Keyboard tab. At the bottom is a set of buttons that lets you select the behavior of the Option key. For most users, Esc+ will be the best choice.
- 
+
+`````comment section````shell comment section````
+: <<'COMMENT'
+#this is multiline comments, commands here is used in urgent case
+#stop manufacturer and rsync manufacturer code.
+ansible 'extra' -m shell -a "cd ~/repository_air_trace/AT_Manufacturer/ && sudo docker-compose stop"
+ansible 'extra' -m synchronize -a "src=/Users/fwu066/Documents/share/repository_air_trace/AT_Manufacturer dest=~/repository_air_trace/  recursive=yes " #--become
+ansible 'extra' -m shell -a "cd ~/repository_air_trace/AT_Manufacturer/ && sudo docker-compose  up -d"
+COMMENT
+
 ```````````````dash section```````````````
 参数"-"代表 standard input
 find . -type f -print0 | tar -czvf backup.tar.gz --null -T -
@@ -6421,12 +6458,21 @@ git rebase在当前分支的head上重新commit，机制不一样
 
 .git/config                                   #1:Specific to that single repository
                                               #2:定义了从remote下载哪些分支
-`````git ingore section````````````````
+
+`````````git ignore section``````
+# https://www.atlassian.com/git/tutorials/gitignore
+# .gitignore uses globbing patterns to match against file names
+
+# https://stackoverflow.com/questions/6380196/gitignore-does-not-work
+# A gitignore file specifies intentionally **untracked files** ，git rm file will stop track them.
+
+
+
 #检查为什么会被忽略
 git check-ignore -v testCloudArtifacts/org*/channel/*.yaml
 
 
-logs/
+logs/     #忽略目录
 !logs/important.log    
 
 --
@@ -6457,6 +6503,13 @@ git config user.name
     git config --global user.email you@example.com
 
 A refspec is specified as [+]<src>:<dst>. The <src> parameter is the source branch in the local repository, and the <dst> parameter is the destination branch in the remote repository. The optional + sign is for forcing the remote repository to perform a non-fast-forward update.
+
+···github section·····
+cat .git/config
+ url = git@github.com:pwccnhk/AT_node_client.git #ssh地址获取方式（github 证书方式私有源）：先用github提供的ssh clone clone一次项目，在.git/config中获取ssh地址，再在github desktop上设置此ssh地址
+或 
+ url = git+ssh://git@github.com/webloginwu/code_example 
+
 ````````初次使用git要设置```
  git config --list
  git config --global user.name "wujunrong"
@@ -6657,6 +6710,11 @@ git add CONTRIBUTING.md
 步骤3.  git add CONTRIBUTING.md  #think of it more as “add this content to the next commit” rather than “add this file to the project”.
 步骤4.  此时用git commit修改会进入本地repository
 ````````````````````````````
+#revert changes made to your working copy, https://stackoverflow.com/questions/1146973/how-do-i-revert-all-local-changes-in-git-managed-project-to-previous-state
+git checkout .
+git reset HEAD <file>..." to unstage)
+
+```````
 #Git - List all files currently under source control?列出被git管理的文件：
        git ls-tree -r master --name-only 
 `````git rename section `````
@@ -6702,25 +6760,29 @@ git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %s,
 
       #场景：某个人改的，在哪个commit改的，改了哪些文件，改的内容是什么？
             git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %cr, %b %C(bold green)%s' --author="frank wu"   # 作者
+            git log --author="frank wu"  --oneline | grep -v  'Merge' |awk '{print  $1}'|xargs -I {} sh -c 'git show --pretty="" --name-only {}'| sort | uniq -u -d # 改了哪些文件，去除Merge的
             commitId=cb1223a
             git show --pretty="" --name-only $commitId
             git difftool -y --tool=meld $commitId "$commitId"^              #或： 
-            git difftool -y --tool=meld $commitId "$commitId"^ -- index.js
+            git difftool -y --tool=meld $commitId "$commitId"^ -- index.js  #或
+            git difftool -y --tool=meld  testCloud  master -- runEverything.sh
 
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %cr, %b %C(bold green)%s'                       #'%cr': committer date, relative 相对日期
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci, %b %C(bold green)%s'
 git rev-list --left-right --boundary --pretty=oneline HEAD...origin/master
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci)%s'      --left-right --boundary  HEAD...origin/master
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci)%s'      --left-right --boundary    71979fa...5ec0355
+
+
+#列出我 frank commit过的所有文件
+git log --author="frank wu"  --oneline | grep -v  'Merge\|init branch' |awk '{print  $1}'|xargs -I {} sh -c 'git show --pretty="" --name-only {}'| sort | uniq -u -d
+
 ····
 '%b': body
 '%C(…)': color specification
 
 git log  gerrit/master
 git log  origin/master
-
-#列出我commit过的所有文件
-git log --author="frank wu"  --oneline | grep -v  'Merge\|init branch' |awk '{print  $1}'|xargs -I {} sh -c 'git show --pretty="" --name-only {}'| sort | uniq -u
 
 ···git file section····git files sectio····
 场景一：列出一个commit的所有文件
@@ -6775,7 +6837,7 @@ http://blog.deadlypenguin.com/blog/2011/05/03/using-meld-with-git-diff/
               [diff] external = git-meld
 
 
-````````````
+``````git diff file section``````
 版本区别：
 git diff HEAD^  HEAD  Linux_Command_Set.txt  当前版本和上一版本的区别
 git diff HEAD^^ HEAD main.c
@@ -6785,7 +6847,9 @@ git diff HEAD~2 HEAD -- main.c
 #本地文件和本地master中的文件比较，显示修改内容
  git diff master:Linux_Command_Set.txt -- Linux_Command_Set.txt 
 #比较两个分支中同一个文件是否被修改
-git diff  testCloud  master -- ./artifacts/channel/configtx.yaml
+git diff                     testCloud  master -- ./artifacts/channel/configtx.yaml
+git difftool -y --tool=meld  testCloud  master -- ./artifacts/channel/configtx.yaml
+
 
 #当前HEAD和master分支的区别
 git diff master
@@ -6874,6 +6938,7 @@ git merge-base branch2 branch3
 #How to "merge" specific files from another branch , http://jasonrudolph.com/blog/2009/02/25/git-tip-how-to-merge-specific-files-from-another-branch/
 git checkout source_branch <path/file>...
 git checkout twitter_integration app/models/avatar.rb
+git checkout testCloud   app-docker-compose.yaml runEverything.sh app-docker-compose.dev.yaml
 ··································
 
 场景一：
@@ -8089,13 +8154,20 @@ f: /home/frank
  drwxr-xr-x root  root  home
  drwxr-xr-x frank frank frank
 
-
+````tar section````
+多个目录打包
+tar -cf myfile.tar /etc/dir1 /var/www/html /home/somedir
+tar -czf myfile.tar.gz /etc/dir1 /var/www/html /home/somedir
+查看tar.gz里面的内容
+zcat v6_mobile01_20151103.tar.gz| less
+tar xvf sshpass-1.06.tar.gz
 ls ../../*/channel/
 `````daemon section````
 start-stop-daemon  --background  --start   --quiet --pidfile /var/run/test                                               --exec /usr/bin/ng -- serve --host 0.0.0.0 --port 4200 --disable-host-check
 start-stop-daemon  --background  --start   --quiet --pidfile /var/run/test --chdir ~/repository_air_trace/AT_node_client --exec /usr/bin/ng -- serve --host 0.0.0.0 --port 4200 --disable-host-check
 
-nohup ng serve --host 0.0.0.0 --port 4200 --disable-host-check  </dev/null >/dev/null 2>&1 ß
+nohup ng serve --host 0.0.0.0 --port 4200 --disable-host-check  </dev/null >/dev/null 2>&1 &
+
 ========node.js section========
 npm install <Module Name>
 npm install   express
@@ -9518,6 +9590,15 @@ screen -ls
 	
 screen  -r  nnnn
       Enable a session with screen terminal that has PID  “nnnn”  (see screen -ls)
+
+screen ~/repository_air_trace/AT_node_sdk/install_basic_package_on_ubuntu.sh
+
+退出screen：
+"Ctrl-a" then "d" #https://stackoverflow.com/questions/4847691/how-do-i-get-out-of-a-screen-without-typing-exit
+
+#https://serverfault.com/questions/21806/how-can-i-launch-a-screen-session-with-a-command-over-ssh-on-a-remote-server-fro
+ssh root@host screen -m -d "tail -f /var/log/messages"
+
 ````vlc section`
 rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm 
 rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
@@ -9899,6 +9980,11 @@ sudo chmod +x /usr/local/bin/docker-compose
     sudo yum  -y  upgrade python*
 #Please note that service names should not include underscores.https://convox.com/docs/docker-compose-file/
 
+`````
+
+docker-compose version
+docker-compose ps
+
 ````````docker compose network````````
 https://docs.docker.com/compose/networking/#use-a-pre-existing-network
 Configure the default network
@@ -9933,6 +10019,7 @@ Instead of attempting to create a network called [projectname]_default, Compose 
 documentation, docs, docker, compose, orchestration, containers, networking
 ````````````````````````````````
 ln app-docker-compose.yaml docker-compose.yaml
+
 docker-compose up -d
 docker-compose ps
 docker-compose stop
@@ -10002,6 +10089,10 @@ nginx 配置文件：
    openssl s_client                                    -connect 23.102.236.94:7054 -tls1_2
    openssl s_client -cipher  ECDH-ECDSA-AES128-SHA256  -connect localhost:7054     -tls1_2
    openssl s_client                                    -connect localhost:7054     -tls1_2
+   完美打印certificate内容：
+   openssl s_client                         -connect 23.102.236.94:7053  </dev/null 2>/dev/null | openssl x509 -text
+
+
  方法二：
    nmap --script ssl-enum-ciphers -p 7054  23.102.236.94       
 
@@ -10347,8 +10438,7 @@ EOF
 #http://www.regular-expressions.info/lookaround.html
 su(?!do).*-c 
 
-#https://www.atlassian.com/git/tutorials/gitignore
-.gitignore uses globbing patterns to match against file names
+
 =====httpd section=======================
 Allow from all
 说明：
