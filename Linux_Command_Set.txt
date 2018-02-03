@@ -5150,6 +5150,14 @@ File -> Properties -> Terminal -> Keyboard
 iterm2:
 : Go to Preferences->Profiles tab. Select your profile on the left, and then open the Keyboard tab. At the bottom is a set of buttons that lets you select the behavior of the Option key. For most users, Esc+ will be the best choice.
 
+`````comment section````shell comment section````
+: <<'COMMENT'
+#this is multiline comments, commands here is used in urgent case
+#stop manufacturer and rsync manufacturer code.
+ansible 'extra' -m shell -a "cd ~/repository_air_trace/AT_Manufacturer/ && sudo docker-compose stop"
+ansible 'extra' -m synchronize -a "src=/Users/fwu066/Documents/share/repository_air_trace/AT_Manufacturer dest=~/repository_air_trace/  recursive=yes " #--become
+ansible 'extra' -m shell -a "cd ~/repository_air_trace/AT_Manufacturer/ && sudo docker-compose  up -d"
+COMMENT
 
 ```````````````dash section```````````````
 参数"-"代表 standard input
@@ -9583,9 +9591,11 @@ screen  -r  nnnn
 
 screen ~/repository_air_trace/AT_node_sdk/install_basic_package_on_ubuntu.sh
 
-推出screen：
+退出screen：
 "Ctrl-a" then "d" #https://stackoverflow.com/questions/4847691/how-do-i-get-out-of-a-screen-without-typing-exit
 
+#https://serverfault.com/questions/21806/how-can-i-launch-a-screen-session-with-a-command-over-ssh-on-a-remote-server-fro
+ssh root@host screen -m -d "tail -f /var/log/messages"
 
 ````vlc section`
 rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm 
