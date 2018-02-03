@@ -293,6 +293,7 @@ find  -E   ./   -iregex  ".*(ldlinux.c32|bios.*Mboot.c32|bios.*libcom32.c32|/pxe
 ====== xargs section =======
   You can force xargs to use at most max-args arguments per command line. For example following will use first two argument per command:
   $ echo 1 2 3 4 | xargs -n 2
+  git log --format="%H %P" | xargs -L 1 git diff #http://offbytwo.com/2011/06/26/things-you-didnt-know-about-xargs.html
 ==========user section==================
   useradd rakhi
   passwd  rakhi
@@ -1194,6 +1195,7 @@ docker run -it --log-driver none alpine ash
 docker inspect -f '{{.HostConfig.LogConfig.Type}}' <CONTAINER>
 
 ======================  yum section and apt-get section dpkg section====================
+
 yum install yum-plugin-fastestmirror
 vi /etc/yum/pluginconf.d/fastestmirror.conf 
 rm -fr /var/cache/yum/timedhosts.txt
@@ -1202,8 +1204,8 @@ rm -f /var/cache/yum/x86_64/6/timedhosts.txt
 
 yum install yum-plugin-priorities
 priority=2
- 
-
+````
+sudo apt-get clean
 ``apt-get search section````
 aptitude search '~i'
 apt-cache search libappindicator3
