@@ -507,7 +507,7 @@ jinga_html_template.globals['clever_function'] = clever_function
 
 print jinga_html_template.render()
 
-``````jinja example```jinja loop section```
+``````jinja example```jinja loop section```jinja json section```````jinja yaml section``
 #在json中不包含list
     {
     "Website": {

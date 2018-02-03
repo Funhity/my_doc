@@ -8156,7 +8156,7 @@ ls ../../*/channel/
 start-stop-daemon  --background  --start   --quiet --pidfile /var/run/test                                               --exec /usr/bin/ng -- serve --host 0.0.0.0 --port 4200 --disable-host-check
 start-stop-daemon  --background  --start   --quiet --pidfile /var/run/test --chdir ~/repository_air_trace/AT_node_client --exec /usr/bin/ng -- serve --host 0.0.0.0 --port 4200 --disable-host-check
 
-nohup ng serve --host 0.0.0.0 --port 4200 --disable-host-check  </dev/null >/dev/null 2>&1 ß
+nohup ng serve --host 0.0.0.0 --port 4200 --disable-host-check  </dev/null >/dev/null 2>&1 &
 
 ========node.js section========
 npm install <Module Name>
@@ -9580,6 +9580,13 @@ screen -ls
 	
 screen  -r  nnnn
       Enable a session with screen terminal that has PID  “nnnn”  (see screen -ls)
+
+screen ~/repository_air_trace/AT_node_sdk/install_basic_package_on_ubuntu.sh
+
+推出screen：
+"Ctrl-a" then "d" #https://stackoverflow.com/questions/4847691/how-do-i-get-out-of-a-screen-without-typing-exit
+
+
 ````vlc section`
 rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm 
 rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
