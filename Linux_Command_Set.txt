@@ -6477,8 +6477,10 @@ cat  my_doc/.git/config
   fetch = +refs/heads/*:refs/remotes/origin/*
   ...
 
+ssh-add ~/.ssh/id_rsa_commandSet. #github destop 会自动启动一个ssh-agent，把默认的id_rsa文件加入到其中，变成一律用默认的id_rsa来访问github，导致在~/.ssh/config中设置的wu.github.com不起作用
 
-
+#delete cached keys
+$ ssh-add -D
 ============git section=====
 
 git for mac
@@ -7438,7 +7440,7 @@ awk '! /li/'                 mail-list
 awk '/edu/ && /li/' mail-list
 awk '/edu/ || /li/' mail-list
 
-`````ansible awk`````
+`````ansible awk````ansible ip section````
 打印~/.ssh/config文件中，inventory name对应的IP地址
    ansible 'org1-AT' -m shell  -a "airtrace={{ inventory_hostname }}; cat ~/repository_air_trace/frank_ssh_config | awk '{ if (\$2 == \"org1-AT\") print \$0 }' "
    ansible 'org1-AT' -m shell  -a "airtrace={{ inventory_hostname }}; cat ~/repository_air_trace/frank_ssh_config | awk '/"org1-AT"/ {getline;print \$2;}'
@@ -10074,7 +10076,16 @@ docker-compose -f app-docker-compose.yaml start   app
 
 ls docker*yaml |xargs -I{} sh -c 'rm -f docker-compose.yaml;   echo ==== {} ====;ln -s {} docker-compose.yaml;sudo   docker-compose ps; rm -f docker-compose.yaml'
 ln -s docker-compose-cli.yaml docker-compose.yaml
+`````docker compose depends ````docker compose volume````
+    volumes:
+      - ./:/root/development
+    # command: tail -f /dev/null
+    # command: npm install
+    command: sh -c 'echo "before start dev" && npm run start'
+    depends_on:
+      - "mongodb_keystore"
 
+```````
 #查询docker ps 中 的command 参数
 mac:
     docker inspect  -f "{{.Name}} {{.Config.Cmd}}" $( docker ps -a -q)
