@@ -6454,6 +6454,31 @@ git commit -a -m "about github"
 
  git remote set-url origin git+ssh://git@github.com/webloginwu/code_exampl
  git remote set-url origin  git+ssh://git@github.com/webloginwu/my_doc.git
+
+````
+#https://coderwall.com/p/7smjkq/multiple-ssh-keys-for-different-accounts-on-github-or-gitlab,其中用ssh-agent没有必要
+#https://stackoverflow.com/questions/5335197/gits-famous-error-permission-to-git-denied-to-user
+#GitHub shouldn't allow the same SSH public key to be added to two accounts, since when you are using the git@github.com:... URLs it's identifying the user based on the SSH key. 
+
+步骤一：创建新key pair
+ssh-keygen -t rsa -C "unarywu@google.com"
+步骤二：
+cat ~/.ssh/config
+# Home account
+Host wu.github.com
+  HostName github.com
+  PreferredAuthentications publickey
+  IdentityFile ~/.ssh/id_rsa_commandSet
+步骤三
+cat  my_doc/.git/config
+   ...
+[remote "origin"]
+  url = git@wu.github.com:webloginwu/my_doc.git
+  fetch = +refs/heads/*:refs/remotes/origin/*
+  ...
+
+
+
 ============git section=====
 
 git for mac
