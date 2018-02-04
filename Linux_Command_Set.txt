@@ -4874,15 +4874,29 @@ shift+alt+t 复制session
 
 ====ssh section ====
 ssh -vvv root@192.168.129.76
+ssh root@10.0.1.120 -p 2222
+
 ssh-keygen -t rsa  
 或：ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
 ssh-copy-id -i ~/.ssh/id_rsa.pub $remote_user@$remote_host
 ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.56.17 -p222   #ssh key section
+
+`````
 ssh-agent bash #rsa文件密码自动输入
 ssh-add ~/.ssh/id_rsa
+
+``````
 #the private key is used for the opposite operation, in these examples to decrypt ciphertext or to create a digital signature. 
-ssh root@10.0.1.120 -p 2222
 curl  -s http://192.168.10.56:5000/devops/megatron/raw/master/RabbitMQ/install.sh | openssl sha1
+
+````````key section````````
+#https://serverfault.com/questions/426394/how-to-check-if-a-rsa-public-private-key-pair-matched
+#ssh-keygen -y -e -f <private key> ，用private key 生成 public key ，注意：不要在.ssh目录下执行这个命令，当在.ssh目录下使用这条命令时，命令会直接输出当前目录下的id_rsa.pub，而不是用private key生成。
+#检查private key和public key是否成对
+PRIVKEY=id_rsa
+TESTKEY=id_rsa.pub
+diff <( ssh-keygen -y -e -f "$PRIVKEY" ) <( ssh-keygen -y -e -f "$TESTKEY" )
+
 ````ssh file section````
 cat file | ssh remoteuser@ip.address.of.remote.machine "cat > remote"
 ssh remoteuser@ip.address.of.remote.machine "cat > remote" < file
