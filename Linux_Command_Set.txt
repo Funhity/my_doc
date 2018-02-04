@@ -1212,6 +1212,7 @@ apt-cache search libappindicator3
 
 apt list --installed | grep virtual
 sudo apt-get remove virtualbox-5.1
+apt-get install --only-upgrade <packagename>. 
 `````````list the contents of a package using YUM````````
 yum install yum-utils -y
 repoquery --list packagename: repoquery --list  zabbix-server-mysql
