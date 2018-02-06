@@ -3385,8 +3385,8 @@ docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca 
 ansible org1-AT -m shell -a "sudo docker exec mongodb_keystore mongo localhost:27018        --eval 'db.getSiblingDB(\"air_trace\").getCollection(\"cryptokeystores\").find({})' "
 
 sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB("air_trace_dev").getCollection("organizations").find({},{name:1})'
-ansible org1-AT -m shell -a "sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB(\"air_trace_dev\").getCollection(\"organizations\").find({},{name:1})' "
-
+ansible test -m shell -a "sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB(\"air_trace_dev\").getCollection(\"organizations\").find({},{name:1})' "
+ansible test -m shell -a "sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB(\"air_trace_dev\").getCollection(\"organizations\").find({},{name:1,admin:1})' "
 
 清空数据：
 sudo docker exec -it mongodb_keystore mongo localhost:27018
