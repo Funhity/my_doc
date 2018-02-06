@@ -3785,7 +3785,8 @@ ansible test -m shell -a "sudo kill -9 \`ps -ef | grep angular | awk '{print \$2
 git log --author="frank wu"  --oneline | grep -v  'Merge\|init branch' |awk '{print  $1}'|xargs -I {} sh -c 'git show --pretty="" --name-only {}'| sort | uniq -u -d
 git log --pretty=format:"%h %an %ad %s" --date=relative --author="frank wu"
 
-
+file=repository_air_trace/AT_node_server/prepareDB.js
+rsync -zvhz   /Users/fwu066/Documents/share/$file org1-AT:~/$file
 
 ansible 'test' -m shell -a "cd ~/repository_air_trace/AT_Manufacturer/ && sudo docker-compose stop"
 ansible 'test' -m synchronize -a "src=/Users/fwu066/Documents/share/repository_air_trace/AT_Manufacturer dest=~/repository_air_trace/  recursive=yes " #--become
