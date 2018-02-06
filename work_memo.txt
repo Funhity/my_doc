@@ -3383,6 +3383,11 @@ docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca 
  sudo docker exec -it mongodb_keystore mongo localhost:27018             --eval "db.getSiblingDB('air_trace').getCollection('cryptokeystores').find({})"
 
 ansible org1-AT -m shell -a "sudo docker exec mongodb_keystore mongo localhost:27018        --eval 'db.getSiblingDB(\"air_trace\").getCollection(\"cryptokeystores\").find({})' "
+
+sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB("air_trace_dev").getCollection("organizations").find({},{name:1})'
+ansible org1-AT -m shell -a "sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB(\"air_trace_dev\").getCollection(\"organizations\").find({},{name:1})' "
+
+
 清空数据：
 sudo docker exec -it mongodb_keystore mongo localhost:27018
 > use air_trace
@@ -3759,7 +3764,7 @@ curl -s 'http://23.102.236.94:4000/channels' \
 
 
 
-
+cd ~/repository_air_trace/AT_node_sdk;docker-compose -f app-docker-compose.yaml restart app
 
 
 curl -s 'http://localhost:8000/user/register' \
@@ -3773,7 +3778,7 @@ curl -s 'http://localhost:8000/user/register' \
      --data '{"username":"adminorg1","password":"111111","org":"org12","email":"123@pwc.cpom","grouop":"admin"}'
 SDK_SERVER=http://localhost:4000/ TARGET_NETWORK=testCloud MONGO_DB_URI='mongodb://localhost/air_trace_dev' node prepareDB.js |less
 
-http://23.102.236.94:8000/testhtml/user
+http://23.102.236.94:8100/testhtml/user
 
 ansible test -m shell -a "sudo kill -9 \`ps -ef | grep angular | awk '{print \$2}'\`"
 

@@ -2568,6 +2568,9 @@ jinja 变量，用字符串初始化时，必须告诉jinja这个字符串是什
             event_tag: {{ tag }}
             event_data: {{ data | json() }}
 =======python jinja section====
+sudo apt install -y python-pip
+pip install jinja2
+
 >>> from jinja2 import Template
 >>> t = Template("Hello {{ something }}!")
 >>> t.render(something="World")
