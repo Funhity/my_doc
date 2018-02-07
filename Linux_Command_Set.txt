@@ -9858,11 +9858,22 @@ echo '{ "foo": [ { "id": 1 } , {"id": 2 }] }' |ssh  'frank@52.191.215.51'  j2y
 
 ====jq section====
 sudo apt install -y jq
+
+example1:
 jq '.["network-config"] | .Frank'
+jq '.["network-config"]'  network-config-DynamicOrg..org14.json  network-config-DynamicOrg.json
 
-jq '{"abc": ."network-config"}'
 
+example2:
+jq '{"abc": ."network-config"}' network-config-DynamicOrg..org14.json  network-config-DynamicOrg.json
 
+example3:
+jq -s '[.[]."network-config"[]]'  network-config-DynamicOrg..org14.json  network-config-DynamicOrg.json
+
+jq '.["network-config"]'  network-config-DynamicOrg..org14.json  network-config-DynamicOrg.json
+
+#merge,https://stackoverflow.com/questions/19529688/how-to-merge-2-json-file-using-jq
+jq -s '.[0] * .[1]'    network-config-DynamicOrg..org14.json  network-config-DynamicOrg.json
 =======windows section=============
 
 ````screenshot section```
