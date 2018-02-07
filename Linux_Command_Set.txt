@@ -9873,6 +9873,7 @@ jq -s '[.[]."network-config"[]]'  network-config-DynamicOrg..org14.json  network
 jq '.["network-config"]'  network-config-DynamicOrg..org14.json  network-config-DynamicOrg.json
 
 #merge,https://stackoverflow.com/questions/19529688/how-to-merge-2-json-file-using-jq
+       https://stedolan.github.io/jq/manual/#Basicfilters
 jq -s '.[0] * .[1]'    network-config-DynamicOrg..org14.json  network-config-DynamicOrg.json
 =======windows section=============
 
