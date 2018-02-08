@@ -573,7 +573,13 @@ print jinga_html_template.render()
    
        {% endfor %}
    ''')   
-  
+
+====jinja loop section====
+{% for dict_item in simple['network-config'] | reverse %}
+  {% if simple['network-config'][dict_item]['domain'] is defined %}
+        - ../../artifacts/channel/crypto-config/peerOrganizations/{{ simple['network-config'][dict_item]['domain'] }}/peers/peer0.{{ simple['network-config'][dict_item]['domain'] }}/:/etc/hyperledger/crypto/peer{{ dict_item }}
+  {% endif %}
+{% endfor %}
 ==========
 
 #考试，自动填写答案

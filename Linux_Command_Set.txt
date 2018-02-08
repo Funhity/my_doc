@@ -905,7 +905,7 @@ docker volume prune
                                                  其中，/var/lib/docker/volumes/是固定的，
                                                       jenkins_home对应冒号的左边（jenkins_home:/var/jenkins_home）
                                                                       冒号的右边是/var/jenkins_home（在container内） 
-检查volume设置：
+检查volume设置： #docker volume section
 sudo docker inspect -f '{{ .Mounts }}' ca_peerOrg1
 ````````docker systemd section``````docker centos7`````
 Dockerfile for systemd base image
@@ -9859,6 +9859,9 @@ echo '{ "foo": [ { "id": 1 } , {"id": 2 }] }' |ssh  'frank@52.191.215.51'  j2y
 ====jq section====
 sudo apt install -y jq
 
+
+cat xxx.txt|jq  '.'
+
 example1:
 jq '.["network-config"] | .Frank'
 jq '.["network-config"]'  network-config-DynamicOrg..org14.json  network-config-DynamicOrg.json
@@ -10181,7 +10184,8 @@ nginx 配置文件：
 #检查certificate
   openssl x509 -in ./org1.example.com/ca/ca.org1.example.com-cert.pem  -text -noout   
   openssl x509 -in ./repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem -text -noout
-  
+  cat AT_node_sdk/artifacts/channel/crypto-config/peerOrganizations/frank.pwc.com/peers/peer0.frank.pwc.com/tls/ca.crt | openssl x509   -text -noout
+
 #检查signature
   openssl s_client -servername example.com -connect example.com:443     </dev/null 2>/dev/null | openssl x509 -text #https://stackoverflow.com/questions/7885785/using-openssl-to-get-the-certificate-from-a-server
   openssl s_client                         -connect 23.102.236.94:7053  </dev/null 2>/dev/null | openssl x509 -text
