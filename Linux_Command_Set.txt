@@ -10186,9 +10186,9 @@ nginx 配置文件：
   openssl s_client -servername example.com -connect example.com:443     </dev/null 2>/dev/null | openssl x509 -text #https://stackoverflow.com/questions/7885785/using-openssl-to-get-the-certificate-from-a-server
   openssl s_client                         -connect 23.102.236.94:7053  </dev/null 2>/dev/null | openssl x509 -text
 
-·············  
+ 方法三：
   用标准输入当作文件来输入
-  openssl x509 -in /dev/stdin  -text -noou
+  openssl x509 -in /dev/stdin  -text -noout
   输入样例
 -----BEGIN CERTIFICATE-----
 MIICRjCCAe2gAwIBAgIQGgI/g0rqOe782QXebuSohDAKBggqhkjOPQQDAjB1MQsw
