@@ -6466,7 +6466,7 @@ xfreerdp /f /u:unar /p:X1 /v:10.0.1.25 /sound:sys:alsa
 https://www.syskit.com/blog/credssp-required-by-server-solutions/
 因为：CredSSP required by serve
 
-============github section===========
+============github section======git section=====
 ssh-keygen -t rsa
 cat ~/.ssh/id_rsa.pub
 git remote set-url origin git+ssh://git@github.com/webloginwu
@@ -10238,7 +10238,9 @@ TWZvb8idMHCraA==
 
 获取 public key
 openssl x509 -pubkey -noout -in ../artifacts/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt
-用ca.crt验证./abc.pem
+
+用ca.crt验证./abc.pem,
+其中./abc.pem是用openssl s_client  -connect 23.102.224.117:7050  </dev/null 2>/dev/null | openssl x509 -text获得的
 openssl verify -CAfile ../artifacts/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt ./abc.pem
 ===========bridge section===================
 apt-get install bridge-utils
