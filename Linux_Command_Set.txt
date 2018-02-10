@@ -5846,6 +5846,10 @@ tcpdump -n dst port 5000
 tcpdump -nni bridge0 icmp  #在bridge0监听ping消息
 tcpdump -nli bridge0  host 10.0.1.25  and 10.0.1.190
 
+`````ssl section ```tls section```
+sudo apt install -y  ssldump
+sudo ssldump -d -k ./repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/ordererOrganizations/example.com/users/Admin@example.com/tls/ca.crt -i 'eth0'  port 7050
+sudo ssldump -d -k ./abc.key -i 'eth0'  port 7050
 =================ubuntu section=====================
 检查版本号
 lsb_release -a
