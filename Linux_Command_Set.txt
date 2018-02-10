@@ -5850,6 +5850,18 @@ tcpdump -nli bridge0  host 10.0.1.25  and 10.0.1.190
 sudo apt install -y  ssldump
 sudo ssldump -d -k ./repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/ordererOrganizations/example.com/users/Admin@example.com/tls/ca.crt -i 'eth0'  port 7050
 sudo ssldump -d -k ./abc.key -i 'eth0'  port 7050
+
+sudo apt install tshark
+
+tshark -o "ssl.desegment_ssl_records: TRUE" \
+-o "ssl.desegment_ssl_application_data: TRUE" \
+-o "ssl.keys_list:190.1.0.4,7050,http,abc.key" \
+-o "ssl.debug_file:ssldebug.log" \
+-f "tcp port 15000" \
+-Y "ssl" \
+-V -x 
+
+sudo tshark -o "ssl.desegment_ssl_records: TRUE" -o "ssl.desegment_ssl_application_data: TRUE" -o "ssl.keys_list:23.102.224.117,7050,http,/home/org13/abc.key" -o "ssl.debug_file:ssldebug.log" -f "tcp port 15000" -Y "ssl" -V -x
 =================ubuntu section=====================
 检查版本号
 lsb_release -a
@@ -10224,6 +10236,10 @@ TWZvb8idMHCraA==
  sudo docker restart ca_peerOrg1
 
 
+获取 public key
+openssl x509 -pubkey -noout -in ../artifacts/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt
+用ca.crt验证./abc.pem
+openssl verify -CAfile ../artifacts/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt ./abc.pem
 ===========bridge section===================
 apt-get install bridge-utils
 yum -y install bridge-utils
