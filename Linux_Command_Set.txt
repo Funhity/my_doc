@@ -6431,6 +6431,7 @@ You can make sed quit at a pattern with sed '/pattern/q', so you just need your 
 sed -n '/^pattern1/,/^pattern2/p;/^pattern2/q'
 That way only the first block will be shown.
 
+abc=`sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB("air_trace_dev").getCollection("organizations").find({},{admin:2})' `;printf "$abc"|sed -n '/0,END CERTIFICATE/!  { /-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/p }'
 
 `````sed insert````
 在包含mysqld的那行前面添加default-character-set=utf8
@@ -10255,12 +10256,14 @@ TWZvb8idMHCraA==
 
 
 检查23.102.224.117:7050 中的certificate和orderers/orderer.example.com/tls/ca.crt中的certificat：
+    取出server中的certificate
     openssl s_client   -connect  23.102.224.117:7050  </dev/null 2>/dev/null | openssl x509 -text | sed -n '/-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/p' > ./server.pem; 
-
+    对比服务器上文件系统中的certificate
     find ./ -ipath "*orderers/orderer.example.com/tls/ca.crt*" | xargs -I{} openssl verify -CAfile {}  ./server.pem
-    
+    对比自己倒出来的ceritificate
     openssl s_client   -connect  23.102.224.117:7050  </dev/null 2>/dev/null |  openssl verify -CAfile ./amdin.crt ./server.pem
 
+从mongodb中取certificate，再用sed取出certificate
 abc=`sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB("air_trace_dev").getCollection("organizations").find({},{admin:2})' `;printf "$abc"
 
 ===========bridge section===================

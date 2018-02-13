@@ -3388,6 +3388,8 @@ sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSi
 ansible test -m shell -a "sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB(\"air_trace_dev\").getCollection(\"organizations\").find({},{name:1})' "
 ansible test -m shell -a "sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB(\"air_trace_dev\").getCollection(\"organizations\").find({},{name:1,admin:1})' "
 
+abc=`sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB("air_trace_dev").getCollection("organizations").find({},{admin:2})' `;printf "$abc"|sed -n '/0,END CERTIFICATE/d  { /-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/p }'
+
 清空数据：
 sudo docker exec -it mongodb_keystore mongo localhost:27018
 > use air_trace
