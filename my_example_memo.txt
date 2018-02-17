@@ -384,7 +384,8 @@ sudo systemctl enable docker
       
       
       template = ENV.get_template("simple_cisco.j2")
-      print (template.render(simple=simple))   #左边是yaml文件，右边是字典
+      print (template.render(simple=simple))   #左边是yaml文件，右边是字典 , left simple jinja var in j2 file ,right simple is a dict
+
 
 ·····
 #两个数据源文件，产生两个dict，合并两个dict，组成user_input_plus_network_config_dict数据源
