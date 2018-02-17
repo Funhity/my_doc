@@ -3793,6 +3793,25 @@ rsync -zvhz   /Users/fwu066/Documents/share/$file org1-AT:~/$file
 ansible 'test' -m shell -a "cd ~/repository_air_trace/AT_Manufacturer/ && sudo docker-compose stop"
 ansible 'test' -m synchronize -a "src=/Users/fwu066/Documents/share/repository_air_trace/AT_Manufacturer dest=~/repository_air_trace/  recursive=yes " #--become
 
+
+
+·····
+#seperated orgs
+rsync  -avhz ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/ordererOrganizations/ org14-AT:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/ordererOrganizations/
+curl -s -X POST http://app:4000/users  -H "content-type: application/json" -d '{ "username":"a", "orgName":"Org1" }'
+sudo docker exec -it cli curl app:4000/updateOrdererDirectory/?username=a\&org=Org1
+
+sudo docker exec -it cli
+cd *
+./removeConsortium.sh SDCMSP
+
+
+cat  ./network-config-DynamicOrg.tmp.org14.json | jq  'del(.[\"network-config\"] | .orderer)'  > ./network-config-DynamicOrg.tmp.json 
+
+···············
+
+sudo docker exec -it cli sh -c "cd /opt/gopath/src/github.com/hyperledger/fabric/peer/tmp/updateOrdererScript/;./addConsortium.sh SDCMSP SDC"
+sudo docker exec -it cli sh -c "cd /opt/gopath/src/github.com/hyperledger/fabric/peer/tmp/updateOrdererScript/; ls"
 `````````blockchain nginx```````
 cat /etc/nginx/conf.d/air-trace.conf
     server {

@@ -4839,7 +4839,7 @@ ansible-playbook release.yml --extra-vars "version=1.23.45 other_variable=foo" #
 ansible org1-AT -m setup -a 'filter=ansible_eth[0-2]'
 
 
-````````playbook shell section```````````
+````````playbook shell section``````ansible shell section`````
 - hosts: 'org10-AT'
   gather_facts: no
   tasks:
@@ -6509,7 +6509,7 @@ cat  my_doc/.git/config
   fetch = +refs/heads/*:refs/remotes/origin/*
   ...
 
-ssh-add ~/.ssh/id_rsa_commandSet. #github destop 会自动启动一个ssh-agent，把默认的id_rsa文件加入到其中，变成一律用默认的id_rsa来访问github，导致在~/.ssh/config中设置的wu.github.com不起作用
+ssh-add ~/.ssh/id_rsa_commandSet   #github destop 会自动启动一个ssh-agent，把默认的id_rsa文件加入到其中，变成一律用默认的id_rsa来访问github，导致在~/.ssh/config中设置的wu.github.com不起作用
 
 #delete cached keys
 $ ssh-add -D
@@ -6937,6 +6937,9 @@ git diff origin/master origin/master~3
 If you want to diff your current working directory against the 5th most recent commit on origin/master, you would omit the first argument:
 git diff origin/master~4
 
+
+
+
 ```````````````````````
 #fetch 和 checkout的关系
  git fetch origin                             #只能获得origin/serverfix，但没有本地分支，可以通过merge到本地分支的方法来继续工作
@@ -7098,6 +7101,15 @@ git rev-list -n 5 HEAD -- <file_path>      #Find the last commit that affected t
                                            #https://stackoverflow.com/questions/953481/find-and-restore-a-deleted-file-in-a-git-repository
 
 git-bisect - Use binary search to find the commit that introduced a bug
+
+`````git delete section````
+#恢复已经删除并且已经commit的文件，https://stackoverflow.com/questions/953481/find-and-restore-a-deleted-file-in-a-git-repository
+git rev-list -n 1 HEAD -- ./testCloudArtifacts/      #查到删除文件的commit id
+git shwo commit_id | grep -C 3 "deleted file mode"   #确认被删除的文件
+git checkout  commit_id^ ./testCloudArtifacts/DynamicOrg/network-config-DynamicOrg.j2
+#一键式：
+git rev-list -n 1 HEAD -- ./testCloudArtifacts/ |xargs -I{} git show {} |  grep -C 3 "deleted file mode"
+git rev-list -n 1 HEAD -- ./testCloudArtifacts/ |xargs -I{} git checkout  {}^ ./testCloudArtifacts/DynamicOrg/network-config-DynamicOrg.j2
 ===========zabbix section===========
 zabbix_server --version
 zabbix-server-mysql.x86_64 : Zabbix server compiled to use MySQL database
@@ -10264,7 +10276,7 @@ TWZvb8idMHCraA==
     openssl s_client   -connect  23.102.224.117:7050  </dev/null 2>/dev/null |  openssl verify -CAfile ./amdin.crt ./server.pem
 
 从mongodb中取certificate，再用sed取出certificate
-abc=`sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB("air_trace_dev").getCollection("organizations").find({},{admin:2})' `;printf "$abc"
+abc=`sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB("air_trace_dev").getCollection("organizations").find({},{admin:2})' `;printf "$abc"| sed -n '/-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/p'
 
 ===========bridge section===================
 apt-get install bridge-utils
