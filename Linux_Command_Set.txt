@@ -4771,6 +4771,7 @@ jumper            ansible_ssh_host=192.168.1.50   ansible_ssh_port=5555
 localhost              ansible_connection=local
 other1.example.com     ansible_connection=ssh        ansible_ssh_user=mpdehaan
 other2.example.com     ansible_connection=ssh        ansible_ssh_user=mdehaan
+test                   ansible_ssh_host=10.0.1.189  ansible_connection=ssh
 
 密码带#号的前面用\转义字符
 When you put a password with special characters inside host inventory file it breaks everything after it and even if you put the password parameter at the end the login result in a authentication failure.
@@ -5133,17 +5134,19 @@ rsync -av /srv/     /tmp/wujunrong/backup/srv/     --exclude   salt/xinxindai_to
 rsync -avh ./hadoop-spark --exclude '*/target/*'  frank@52.191.119.111:/home/frank/demo-src --delete-excluded   --delete
 
 
+····ansible rsync section·············ansible synchronize section···········
 
-`````
+ansible 'AirTrace-org[1:4]*' -m shell -a   'bc_home=~;rsync -azh -e "ssh -F $bc_home/.ssh/config"  AirTrace-org2:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/  ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/'
+执行1和4，而不是1、2、3、4
+
+
+ansible test -m synchronize -a "src=../root  dest=~/tmp/  recursive=yes" #把root目录下的内容拷贝到/tmp目录下
+ansible test -m synchronize -a "src=../root/ dest=~/tmp/  recursive=yes" #把root目录拷贝到/tmp目录下
+
 
 ansible 'AirTrace-org1' -m shell -a "sudo scp -F ~/.ssh/config -r ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/*  AirTrace-org4:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
 ansible 'AirTrace-org1' -m shell -a "sudo scp -F ~/.ssh/config -r ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/*  AirTrace-org2:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
 
-#ansible rsync section
-
-ansible 'AirTrace-org[1:4]*' -m shell -a   'bc_home=~;rsync -azh -e "ssh -F $bc_home/.ssh/config"  AirTrace-org2:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/  ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/'
-
-执行1和4，而不是1、2、3、4
 
 ``````````断点续传 section````````````
 #https://stackoverflow.com/questions/20860896/is-there-a-way-to-continue-broken-scp-secure-copy-command-process-in-linux
