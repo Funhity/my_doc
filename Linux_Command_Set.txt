@@ -9888,7 +9888,7 @@ Set a key to undefined to remove it
     docker pull jlordiales/jyparser
     cat test.json | docker run -i --rm jlordiales/jyparser get ".menu.id"
 
-`````json diff section``````
+`````json diff section````jq section``
 diff  <(jq -S . network-config-testCloud.json)  <(jq -S . wu.json)  
 meld  <(jq -S . network-config-testCloud.json)  <(jq -S . wu.json)  
 ======json 2 yaml====j2y==
@@ -9899,8 +9899,13 @@ echo '{ "foo": [ { "id": 1 } , {"id": 2 }] }' |ssh  'frank@52.191.215.51'  j2y
 
 
 ====jq section====
+ubuntu:
 sudo apt install -y jq
 
+centos:
+sudo yum  -y  install epel-release 
+yum install -y jq
+```````
 
 cat xxx.txt|jq  '.'
 
