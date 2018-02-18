@@ -6491,7 +6491,7 @@ git commit -a -m "about github"
  git remote set-url origin git+ssh://git@github.com/webloginwu/code_exampl
  git remote set-url origin  git+ssh://git@github.com/webloginwu/my_doc.git
 
-````
+````````````一个密钥不能对应两个github项目，必须有两个秘钥，另一个密钥用ssh-agent缓存````````````
 #一个密钥不能对应两个github项目，必须有两个秘钥，另一个密钥用ssh-agent缓存
 #https://coderwall.com/p/7smjkq/multiple-ssh-keys-for-different-accounts-on-github-or-gitlab,其中用ssh-agent没有必要
 #https://stackoverflow.com/questions/5335197/gits-famous-error-permission-to-git-denied-to-user
@@ -6515,7 +6515,7 @@ cat  my_doc/.git/config
   ...
 
 ssh-add ~/.ssh/id_rsa_commandSet   #github destop 会自动启动一个ssh-agent，把默认的id_rsa文件加入到其中，变成一律用默认的id_rsa来访问github，导致在~/.ssh/config中设置的wu.github.com不起作用
-
+``````````````````````````
 #delete cached keys
 $ ssh-add -D
 ============git section=====
