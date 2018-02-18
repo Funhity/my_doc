@@ -3812,6 +3812,44 @@ cat  ./network-config-DynamicOrg.tmp.org14.json | jq  'del(.[\"network-config\"]
 
 sudo docker exec -it cli sh -c "cd /opt/gopath/src/github.com/hyperledger/fabric/peer/tmp/updateOrdererScript/;./addConsortium.sh SDCMSP SDC"
 sudo docker exec -it cli sh -c "cd /opt/gopath/src/github.com/hyperledger/fabric/peer/tmp/updateOrdererScript/; ls"
+
+====command section=======
+
+
+``````alias section````
+#ubuntu:
+cat >> ~/.bash_aliases <<EOF
+alias sdk='cd ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg'
+EOF
+source ~/.bashrc
+`````
+#macos:
+cat >> ~/.bash_profile <<EOF
+alias gitwu='cd /Users/fwu066/Documents/share/git;pwd'
+alias sdk='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg;pwd'
+EOF
+source ~/.bash_profile
+`````
+
+
+`````
+file=repository_air_trace/AT_node_server/prepareDB.js
+rsync -zvhz   /Users/fwu066/Documents/share/$file org1-AT:~/$file
+```````
+- hosts: 'org13-AT'
+  gather_facts: no
+  tasks:
+    - name: init orderer for dynamic org
+      shell: |
+        
+        echo "setup orderer ..."
+        curl -s -X POST http://app:4000/users  -H "content-type: application/json" -d '{ "username":"a", "orgName":"Frank3" }' ;  
+        sudo docker exec -t cli curl app:4000/updateOrdererDirectory/?username=a\&org=Frank3 ; 
+        sudo docker exec -t cli bash  -c "cd /opt/gopath/src/github.com/hyperledger/fabric/peer/tmp/updateOrdererScript/;yes y|./addConsortium.sh Frank3MSP Frank3"
+      args:
+        executable: /bin/bash
+      register: ps
+    - debug: var=ps.stdout_lines
 `````````blockchain nginx```````
 cat /etc/nginx/conf.d/air-trace.conf
     server {
