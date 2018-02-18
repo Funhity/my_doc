@@ -658,6 +658,15 @@ print jinga_html_template.render()
 ````jinja if section```
 {% if simple['deploy_orderer'] == true %}
 {% endif %}
+·····
+
+echo cleaning old cert/block/channel.tx .....
+{% if simple['deploy_orderer'] == true %}
+   rm -rf crypto-config/
+{% else %}
+   rm -rf crypto-config/peerOrganizations/
+{% endif %}
+
 ==========
 
 #考试，自动填写答案
