@@ -3793,6 +3793,11 @@ rsync -zvhz   /Users/fwu066/Documents/share/$file org1-AT:~/$file
 ansible 'test' -m shell -a "cd ~/repository_air_trace/AT_Manufacturer/ && sudo docker-compose stop"
 ansible 'test' -m synchronize -a "src=/Users/fwu066/Documents/share/repository_air_trace/AT_Manufacturer dest=~/repository_air_trace/  recursive=yes " #--become
 
+#ansible  'test' -m synchronize -a "src=/Users/fwu066/Documents/share/repository_air_trace dest=~  delete=yes recursive=yes  sync_opts='{{ ["--exclude=~/repository_air_trace/AT_node_client/node_modules/node-sass/vendor/linux-x64-57/*"] }}' " #--become
+
+#need exclude:repository_air_trace/AT_node_client/node_modules/node-sass/vendor/linux-x64-57/
+#rsync_opts='{{ ["--exclude=~/repository_air_trace/AT_node_client/node_modules/node-sass/vendor/linux-x64-57/*"] }}
+
 
 
 ·····
@@ -3824,9 +3829,12 @@ EOF
 source ~/.bashrc
 `````
 #macos:
-cat >> ~/.bash_profile <<EOF
+cat > ~/.bash_profile <<EOF
 alias gitwu='cd /Users/fwu066/Documents/share/git;pwd'
-alias sdk='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg;pwd'
+alias dyn='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg;pwd'
+alias sdk='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/;pwd'
+alias sshconfig='cat ~/.ssh/config'
+alias ten='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/testCloudArtifacts/;pwd;echo ./runEverything.sh'
 EOF
 source ~/.bash_profile
 `````
@@ -3835,12 +3843,15 @@ source ~/.bash_profile
 `````
 file=repository_air_trace/AT_node_server/prepareDB.js
 rsync -zvhz   /Users/fwu066/Documents/share/$file org1-AT:~/$file
-```````
+````ansible command section```
+#https://stackoverflow.com/questions/40230184/how-to-do-multiline-shell-script-in-ansible
+cat ./ansible-shell-command.yaml <<EOF
 - hosts: 'org13-AT'
   gather_facts: no
   tasks:
     - name: init orderer for dynamic org
-      shell: |
+      shell: 
+        cmd: |
         
         echo "setup orderer ..."
         curl -s -X POST http://app:4000/users  -H "content-type: application/json" -d '{ "username":"a", "orgName":"Frank3" }' ;  
@@ -3850,6 +3861,9 @@ rsync -zvhz   /Users/fwu066/Documents/share/$file org1-AT:~/$file
         executable: /bin/bash
       register: ps
     - debug: var=ps.stdout_lines
+
+EOF
+ansilbe-playbook ./ansible-shell-command.yaml
 `````````blockchain nginx```````
 cat /etc/nginx/conf.d/air-trace.conf
     server {
