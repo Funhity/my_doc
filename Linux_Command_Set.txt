@@ -4713,6 +4713,10 @@ crontab -l
 /var/log/messages
 ============================   ansible section =================================
 The goal of a play is to map a group of hosts to some well defined roles, represented by things ansible calls tasks. At a basic level, a task is nothing more than a call to an ansible module (see About Modules).
+``````
+macosx:
+sudo easy_install pip
+sudo pip install ansible
 ````````epel section````
 方法一：  
   sudo yum -y install epel-release  ansible openssh-clients libselinux-python sshpass

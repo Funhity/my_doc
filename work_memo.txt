@@ -3835,6 +3835,7 @@ alias dyn='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/tes
 alias sdk='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/;pwd'
 alias sshconfig='cat ~/.ssh/config'
 alias ten='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/testCloudArtifacts/;pwd;echo ./runEverything.sh'
+alias addgitwu='ssh-add ~/.ssh/id_rsa_commandSet'
 EOF
 source ~/.bash_profile
 `````
