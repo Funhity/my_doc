@@ -10622,8 +10622,8 @@ EOF
 ======regular expression section===
 #http://www.regular-expressions.info/lookaround.html
 su(?!do).*-c 
-
-
+测试工具：
+https://regex101.com/
 =====httpd section=======================
 Allow from all
 说明：
