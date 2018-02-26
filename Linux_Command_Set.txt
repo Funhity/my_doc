@@ -6979,7 +6979,7 @@ git commit --amend -m "an updated commit message"
 # Edit hello.py and main.py git add hello.py git commit
 # Realize you forgot to add the changes from main.py git add main.py
 git commit --amend --no-edit
-·························
+········git tag section·················
 git tag
 git tag -l "v1.8.5*"
 git tag -a v1.4      -m "my version 1.4"
@@ -6989,6 +6989,13 @@ git tag -a v1.2     9fceb02    #you specify the commit checksum (or part of it) 
 
 git push origin   v1.5
 git push origin --tags
+
+
+In “detached HEAD” state, if you make changes and then create a commit, the tag will stay the same, but your new commit won’t belong to any branch and will be unreachable, except for by the exact commit hash. Thus, if you need to make changes — say you’re fixing a bug on an older version, for instance — you will generally want to create a branch:
+
+$ git checkout -b version2 v2.0.0
+Switched to a new branch 'version2'
+
 
 `````git branch section``````
 #创建本地分支，再checkout
@@ -10621,7 +10628,10 @@ display: flex;
 EOF
 ======regular expression section===
 #http://www.regular-expressions.info/lookaround.html
+#a lookahead or a lookbehind does not "consume" any characters on the string
 su(?!do).*-c 
+
+
 测试工具：
 https://regex101.com/
 =====httpd section=======================

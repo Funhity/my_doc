@@ -3822,11 +3822,17 @@ sudo docker exec -it cli sh -c "cd /opt/gopath/src/github.com/hyperledger/fabric
 
 
 ``````alias section````
+cat > ./ansible-alias-command.sh <<ansibleEOF
+#!/bin/bash
 #ubuntu:
-cat >> ~/.bash_aliases <<EOF
-alias sdk='cd ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg'
+cat > ~/.bash_aliases <<EOF
+alias sdk='cd ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/'
+alias dyn='cd ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg'
 EOF
 source ~/.bashrc
+ansibleEOF
+
+ansible org1-AT -m  script -a "./ansible-alias-command.sh "
 `````
 #macos:
 cat > ~/.bash_profile <<EOF
@@ -3839,9 +3845,17 @@ alias addgitwu='ssh-add ~/.ssh/id_rsa_commandSet'
 EOF
 source ~/.bash_profile
 `````
+cat > ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg/user_input.yaml <<EOF
+orderer_ip: 23.102.224.117
+orderer_domain: orderer.example.com
+orderer_name: Orderer
+deploy_orderer: false
+org_domain: nike.com
+org_ip: 23.102.224.117
+org_name: Nike
+EOF
 
-
-`````
+```rsync template section````
 file=repository_air_trace/AT_node_server/prepareDB.js
 rsync -zvhz   /Users/fwu066/Documents/share/$file org1-AT:~/$file
 ````ansible command section```
@@ -3896,5 +3910,32 @@ cat /etc/nginx/conf.d/air-trace.conf
             location = /50x.html {
         }
     }
+
+·····················
+cat > /Users/fwu066/Documents/share/tmp/ansible-file-command.yaml <<ansibleEOF
+- hosts: 'org1-AT'
+  gather_facts: no
+  tasks:
+    - name: init orderer for dynamic org
+      shell: 
+        cmd: |
+          cat > ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg/user_input.yaml <<EOF
+          orderer_ip: 23.102.236.94
+          orderer_domain: orderer.example.com
+          orderer_name: Orderer
+          deploy_orderer: true
+          org_domain: testorg1.com
+          org_ip: 23.102.236.94
+          org_name: Testorg1
+          EOF
+      args:
+        executable: /bin/bash
+      register: ps
+    - debug: var=ps.stdout_lines
+ansibleEOF
+ansible-playbook /Users/fwu066/Documents/share/tmp/ansible-file-command.yaml 
+······
+
+
 ```````````
 
