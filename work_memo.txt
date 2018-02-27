@@ -3390,6 +3390,13 @@ ansible test -m shell -a "sudo docker exec mongodb_chaincode mongo localhost:270
 
 abc=`sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB("air_trace_dev").getCollection("organizations").find({},{admin:2})' `;printf "$abc"|sed -n '/0,END CERTIFICATE/d  { /-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/p }'
 
+#找到第一个"name"="Testorg1"的document，只显示admin对应的值
+sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB("air_trace_dev").getCollection("organizations").find({"name":"Testorg1"}, { admin: 1, }).pretty()'
+#只显示admin对应的值，不显示_id
+sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB("air_trace_dev").getCollection("organizations").find({"name":"Testorg1"}, { admin: 1,_id: 0 }).pretty()'
+····mongodb json section······
+sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB("air_trace_dev").getCollection("organizations").find({"name":"Testorg1"}, { admin: 1,_id: 0 }).pretty()' | grep -v -i mongodb | jq '.'
+···········
 清空数据：
 sudo docker exec -it mongodb_keystore mongo localhost:27018
 > use air_trace
@@ -3822,7 +3829,7 @@ sudo docker exec -it cli sh -c "cd /opt/gopath/src/github.com/hyperledger/fabric
 
 
 ``````alias section````
-cat > ./ansible-alias-command.sh <<ansibleEOF
+cat > /Users/fwu066/Documents/share/tmp/ansible-alias-command.sh <<ansibleEOF
 #!/bin/bash
 #ubuntu:
 cat > ~/.bash_aliases <<EOF
@@ -3832,7 +3839,7 @@ EOF
 source ~/.bashrc
 ansibleEOF
 
-ansible org1-AT -m  script -a "./ansible-alias-command.sh "
+ansible org1-AT -m  script -a "/Users/fwu066/Documents/share/tmp/ansible-alias-command.sh "
 `````
 #macos:
 cat > ~/.bash_profile <<EOF
@@ -3911,7 +3918,7 @@ cat /etc/nginx/conf.d/air-trace.conf
         }
     }
 
-·····················
+··········ansible command section···········
 cat > /Users/fwu066/Documents/share/tmp/ansible-file-command.yaml <<ansibleEOF
 - hosts: 'org1-AT'
   gather_facts: no
