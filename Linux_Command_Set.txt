@@ -10331,7 +10331,7 @@ sudo systemd-tmpfiles --prefix=/sys --create
       yum -y install epel-release wget curl telnet lrzsz aria2 openssh-clients openssh-server iotop net-tools lsof tcpdump tree tcpdump zip unzip less dos2unix git iproute bind-utils
 
 #ubuntu:
-       sudo apt-get -y install tree lrzsz dos2unix
+       sudo apt-get -y install tree lrzsz dos2unix build-essential
        
 ``````alias section````
 #ubuntu:
@@ -10703,7 +10703,12 @@ alias gitwu='cd /Users/fwu066/Documents/share/git;pwd'
 alias sdk='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg;pwd'
 EOF
 source ~/.bash_profile
-======
+====nodejs section==
+npm install
+会在下面文件搜索package，然后安装
+cat package.json      #package的范围
 
-
+清理nodejs下载的package
+rm package-lock.json  #安装时的具体版本
+rm -fr node_modules/
 

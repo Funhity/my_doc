@@ -3381,6 +3381,8 @@ docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca 
  docker exec -it mongodb_keystore mongo --eval "db.getSiblingDB('air_trace').getCollection('cryptokeystores').find({})"
  sudo docker exec -it mongodb_keystore mongo localhost:27018/air-trace   --eval "db.getSiblingDB('air_trace').getCollection('cryptokeystores').find({})"
  sudo docker exec -it mongodb_keystore mongo localhost:27018             --eval "db.getSiblingDB('air_trace').getCollection('cryptokeystores').find({})"
+ sudo docker exec -it mongodb_keystore mongo localhost:27018             --eval "db.getSiblingDB('air_trace').getCollection('cryptokeystores').find({}).pretty()"
+
 
 ansible org1-AT -m shell -a "sudo docker exec mongodb_keystore mongo localhost:27018        --eval 'db.getSiblingDB(\"air_trace\").getCollection(\"cryptokeystores\").find({})' "
 
@@ -3396,7 +3398,7 @@ sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSi
 sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB("air_trace_dev").getCollection("organizations").find({"name":"Testorg1"}, { admin: 1,_id: 0 }).pretty()'
 ····mongodb json section······
 sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB("air_trace_dev").getCollection("organizations").find({"name":"Testorg1"}, { admin: 1,_id: 0 }).pretty()' | grep -v -i mongodb | jq '.'
-···········
+
 清空数据：
 sudo docker exec -it mongodb_keystore mongo localhost:27018
 > use air_trace
@@ -3825,7 +3827,7 @@ cat  ./network-config-DynamicOrg.tmp.org14.json | jq  'del(.[\"network-config\"]
 sudo docker exec -it cli sh -c "cd /opt/gopath/src/github.com/hyperledger/fabric/peer/tmp/updateOrdererScript/;./addConsortium.sh SDCMSP SDC"
 sudo docker exec -it cli sh -c "cd /opt/gopath/src/github.com/hyperledger/fabric/peer/tmp/updateOrdererScript/; ls"
 
-====command section=======
+====blockchain command section=======
 
 
 ``````alias section````
@@ -3833,13 +3835,13 @@ cat > /Users/fwu066/Documents/share/tmp/ansible-alias-command.sh <<ansibleEOF
 #!/bin/bash
 #ubuntu:
 cat > ~/.bash_aliases <<EOF
-alias sdk='cd ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/'
+alias sdk='cd ~/repository_air_trace/AT_node_sdk/'
 alias dyn='cd ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg'
 EOF
 source ~/.bashrc
 ansibleEOF
 
-ansible org1-AT -m  script -a "/Users/fwu066/Documents/share/tmp/ansible-alias-command.sh "
+ansible test -m  script -a "/Users/fwu066/Documents/share/tmp/ansible-alias-command.sh "
 `````
 #macos:
 cat > ~/.bash_profile <<EOF

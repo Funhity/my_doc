@@ -749,6 +749,20 @@ EOF
 sudo systemctl restart nginx.service
 
 ansilbeEOF
-ansible org13-AT -m  script -a "./ansible-shell-command.sh" --become
+ansible test -m  script -a "./ansible-shell-command.sh" --become
 
-=========
+=======port section=====
+cat >> /Users/fwu066/Documents/share/tmp/ansible-ping-port.yaml <<ansibleEOF
+- name:  port test
+  hosts: test
+  gather_facts: True
+  tasks:
+    - name: port
+      wait_for:
+       host: "{{ ansible_hostname }}"
+       port: 8100
+       timeout: 1
+    - debug: msg="System {{ ansible_hostname }} has uuid {{ ansible_product_uuid }}"
+ansibleEOF
+ansible-playbook /Users/fwu066/Documents/share/tmp/ansible-ping-port.yaml 
+========
