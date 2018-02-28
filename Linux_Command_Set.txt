@@ -5152,7 +5152,8 @@ ansible test -m synchronize -a "src=../root/ dest=~/tmp/  recursive=yes" #把roo
 ansible 'AirTrace-org1' -m shell -a "sudo scp -F ~/.ssh/config -r ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/*  AirTrace-org4:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
 ansible 'AirTrace-org1' -m shell -a "sudo scp -F ~/.ssh/config -r ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/*  AirTrace-org2:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
 
-
+#rsync exclude
+ansible  'org9-AT' -m synchronize -a "src=`pwd`/ dest=~/repository_air_trace/ recursive=yes rsync_opts=\'{{ [\"--exclude=`pwd`/AT_node_sdk/node_modules\"] }}\' "
 ``````````断点续传 section````````````
 #https://stackoverflow.com/questions/20860896/is-there-a-way-to-continue-broken-scp-secure-copy-command-process-in-linux
 #https://www.cyberciti.biz/tips/linux-use-rsync-transfer-mirror-files-directories.html
