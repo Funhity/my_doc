@@ -4752,7 +4752,22 @@ echo host_key_checking=false>>/etc/ansible/ansible.cfg
        /etc/ansible/ansible.cfg  
       [defaults]
       host_key_checking=false
-```````````````````````````````````````````````````````
+```````````mac ansible section``````````````````
+#mac
+#http://docs.ansible.com/ansible/latest/intro_installation.html
+sudo easy_install pip
+sudo pip install ansible
+sudo wget -O /etc/ansible/ansible.cfg https://raw.githubusercontent.com/ansible/ansible/devel/examples/ansible.cfg
+````````````
+#ubuntu:
+#http://docs.ansible.com/ansible/latest/intro_installation.html
+sudo apt-get -y update
+sudo apt-get -y install software-properties-common
+sudo apt-add-repository ppa:ansible/ansible
+sudo apt-get -y update
+sudo apt-get -y install ansible
+
+``````````````
 /etc/ansible/hosts:
 
 [webservers]
@@ -5153,7 +5168,7 @@ ansible 'AirTrace-org1' -m shell -a "sudo scp -F ~/.ssh/config -r ~/repository_a
 ansible 'AirTrace-org1' -m shell -a "sudo scp -F ~/.ssh/config -r ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/*  AirTrace-org2:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
 
 #rsync exclude
-ansible  'org9-AT' -m synchronize -a "src=`pwd`/ dest=~/repository_air_trace/ recursive=yes rsync_opts=\'{{ [\"--exclude=`pwd`/AT_node_sdk/node_modules\"] }}\' "
+ansible  'org9-AT' -m synchronize -a "src=`pwd`/ dest=~/repository_air_trace/ recursive=yes checksum=yes delete=yes rsync_opts=\'{{ [\"--exclude=`pwd`/AT_node_sdk/node_modules\"] }}\' "
 ``````````断点续传 section````````````
 #https://stackoverflow.com/questions/20860896/is-there-a-way-to-continue-broken-scp-secure-copy-command-process-in-linux
 #https://www.cyberciti.biz/tips/linux-use-rsync-transfer-mirror-files-directories.html
@@ -9182,11 +9197,7 @@ ansible 'ci*:!ci19'  -m raw -a "/opt/local/sbin/pkg_add -U /var/db/pkgin/cache/p
 按照hosts文件中的服务器顺序一个个执行，列出smartos上的硬盘
 ansible qinghua -f 1 -m raw -a " format < /dev/null | sed -n 's/.*\(<.*>\).*/\1/p' "
 
-=====mac ansible section=====
-#http://docs.ansible.com/ansible/latest/intro_installation.html
-sudo easy_install pip
-sudo pip install ansible
-sudo wget -O /etc/ansible/ansible.cfg https://raw.githubusercontent.com/ansible/ansible/devel/examples/ansible.cfg
+
 
 =====smartos salt section=====
 
@@ -10168,7 +10179,7 @@ docker-compose ps
 docker-compose stop
 
 docker-compose -f app-docker-compose.yaml restart
-docker-compose -f app-docker-compose.yaml restart app
+docker-compose -f app-docker-compose.yaml restart app #注：app 是sercvice name不是container name
 docker-compose -f app-docker-compose.yaml stop    app
 docker-compose -f app-docker-compose.yaml start   app
 
@@ -10713,3 +10724,20 @@ cat package.json      #package的范围
 rm package-lock.json  #安装时的具体版本
 rm -fr node_modules/
 
+
+
+=======port section=====
+cat >> /Users/fwu066/Documents/share/tmp/ansible-ping-port.yaml <<ansibleEOF
+- name:  port test
+  hosts: test
+  gather_facts: True
+  tasks:
+    - name: port
+      wait_for:
+       host: "{{ ansible_hostname }}"
+       port: 4200
+       timeout: 1
+    - debug: msg="System {{ ansible_hostname }} has uuid {{ ansible_product_uuid }}"
+ansibleEOF
+ansible-playbook /Users/fwu066/Documents/share/tmp/ansible-ping-port.yaml 
+========

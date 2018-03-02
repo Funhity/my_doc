@@ -3867,27 +3867,7 @@ EOF
 ```rsync template section````
 file=repository_air_trace/AT_node_server/prepareDB.js
 rsync -zvhz   /Users/fwu066/Documents/share/$file org1-AT:~/$file
-````ansible command section```
-#https://stackoverflow.com/questions/40230184/how-to-do-multiline-shell-script-in-ansible
-cat ./ansible-shell-command.yaml <<EOF
-- hosts: 'org13-AT'
-  gather_facts: no
-  tasks:
-    - name: init orderer for dynamic org
-      shell: 
-        cmd: |
-        
-        echo "setup orderer ..."
-        curl -s -X POST http://app:4000/users  -H "content-type: application/json" -d '{ "username":"a", "orgName":"Frank3" }' ;  
-        sudo docker exec -t cli curl app:4000/updateOrdererDirectory/?username=a\&org=Frank3 ; 
-        sudo docker exec -t cli bash  -c "cd /opt/gopath/src/github.com/hyperledger/fabric/peer/tmp/updateOrdererScript/;yes y|./addConsortium.sh Frank3MSP Frank3"
-      args:
-        executable: /bin/bash
-      register: ps
-    - debug: var=ps.stdout_lines
 
-EOF
-ansilbe-playbook ./ansible-shell-command.yaml
 `````````blockchain nginx```````
 cat /etc/nginx/conf.d/air-trace.conf
     server {
@@ -3921,6 +3901,8 @@ cat /etc/nginx/conf.d/air-trace.conf
     }
 
 ··········ansible command section···········
+#场景一：
+#在远程shell中包含EOF
 cat > /Users/fwu066/Documents/share/tmp/ansible-file-command.yaml <<ansibleEOF
 - hosts: 'org1-AT'
   gather_facts: no
@@ -3944,7 +3926,37 @@ cat > /Users/fwu066/Documents/share/tmp/ansible-file-command.yaml <<ansibleEOF
 ansibleEOF
 ansible-playbook /Users/fwu066/Documents/share/tmp/ansible-file-command.yaml 
 ······
+#场景二
+#https://stackoverflow.com/questions/40230184/how-to-do-multiline-shell-script-in-ansible
+cat ./ansible-shell-command.yaml <<EOF
+- hosts: 'org13-AT'
+  gather_facts: no
+  tasks:
+    - name: init orderer for dynamic org
+      shell: 
+        cmd: |
+        
+        echo "setup orderer ..."
+        curl -s -X POST http://app:4000/users  -H "content-type: application/json" -d '{ "username":"a", "orgName":"Frank3" }' ;  
+        sudo docker exec -t cli curl app:4000/updateOrdererDirectory/?username=a\&org=Frank3 ; 
+        sudo docker exec -t cli bash  -c "cd /opt/gopath/src/github.com/hyperledger/fabric/peer/tmp/updateOrdererScript/;yes y|./addConsortium.sh Frank3MSP Frank3"
+      args:
+        executable: /bin/bash
+      register: ps
+    - debug: var=ps.stdout_lines
 
-
-```````````
-
+EOF
+ansilbe-playbook ./ansible-shell-command.yaml
+===blockchain build section====
+ubuntu:
+sudo apt install -y python-pip
+pip install --upgrade pip
+pip install jinja2
+```````
+mac:
+cd /Users/fwu066/Documents/share/repository_air_trace
+ansible  'org9-AT' -m synchronize -a "src=`pwd`/ dest=~/repository_air_trace/ recursive=yes checksum=yes delete=yes rsync_opts=\'{{ [\"--exclude=`pwd`/AT_node_sdk/node_modules\"] }}\' "
+===blockchain project section==
+sed 's/extra/demo/g' dynOrgRunEverything.sh >./tmpdeploy.sh && chmod +x  ./tmpdeploy.sh &&  ./tmpdeploy.sh
+sed 's/extra/test/g' dynOrgRunEverything.sh >./tmpdeploy.sh && chmod +x  ./tmpdeploy.sh &&  ./tmpdeploy.sh
+sed 's/extra/dev/g' dynOrgRunEverything.sh >./tmpdeploy.sh && chmod +x  ./tmpdeploy.sh &&  ./tmpdeploy.sh
