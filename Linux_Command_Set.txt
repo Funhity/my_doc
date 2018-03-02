@@ -9710,6 +9710,8 @@ screen  -r  nnnn
 
 screen ~/repository_air_trace/AT_node_sdk/install_basic_package_on_ubuntu.sh
 
+screen -X -S [session # you want to kill] quit     #kill a screen session
+
 退出screen：
 "Ctrl-a" then "d" #https://stackoverflow.com/questions/4847691/how-do-i-get-out-of-a-screen-without-typing-exit
 
