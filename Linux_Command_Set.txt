@@ -4713,6 +4713,10 @@ crontab -l
 /var/log/messages
 ============================   ansible section =================================
 The goal of a play is to map a group of hosts to some well defined roles, represented by things ansible calls tasks. At a basic level, a task is nothing more than a call to an ansible module (see About Modules).
+``````
+macosx:
+sudo easy_install pip
+sudo pip install ansible
 ````````epel section````
 方法一：  
   sudo yum -y install epel-release  ansible openssh-clients libselinux-python sshpass
@@ -4748,7 +4752,22 @@ echo host_key_checking=false>>/etc/ansible/ansible.cfg
        /etc/ansible/ansible.cfg  
       [defaults]
       host_key_checking=false
-```````````````````````````````````````````````````````
+```````````mac ansible section``````````````````
+#mac
+#http://docs.ansible.com/ansible/latest/intro_installation.html
+sudo easy_install pip
+sudo pip install ansible
+sudo wget -O /etc/ansible/ansible.cfg https://raw.githubusercontent.com/ansible/ansible/devel/examples/ansible.cfg
+````````````
+#ubuntu:
+#http://docs.ansible.com/ansible/latest/intro_installation.html
+sudo apt-get -y update
+sudo apt-get -y install software-properties-common
+sudo apt-add-repository ppa:ansible/ansible
+sudo apt-get -y update
+sudo apt-get -y install ansible
+
+``````````````
 /etc/ansible/hosts:
 
 [webservers]
@@ -5124,9 +5143,10 @@ rsync -avzh  /var/www/html/cm5   root@192.168.38.119:/var/www/html/centos6-cm5.5
 rsync -avzh 192.168.1.148:/home/frank/docker-share/  ./   --checksum
 --checksum also modifies the file-times-and-sizes heuristic, but here it ignores times and examines only sizes. Files on the source and destination sides that differ in size are transferred, since they are obviously different. Files with the same size are checksummed (with MD5 in rsync version 3.0.0+, or with MD4 in earlier versions), and those found to have differing sums are also transferred.
 
-
+`````rsync template`````
 file=repository_air_trace/AT_node_server/prepareDB.js
 rsync -zvhz   /Users/fwu066/Documents/share/$file org1-AT:~/$file
+
 ````rsync delete``rsync exclude````
 #备份样例
 rsync -av /srv/     /tmp/wujunrong/backup/srv/     --exclude   salt/xinxindai_tomcat/files/v6_packages    --exclude=*.zip  --exclude=*.jpg   --exclude=*.png    --cvs-exclude    --exclude=*.apk   --exclude=*.bin  --exclude=*.gz  --exclude=*.jsp  --exclude=*.js  --exclude=*.rpm    --exclude=*.class  --exclude=.*  --exclude=*.txt
@@ -5147,7 +5167,8 @@ ansible test -m synchronize -a "src=../root/ dest=~/tmp/  recursive=yes" #把roo
 ansible 'AirTrace-org1' -m shell -a "sudo scp -F ~/.ssh/config -r ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/*  AirTrace-org4:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
 ansible 'AirTrace-org1' -m shell -a "sudo scp -F ~/.ssh/config -r ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/*  AirTrace-org2:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/"
 
-
+#rsync exclude
+ansible  'org9-AT' -m synchronize -a "src=`pwd`/ dest=~/repository_air_trace/ recursive=yes checksum=yes delete=yes rsync_opts=\'{{ [\"--exclude=`pwd`/AT_node_sdk/node_modules\"] }}\' "
 ``````````断点续传 section````````````
 #https://stackoverflow.com/questions/20860896/is-there-a-way-to-continue-broken-scp-secure-copy-command-process-in-linux
 #https://www.cyberciti.biz/tips/linux-use-rsync-transfer-mirror-files-directories.html
@@ -6490,7 +6511,7 @@ git commit -a -m "about github"
  git remote set-url origin git+ssh://git@github.com/webloginwu/code_exampl
  git remote set-url origin  git+ssh://git@github.com/webloginwu/my_doc.git
 
-````
+````````````一个密钥不能对应两个github项目，必须有两个秘钥，另一个密钥用ssh-agent缓存````````````
 #一个密钥不能对应两个github项目，必须有两个秘钥，另一个密钥用ssh-agent缓存
 #https://coderwall.com/p/7smjkq/multiple-ssh-keys-for-different-accounts-on-github-or-gitlab,其中用ssh-agent没有必要
 #https://stackoverflow.com/questions/5335197/gits-famous-error-permission-to-git-denied-to-user
@@ -6514,7 +6535,7 @@ cat  my_doc/.git/config
   ...
 
 ssh-add ~/.ssh/id_rsa_commandSet   #github destop 会自动启动一个ssh-agent，把默认的id_rsa文件加入到其中，变成一律用默认的id_rsa来访问github，导致在~/.ssh/config中设置的wu.github.com不起作用
-
+``````````````````````````
 #delete cached keys
 $ ssh-add -D
 ============git section=====
@@ -6974,7 +6995,7 @@ git commit --amend -m "an updated commit message"
 # Edit hello.py and main.py git add hello.py git commit
 # Realize you forgot to add the changes from main.py git add main.py
 git commit --amend --no-edit
-·························
+········git tag section·················
 git tag
 git tag -l "v1.8.5*"
 git tag -a v1.4      -m "my version 1.4"
@@ -6984,6 +7005,13 @@ git tag -a v1.2     9fceb02    #you specify the commit checksum (or part of it) 
 
 git push origin   v1.5
 git push origin --tags
+
+
+In “detached HEAD” state, if you make changes and then create a commit, the tag will stay the same, but your new commit won’t belong to any branch and will be unreachable, except for by the exact commit hash. Thus, if you need to make changes — say you’re fixing a bug on an older version, for instance — you will generally want to create a branch:
+
+$ git checkout -b version2 v2.0.0
+Switched to a new branch 'version2'
+
 
 `````git branch section``````
 #创建本地分支，再checkout
@@ -9169,11 +9197,7 @@ ansible 'ci*:!ci19'  -m raw -a "/opt/local/sbin/pkg_add -U /var/db/pkgin/cache/p
 按照hosts文件中的服务器顺序一个个执行，列出smartos上的硬盘
 ansible qinghua -f 1 -m raw -a " format < /dev/null | sed -n 's/.*\(<.*>\).*/\1/p' "
 
-=====mac ansible section=====
-#http://docs.ansible.com/ansible/latest/intro_installation.html
-sudo easy_install pip
-sudo pip install ansible
-sudo wget -O /etc/ansible/ansible.cfg https://raw.githubusercontent.com/ansible/ansible/devel/examples/ansible.cfg
+
 
 =====smartos salt section=====
 
@@ -9686,6 +9710,8 @@ screen  -r  nnnn
 
 screen ~/repository_air_trace/AT_node_sdk/install_basic_package_on_ubuntu.sh
 
+screen -X -S [session # you want to kill] quit     #kill a screen session
+
 退出screen：
 "Ctrl-a" then "d" #https://stackoverflow.com/questions/4847691/how-do-i-get-out-of-a-screen-without-typing-exit
 
@@ -9910,9 +9936,10 @@ cat xxx.txt|jq  '.'
 
 example1:
 jq '.["network-config"] | .Frank'
-jq '.["network-config"]'  network-config-DynamicOrg..org14.json  network-config-DynamicOrg.json
 
-
+jq  '.["network-config"]'             network-config-DynamicOrg..org14.json  network-config-DynamicOrg.json
+jq  '.["network-config"]|.Nike'       network-config-DynamicOrg.tmp.json
+jq '.["network-config"] |.orderer'    network-config-DynamicOrg.tmp.json network-config-DynamicOrg.tmp.json.org14  #返回两个一摸一样的orderer，不用-s，jq命令只是简单的对两个json分别独立处理
 example2:
 jq '{"abc": ."network-config"}' network-config-DynamicOrg..org14.json  network-config-DynamicOrg.json
 
@@ -9921,10 +9948,16 @@ jq -s '[.[]."network-config"[]]'  network-config-DynamicOrg..org14.json  network
 
 jq '.["network-config"]'  network-config-DynamicOrg..org14.json  network-config-DynamicOrg.json
 
+````
 #merge,https://stackoverflow.com/questions/19529688/how-to-merge-2-json-file-using-jq
        https://stedolan.github.io/jq/manual/#Basicfilters
+
+#Objects are added by merging, that is, inserting all the key-value pairs from both objects into a single combined object. If both objects contain a value for the same key, the object on the right of the + wins. (For recursive merge use the * operator.)
 jq -s '.[0] * .[1]'    network-config-DynamicOrg..org14.json  network-config-DynamicOrg.json #https://stedolan.github.io/jq/manual/v1.5/#Builtinoperatorsandfunctions
 
+
+#把两个object变成一个[ ]数组
+jq -s '.' network-config-DynamicOrg.tmp.json network-config-DynamicOrg.tmp.json.org14
 
 cat ../../app/network-config-DynamicOrg.json  | jq  'del(.["network-config"] | .orderer)'
 =======windows section=============
@@ -10149,7 +10182,7 @@ docker-compose ps
 docker-compose stop
 
 docker-compose -f app-docker-compose.yaml restart
-docker-compose -f app-docker-compose.yaml restart app
+docker-compose -f app-docker-compose.yaml restart app #注：app 是sercvice name不是container name
 docker-compose -f app-docker-compose.yaml stop    app
 docker-compose -f app-docker-compose.yaml start   app
 
@@ -10309,9 +10342,28 @@ EOF
 sudo systemd-tmpfiles --prefix=/sys --create
 
 ====os section ===init section===centos section==os init section===docker init===
-yum -y install epel-release wget curl telnet lrzsz aria2 openssh-clients openssh-server iotop net-tools lsof tcpdump tree tcpdump zip unzip less dos2unix git iproute bind-utils
+#centos:
+      yum -y install epel-release wget curl telnet lrzsz aria2 openssh-clients openssh-server iotop net-tools lsof tcpdump tree tcpdump zip unzip less dos2unix git iproute bind-utils
 
-sudo apt-get -y install tree lrzsz dos2unix
+#ubuntu:
+       sudo apt-get -y install tree lrzsz dos2unix build-essential
+       
+``````alias section````
+#ubuntu:
+cat >> ~/.bash_aliases <<EOF
+alias sdk='cd ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg'
+EOF
+source ~/.bashrc
+`````
+#macos:
+cat >> ~/.bash_profile <<EOF
+alias gitwu='cd /Users/fwu066/Documents/share/git;pwd'
+alias sdk='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg;pwd'
+EOF
+source ~/.bash_profile
+`````
+
+
 ====firefox section=====
 用Ctrl+Tab切换tab页
 
@@ -10591,9 +10643,12 @@ display: flex;
 EOF
 ======regular expression section===
 #http://www.regular-expressions.info/lookaround.html
+#a lookahead or a lookbehind does not "consume" any characters on the string
 su(?!do).*-c 
 
 
+测试工具：
+https://regex101.com/
 =====httpd section=======================
 Allow from all
 说明：
@@ -10650,3 +10705,42 @@ Exception
 Cmd+Shift+o (Command + Shift + o (letter o, not zero)) on Mac,
 ctrl+Shift+o on Windows. 
        
+=====alias section=====
+#ubuntu:
+cat >> ~/.bash_aliases <<EOF
+alias sdk='cd ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg'
+EOF
+source ~/.bashrc
+`````
+#macos:
+cat >> ~/.bash_profile <<EOF
+alias gitwu='cd /Users/fwu066/Documents/share/git;pwd'
+alias sdk='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg;pwd'
+EOF
+source ~/.bash_profile
+====nodejs section==
+npm install
+会在下面文件搜索package，然后安装
+cat package.json      #package的范围
+
+清理nodejs下载的package
+rm package-lock.json  #安装时的具体版本
+rm -fr node_modules/
+
+
+
+=======port section=====
+cat >> /Users/fwu066/Documents/share/tmp/ansible-ping-port.yaml <<ansibleEOF
+- name:  port test
+  hosts: test
+  gather_facts: True
+  tasks:
+    - name: port
+      wait_for:
+       host: "{{ ansible_hostname }}"
+       port: 4200
+       timeout: 1
+    - debug: msg="System {{ ansible_hostname }} has uuid {{ ansible_product_uuid }}"
+ansibleEOF
+ansible-playbook /Users/fwu066/Documents/share/tmp/ansible-ping-port.yaml 
+========

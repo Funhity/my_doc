@@ -658,6 +658,15 @@ print jinga_html_template.render()
 ````jinja if section```
 {% if simple['deploy_orderer'] == true %}
 {% endif %}
+·····
+
+echo cleaning old cert/block/channel.tx .....
+{% if simple['deploy_orderer'] == true %}
+   rm -rf crypto-config/
+{% else %}
+   rm -rf crypto-config/peerOrganizations/
+{% endif %}
+
 ==========
 
 #考试，自动填写答案
@@ -703,3 +712,57 @@ function $ajax(question, searchType, parent, parentIndex) {
    }
  });
 }
+
+=====ansible command section=====
+cat >./ansible-shell-command.sh <<'ansilbeEOF'
+
+sudo cat> /etc/nginx/conf.d/air-trace.conf<<'EOF'
+server {
+    error_log /var/log/nginx/error.log info;
+    rewrite_log on;
+    listen       4200 default_server;
+#        listen       [::]:80 default_server;
+    server_name  _;
+    root         /var/www/html;
+    # Load configuration files for the default server block.
+    include /etc/nginx/default.d/*.conf;
+    location / {
+             index  index.html;
+             error_log /var/log/nginx/location-error.log info;
+             root  /var/www/html;
+             #try_files $uri $uri/index.html;
+             autoindex on;
+    }
+    error_page 404 /index.html;
+        location = /index.html {
+              root  /var/www/html;
+              internal;
+    }
+#   error_page 404 /404.html;
+#       location = /40x.html {
+#   }
+    error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+    }
+}
+EOF
+sudo systemctl restart nginx.service
+
+ansilbeEOF
+ansible test -m  script -a "./ansible-shell-command.sh" --become
+
+=======port section=====
+cat >> /Users/fwu066/Documents/share/tmp/ansible-ping-port.yaml <<ansibleEOF
+- name:  port test
+  hosts: test
+  gather_facts: True
+  tasks:
+    - name: port
+      wait_for:
+       host: "{{ ansible_hostname }}"
+       port: 8100
+       timeout: 1
+    - debug: msg="System {{ ansible_hostname }} has uuid {{ ansible_product_uuid }}"
+ansibleEOF
+ansible-playbook /Users/fwu066/Documents/share/tmp/ansible-ping-port.yaml 
+========

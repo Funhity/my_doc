@@ -3381,6 +3381,8 @@ docker run -v $(pwd):/work -e FABRIC_CA_CLIENT_HOME=/work hyperledger/fabric-ca 
  docker exec -it mongodb_keystore mongo --eval "db.getSiblingDB('air_trace').getCollection('cryptokeystores').find({})"
  sudo docker exec -it mongodb_keystore mongo localhost:27018/air-trace   --eval "db.getSiblingDB('air_trace').getCollection('cryptokeystores').find({})"
  sudo docker exec -it mongodb_keystore mongo localhost:27018             --eval "db.getSiblingDB('air_trace').getCollection('cryptokeystores').find({})"
+ sudo docker exec -it mongodb_keystore mongo localhost:27018             --eval "db.getSiblingDB('air_trace').getCollection('cryptokeystores').find({}).pretty()"
+
 
 ansible org1-AT -m shell -a "sudo docker exec mongodb_keystore mongo localhost:27018        --eval 'db.getSiblingDB(\"air_trace\").getCollection(\"cryptokeystores\").find({})' "
 
@@ -3389,6 +3391,13 @@ ansible test -m shell -a "sudo docker exec mongodb_chaincode mongo localhost:270
 ansible test -m shell -a "sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB(\"air_trace_dev\").getCollection(\"organizations\").find({},{name:1,admin:1})' "
 
 abc=`sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB("air_trace_dev").getCollection("organizations").find({},{admin:2})' `;printf "$abc"|sed -n '/0,END CERTIFICATE/d  { /-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/p }'
+
+#找到第一个"name"="Testorg1"的document，只显示admin对应的值
+sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB("air_trace_dev").getCollection("organizations").find({"name":"Testorg1"}, { admin: 1, }).pretty()'
+#只显示admin对应的值，不显示_id
+sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB("air_trace_dev").getCollection("organizations").find({"name":"Testorg1"}, { admin: 1,_id: 0 }).pretty()'
+····mongodb json section······
+sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB("air_trace_dev").getCollection("organizations").find({"name":"Testorg1"}, { admin: 1,_id: 0 }).pretty()' | grep -v -i mongodb | jq '.'
 
 清空数据：
 sudo docker exec -it mongodb_keystore mongo localhost:27018
@@ -3793,6 +3802,11 @@ rsync -zvhz   /Users/fwu066/Documents/share/$file org1-AT:~/$file
 ansible 'test' -m shell -a "cd ~/repository_air_trace/AT_Manufacturer/ && sudo docker-compose stop"
 ansible 'test' -m synchronize -a "src=/Users/fwu066/Documents/share/repository_air_trace/AT_Manufacturer dest=~/repository_air_trace/  recursive=yes " #--become
 
+#ansible  'test' -m synchronize -a "src=/Users/fwu066/Documents/share/repository_air_trace dest=~  delete=yes recursive=yes  sync_opts='{{ ["--exclude=~/repository_air_trace/AT_node_client/node_modules/node-sass/vendor/linux-x64-57/*"] }}' " #--become
+
+#need exclude:repository_air_trace/AT_node_client/node_modules/node-sass/vendor/linux-x64-57/
+#rsync_opts='{{ ["--exclude=~/repository_air_trace/AT_node_client/node_modules/node-sass/vendor/linux-x64-57/*"] }}
+
 
 
 ·····
@@ -3812,6 +3826,48 @@ cat  ./network-config-DynamicOrg.tmp.org14.json | jq  'del(.[\"network-config\"]
 
 sudo docker exec -it cli sh -c "cd /opt/gopath/src/github.com/hyperledger/fabric/peer/tmp/updateOrdererScript/;./addConsortium.sh SDCMSP SDC"
 sudo docker exec -it cli sh -c "cd /opt/gopath/src/github.com/hyperledger/fabric/peer/tmp/updateOrdererScript/; ls"
+
+====blockchain command section=======
+
+
+``````alias section````
+cat > /Users/fwu066/Documents/share/tmp/ansible-alias-command.sh <<ansibleEOF
+#!/bin/bash
+#ubuntu:
+cat > ~/.bash_aliases <<EOF
+alias sdk='cd ~/repository_air_trace/AT_node_sdk/'
+alias dyn='cd ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg'
+EOF
+source ~/.bashrc
+ansibleEOF
+
+ansible test -m  script -a "/Users/fwu066/Documents/share/tmp/ansible-alias-command.sh "
+`````
+#macos:
+cat > ~/.bash_profile <<EOF
+alias gitwu='cd /Users/fwu066/Documents/share/git;pwd'
+alias dyn='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg;pwd'
+alias sdk='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/;pwd'
+alias sshconfig='cat ~/.ssh/config'
+alias ten='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/testCloudArtifacts/;pwd;echo ./runEverything.sh'
+alias addgitwu='ssh-add ~/.ssh/id_rsa_commandSet'
+EOF
+source ~/.bash_profile
+`````
+cat > ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg/user_input.yaml <<EOF
+orderer_ip: 23.102.224.117
+orderer_domain: orderer.example.com
+orderer_name: Orderer
+deploy_orderer: false
+org_domain: nike.com
+org_ip: 23.102.224.117
+org_name: Nike
+EOF
+
+```rsync template section````
+file=repository_air_trace/AT_node_server/prepareDB.js
+rsync -zvhz   /Users/fwu066/Documents/share/$file org1-AT:~/$file
+
 `````````blockchain nginx```````
 cat /etc/nginx/conf.d/air-trace.conf
     server {
@@ -3843,5 +3899,64 @@ cat /etc/nginx/conf.d/air-trace.conf
             location = /50x.html {
         }
     }
-```````````
 
+··········ansible command section···········
+#场景一：
+#在远程shell中包含EOF
+cat > /Users/fwu066/Documents/share/tmp/ansible-file-command.yaml <<ansibleEOF
+- hosts: 'org1-AT'
+  gather_facts: no
+  tasks:
+    - name: init orderer for dynamic org
+      shell: 
+        cmd: |
+          cat > ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg/user_input.yaml <<EOF
+          orderer_ip: 23.102.236.94
+          orderer_domain: orderer.example.com
+          orderer_name: Orderer
+          deploy_orderer: true
+          org_domain: testorg1.com
+          org_ip: 23.102.236.94
+          org_name: Testorg1
+          EOF
+      args:
+        executable: /bin/bash
+      register: ps
+    - debug: var=ps.stdout_lines
+ansibleEOF
+ansible-playbook /Users/fwu066/Documents/share/tmp/ansible-file-command.yaml 
+······
+#场景二
+#https://stackoverflow.com/questions/40230184/how-to-do-multiline-shell-script-in-ansible
+cat ./ansible-shell-command.yaml <<EOF
+- hosts: 'org13-AT'
+  gather_facts: no
+  tasks:
+    - name: init orderer for dynamic org
+      shell: 
+        cmd: |
+        
+        echo "setup orderer ..."
+        curl -s -X POST http://app:4000/users  -H "content-type: application/json" -d '{ "username":"a", "orgName":"Frank3" }' ;  
+        sudo docker exec -t cli curl app:4000/updateOrdererDirectory/?username=a\&org=Frank3 ; 
+        sudo docker exec -t cli bash  -c "cd /opt/gopath/src/github.com/hyperledger/fabric/peer/tmp/updateOrdererScript/;yes y|./addConsortium.sh Frank3MSP Frank3"
+      args:
+        executable: /bin/bash
+      register: ps
+    - debug: var=ps.stdout_lines
+
+EOF
+ansilbe-playbook ./ansible-shell-command.yaml
+===blockchain build section====
+ubuntu:
+sudo apt install -y python-pip
+pip install --upgrade pip
+pip install jinja2
+```````
+mac:
+cd /Users/fwu066/Documents/share/repository_air_trace
+ansible  'org9-AT' -m synchronize -a "src=`pwd`/ dest=~/repository_air_trace/ recursive=yes checksum=yes delete=yes rsync_opts=\'{{ [\"--exclude=`pwd`/AT_node_sdk/node_modules\"] }}\' "
+===blockchain project section==
+sed 's/extra/demo/g' dynOrgRunEverything.sh >./tmpdeploy.sh && chmod +x  ./tmpdeploy.sh &&  ./tmpdeploy.sh
+sed 's/extra/test/g' dynOrgRunEverything.sh >./tmpdeploy.sh && chmod +x  ./tmpdeploy.sh &&  ./tmpdeploy.sh
+sed 's/extra/dev/g' dynOrgRunEverything.sh >./tmpdeploy.sh && chmod +x  ./tmpdeploy.sh &&  ./tmpdeploy.sh
