@@ -9923,7 +9923,7 @@ jq '.["network-config"]'  network-config-DynamicOrg..org14.json  network-config-
 
 #merge,https://stackoverflow.com/questions/19529688/how-to-merge-2-json-file-using-jq
        https://stedolan.github.io/jq/manual/#Basicfilters
-jq -s '.[0] * .[1]'    network-config-DynamicOrg..org14.json  network-config-DynamicOrg.json
+jq -s '.[0] * .[1]'    network-config-DynamicOrg..org14.json  network-config-DynamicOrg.json #https://stedolan.github.io/jq/manual/v1.5/#Builtinoperatorsandfunctions
 
 
 cat ../../app/network-config-DynamicOrg.json  | jq  'del(.["network-config"] | .orderer)'
