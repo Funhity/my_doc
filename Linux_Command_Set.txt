@@ -5417,7 +5417,14 @@ find .  -type f -exec sh -c 'second=$(echo {}|  sed  -r   -n  "s/.*-([0-9]+)\.ou
                              [ ! -z "$second" ] && my_second=$(date -u -d @$second +"%H_%M_%S")  && \
                              new_file_name=$(echo {}|sed  -r  "s/([0-9]+)\.out/$my_second.out/g") && \
                              mv {}   $new_file_name '  \;
-							 
+
+mysqldump -u root -p --all-databases >  /tmp/database-backup-$(date +%Y%m%d).sql
+
+date "+DATE: %Y-%m-%d%nTIME: %H:%M:%S"
+date "+%Y-%m-%d_%H:%M"
+
+
+ansible org7-AT  -m shell -a "sudo docker ps | awk '{print \$NF}' | grep -v NAMES | xargs -I{}  sh -c 'sudo docker logs {}  > /tmp/{}_`date "+%Y-%m-%d_%H".log` 2>&1 '   "
 ```````````````````````````取日志 log section``````
 salt 'v6_webservice02' cmd.run "ls -lh /opt/webserver/v6_tomcat/logs/catalina.out.20150905"
                                 grep -E "^\[v6_webservice\]\[INFO\]2015-09-05\s12:00"   /opt/webserver/v6_tomcat/logs/catalina.out.20150905
@@ -6510,6 +6517,8 @@ git commit -a -m "about github"
 
  git remote set-url origin git+ssh://git@github.com/webloginwu/code_exampl
  git remote set-url origin  git+ssh://git@github.com/webloginwu/my_doc.git
+
+https://github.com/pwccnhk/AT_partstraceability/invitations
 
 ````````````一个密钥不能对应两个github项目，必须有两个秘钥，另一个密钥用ssh-agent缓存````````````
 #一个密钥不能对应两个github项目，必须有两个秘钥，另一个密钥用ssh-agent缓存

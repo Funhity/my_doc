@@ -3947,7 +3947,7 @@ cat ./ansible-shell-command.yaml <<EOF
 
 EOF
 ansilbe-playbook ./ansible-shell-command.yaml
-===blockchain build section====
+===blockchain build section===blockchain project section=
 ubuntu:
 sudo apt install -y python-pip
 pip install --upgrade pip
@@ -3956,7 +3956,12 @@ pip install jinja2
 mac:
 cd /Users/fwu066/Documents/share/repository_air_trace
 ansible  'org9-AT' -m synchronize -a "src=`pwd`/ dest=~/repository_air_trace/ recursive=yes checksum=yes delete=yes rsync_opts=\'{{ [\"--exclude=`pwd`/AT_node_sdk/node_modules\"] }}\' "
-===blockchain project section==
+``````
+
 sed 's/extra/demo/g' dynOrgRunEverything.sh >./tmpdeploy.sh && chmod +x  ./tmpdeploy.sh &&  ./tmpdeploy.sh
 sed 's/extra/test/g' dynOrgRunEverything.sh >./tmpdeploy.sh && chmod +x  ./tmpdeploy.sh &&  ./tmpdeploy.sh
 sed 's/extra/dev/g' dynOrgRunEverything.sh >./tmpdeploy.sh && chmod +x  ./tmpdeploy.sh &&  ./tmpdeploy.sh
+
+===blockchain log section=
+ansible org7-AT  -m shell -a "sudo docker ps | awk '{print \$NF}' | grep -v NAMES | xargs -I{}  sh -c 'sudo docker logs {}  > /tmp/{}_`date "+%Y-%m-%d_%H".log` 2>&1 '   "
+
