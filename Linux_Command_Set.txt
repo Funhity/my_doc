@@ -9960,9 +9960,10 @@ jq '.["network-config"]'  network-config-DynamicOrg..org14.json  network-config-
 ````
 #merge,https://stackoverflow.com/questions/19529688/how-to-merge-2-json-file-using-jq
        https://stedolan.github.io/jq/manual/#Basicfilters
-       #Objects are added by merging, that is, inserting all the key-value pairs from both objects into a single combined object. If both objects contain a value for the same key, the object on the right of the + wins. (For recursive merge use the * operator.)
-jq -s '.[0] * .[1]'    network-config-DynamicOrg..org14.json  network-config-DynamicOrg.json
-`````
+
+#Objects are added by merging, that is, inserting all the key-value pairs from both objects into a single combined object. If both objects contain a value for the same key, the object on the right of the + wins. (For recursive merge use the * operator.)
+jq -s '.[0] * .[1]'    network-config-DynamicOrg..org14.json  network-config-DynamicOrg.json #https://stedolan.github.io/jq/manual/v1.5/#Builtinoperatorsandfunctions
+
 
 #把两个object变成一个[ ]数组
 jq -s '.' network-config-DynamicOrg.tmp.json network-config-DynamicOrg.tmp.json.org14
