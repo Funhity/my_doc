@@ -5153,7 +5153,8 @@ rsync -av /srv/     /tmp/wujunrong/backup/srv/     --exclude   salt/xinxindai_to
 #同步时，去掉target目录（可能在某个子目录下），并且delete掉上次同步的target目录
 rsync -avh ./hadoop-spark --exclude '*/target/*'  frank@52.191.119.111:/home/frank/demo-src --delete-excluded   --delete
 
-
+#注意：Exclude path is always relative，https://www.thegeekstuff.com/2011/01/rsync-exclude-files-and-folders/
+rsync -avz --exclude 'dir*' source/ destination/
 ····ansible rsync section·············ansible synchronize section···········
 
 ansible 'AirTrace-org[1:4]*' -m shell -a   'bc_home=~;rsync -azh -e "ssh -F $bc_home/.ssh/config"  AirTrace-org2:~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/  ~/repository_air_trace/AT_node_sdk/artifacts/channel/crypto-config/'
@@ -9969,6 +9970,9 @@ jq -s '.[0] * .[1]'    network-config-DynamicOrg..org14.json  network-config-Dyn
 jq -s '.' network-config-DynamicOrg.tmp.json network-config-DynamicOrg.tmp.json.org14
 
 cat ../../app/network-config-DynamicOrg.json  | jq  'del(.["network-config"] | .orderer)'
+
+jq  'del(.["partNo", "channelName", "peer0"])' invoke.json
+
 =======windows section=============
 
 ````screenshot section```
