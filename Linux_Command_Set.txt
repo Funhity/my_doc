@@ -10748,8 +10748,8 @@ rm -fr node_modules/
 
 
 
-=======port section=====
-cat >> /Users/fwu066/Documents/share/tmp/ansible-ping-port.yaml <<ansibleEOF
+=======port section====check port section====
+cat > /Users/fwu066/Documents/share/tmp/ansible-ping-port.yaml <<ansibleEOF
 - name:  port test
   hosts: test
   gather_facts: True
@@ -10759,7 +10759,7 @@ cat >> /Users/fwu066/Documents/share/tmp/ansible-ping-port.yaml <<ansibleEOF
        host: "{{ ansible_hostname }}"
        port: 4200
        timeout: 1
-    - debug: msg="System {{ ansible_hostname }} has uuid {{ ansible_product_uuid }}"
+    - debug: msg="check port on {{ ansible_hostname }}"
 ansibleEOF
 ansible-playbook /Users/fwu066/Documents/share/tmp/ansible-ping-port.yaml 
 ========
