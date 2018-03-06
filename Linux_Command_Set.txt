@@ -10729,6 +10729,11 @@ EOF
 source ~/.bash_profile
 ====nodejs section==
 npm install
+npm install node@v6.9.0
+npm install --verbose
+
+npm cache clean
+
 会在下面文件搜索package，然后安装
 cat package.json      #package的范围
 
