@@ -883,6 +883,7 @@ docker volume ls
 docker volume inspect my-vol
 docker volume rm my-vol
 docker volume prune
+docker system prune
 案例：
        docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home  -v /etc/resolv.conf:/etc/resolv.conf jenkins
        [root@pwc-hp jenkins_home]# docker volume ls

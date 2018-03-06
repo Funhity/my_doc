@@ -3956,6 +3956,8 @@ pip install jinja2
 mac:
 cd /Users/fwu066/Documents/share/repository_air_trace
 ansible  'org9-AT' -m synchronize -a "src=`pwd`/ dest=~/repository_air_trace/ recursive=yes checksum=yes delete=yes rsync_opts=\'{{ [\"--exclude=*node_modules*\"] }}\' "
+
+
 ansible 'dev' -m synchronize -a "src=/Users/fwu066/Documents/share/repository_air_trace/AT_partstraceability dest=~/repository_air_trace/  recursive=yes rsync_opts=\'{{ [\"--exclude=*node_modules*\"] }}\' " #--become
 
 ``````
