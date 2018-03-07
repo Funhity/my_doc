@@ -3901,6 +3901,24 @@ cat /etc/nginx/conf.d/air-trace.conf
     }
 
 ··········ansible command section···········
+场景0：普通shell命令
+cat >./ansible-shell-command.yaml <<EOF
+- name:  port test
+  hosts: 'orgs:!org1-AT:!org3-AT'
+  gather_facts: no
+  tasks:
+    - name: init orderer for dynamic org
+      shell: |
+         sudo chown ${HOME#/home/}:${HOME#/home/} -R $HOME
+         cd  ~/repository_air_trace/AT_partstraceability/
+         sudo npm install
+      args:
+        executable: /bin/bash
+      register: ps
+    - debug: var=ps.stdout_lines
+
+EOF
+ansible-playbook ./ansible-shell-command.yaml
 #场景一：
 #在远程shell中包含EOF
 cat > /Users/fwu066/Documents/share/tmp/ansible-file-command.yaml <<ansibleEOF

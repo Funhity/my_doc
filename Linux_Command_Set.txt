@@ -4860,7 +4860,7 @@ ansible-playbook release.yml --extra-vars "version=1.23.45 other_variable=foo" #
 ansible org1-AT -m setup -a 'filter=ansible_eth[0-2]'
 
 
-````````playbook shell section``````ansible shell section`````
+````````playbook shell section``````ansible shell section`````ansible command section```
 - hosts: 'org10-AT'
   gather_facts: no
   tasks:
@@ -4882,6 +4882,49 @@ ansible org1-AT -m setup -a 'filter=ansible_eth[0-2]'
         sleep 4
       register: ps
     - debug: var=ps.stdout_lines
+
+··········
+场景一：
+cat >./ansible-shell-command.yaml <<EOF
+- name:  port test
+  hosts: 'orgs:!org1-AT:!org3-AT'
+  gather_facts: no
+  tasks:
+    - name: init orderer for dynamic org
+      shell: |
+         sudo chown ${HOME#/home/}:${HOME#/home/} -R $HOME
+         cd  ~/repository_air_trace/AT_partstraceability/
+         sudo npm install
+      args:
+        executable: /bin/bash
+      register: ps
+    - debug: var=ps.stdout_lines
+
+EOF
+ansible-playbook ./ansible-shell-command.yaml
+
+
+#场景二：在shell中要创建文件
+#https://stackoverflow.com/questions/40230184/how-to-do-multiline-shell-script-in-ansible
+cat ./ansible-shell-command.yaml <<EOF
+- hosts: 'org13-AT'
+  gather_facts: no
+  tasks:
+    - name: init orderer for dynamic org
+      shell: 
+        cmd: |
+        
+        echo "setup orderer ..."
+        curl -s -X POST http://app:4000/users  -H "content-type: application/json" -d '{ "username":"a", "orgName":"Frank3" }' ;  
+        sudo docker exec -t cli curl app:4000/updateOrdererDirectory/?username=a\&org=Frank3 ; 
+        sudo docker exec -t cli bash  -c "cd /opt/gopath/src/github.com/hyperledger/fabric/peer/tmp/updateOrdererScript/;yes y|./addConsortium.sh Frank3MSP Frank3"
+      args:
+        executable: /bin/bash
+      register: ps
+    - debug: var=ps.stdout_lines
+
+EOF
+ansilbe-playbook ./ansible-shell-command.yaml
 ````````xshell section````````````
 /etc/ansible/hosts->xshell 配置文件
 cat /etc/ansible/hosts| grep -E -v "^[[:space:]]*$"  | grep -v -E "\[.*\]" | grep -v "^#.*" | grep -v localhost | awk '{system("echo -ne "$1" \",\"  ; echo -ne "$2" | cut -d = -f 2- | tr -d \"\n\" ; echo -ne \",\" ssh ;echo -ne \",\" 22 \",\"; echo  -ne "$4" | cut -d = -f 2-  | tr -d \"\n\"   ;echo -ne \",\" ;  echo -e   "$5" | cut -d = -f 2-  ")}' |sed  's/\\//g' |sed 's/ //g'>./xshell.csv
