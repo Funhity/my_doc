@@ -6474,6 +6474,11 @@ echo "atestb" | sed 's/.*\(test\).*/\1/'
 #要用backreference \1 前面必须要用括号把要引用的括起来，例如：http://languor.us/sed-invalid-reference-1-s-commands-rhs
 ansible org1-AT -m shell -a "sudo docker ps | sed -n 's/.*\(ca_peerOrg[0-9]\).*/\1/p'|xargs -I{} sudo docker restart {}"
 ````````
+# print line number 52
+sed -n '52p' # method 1
+sed '52!d' # method 2
+sed '52q;d' # method 3, efficient on large files 
+
 
 sed -e "s/stage_/\/stage/g" -e "s/v6_webservice/\/webservice\//g"
 删除最后一行：
@@ -10805,4 +10810,9 @@ cat > /Users/fwu066/Documents/share/tmp/ansible-ping-port.yaml <<ansibleEOF
     - debug: msg="check port on {{ ansible_hostname }}"
 ansibleEOF
 ansible-playbook /Users/fwu066/Documents/share/tmp/ansible-ping-port.yaml 
-========
+====selenium section====autotest section=====
+mac:
+sudo -H  pip install selenium
+sudo xcodebuild -license accept
+brew install geckodriver
+
