@@ -4839,7 +4839,7 @@ Top-level defaults
 * At the service level, role variables and role metadata come into play. Precedence is given first to values defined for the service in container.yml, then to the role’s metadata found in meta/container.yml, then to role defaults in defaults/meta.yml, and finally to global variables.
 
 
-·············
+········ansible jinja section·····
 ansible test_nginx    -m fetch  -a "src=/var/log/nginx/bigdata_pv.log     dest=/opt/logs/share/{{ inventory_hostname }}.bigdata_pv.log  flat=yes"
 
 ansible 'org1-AT' -m template -a "src=/Users/fwu066/Documents/share/tmp/test.j2  dest=/tmp/wujunrong/test.txt"
@@ -10420,7 +10420,11 @@ source ~/.bashrc
 #macos:
 cat >> ~/.bash_profile <<EOF
 alias gitwu='cd /Users/fwu066/Documents/share/git;pwd'
-alias sdk='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg;pwd'
+alias dyn='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg;pwd'
+alias sdk='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk;pwd'
+alias server='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_server;pwd'
+alias deploy='cd /Users/fwu066/Documents/share/repository_air_trace/AT_deployment;pwd'
+alias tmp='cd /Users/fwu066/Documents/share/tmp;pwd'
 EOF
 source ~/.bash_profile
 `````

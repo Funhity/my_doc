@@ -3422,6 +3422,8 @@ true
 > exit
 bye
 
+
+ansible org8-AT -m shell -a "sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getCollection('users').find({})' "
 ··········
 
 sudo docker exec -ti mongodb_keystore sh -c "mongo localhost:27018"
@@ -3986,4 +3988,5 @@ sed 's/extra/dev/g' dynOrgRunEverything.sh >./tmpdeploy.sh && chmod +x  ./tmpdep
 
 ===blockchain log section=
 ansible org7-AT  -m shell -a "sudo docker ps | awk '{print \$NF}' | grep -v NAMES | xargs -I{}  sh -c 'sudo docker logs {}  > /tmp/{}_`date "+%Y-%m-%d_%H".log` 2>&1 '   "
-
+cd ~/repository_air_trace/AT_node_server
+sed -i 's/org1/Demo1/g'  config.js
