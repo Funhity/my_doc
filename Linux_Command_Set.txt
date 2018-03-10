@@ -4904,27 +4904,52 @@ EOF
 ansible-playbook ./ansible-shell-command.yaml
 
 
-#场景二：在shell中要创建文件
+#场景二：在shell中要创建文件,即要嵌套EOF
 #https://stackoverflow.com/questions/40230184/how-to-do-multiline-shell-script-in-ansible
-cat ./ansible-shell-command.yaml <<EOF
-- hosts: 'org13-AT'
+
+cat > /Users/fwu066/Documents/share/tmp/ansible-file-command.yaml <<ansibleEOF
+- hosts: 'org8-AT'
   gather_facts: no
   tasks:
     - name: init orderer for dynamic org
       shell: 
         cmd: |
-        
-        echo "setup orderer ..."
-        curl -s -X POST http://app:4000/users  -H "content-type: application/json" -d '{ "username":"a", "orgName":"Frank3" }' ;  
-        sudo docker exec -t cli curl app:4000/updateOrdererDirectory/?username=a\&org=Frank3 ; 
-        sudo docker exec -t cli bash  -c "cd /opt/gopath/src/github.com/hyperledger/fabric/peer/tmp/updateOrdererScript/;yes y|./addConsortium.sh Frank3MSP Frank3"
+          cat > ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg/user_input.yaml <<EOF
+          orderer_ip: 13.75.126.211
+          orderer_domain: orderer.example.com
+          orderer_name: Orderer
+          deploy_orderer: false
+          org_domain: demo2.com
+          org_ip: 13.75.44.53
+          org_name: Demo2
+          EOF
+      args:
+        executable: /bin/bash
+      register: ps
+    - debug: var=ps.stdout_lines
+ansibleEOF
+ansible-playbook /Users/fwu066/Documents/share/tmp/ansible-file-command.yaml 
+
+cat > ./ansible-shell-command.yaml <<AnsibleEOF
+- hosts: 'org1-AT'
+  gather_facts: no
+  tasks:
+    - name: init orderer for dynamic org
+      shell: 
+        cmd: |
+          cat > ~/.bash_aliases <<EOF
+          alias sdk='cd ~/repository_air_trace/AT_node_sdk/'
+          alias dyn='cd ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg'
+          EOF
+          source ~/.bashrc        
+
       args:
         executable: /bin/bash
       register: ps
     - debug: var=ps.stdout_lines
 
-EOF
-ansilbe-playbook ./ansible-shell-command.yaml
+AnsibleEOF
+ansible-playbook ./ansible-shell-command.yaml
 ````````xshell section````````````
 /etc/ansible/hosts->xshell 配置文件
 cat /etc/ansible/hosts| grep -E -v "^[[:space:]]*$"  | grep -v -E "\[.*\]" | grep -v "^#.*" | grep -v localhost | awk '{system("echo -ne "$1" \",\"  ; echo -ne "$2" | cut -d = -f 2- | tr -d \"\n\" ; echo -ne \",\" ssh ;echo -ne \",\" 22 \",\"; echo  -ne "$4" | cut -d = -f 2-  | tr -d \"\n\"   ;echo -ne \",\" ;  echo -e   "$5" | cut -d = -f 2-  ")}' |sed  's/\\//g' |sed 's/ //g'>./xshell.csv
@@ -10042,10 +10067,12 @@ centos:
 md5sum  sshpass-1.06.tar.gz
 
 
-=====yes section=====
+=====yes section====y section=
 
 Do you want to continue [Y/n]?
 yes Y | command-that-asks-for-input
+
+sudo docker exec -t cli bash  -c "cd /opt/gopath/src/github.com/hyperledger/fabric/peer/tmp/updateOrdererScript/;yes y|./addConsortium.sh Frank3MSP Frank3"
 
 `````
 gunzip chunter-0.7.0p3.gz
@@ -10411,12 +10438,7 @@ sudo systemd-tmpfiles --prefix=/sys --create
        sudo apt-get -y install tree lrzsz dos2unix build-essential
        
 ``````alias section````
-#ubuntu:
-cat >> ~/.bash_aliases <<EOF
-alias sdk='cd ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg'
-EOF
-source ~/.bashrc
-`````
+
 #macos:
 cat >> ~/.bash_profile <<EOF
 alias gitwu='cd /Users/fwu066/Documents/share/git;pwd'
@@ -10429,14 +10451,35 @@ alias sublime='open -a /Applications/Sublime\ Text.app'
 EOF
 source ~/.bash_profile
 `````
-=====alias section=====
+
 #ubuntu:
 cat >> ~/.bash_aliases <<EOF
 alias sdk='cd ~/repository_air_trace/AT_node_sdk/'
 alias dyn='cd ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg'
 EOF
 source ~/.bashrc
+········
+#
+cat > ./ansible-shell-command.yaml <<AnsibleEOF
+- hosts: 'org1-AT'
+  gather_facts: no
+  tasks:
+    - name: init orderer for dynamic org
+      shell: 
+        cmd: |
+          cat > ~/.bash_aliases <<EOF
+          alias sdk='cd ~/repository_air_trace/AT_node_sdk/'
+          alias dyn='cd ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg'
+          EOF
+          source ~/.bashrc        
 
+      args:
+        executable: /bin/bash
+      register: ps
+    - debug: var=ps.stdout_lines
+
+AnsibleEOF
+ansible-playbook ./ansible-shell-command.yaml
 
 ====firefox section=====
 用Ctrl+Tab切换tab页
