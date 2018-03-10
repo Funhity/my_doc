@@ -10425,9 +10425,17 @@ alias sdk='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk;pwd
 alias server='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_server;pwd'
 alias deploy='cd /Users/fwu066/Documents/share/repository_air_trace/AT_deployment;pwd'
 alias tmp='cd /Users/fwu066/Documents/share/tmp;pwd'
+alias sublime='open -a /Applications/Sublime\ Text.app'
 EOF
 source ~/.bash_profile
 `````
+=====alias section=====
+#ubuntu:
+cat >> ~/.bash_aliases <<EOF
+alias sdk='cd ~/repository_air_trace/AT_node_sdk/'
+alias dyn='cd ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg'
+EOF
+source ~/.bashrc
 
 
 ====firefox section=====
@@ -10771,19 +10779,8 @@ Exception
 Cmd+Shift+o (Command + Shift + o (letter o, not zero)) on Mac,
 ctrl+Shift+o on Windows. 
        
-=====alias section=====
-#ubuntu:
-cat >> ~/.bash_aliases <<EOF
-alias sdk='cd ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg'
-EOF
-source ~/.bashrc
-`````
-#macos:
-cat >> ~/.bash_profile <<EOF
-alias gitwu='cd /Users/fwu066/Documents/share/git;pwd'
-alias sdk='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg;pwd'
-EOF
-source ~/.bash_profile
+
+
 ====nodejs section==
 npm install
 npm install node@v6.9.0
