@@ -2835,6 +2835,11 @@ telnet: 装inetutils 模块
 getclip putclip : 装cygutils-extra模块
 git ls-tree -r master --name-only |putclip.exe
 
+
+`````
+#打开资源管理器：
+explorer .
+
 =============paste section==========
 mac: paste
 windows:Ditto-cp
@@ -9400,6 +9405,40 @@ zlogin bf540e13-56df-cac7-819e-c82185d58209  sed -i.bak 's/PermitRootLogin witho
 zlogin bf540e13-56df-cac7-819e-c82185d58209  svcadm restart svc:/network/ssh:default
 zlogin bf540e13-56df-cac7-819e-c82185d58209  cp /opt/local/etc/pkgin/repositories.conf /opt/local/etc/pkgin/repositories.conf.original
 
+=====python section=====
+
+#列出所有package
+方法一：in a Python shell/prompt.
+help('modules')
+
+
+方法二：
+pip freeze
+````python path section``
+
+python -m site  #列出sys.path 
+python -c "import site; print(site.getsitepackages())"
+
+```pip section``
+#显示用pip安装模块的路径
+pip show selenium
+
+
+
+```````
+实例：
+步骤1:
+pip install selenium
+pip show selenium
+python -m site  #列出sys.path 
+两个路径不一样
+
+步骤2:
+import os
+import sys
+sys.path.insert(0, "/cygdrive/c/python27/lib/site-packages/")
+from selenium import webdriver
+
 
 
 ===smartos python section=====
@@ -10860,7 +10899,16 @@ sudo -H  pip install selenium
 sudo xcodebuild -license accept
 brew install geckodriver
 
-ubuntu:
+#chrome:
+#https://sites.google.com/a/chromium.org/chromedriver/downloads
+#https://chromedriver.storage.googleapis.com/index.html?path=2.36/
+wget https://chromedriver.storage.googleapis.com/2.36/chromedriver_mac64.zip
+unzip chromedriver_mac64.zip  
+cp ./chromedriver /usr/local/bin/
+
+`````
+
+#ubuntu:
 #https://medium.com/@griggheo/running-selenium-webdriver-tests-using-firefox-headless-mode-on-ubuntu-d32500bb6af2
 
 pip install selenium
@@ -10877,5 +10925,9 @@ wget https://github.com/mozilla/geckodriver/releases/download/v0.19.0/geckodrive
 sudo sh -c 'tar -x geckodriver -zf  geckodriver-v0.19.0-linux64.tar.gz -O > /usr/bin/geckodriver'
 sudo chmod +x /usr/bin/geckodriver
 
+
+``````
+#windows:
+pip install -U selenium
 
 
