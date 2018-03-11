@@ -10920,12 +10920,23 @@ export DISPLAY=:10
 firefox
 (kill it with Ctrl-C)
 
-
+#firefox
 wget https://github.com/mozilla/geckodriver/releases/download/v0.19.0/geckodriver-v0.19.0-linux64.tar.gz
 sudo sh -c 'tar -x geckodriver -zf  geckodriver-v0.19.0-linux64.tar.gz -O > /usr/bin/geckodriver'
 sudo chmod +x /usr/bin/geckodriver
 
+#chrome,https://sites.google.com/a/chromium.org/chromedriver/home
+wget https://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip
+sudo apt-get install unzip
+unzip chromedriver_linux64.zip
+sudo cp chromedriver /usr/bin/
+sudo chmod +x /usr/bin/chromedriver
 
+#https://www.linuxbabe.com/ubuntu/install-google-chrome-ubuntu-16-04-lts
+curl -sS -o - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add
+sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
+sudo apt-get -y update
+sudo apt-get -y install google-chrome-stable
 ``````
 #windows cygwin:
 #安装python，wet
