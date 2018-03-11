@@ -9426,7 +9426,7 @@ pip show selenium
 
 
 ```````
-实例：
+实例：pip安装package所在的路径和python默认使用的路径，两个路径不一样
 步骤1:
 pip install selenium
 pip show selenium
