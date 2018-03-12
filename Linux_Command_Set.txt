@@ -2810,6 +2810,9 @@ netstat -antup
 yum install lsof -y
 lsof -OnP | grep LISTEN
 
+sudo lsof -p 127082  #显示进程打开的文件
+
+
 netstat -anp |grep 2181   #查看谁 连到 2181
 netstat -anp --inet       #查看谁 连到 谁
 netstat -tulpn
@@ -10308,7 +10311,7 @@ ln app-docker-compose.yaml docker-compose.yaml
 docker-compose up -d
 docker-compose ps
 docker-compose stop
-
+sudo docker-compose  restart
 docker-compose -f app-docker-compose.yaml restart
 docker-compose -f app-docker-compose.yaml restart app #注：app 是sercvice name不是container name
 docker-compose -f app-docker-compose.yaml stop    app
@@ -10860,8 +10863,10 @@ Exception
 列出所有函数：
 Cmd+Shift+o (Command + Shift + o (letter o, not zero)) on Mac,
 ctrl+Shift+o on Windows. 
-       
 
+
+````visualstudio json `````
+格式化 json:option + shitft + f
 
 ====nodejs section==
 npm install
