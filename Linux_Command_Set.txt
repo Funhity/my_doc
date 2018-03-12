@@ -5096,6 +5096,9 @@ proxychains apt-get -y install docker-ce
 
 
 ===pip section===shadowsocks section===vpn section===
+#ubuntu:
+sudo apt-get install -y python-pip
+
 
 #mac:
      #https://shadowsocks.org/en/download/clients.html
@@ -5108,8 +5111,8 @@ proxychains apt-get -y install docker-ce
        /usr/local/opt/shadowsocks-libev/bin/ss-local -c /usr/local/etc/shadowsocks-libev.json -u
          
 ```
-yum -y install python
-yum -y install python-setuptools && easy_install pip
+sudo yum -y install python
+sudo yum -y install python-setuptools && easy_install pip
 #wget https://bootstrap.pypa.io/get-pip.py
 #python get-pip.py
 pip install -vvv  shadowshocks
@@ -5976,7 +5979,7 @@ sudo tshark -o "ssl.desegment_ssl_records: TRUE" -o "ssl.desegment_ssl_applicati
 lsb_release -a
 ```
 #Fixing APT Hash Sum Mismatch: Consistent APT Repositories,https://blog.packagecloud.io/eng/2016/09/27/fixing-apt-hash-sum-mismatch-consistent-apt-repositories/
-apt-get clean
+sudo apt-get clean
 sudo rm -fr /var/lib/apt/lists/*
 ````
 boot: Not enough free disk space when upgrading
@@ -10915,15 +10918,16 @@ cp ./chromedriver /usr/local/bin/
 
 #ubuntu:
 #https://medium.com/@griggheo/running-selenium-webdriver-tests-using-firefox-headless-mode-on-ubuntu-d32500bb6af2
-
+sudo apt-get install -y python-pip
+pip install --upgrade pip
 pip install selenium
 sudo apt-get install -y firefox xvfb
 Xvfb :10 -ac &
 export DISPLAY=:10
 
 #Test that you can run firefox in the foreground with no errors
-firefox
-(kill it with Ctrl-C)
+#firefox
+#(kill it with Ctrl-C)
 
 #firefox
 wget https://github.com/mozilla/geckodriver/releases/download/v0.19.0/geckodriver-v0.19.0-linux64.tar.gz
@@ -10932,7 +10936,7 @@ sudo chmod +x /usr/bin/geckodriver
 
 #chrome,https://sites.google.com/a/chromium.org/chromedriver/home
 wget https://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip
-sudo apt-get install unzip
+sudo apt-get install  -y unzip
 unzip chromedriver_linux64.zip
 sudo cp chromedriver /usr/bin/
 sudo chmod +x /usr/bin/chromedriver
