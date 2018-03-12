@@ -3727,6 +3727,33 @@ rsync  -avhz /Users/fwu066/Documents/share/repository_air_trace//AT_node_server/
 2.change IP address of 8000 port for client side visisting
 rsync  -avhz /Users/fwu066/Documents/share/repository_air_trace/AT_node_client/src/environments/environment.ts  all-AT:/home/allorgs/repository_air_trace/AT_node_client/src/environments/environment.ts
 
+
+
+
+
+curl -s -vX POST 'http://localhost:8000/organization/createOtherProfile' \
+-H 'Content-Type: application/json' \
+-d "$body" \
+-c ./cookieForManufacture | sed 's/"/ /g' | awk '{print $2,$3}'
+curl -s -vX POST 'http://localhost:8000/otherPeer/uploadOrgPeers' \
+-H 'Content-Type: application/json' \
+-d "$body" \
+-c ./cookieForManufacture | sed 's/"/ /g' | awk '{print $2,$3}'
+$(jq '.engineer' deployLocal.json)
+{
+fileContent: ["$peer0", "$peer1"],
+orgname: "Airline"
+}
+{
+msp: "$mspfile",
+mspFileName: "$fileName",
+mspid: "AirlineMSP",
+name: "Airline",
+peerFileName: "$peer0FileName, $peer1FileName"
+}
+
+
+
 ``````blockchain code section````````````````
 #client side 初始化
 cd ~/repository_air_trace/AT_node_client; \

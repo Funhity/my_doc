@@ -9968,6 +9968,17 @@ sudo openvpn --config ~/Documents/briphant_office_sh_new
 功能：列车函数列表
      Ctrl+R  command+R
 
+
+`````sublime sftp section````
+步骤一：
+ctrl+shift+p on Windows and Linux, 
+and cmd+shift+p on OS X
+
+步骤二：
+https://wbond.net/sublime_packages/sftp/installation
+Type in SFTP and hit enter
+
+
 ````Column Selection ```````
 Different mouse buttons are used on each platform:
 OS X
