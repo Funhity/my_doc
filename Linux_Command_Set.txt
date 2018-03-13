@@ -9431,7 +9431,7 @@ pip show selenium
 
 
 
-```````
+`````python cygwin````cygwin python``
 实例：pip安装package所在的路径和python默认使用的路径，两个路径不一样
 步骤1:
 pip install selenium
@@ -10967,7 +10967,7 @@ unzip ./chromedriver_win32.zip
 cp chromedriver.exe /user/local/bin
 
 
-····
+···example····
 cat test.py
 import os
 import sys
@@ -10988,7 +10988,14 @@ browser = webdriver.Chrome(chrome_options=options)
 browser.get("http://pypi.python.org/pypi/selenium")
 browser.find_element_by_link_text("selenium-3.10.0.tar.gz").click()
 
-·····
+····example····selenium cygwin section··
+#windwos cygwin，增加/cygdrive/c/python27/lib/site-packages/到package库中
+import os
+import sys
+sys.path.insert(0, "/cygdrive/c/python27/lib/site-packages/")
+from selenium import webdriver
+
+
 
 
 
