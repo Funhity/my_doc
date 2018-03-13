@@ -3729,12 +3729,36 @@ rsync  -avhz /Users/fwu066/Documents/share/repository_air_trace/AT_node_client/s
 
 
 
+    echo "User login"
+    body=$(jq 'del(.user["org", "email", "group"])|.user' deployLocal.json)
+    curl -s -X POST 'http://localhost:8000/user/login' \
+        -H 'Content-Type: application/json' \
+        -d "$body" \
+        -c ./cookieFile | sed 's/"/ /g' | awk '{print $2,$3}'
 
 
 curl -s -vX POST 'http://localhost:8000/organization/createOtherProfile' \
 -H 'Content-Type: application/json' \
 -d "$body" \
 -c ./cookieForManufacture | sed 's/"/ /g' | awk '{print $2,$3}'
+
+
+
+{
+msp: "{}",
+mspFileName: "$fileName",
+mspid: "AirlineMSP",
+name: "Airline",
+peerFileName: "$peer0FileName, $peer1FileName"
+}
+a.json
+b.json
+
+$(jq . | a.json)
+
+
+
+
 curl -s -vX POST 'http://localhost:8000/otherPeer/uploadOrgPeers' \
 -H 'Content-Type: application/json' \
 -d "$body" \
@@ -3744,13 +3768,7 @@ $(jq '.engineer' deployLocal.json)
 fileContent: ["$peer0", "$peer1"],
 orgname: "Airline"
 }
-{
-msp: "$mspfile",
-mspFileName: "$fileName",
-mspid: "AirlineMSP",
-name: "Airline",
-peerFileName: "$peer0FileName, $peer1FileName"
-}
+
 
 
 

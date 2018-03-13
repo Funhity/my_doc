@@ -181,8 +181,10 @@ fi
 /etc/init.d/network restart
    sed -i.bak  's/HOSTNAME=.*/HOSTNAME=cloudera-manager/g' /etc/sysconfig/network
 
-=====nmap section==arp section==nc section==address section===ping section====
+=====nmap section==arp section==nc section==address section===ping section====port section====
   sudo yum install nmap -y 
+  mac: brew install nmap
+
   arping -c 1 -I br0      192.168.38.150
   arping      -I ens32 -b 192.168.31.123 测试是否有IP冲突
 
