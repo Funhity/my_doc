@@ -2264,8 +2264,28 @@ http://192.168.23.1:3000
 sudo hiera admin_password
 
 ====pwc section===
+````pwc command````
+cat >./ansible-shell-command.yaml <<EOF
+- name:  port test-AT
+  hosts: 'test2-AT'
+  gather_facts: no
+  tasks:
+    - name: init orderer for dynamic org
+      shell: |
+           cp ~/.ssh/authorized_keys ~/.ssh/authorized_keys.bak
+           echo ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDI1dHFY76ryg1tplqAySTJAqaL2jTX/1QJhE7jKDpVNEr+H6GajvQKMTzNF1PYmHACjF3TtyWX/15btZETyddUKhjy36vHEk35Pz8rB4pV2YUcoPJhiHXDh8vCcizzZacvvzttKs2eNPaZJVnEUu8Fn6z7/gEvJmH3GDHdazRo5wdAwEKamkErQZYZjLdq1kp7ywGOWn+Hhm/nTCLZukENL1sNPwPWMW2G1i65HpXgoCKnoMLyC1xb0/1DocntxCEgvgjiuYgxwayveaAsQ5J0dDCBMYc/ZzdhAtcIgYrkaBaMU/MCyA8WG5AjOVyqd7S0xeFdztKWONAab6H7iTG0ZUCrFfAOmjwoq0qZB1ToKTSUew3ACcp/dPE8NrIF+JbKYC87udxCgLNpjpWK5j2SKHwClUnR486b3vFCVpDjmjGQeez/yGrmuI5iulgt1xP1+chO0N+jetAvfXbFiYdFrYAgqNLbCstOdASBFsvdEMZvkgYRiyxw33QWpVec5lWzhe8o5wVMIvEgrYlsgA9BCFkV08EkpgeLwe4Q6D/CKTz47zxx4Ue7vC32iwQesMD44HcU6DMQIhWeJqkz8X+ZFiN3NppCQhM83LbnVcjllzcE+DXfhWiFZhxv9xyjDiO36CSx5vHsoGEPv21GZ4APD3Lqx/p6PMRoZQOWlAEBXw== bernhard.jp.zech@hk.pwc.com >>  ~/.ssh/authorized_keys
 
+           
+           diff ~/.ssh/authorized_keys ~/.ssh/authorized_keys.bak
 
+           echo "finished"
+      args:
+        executable: /bin/bash
+      register: ps
+    - debug: var=ps.stdout_lines
+
+EOF
+ansible-playbook ./ansible-shell-command.yaml
 
 `````pwc kvm````
 qemu-img create -f qcow2  /home/frank/HPDisk/kvm/pwc.qcow2 100G

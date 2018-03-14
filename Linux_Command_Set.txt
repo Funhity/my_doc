@@ -1191,8 +1191,11 @@ docker logs
 # https://superuser.com/questions/117841/get-colors-in-less-or-more
   sudo docker logs peer0.org3.example.com 2>&1 | less -i -R
 
-
 docker service logs
+
+sudo docker logs -f --tail 200 part_straceability_app
+
+
 docker info |grep 'Logging Driver'
 docker run -it --log-driver none alpine ash
 docker inspect -f '{{.HostConfig.LogConfig.Type}}' <CONTAINER>
@@ -10521,7 +10524,7 @@ source ~/.bashrc
 ········
 #
 cat > ./ansible-shell-command.yaml <<AnsibleEOF
-- hosts: 'org1-AT'
+- hosts: 'test'
   gather_facts: no
   tasks:
     - name: init orderer for dynamic org
@@ -10530,6 +10533,7 @@ cat > ./ansible-shell-command.yaml <<AnsibleEOF
           cat > ~/.bash_aliases <<EOF
           alias sdk='cd ~/repository_air_trace/AT_node_sdk/'
           alias dyn='cd ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg'
+          alias trace='cd ~/repository_air_trace/AT_partstraceability'
           EOF
           source ~/.bashrc        
 
@@ -10937,7 +10941,7 @@ cp ./chromedriver /usr/local/bin/
 `````
 
 #ubuntu:
-步骤一：安装xserver
+#步骤一：安装selenium and xserver and run
 #https://medium.com/@griggheo/running-selenium-webdriver-tests-using-firefox-headless-mode-on-ubuntu-d32500bb6af2
 sudo apt-get install -y python-pip
 pip install --upgrade pip
@@ -10950,7 +10954,7 @@ export DISPLAY=:10
 #firefox
 #(kill it with Ctrl-C)
 
-步骤二：安装可执行文件驱动到path
+#步骤二：安装可执行文件驱动到path
 #firefox
 wget https://github.com/mozilla/geckodriver/releases/download/v0.19.0/geckodriver-v0.19.0-linux64.tar.gz
 sudo sh -c 'tar -x geckodriver -zf  geckodriver-v0.19.0-linux64.tar.gz -O > /usr/bin/geckodriver'
@@ -10963,7 +10967,7 @@ unzip chromedriver_linux64.zip
 sudo cp chromedriver /usr/bin/
 sudo chmod +x /usr/bin/chromedriver
 
-步骤三：安装chrome
+#步骤三：安装chrome
 #https://www.linuxbabe.com/ubuntu/install-google-chrome-ubuntu-16-04-lts
 curl -sS -o - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add
 sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
@@ -10979,6 +10983,10 @@ unzip ./chromedriver_win32.zip
 cp chromedriver.exe /user/local/bin
 
 
+········selenium windows·······
+import os
+import sys
+sys.path.insert(0, "/cygdrive/c/python27/lib/site-packages/")
 ···example····
 cat test.py
 import os
