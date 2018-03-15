@@ -7123,7 +7123,7 @@ git checkout -b version2     v2.0.0
 #切换分支
 git checkout -b iss53 = git branch iss53(创建新本地分支);git checkout iss53
 
-#从服务器下载分支
+#从服务器下载分支操作步骤
 git fetch
 git checkout test
 ````````
@@ -10990,7 +10990,8 @@ unzip ./chromedriver_win32.zip
 cp chromedriver.exe /user/local/bin
 
 
-········selenium windows·······
+········selenium windows····selenium cygwin···
+#在Windows cygwin环境下，把下面代码加到最前面
 import os
 import sys
 sys.path.insert(0, "/cygdrive/c/python27/lib/site-packages/")
