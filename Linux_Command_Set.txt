@@ -7125,6 +7125,9 @@ git push origin   v0.1
 #下载tag git pull
 步骤三：
 git diff v0.1 HEAD --name-only
+步骤四：checkout重新部署，但这个tag不能commit，https://git-scm.com/book/en/v2/Git-Basics-Tagging
+git checkout 2.0.0
+
 
 In “detached HEAD” state, if you make changes and then create a commit, the tag will stay the same, but your new commit won’t belong to any branch and will be unreachable, except for by the exact commit hash. Thus, if you need to make changes — say you’re fixing a bug on an older version, for instance — you will generally want to create a branch:
 
