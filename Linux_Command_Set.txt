@@ -6936,6 +6936,9 @@ git stash --keep-index    # git index serves as a staging area
                           保留在stage中的内容，可以继续开发，直至commit提交到本地repository
 步骤二：                          
 git stash list
+git stash list --date=local
+git diff stash@{0}
+git stash show -p stash@{0}
 步骤三：
 git stash apply stash@{2}
 git stash apply          #原有的内容都在working direcotry中，但已经stage的内容丢失，要不丢失，则加--index 参数
@@ -7119,6 +7122,10 @@ git checkout -b [branchname] [tagname]:
 git checkout -b version2     v2.0.0
 #切换分支
 git checkout -b iss53 = git branch iss53(创建新本地分支);git checkout iss53
+
+#从服务器下载分支
+git fetch
+git checkout test
 ````````
 git branch                        #列出本地所有branch
 git branch -v                     #功能1：To see the last commit on each branch 
