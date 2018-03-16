@@ -3002,7 +3002,9 @@ Type: Control a
 Type: q
 Type: 98@a
 =======================  sudo section   ========================   
-命令：visudo //press escape, then type ZZ
+命令：visudo 
+
+//press escape, then type ZZ
 Cmnd_Alias SALTCMD = /usr/bin/salt, /usr/bin/salt-key, /usr/bin/salt-run, /usr/bin/salt-ssh, /usr/bin/salt-cp
 wujunrong ALL = NOPASSWD: SALTCMD
 
@@ -3015,8 +3017,9 @@ sudo vi /etc/sudoers
 root            ALL = (ALL) ALL
 %admin          ALL = (ALL) ALL
 fwu066          ALL = (ALL) NOPASSWD: ALL
-
-
+========^ section ======
+^ 等同于 control
+nano 保存方法，control X， yes，再选 write to file
 =======================suid section,sgid section  ======================
 sgid:  chmod g+s ./test_list_date.sh
 suid:  chmod u+s ./test_list_date.sh
@@ -6027,6 +6030,7 @@ sudo systemctl status   sshd-second.service
 ssh -p 22220 user@server
 
 `````ubuntu network section`````
+sudo service networking restart
 
 cat  /etc/network/interfaces
 # interfaces(5) file used by ifup(8) and ifdown(8)
