@@ -2264,7 +2264,7 @@ http://192.168.23.1:3000
 sudo hiera admin_password
 
 ====pwc section===
-````pwc command````
+````pwc command``public key section``
 cat >./ansible-shell-command.yaml <<EOF
 - name:  port test-AT
   hosts: 'test2-AT'

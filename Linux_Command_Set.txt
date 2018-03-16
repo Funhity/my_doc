@@ -865,7 +865,7 @@ sudo system-docker run -d --net=host --name busydash husseingalal/busydash
 
 ``````dockerfile section```````````
 sudo docker build -t ouruser/sinatra:v2 .
-
+     docker build -f /path/to/a/Dockerfile .
 
 ``````docker image section```````
 docker images
@@ -6822,6 +6822,9 @@ git commit -a -m 'added new benchmarks'   #Skipping the Staging Area
 #用我方的代码来解决冲突
 git checkout --ours ./artifacts/base.yaml
 
+#to discard changes in working directory
+git checkout -- <file>...   
+
 ···git rebase section······
 #https://www.atlassian.com/git/tutorials/merging-vs-rebasing
 The golden rule of git rebase is to never use it on public branches.
@@ -10536,6 +10539,7 @@ alias sdk='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk;pwd
 alias server='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_server;pwd'
 alias deploy='cd /Users/fwu066/Documents/share/repository_air_trace/AT_deployment;pwd'
 alias tmp='cd /Users/fwu066/Documents/share/tmp;pwd'
+alias trace='cd /Users/fwu066/Documents/share/repository_air_trace/AT_partstraceability'
 alias sublime='open -a /Applications/Sublime\ Text.app'
 EOF
 source ~/.bash_profile
@@ -10545,12 +10549,13 @@ source ~/.bash_profile
 cat >> ~/.bash_aliases <<EOF
 alias sdk='cd ~/repository_air_trace/AT_node_sdk/'
 alias dyn='cd ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg'
+alias trace='cd ~/repository_air_trace/AT_partstraceability'
 EOF
 source ~/.bashrc
 ········
 #
 cat > ./ansible-shell-command.yaml <<AnsibleEOF
-- hosts: 'test'
+- hosts: 'orgs'
   gather_facts: no
   tasks:
     - name: init orderer for dynamic org
@@ -10560,6 +10565,7 @@ cat > ./ansible-shell-command.yaml <<AnsibleEOF
           alias sdk='cd ~/repository_air_trace/AT_node_sdk/'
           alias dyn='cd ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg'
           alias trace='cd ~/repository_air_trace/AT_partstraceability'
+          alias init='cd ~/repository_air_trace/AT_node_sdk/deployScripts'
           EOF
           source ~/.bashrc        
 
@@ -10611,7 +10617,7 @@ sudo route del -net default gw 10.0.1.1 dev eth0   # and delete old default rout
 sudo docker ps | grep uberga | awk '{print $NF}' |xargs -I{} sudo docker stop {}
 
 
-======gerrit section=
+======gerrit section=======
 version:
 ssh wujunrog-username@192.168.56.17 -p 29418  gerrit version
 #https://gerrit-releases.storage.googleapis.com/index.html
@@ -10973,6 +10979,7 @@ sudo apt-get install -y python-pip
 pip install --upgrade pip
 sudo pip install selenium # 或sudo -H pip install selenium
 sudo apt-get install -y firefox xvfb
+sleep 3
 Xvfb :10 -ac &
 export DISPLAY=:10
 
@@ -11006,6 +11013,7 @@ sudo apt-get -y install google-chrome-stable
 pip install -U selenium
 wget https://chromedriver.storage.googleapis.com/2.36/chromedriver_win32.zip
 unzip ./chromedriver_win32.zip
+sleep 5
 cp chromedriver.exe /user/local/bin
 
 
@@ -11043,6 +11051,9 @@ sys.path.insert(0, "/cygdrive/c/python27/lib/site-packages/")
 from selenium import webdriver
 
 
+=====for section=====loop section=====
+# 遍历AT开头的目录名称，https://www.cyberciti.biz/faq/linux-unix-bash-for-loop-one-line-command/
 
+for i in AT*; do cd $i; pwd;echo ==========; git diff;cd -; done
 
 
