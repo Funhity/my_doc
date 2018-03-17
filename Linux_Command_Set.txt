@@ -2826,6 +2826,10 @@ fuser 7000/tcp   #https://www.cyberciti.biz/faq/what-process-has-open-linux-port
 ss -napt | grep 3260 
 
 mac:
+#https://apple.stackexchange.com/questions/117644/how-can-i-list-my-open-network-ports-with-netstat
+sudo lsof -PiTCP -sTCP:LISTEN
+netstat -ap tcp | grep -i "listen"
+
 lsof -n -i4TCP:$PORT | grep LISTEN
 =======================  cygwin section  ========================     
   windows:  netstat -an
@@ -4992,9 +4996,18 @@ ssh-keygen -t rsa
 ssh-copy-id -i ~/.ssh/id_rsa.pub $remote_user@$remote_host
 ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.56.17 -p222   #ssh key section
 
+````ssh config section````
+Host v1
+        HostName localhost
+        port 2222
+        IdentityFile ~/.ssh/id_rsa
+        User frank
+        AddKeysToAgent yes
+        UseKeychain yes
 `````
 ssh-agent bash #rsa文件密码自动输入
 ssh-add ~/.ssh/id_rsa
+
 
 ``````
 #the private key is used for the opposite operation, in these examples to decrypt ciphertext or to create a digital signature. 
