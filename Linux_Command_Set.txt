@@ -3021,7 +3021,7 @@ sudo vi /etc/sudoers
 root            ALL = (ALL) ALL
 %admin          ALL = (ALL) ALL
 fwu066          ALL = (ALL) NOPASSWD: ALL
-========^ section ======
+========^ section =====nano section=
 ^ 等同于 control
 nano 保存方法，control X， yes，再选 write to file
 =======================suid section,sgid section  ======================
@@ -3049,6 +3049,8 @@ wget --user=briphant --password='the_password' ftp://10.16.2.130/cloud/v7.1.0/fl
 
 pgrep -a fk.sh| tee ./fk.log| wc -l
 crontab -l | tee crontab-backup.txt | sed 's/old/new/' | crontab –
+
+exec &> >(tee "$log_file")
 
 ````Process substitution`````
 使用tee命令，在标准输出和日志文件中同时输出：
@@ -10155,6 +10157,16 @@ jq -s '.' network-config-DynamicOrg.tmp.json network-config-DynamicOrg.tmp.json.
 cat ../../app/network-config-DynamicOrg.json  | jq  'del(.["network-config"] | .orderer)'
 
 jq  'del(.["partNo", "channelName", "peer0"])' invoke.json
+```````
+    mspData=$(jq --arg data "$(<~/Downloads/EngineerMSP.json)" '.=$data' organization.json)
+    body=`jq ".msp=$mspData" ./organization.json`
+    
+
+    curl -s -vX POST 'http://localhost:8000/organization/createOtherProfile' \
+    -H 'Content-Type: application/json' \
+    -d "$body" \
+    -b ./cookieFile | sed 's/"/ /g' | awk '{print $2,$3}'
+    sleep 3
 
 =======windows section=============
 
