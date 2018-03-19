@@ -1101,7 +1101,8 @@ docker stop $(docker ps -a -q)
 docker rm   $(docker ps -a -q)
 docker rm -v   /dbdata nostalgic_morse  #To delete the volume from disk, you must explicitly call docker rm -v against the last container with a reference to the volume.
 docker ps -a | grep -v 'adoring_dubinsky\|NAMES'| awk '{print $1}'|xargs docker rm
- 
+
+docker ps -a | grep -v 'NAMES'| awk '{print $1}'|xargs docker rm
  docker rm  -f  $(docker ps -a -q)
  docker rm `docker stop  $(docker ps -q -a)`
 `````docker tini section`````
@@ -5216,6 +5217,8 @@ ps -eo pid,lstart,cmd | grep 91209
 
 #按启动时间排序：
 ps -ef --sort=start_time
+#process 25217 运行了多少时间
+ps -o etime= -p "25217"
 ============= 翻墙 ================
 
 lantern :sudo apt-get install libappindicator3-1
@@ -10559,7 +10562,7 @@ sudo systemd-tmpfiles --prefix=/sys --create
       yum -y install epel-release wget curl telnet lrzsz aria2 openssh-clients openssh-server iotop net-tools lsof tcpdump tree tcpdump zip unzip less dos2unix git iproute bind-utils
 
 #ubuntu:
-       sudo apt-get -y install tree lrzsz dos2unix build-essential
+       sudo apt-get -y install tree lrzsz dos2unix build-essential telnet
        
 ``````alias section````
 
@@ -10571,7 +10574,7 @@ alias sdk='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk;pwd
 alias server='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_server;pwd'
 alias deploy='cd /Users/fwu066/Documents/share/repository_air_trace/AT_deployment;pwd'
 alias tmp='cd /Users/fwu066/Documents/share/tmp;pwd'
-alias trace='cd /Users/fwu066/Documents/share/repository_air_trace/AT_partstraceability'
+alias parts='cd /Users/fwu066/Documents/share/repository_air_trace/AT_partstraceability'
 alias sublime='open -a /Applications/Sublime\ Text.app'
 EOF
 source ~/.bash_profile
@@ -10581,7 +10584,7 @@ source ~/.bash_profile
 cat >> ~/.bash_aliases <<EOF
 alias sdk='cd ~/repository_air_trace/AT_node_sdk/'
 alias dyn='cd ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg'
-alias trace='cd ~/repository_air_trace/AT_partstraceability'
+alias parts='cd ~/repository_air_trace/AT_partstraceability'
 EOF
 source ~/.bashrc
 ········
