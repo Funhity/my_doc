@@ -230,6 +230,7 @@ rm -f /etc/udev/rules.d/70-persistent-net.rules
   gunzip -S .zip mysqlsampledatabase1.zip
   zcat v6_mobile01_20151103.tar.gz| less
   zcat v6_mobile01_20151201.tar.gz| grep -aHn 15120115162100176722
+
 ````````````rz section sz section````````
   
   apt-get install lrzsz
@@ -10131,7 +10132,17 @@ sudo apt install -y jq
 centos:
 sudo yum  -y  install epel-release 
 yum install -y jq
+
 ```````
+#jq pretty print
+#https://stackoverflow.com/questions/352098/how-can-i-pretty-print-json-in-a-unix-shell-script
+$ jq . <<< '{ "foo": "lorem", "bar": "ipsum" }'
+{
+  "bar": "ipsum",
+  "foo": "lorem"
+}
+
+```````````````
 
 cat xxx.txt|jq  '.'
 
@@ -10954,8 +10965,9 @@ Cmd+Shift+o (Command + Shift + o (letter o, not zero)) on Mac,
 ctrl+Shift+o on Windows. 
 
 
-````visualstudio json `````
-格式化 json:option + shitft + f
+````visualstudio json ````json section```````
+格式化 json:
+option + shitft + f
 
 ====nodejs section==
 npm install
@@ -11100,5 +11112,14 @@ from selenium import webdriver
 # 遍历AT开头的目录名称，https://www.cyberciti.biz/faq/linux-unix-bash-for-loop-one-line-command/
 
 for i in AT*; do cd $i; pwd;echo ==========; git diff;cd -; done
+
+
+=======cat section=====
+#How can I input to a file directly from the terminal
+cat > filename
+enter text
+hit Ctrl-D to stop
+=======================
+
 
 
