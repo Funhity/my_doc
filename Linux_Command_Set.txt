@@ -5201,7 +5201,7 @@ ansible-pull                 -o           -d /tmp/test-ansible/git/   -i /etc/an
 寻找local.yml              有变化才执行
 或者office-salt.yml文件                   checkout 路径                  host文件            git源路径
 
-=========================   ps section command  ====================================
+=========================   ps section command  ==============ps -ef section======================
 
 From the man page, there are a few thread options:
 
@@ -10133,7 +10133,7 @@ centos:
 sudo yum  -y  install epel-release 
 yum install -y jq
 
-```````
+```jq pretty section````
 #jq pretty print
 #https://stackoverflow.com/questions/352098/how-can-i-pretty-print-json-in-a-unix-shell-script
 $ jq . <<< '{ "foo": "lorem", "bar": "ipsum" }'
@@ -10405,7 +10405,10 @@ documentation, docs, docker, compose, orchestration, containers, networking
 ln app-docker-compose.yaml docker-compose.yaml
 
 docker-compose up -d
-docker-compose ps
+
+docker-compose ps.   #docker sevice
+docker-compose -f mongo-init-user.yaml ps
+
 docker-compose stop
 sudo docker-compose  restart
 docker-compose -f app-docker-compose.yaml restart
@@ -10576,7 +10579,11 @@ sudo systemd-tmpfiles --prefix=/sys --create
        sudo apt-get -y install tree lrzsz dos2unix build-essential telnet
        
 ``````alias section````
-
+···alias ansible··
+#https://unix.stackexchange.com/questions/243821/run-a-command-in-an-interactive-shell-with-ssh-after-sourcing-bashrc
+#Aliases are not expanded when the shell is not interactive, unless the expand_aliases shell option is set using shopt (see the description of shopt under SHELL BUILTIN COMMANDS below).
+ansible v2 -a "bash -i -c  'close'"
+······
 #macos:
 cat >> ~/.bash_profile <<EOF
 alias gitwu='cd /Users/fwu066/Documents/share/git;pwd'
@@ -10612,6 +10619,7 @@ cat > ./ansible-shell-command.yaml <<AnsibleEOF
           alias dyn='cd ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg'
           alias trace='cd ~/repository_air_trace/AT_partstraceability'
           alias init='cd ~/repository_air_trace/AT_node_sdk/deployScripts'
+          alias deploy='cd ~/repository_air_trace/AT_deployment'
           EOF
           source ~/.bashrc        
 
@@ -10968,6 +10976,9 @@ ctrl+Shift+o on Windows.
 ````visualstudio json ````json section```````
 格式化 json:
 option + shitft + f
+
+········
+jq . <<< '{ "foo": "lorem", "bar": "ipsum" }'
 
 ====nodejs section==
 npm install
