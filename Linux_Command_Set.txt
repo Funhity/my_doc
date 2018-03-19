@@ -23,7 +23,7 @@ cat /etc/*release*
 chkconfig --add glassfish4
 chkconfig --list glassfish4
 
-````hostname section```host section``
+````hostname section```host section`````network name section````
 centos7:   /etc/hostname  #经测试有效      
            vm_name=docker-test3;hostname $vm_name;echo $vm_name > /etc/hostname;hostname
 
@@ -10004,7 +10004,10 @@ fmdump
 ==========set section===========================
 
 set -e 有错误就退出
-set -x 可以观察运行到哪一行
+set -x 可以观察运行到哪一行,https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+       The -x option causes bash to print each command before executing it. This can be of great help when you have to try and debug a bash script failure through its logs.
+推荐：https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/，pipe line 左边失败立即退出
+set -eo pipefail
 ===========openvpn section==============
 centos:
 yum -y install openvpn
@@ -10999,17 +11002,22 @@ wget https://chromedriver.storage.googleapis.com/2.36/chromedriver_mac64.zip
 unzip chromedriver_mac64.zip  
 cp ./chromedriver /usr/local/bin/
 
-`````
+``````selenium section`````
 
+cat > ./selenium_install.sh<<EOF
+set -e
 #ubuntu:
 #步骤一：安装selenium and xserver and run
 #https://medium.com/@griggheo/running-selenium-webdriver-tests-using-firefox-headless-mode-on-ubuntu-d32500bb6af2
 sudo apt-get install -y python-pip
+#sudo sh -c 'echo "127.0.1.1 frank-VirtualBox1">>/etc/hosts' #frank-VirtualBox1 必须和hostname一致，
 pip install --upgrade pip
 sudo pip install selenium # 或sudo -H pip install selenium
 sudo apt-get install -y firefox xvfb
 sleep 3
+set +e
 Xvfb :10 -ac &
+set -e
 export DISPLAY=:10
 
 #Test that you can run firefox in the foreground with no errors
@@ -11035,6 +11043,11 @@ curl -sS -o - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key a
 sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
 sudo apt-get -y update
 sudo apt-get -y install google-chrome-stable
+
+EOF
+chmod +x ./selenium_install.sh
+./selenium_install.sh
+
 ``````
 #windows cygwin:
 #安装python，wet
