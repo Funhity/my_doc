@@ -297,6 +297,10 @@ find  -E   ./   -iregex  ".*(ldlinux.c32|bios.*Mboot.c32|bios.*libcom32.c32|/pxe
   You can force xargs to use at most max-args arguments per command line. For example following will use first two argument per command:
   $ echo 1 2 3 4 | xargs -n 2
   git log --format="%H %P" | xargs -L 1 git diff #http://offbytwo.com/2011/06/26/things-you-didnt-know-about-xargs.html
+``````````
+  --no-run-if-empty
+  #https://stackoverflow.com/questions/8296710/ignore-empty-result-for-xargs
+  sudo docker ps -a | grep -v 'NAMES'| awk '{print $1}'|xargs --no-run-if-empty sudo docker rm -f
 ==========user section==================
   useradd rakhi
   passwd  rakhi
@@ -6998,7 +7002,9 @@ git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %s,
             git difftool -y --tool=meld $commitId "$commitId"^ -- index.js  #或
             git difftool -y --tool=meld  testCloud  master -- runEverything.sh
 
+推荐：
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %cr, %b %C(bold green)%s'                       #'%cr': committer date, relative 相对日期
+
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci, %b %C(bold green)%s'
 git rev-list --left-right --boundary --pretty=oneline HEAD...origin/master
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h, %C(bold blue)%cn%C(reset), %ci)%s'      --left-right --boundary  HEAD...origin/master
@@ -10579,30 +10585,34 @@ sudo systemd-tmpfiles --prefix=/sys --create
        sudo apt-get -y install tree lrzsz dos2unix build-essential telnet
        
 ``````alias section````
+
+
 ···alias ansible··
 #https://unix.stackexchange.com/questions/243821/run-a-command-in-an-interactive-shell-with-ssh-after-sourcing-bashrc
 #Aliases are not expanded when the shell is not interactive, unless the expand_aliases shell option is set using shopt (see the description of shopt under SHELL BUILTIN COMMANDS below).
-ansible v2 -a "bash -i -c  'close'"
+  ansible v2 -a "bash -i -c  'close'"
+  alias close='sudo shutdown -h now'
+
 ······
 #macos:
 cat >> ~/.bash_profile <<EOF
-alias gitwu='cd /Users/fwu066/Documents/share/git;pwd'
-alias dyn='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg;pwd'
-alias sdk='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk;pwd'
-alias server='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_server;pwd'
-alias deploy='cd /Users/fwu066/Documents/share/repository_air_trace/AT_deployment;pwd'
-alias tmp='cd /Users/fwu066/Documents/share/tmp;pwd'
-alias parts='cd /Users/fwu066/Documents/share/repository_air_trace/AT_partstraceability'
-alias sublime='open -a /Applications/Sublime\ Text.app'
+  alias gitwu='cd /Users/fwu066/Documents/share/git;pwd'
+  alias dyn='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg;pwd'
+  alias sdk='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk;pwd'
+  alias server='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_server;pwd'
+  alias deploy='cd /Users/fwu066/Documents/share/repository_air_trace/AT_deployment;pwd'
+  alias tmp='cd /Users/fwu066/Documents/share/tmp;pwd'
+  alias parts='cd /Users/fwu066/Documents/share/repository_air_trace/AT_partstraceability'
+  alias sublime='open -a /Applications/Sublime\ Text.app'
 EOF
 source ~/.bash_profile
 `````
 
 #ubuntu:
 cat >> ~/.bash_aliases <<EOF
-alias sdk='cd ~/repository_air_trace/AT_node_sdk/'
-alias dyn='cd ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg'
-alias parts='cd ~/repository_air_trace/AT_partstraceability'
+  alias sdk='cd ~/repository_air_trace/AT_node_sdk/'
+  alias dyn='cd ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg'
+  alias parts='cd ~/repository_air_trace/AT_partstraceability'
 EOF
 source ~/.bashrc
 ········
