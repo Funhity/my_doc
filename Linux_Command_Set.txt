@@ -6988,6 +6988,9 @@ git stash drop stash@{0}
 git log salt-office/master --stat
 git log -2
 git log --oneline #simple output
+
+#显示一行变化历史，https://stackoverflow.com/questions/9935379/git-show-all-of-the-various-changes-to-a-single-line-in-a-specified-file-over-t
+git log -L110,110:/lib/client.js. 
 ·········
 git log --graph --oneline --decorate --all 
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h %s %ci %h %b'
@@ -7027,6 +7030,7 @@ git log  origin/master
         git show --pretty="" --name-only bd61ad98
 场景二：列出一个文件中的所有commit
         git blame ./scala-devops/src/main/scala/SimpleApp.scala
+        git log -L10,10:./runEverything.sh #https://stackoverflow.com/questions/9935379/git-show-all-of-the-various-changes-to-a-single-line-in-a-specified-file-over-t
 
 场景三：列出一个文件中的所有commit
 #View the change history of a file using Git versioning
