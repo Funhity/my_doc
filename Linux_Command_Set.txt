@@ -7081,9 +7081,8 @@ git diff HEAD^^ HEAD main.c
 git diff HEAD^^..HEAD -- main.c
 git diff HEAD~2 HEAD -- main.c
 
-
 git diff v0.1 HEAD --name-only
-
+git diff master mongo_auth ./deployScripts/configPrimary.json
 
 #本地文件和本地master中的文件比较，显示修改内容
  git diff master:Linux_Command_Set.txt -- Linux_Command_Set.txt 
@@ -7205,7 +7204,11 @@ git merge-base branch2 branch3
 
 
 ·····git merge file section·······
+#合入其他分支的代码
 #How to "merge" specific files from another branch , http://jasonrudolph.com/blog/2009/02/25/git-tip-how-to-merge-specific-files-from-another-branch/
+#步骤一：
+git checkout master
+#步骤二：
 git checkout source_branch <path/file>...
 git checkout twitter_integration app/models/avatar.rb
 git checkout testCloud   app-docker-compose.yaml runEverything.sh app-docker-compose.dev.yaml
