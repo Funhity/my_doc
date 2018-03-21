@@ -3443,6 +3443,7 @@ true
 bye
 
 mongo -u air_trace_user -p MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
+mongo air_trace --host mongodb_chaincode --username air_trace_user --password MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
 ansible org8-AT -m shell -a "sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getCollection('users').find({})' "
 ··········
 

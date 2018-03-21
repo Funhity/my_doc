@@ -10984,7 +10984,8 @@ Exception
 列出所有函数：
 Cmd+Shift+o (Command + Shift + o (letter o, not zero)) on Mac,
 ctrl+Shift+o on Windows. 
-
+````
+market: Press Ctrl+Shift+X or ⇧⌘X
 
 ````visualstudio json ````json section```````
 格式化 json:
