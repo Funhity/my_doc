@@ -11069,6 +11069,7 @@ sudo apt-get install -y firefox xvfb
 sleep 3
 set +e
 Xvfb :10 -ac &
+#ansible dev -m shell -a "(nohup Xvfb :10 -ac </dev/null >/dev/null 2>&1 ) &"
 set -e
 export DISPLAY=:10
 
