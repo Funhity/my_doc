@@ -6641,7 +6641,7 @@ https://github.com/pwccnhk/AT_partstraceability/invitations
 
 ```````````````ssh-agent section`````
 使用场景一：
-#一个密钥不能对应两个github项目，必须有两个秘钥，两个秘钥用ssh-agent缓存的场景下（用ssh-add -L查看，github desktop 用ssh-agent缓存秘钥）
+#一个密钥不能对应两个github项目，必须有两个秘钥，两个秘钥用ssh-agent缓存的场景下（用ssh-add -L查看，github desktop 只用ssh-agent中存在着的秘钥,切换到ssh方式后也是如此）
 #https://coderwall.com/p/7smjkq/multiple-ssh-keys-for-different-accounts-on-github-or-gitlab,其中用ssh-agent没有必要
 #https://stackoverflow.com/questions/5335197/gits-famous-error-permission-to-git-denied-to-user
 #GitHub shouldn't allow the same SSH public key to be added to two accounts, since when you are using the git@github.com:... URLs it's identifying the user based on the SSH key. 
@@ -6740,6 +6740,8 @@ git config user.name
 A refspec is specified as [+]<src>:<dst>. The <src> parameter is the source branch in the local repository, and the <dst> parameter is the destination branch in the remote repository. The optional + sign is for forcing the remote repository to perform a non-fast-forward update.
 
 ···github section·····
+#github desktop 只用ssh-agent中存在着的秘钥,切换到ssh方式后也是如此
+
 cat .git/config
  url = git@github.com:pwccnhk/AT_node_client.git #ssh地址获取方式（github 证书方式私有源）：先用github提供的ssh clone clone一次项目，在.git/config中获取ssh地址，再在github desktop上设置此ssh地址
 或 
