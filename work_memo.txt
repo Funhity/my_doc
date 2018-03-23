@@ -3444,6 +3444,7 @@ bye
 
 mongo -u air_trace_user -p MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
 mongo air_trace --host mongodb_chaincode --username air_trace_user --password MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
+sudo docker exec -it mongodb_chaincode mongo air_trace --host mongodb_chaincode --username air_trace_user --password MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
 ansible org8-AT -m shell -a "sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getCollection('users').find({})' "
 ··········
 
@@ -3790,8 +3791,11 @@ fileContent: ["$peer0", "$peer1"],
 orgname: "Airline"
 }
 
+ansible 'dev:!dev[0]' -m shell -a "cat ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg/user_input.yaml | y2j| jq '.org_ip'"
+ansible 'dev[0]'      -m shell -a "sed -i.bak 's/13.75.89.20/10.0.2.15/g'  ~/repository_air_trace/AT_node_sdk/deployScripts/import_org_info_from_org2_to_org1.py"
 
-
+ansible 'dev[0]'      -m shell -a "cat ~/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg/user_input.yaml | y2j| jq '.org_ip'"
+ansible 'dev:!dev[0]' -m shell -a "sed -i.bak 's/23.99.110.7/10.0.2.4/g'  ~/repository_air_trace/AT_node_sdk/deployScripts/import_org_info_from_org1_to_org2.py"
 
 ``````blockchain code section````````````````
 #client side 初始化
@@ -3820,6 +3824,8 @@ read installed chaincodes from peer (the channelname here can be any random name
    http://23.102.236.94:4000/chaincodes/mychannel555?username=fsadf&org=org3&peer=peer0&type=installed
 read instantiated chaincodes from a channel
    http://23.102.236.94:4000/chaincodes/mychannel555?username=fsadf&org=org3&peer=peer0&type=instantiated
+
+
 
 
 `````````blockchain command section```````

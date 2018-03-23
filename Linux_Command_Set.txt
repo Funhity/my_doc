@@ -10140,7 +10140,7 @@ Set a key to undefined to remove it
 diff  <(jq -S . network-config-testCloud.json)  <(jq -S . wu.json)  
 meld  <(jq -S . network-config-testCloud.json)  <(jq -S . wu.json)  
 ======json 2 yaml====j2y==
-
+#https://github.com/wildducktheories/y2j
 docker run --rm wildducktheories/y2j y2j.sh installer /usr/local/bin | sudo bash
 /usr/local/bin/{y2j.sh,y2j,j2y,yq}
 echo '{ "foo": [ { "id": 1 } , {"id": 2 }] }' |ssh  'frank@52.191.215.51'  j2y
@@ -10374,7 +10374,7 @@ sudo yum -y install docker-ce
 sudo systemctl start docker
 sudo systemctl enable docker
 sudo docker run hello-world
-```docker compose section`````
+```docker compose section`````docker-compose section``````````
 方法一：
 curl -L https://github.com/docker/compose/releases/download/1.14.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
@@ -10390,7 +10390,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 docker-compose version
 docker-compose ps
 
-````````docker compose network````````
+````````docker compose network``````docker-compose network`````````
 https://docs.docker.com/compose/networking/#use-a-pre-existing-network
 Configure the default network
 
