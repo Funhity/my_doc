@@ -10429,7 +10429,7 @@ docker-compose up -d
 
 docker-compose ps.   #docker sevice
 docker-compose -f mongo-init-user.yaml ps
-
+sudo docker-compose  -f  mongo-init-user.yaml  logs --follow
 docker-compose stop
 sudo docker-compose  restart
 docker-compose -f app-docker-compose.yaml restart
@@ -10597,7 +10597,7 @@ sudo systemd-tmpfiles --prefix=/sys --create
       yum -y install epel-release wget curl telnet lrzsz aria2 openssh-clients openssh-server iotop net-tools lsof tcpdump tree tcpdump zip unzip less dos2unix git iproute bind-utils
 
 #ubuntu:
-       sudo apt-get -y install tree lrzsz dos2unix build-essential telnet
+       sudo apt-get -y install tree lrzsz dos2unix build-essential telnet screen
        
 ``````alias section````
 
