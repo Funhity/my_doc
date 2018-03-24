@@ -10605,7 +10605,7 @@ sudo systemd-tmpfiles --prefix=/sys --create
 ···alias ansible··
 #https://unix.stackexchange.com/questions/243821/run-a-command-in-an-interactive-shell-with-ssh-after-sourcing-bashrc
 #Aliases are not expanded when the shell is not interactive, unless the expand_aliases shell option is set using shopt (see the description of shopt under SHELL BUILTIN COMMANDS below).
-  ansible v2 -a "bash -i -c  'close'"
+  ansible v2 -a "bash -i -c  'close'"   #ansible alias section
   alias close='sudo shutdown -h now'
 
 ······
@@ -10939,8 +10939,17 @@ EOF
 su(?!do).*-c 
 
 
-测试工具：
+在线测试工具：
 https://regex101.com/
+
+#case sensitive
+#https://stackoverflow.com/questions/9655164/regex-ignore-case-sensitivity
+#Use the (?i) and [optionally] (?-i) mode modifiers:
+#实例： 
+ (?i)mac
+ (?i)G[a-b](?-i).*
+ [gG][a-bA-B].*
+
 =====httpd section=======================
 Allow from all
 说明：
@@ -11054,7 +11063,7 @@ wget https://chromedriver.storage.googleapis.com/2.36/chromedriver_mac64.zip
 unzip chromedriver_mac64.zip  
 cp ./chromedriver /usr/local/bin/
 
-``````selenium section`````
+``````selenium section`````selenium install`````
 
 cat > ./selenium_install.sh<<EOF
 set -e
