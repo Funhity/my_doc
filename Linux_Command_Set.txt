@@ -5138,7 +5138,8 @@ sudo apt-get install -y python-pip
        brew services start shadowsocks-libev
      Or, if you don't want/need a background service you can just run:
        /usr/local/opt/shadowsocks-libev/bin/ss-local -c /usr/local/etc/shadowsocks-libev.json -u
-         
+cygwin:
+       在setup中安装python2-pip        
 ```
 sudo yum -y install python
 sudo yum -y install python-setuptools && easy_install pip
@@ -6275,10 +6276,14 @@ cluster-migration-barrier
 #The form SLAVEOF NO ONE will stop replication, turning the server into a MASTER, but will not discard the replication. So, if the old master stops working, it is possible to turn the slave into a master and set the application to use this new master in read/write.
 SLAVEOF NO ONE
 
-====notepad section===
+====notepad section=====editor section====
 column mode:
 Alt + Mouse draggin
 Alt + Shift + Arrow keys
+
+#直接跑到最后一行
+Use the Home key for start of line. Repeated presses of Home toggle between start of line and first non-white-space character on the line. Use the End key for end of line.
+Use Control+Home and Control+End for start and end of buffer.
 ======nfs section============
 步骤一：
 yum -y install nfs-utils nfs-utils-lib
@@ -10592,12 +10597,12 @@ w /sys/devices/platform/i8042/serio1/serio2/sensitivity - - - - 175
 EOF
 sudo systemd-tmpfiles --prefix=/sys --create
 
-====os section ===init section===centos section==os init section===docker init===
+====os section ===init section===centos section==os init section===docker init===os basic===
 #centos:
-      yum -y install epel-release wget curl telnet lrzsz aria2 openssh-clients openssh-server iotop net-tools lsof tcpdump tree tcpdump zip unzip less dos2unix git iproute bind-utils
+      yum -y install epel-release wim wget curl telnet lrzsz aria2 openssh-clients openssh-server iotop net-tools lsof tcpdump tree tcpdump zip unzip less dos2unix git iproute bind-utils
 
 #ubuntu:
-       sudo apt-get -y install tree lrzsz dos2unix build-essential telnet screen
+       sudo apt-get -y install tree lrzsz dos2unix build-essential telnet screen vim
        
 ``````alias section````
 
@@ -10998,7 +11003,7 @@ Exception
      list of Deny rules
 
 `````````````````````````````````````````````
-=====visualstudio section======
+=====visualstudio section======editor section==========
 
 快捷键：command + ／ 增加或去掉注释
        command + p  搜索打开文件
@@ -11166,7 +11171,12 @@ for i in AT*; do cd $i; pwd;echo ==========; git diff;cd -; done
 cat > filename
 enter text
 hit Ctrl-D to stop
-=======================
+========antlr section===============
+步骤一：装ANTLR tool
+        下载：http://www.antlr.org/download/antlr-4.7.1-complete.jar
+步骤二：装Java Target 或者 python Target
+        pip install antlr4-python2-runtime
 
+装plugin
 
 
