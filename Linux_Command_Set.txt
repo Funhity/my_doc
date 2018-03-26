@@ -5139,7 +5139,9 @@ sudo apt-get install -y python-pip
      Or, if you don't want/need a background service you can just run:
        /usr/local/opt/shadowsocks-libev/bin/ss-local -c /usr/local/etc/shadowsocks-libev.json -u
 cygwin:
-       在setup中安装python2-pip        
+       easy_install-2.7 pip
+	   pip install --upgrade pip
+
 ```
 sudo yum -y install python
 sudo yum -y install python-setuptools && easy_install pip
@@ -11175,6 +11177,8 @@ hit Ctrl-D to stop
 步骤一：装ANTLR tool
         下载：http://www.antlr.org/download/antlr-4.7.1-complete.jar
 步骤二：装Java Target 或者 python Target
+        easy_install-2.7 pip  #cygwin
+		pip install --upgrade pip
         pip install antlr4-python2-runtime
 
 装plugin
