@@ -201,7 +201,9 @@ fi
   ansible host* -m shell -a  "virsh list --all| grep -E 'running'  | awk '{print \$2}'   |xargs  -I '{}' sudo virsh domiflist  '{}' " | grep -B 50  "52:54:00:80:c4:07"
   端口：
   nmap -p 80 192.168.1.1
-  ===============  xwindows section  ===============================
+  nmap  -Pn 23.99.110.7  #扫描Azure端口， Azure section
+
+===============  xwindows section  ===============================
 yum groupinstall -y 'Desktop'
 yum groupinstall -y 'X Window System'
 yum groupinstall -y  fonts
@@ -11177,12 +11179,28 @@ enter text
 hit Ctrl-D to stop
 ========antlr section===============
 步骤一：装ANTLR tool
-        下载：http://www.antlr.org/download/antlr-4.7.1-complete.jar
-步骤二：装Java Target 或者 python Target
+        下载：wget http://www.antlr.org/download/antlr-4.7.1-complete.jar
+步骤二：装ANTLR tool可调用的Java Target 或者 python Target
         easy_install-2.7 pip  #cygwin
-		pip install --upgrade pip
+		    pip install --upgrade pip
         pip install antlr4-python2-runtime
 
-装plugin
+步骤三：在IDE中装plugin
+       elipse的plugin 或 visualstudio plugin
+       
+步骤四：编译g4文件
+      方法一：
+      #https://dzone.com/articles/antlr-4-with-python-2-detailed-example
+       antlr4 -Dlanguage=Python2 arithmetic.g4
+      方法二：
+      #https://github.com/AlanHohn/antlr4-python
+       java -Xmx500M -cp <path to ANTLR complete JAR> org.antlr.v4.Tool -Dlanguage=Python2 Hello.g4
+步骤五：写python代码
+       Hello.py中引用步骤四中生成的HelloLexer.py,HelloListener.py,HelloParser.py
+       例如：
+       from HelloLexer import HelloLexer
+       from HelloListener import HelloListener
+       from HelloParser import HelloParser
+
 
 
