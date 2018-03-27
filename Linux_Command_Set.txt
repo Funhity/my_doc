@@ -6665,6 +6665,7 @@ cat  my_doc/.git/config
 
 ssh-add ~/.ssh/id_rsa_commandSet   #github destop 会自动启动一个ssh-agent，把默认的id_rsa文件加入到其中，变成一律用默认的id_rsa来访问github，导致在~/.ssh/config中设置的wu.github.com不起作用
 ``````ssh agent section```````ssh-agent section`````````````
+#一旦使用了ssh-agent,所有和ssh私钥相关的应用，应用将全部使用ssh-agent中缓存的私钥
   ssh-add ~/.ssh/id_rsa
 #https://unix.stackexchange.com/questions/58969/how-to-list-keys-added-to-ssh-agent-with-ssh-add
   ssh-add -l
@@ -11078,7 +11079,8 @@ sudo apt-get install -y firefox xvfb
 sleep 3
 set +e
 Xvfb :10 -ac &
-#ansible dev -m shell -a "(nohup Xvfb :10 -ac </dev/null >/dev/null 2>&1 ) &"
+#display section
+#ansible dev -m shell -a "(nohup Xvfb :10 -ac </dev/null >/dev/null 2>&1 ) &"  
 set -e
 export DISPLAY=:10
 
