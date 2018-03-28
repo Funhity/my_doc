@@ -182,6 +182,9 @@ fi
    sed -i.bak  's/HOSTNAME=.*/HOSTNAME=cloudera-manager/g' /etc/sysconfig/network
 
 =====nmap section==arp section==nc section==address section===ping section====port section====
+
+  apt-get install -yqq inetutils-ping #https://docs.docker.com/engine/userguide/networking/default_network/dockerlinks/
+`````
   sudo yum install nmap -y 
   mac: brew install nmap
 
@@ -5013,7 +5016,7 @@ Host v1
         IdentityFile ~/.ssh/id_rsa
         User frank
         AddKeysToAgent yes
-        UseKeychain yes
+        UseKeychain yes 
 `````
 ssh-agent bash #rsa文件密码自动输入
 ssh-add ~/.ssh/id_rsa
@@ -10620,7 +10623,7 @@ sudo systemd-tmpfiles --prefix=/sys --create
 
 ······
 #macos:
-cat >> ~/.bash_profile <<EOF
+cat > ~/.bash_profile <<EOF
   alias gitwu='cd /Users/fwu066/Documents/share/git;pwd'
   alias dyn='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/testCloudArtifacts/DynamicOrg;pwd'
   alias sdk='cd /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk;pwd'
@@ -10629,6 +10632,8 @@ cat >> ~/.bash_profile <<EOF
   alias tmp='cd /Users/fwu066/Documents/share/tmp;pwd'
   alias parts='cd /Users/fwu066/Documents/share/repository_air_trace/AT_partstraceability'
   alias sublime='open -a /Applications/Sublime\ Text.app'
+  alias antlr4='java -jar /usr/local/lib/antlr-4.7.1-complete.jar'
+  alias grun='java -cp /usr/local/lib/antlr-4.7.1-complete.jar org.antlr.v4.runtime.misc.TestRig' 
 EOF
 source ~/.bash_profile
 `````
@@ -11178,8 +11183,16 @@ cat > filename
 enter text
 hit Ctrl-D to stop
 ========antlr section===============
+export CLASSPATH=".:/usr/local/lib/antlr-4.7.1-complete.jar:$CLASSPATH"
+```````
 步骤一：装ANTLR tool
-        下载：wget http://www.antlr.org/download/antlr-4.7.1-complete.jar
+        下载：
+        wget -O  /usr/local/lib/antlr-4.7.1-complete.jar   http://www.antlr.org/download/antlr-4.7.1-complete.jar
+
+        #https://dzone.com/articles/antlr-4-with-python-2-detailed-example
+        alias antlr4='java -jar /usr/local/lib/antlr-4.7.1-complete.jar'
+        alias grun='java -cp ".:/usr/local/lib/antlr-4.7.1-complete.jar" org.antlr.v4.runtime.misc.TestRig'        
+
 步骤二：装ANTLR tool可调用的Java Target 或者 python Target
         easy_install-2.7 pip  #cygwin
 		    pip install --upgrade pip
@@ -11191,7 +11204,7 @@ hit Ctrl-D to stop
 
 步骤四：编译g4文件
       方法一：
-      #https://dzone.com/articles/antlr-4-with-python-2-detailed-example
+
        antlr4 -Dlanguage=Python2 arithmetic.g4
       方法二：
       #https://github.com/AlanHohn/antlr4-python
@@ -11204,5 +11217,16 @@ hit Ctrl-D to stop
        from HelloListener import HelloListener
        from HelloParser import HelloParser
 
+`````
+自动化步骤
+        easy_install-2.7 pip  #cygwin
+        pip install --upgrade pip
+        pip install antlr4-python2-runtime
 
+        wget -O  /usr/local/lib/antlr-4.7.1-complete.jar   http://www.antlr.org/download/antlr-4.7.1-complete.jar
+        java -jar /usr/local/lib/antlr-4.7.1-complete.jar Hello.g4 #编译g4文件
+        javac *.java
+        java -cp ".:/usr/local/lib/antlr-4.7.1-complete.jar" org.antlr.v4.runtime.misc.TestRig  Hello r -tokens -tree -gui #测试命令
+
+`````
 
