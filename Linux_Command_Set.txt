@@ -11187,7 +11187,8 @@ hit Ctrl-D to stop
 
 步骤三：在IDE中装plugin
        elipse的plugin 或 visualstudio plugin
-       
+       Parse tree显示方法:  Window>Show View>Other, Antlr4>Parse tree #https://stackoverflow.com/questions/23389728/how-can-i-see-the-live-parse-tree-using-antlr4-ide-in-eclipse
+
 步骤四：编译g4文件
       方法一：
       #https://dzone.com/articles/antlr-4-with-python-2-detailed-example
@@ -11195,7 +11196,8 @@ hit Ctrl-D to stop
       方法二：
       #https://github.com/AlanHohn/antlr4-python
        java -Xmx500M -cp <path to ANTLR complete JAR> org.antlr.v4.Tool -Dlanguage=Python2 Hello.g4
-步骤五：写python代码
+
+步骤五：写python代码,https://dzone.com/articles/using-antlr-4-with-python-2
        Hello.py中引用步骤四中生成的HelloLexer.py,HelloListener.py,HelloParser.py
        例如：
        from HelloLexer import HelloLexer
