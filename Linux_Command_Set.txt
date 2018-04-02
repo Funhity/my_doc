@@ -34,7 +34,7 @@ Debian:    /etc/hostname
 ``````````````
 windows:   C:\Windows\System32\drivers\etc
            /etc/hosts
-=====================  DNS section ====================
+`````` DNS section``````````
 /etc/sysconfig/network
 cat /etc/resolv.conf 
 host -v -t a cyberciti.biz
@@ -48,6 +48,18 @@ nslookup <ip>  #根据ip查域名
 指定dns服务器查询dns的ip地址
 nslookup youtube.com 114.114.114.114
 nslookup youtube.com 8.8.8.8
+
+apt-get install dnsutil
+# 从IP找hostname
+# https://stackoverflow.com/questions/24182950/how-to-get-hostname-from-iplinux
+To find a hostname in your local network by IP address you can use:
+nmblookup -A <ip>
+To find a hostname on the internet you could use the host program:
+host <ip>
+Or you can install nbtscan by running:
+sudo apt-get install nbtscan
+And use:
+nbtscan <ip>
 ````````查询authoritative域名服务器```````
 
 方法一：
@@ -1193,6 +1205,10 @@ $ docker run -d \
   registry:2
 用docker inspect 22a00f4b2dbb| less查看/var/lib/registry被mount到哪个目录
 ````````docker log section````
+docker log 所在的路径
+/var/lib/docker/containers/containerId
+
+
 #https://docs.docker.com/engine/admin/logging/overview/#configure-the-default-logging-driver
 #https://docs.docker.com/engine/admin/logging/view_container_logs/
 #docker logs shows the command’s STDOUT and STDERR. 
@@ -1791,11 +1807,11 @@ Jinja -> YAML -> Highstate -> low state -> execution
 
 非root用户运行：http://docs.saltstack.com/en/latest/ref/configuration/nonroot.html
 ``````````````````````salt-master section ````````````````````````
-  
-  yum -y install salt-ssh
-  yum -y install salt-master
-  
-
+centos:
+yum -y install salt-ssh
+yum -y install salt-master
+ubuntu:
+sudo apt-get install -y salt-master
 ####################
 最新方法：
 sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-2.el7.noarch.rpm
@@ -4792,12 +4808,12 @@ echo host_key_checking=false>>/etc/ansible/ansible.cfg
 sudo easy_install pip
 sudo pip install ansible
 sudo wget -O /etc/ansible/ansible.cfg https://raw.githubusercontent.com/ansible/ansible/devel/examples/ansible.cfg
-````````````
+`````ansible ubuntu```````
 #ubuntu:
 #http://docs.ansible.com/ansible/latest/intro_installation.html
 sudo apt-get -y update
 sudo apt-get -y install software-properties-common
-sudo apt-add-repository ppa:ansible/ansible
+yes "" |sudo apt-add-repository ppa:ansible/ansible
 sudo apt-get -y update
 sudo apt-get -y install ansible
 
@@ -5000,7 +5016,7 @@ fast point three times the mouse selects the current row
 
 shift+alt+t 复制session
 
-====ssh section ====
+====ssh section ===key section===host section=
 ssh -vvv root@192.168.129.76
 ssh root@10.0.1.120 -p 2222
 
@@ -5457,8 +5473,14 @@ sudo apt-get install build-essential
   grep -v 'adoring_dubinsky\|NAMES'
   grep -E -v "^[[:space:]]*$"  #去空行
   find / -ipath "*ansible.cfg" 2>&1 | grep -v 'Permission'
+
+····grep lookaround section····
+Ubuntu：
+  grep -P -o "(?<=Host ).*"  hostlist
+
 ··········smartos grep section········      
   ls |  /usr/xpg4/bin/grep  -v -E 'wujunrong_9d58adc6-499b-11e6-9ea7-437c859dc16b.*|ffed9526-999d-11e6-93ae-bfa56012d3b9'
+
 ``````````````````````````````
 
 
@@ -10250,6 +10272,10 @@ sudo docker exec -t cli bash  -c "cd /opt/gopath/src/github.com/hyperledger/fabr
 gunzip chunter-0.7.0p3.gz
 yes 'yes' |sh chunter-0.7.0p3
 
+``````
+模拟输入enter
+yes "" |sudo apt-add-repository ppa:ansible/ansible
+
 ========cygwin clipboard section====cygwin paste==
 安装cygutils-extra
 ssh root@10.0.1.160 cat /data/files/66d919a8-132a-11e7-a7b8-5b99fa122880/manifest.json  > /dev/clipboard
@@ -10633,7 +10659,9 @@ cat > ~/.bash_profile <<EOF
   alias parts='cd /Users/fwu066/Documents/share/repository_air_trace/AT_partstraceability'
   alias sublime='open -a /Applications/Sublime\ Text.app'
   alias antlr4='java -jar /usr/local/lib/antlr-4.7.1-complete.jar'
-  alias grun='java -cp /usr/local/lib/antlr-4.7.1-complete.jar org.antlr.v4.runtime.misc.TestRig' 
+  alias grun='java -cp ".:/usr/local/lib/antlr-4.7.1-complete.jar" org.antlr.v4.runtime.misc.TestRig' 
+  alias sshconfig='cat ~/.ssh/config'
+  alias viansible='vi /etc/ansible/hosts'
 EOF
 source ~/.bash_profile
 `````
@@ -11198,7 +11226,7 @@ export CLASSPATH=".:/usr/local/lib/antlr-4.7.1-complete.jar:$CLASSPATH"
 		    pip install --upgrade pip
         pip install antlr4-python2-runtime
 
-步骤三：在IDE中装plugin
+步骤三：在IDE中装plugin,用IDE编辑g4文件
        elipse的plugin 或 visualstudio plugin
        Parse tree显示方法:  Window>Show View>Other, Antlr4>Parse tree #https://stackoverflow.com/questions/23389728/how-can-i-see-the-live-parse-tree-using-antlr4-ide-in-eclipse
 
@@ -11225,8 +11253,29 @@ export CLASSPATH=".:/usr/local/lib/antlr-4.7.1-complete.jar:$CLASSPATH"
 
         wget -O  /usr/local/lib/antlr-4.7.1-complete.jar   http://www.antlr.org/download/antlr-4.7.1-complete.jar
         java -jar /usr/local/lib/antlr-4.7.1-complete.jar Hello.g4 #编译g4文件
+        export CLASSPATH=".:/usr/local/lib/antlr-4.7.1-complete.jar:$CLASSPATH"  #javac 需要
         javac *.java
         java -cp ".:/usr/local/lib/antlr-4.7.1-complete.jar" org.antlr.v4.runtime.misc.TestRig  Hello r -tokens -tree -gui #测试命令
 
 `````
 
+===azure section====
+#mac os
+https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-macos?view=azure-cli-latest
+brew update && brew install azure-cli
+
+#ubuntu
+步骤一：
+AZ_REPO=$(lsb_release -cs)
+echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
+     sudo tee /etc/apt/sources.list.d/azure-cli.list
+
+sudo apt-key adv --keyserver packages.microsoft.com --recv-keys 52E16F86FEE04B979B07E28DB02C46DF417A0893
+sudo apt-get install apt-transport-https
+sudo apt-get update && sudo apt-get install azure-cli
+步骤二：
+frank@frank-VirtualBox1:~$ az login
+To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code GAP8QYNTB to authenticate.
+
+az vm list
+=====================
