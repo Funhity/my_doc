@@ -4816,6 +4816,7 @@ sudo apt-get -y install software-properties-common
 yes "" |sudo apt-add-repository ppa:ansible/ansible
 sudo apt-get -y update
 sudo apt-get -y install ansible
+sudo sed -i.bak2 's/#host_key_checking = False/host_key_checking = False/' /etc/ansible/ansible.cfg
 
 ``````````````
 /etc/ansible/hosts:
@@ -5025,7 +5026,7 @@ ssh-keygen -t rsa
 ssh-copy-id -i ~/.ssh/id_rsa.pub $remote_user@$remote_host
 ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.56.17 -p222   #ssh key section
 
-````ssh config section````
+```````ssh config section``````UseKeychain section````````
 Host v1
         HostName localhost
         port 2222
@@ -5033,6 +5034,16 @@ Host v1
         User frank
         AddKeysToAgent yes
         UseKeychain yes 
+实例：
+IgnoreUnknown UseKeychain
+Host org1-AT
+        HostName 23.102.236.94
+        IdentityFile /Users/fwu066/Documents/share/repository_air_trace/frank_id_rsa
+        User org1
+        AddKeysToAgent yes
+        UseKeychain yes
+
+
 `````
 ssh-agent bash #rsa文件密码自动输入
 ssh-add ~/.ssh/id_rsa
@@ -5474,9 +5485,12 @@ sudo apt-get install build-essential
   grep -E -v "^[[:space:]]*$"  #去空行
   find / -ipath "*ansible.cfg" 2>&1 | grep -v 'Permission'
 
-····grep lookaround section····
+····grep lookaround section····lookbehind····regular expression section····
 Ubuntu：
-  grep -P -o "(?<=Host ).*"  hostlist
+    grep -P -o "(?<=Host ).*"  hostlist
+  #打印出ansible ping 结果中包含SUCCESS的server，输出案例：dev4 | SUCCESS => {
+    ansible orgs -m ping 2>&1 | grep -P -o  "[^\s]+(?=\s\| SUCCESS)  #\s和空格 都能代表空格
+
 
 ··········smartos grep section········      
   ls |  /usr/xpg4/bin/grep  -v -E 'wujunrong_9d58adc6-499b-11e6-9ea7-437c859dc16b.*|ffed9526-999d-11e6-93ae-bfa56012d3b9'
@@ -7816,9 +7830,11 @@ Jump to end of a line – Command+Right Arrow.
 Jump to beginning of current word – Option+Right Arrow.
 Jump to end of current word – Option+Right Arrow.
 Jump to beginning of all text – Command+Up Arrow.
-
+`````````
 open ~/.ssh/config
-
+`````dialog section``````
+#http://osxdaily.com/2011/03/01/show-hidden-files-in-mac-os-x-dialog-boxes-with-commandshiftperiod/
+Show Hidden Files in Mac OS X Dialog Boxes with Command+Shift+Period
 `````brew section```lrzsz section````
 步骤一
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -10662,6 +10678,7 @@ cat > ~/.bash_profile <<EOF
   alias grun='java -cp ".:/usr/local/lib/antlr-4.7.1-complete.jar" org.antlr.v4.runtime.misc.TestRig' 
   alias sshconfig='cat ~/.ssh/config'
   alias viansible='vi /etc/ansible/hosts'
+  alias gitadd='ssh-add ~/.ssh/id_rsa_commandSet'
 EOF
 source ~/.bash_profile
 `````
