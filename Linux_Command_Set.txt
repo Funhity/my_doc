@@ -10261,7 +10261,7 @@ centos:
 md5sum  sshpass-1.06.tar.gz
 
 
-=====yes section====y section=
+=====yes section====y section====enter section====
 
 Do you want to continue [Y/n]?
 yes Y | command-that-asks-for-input
