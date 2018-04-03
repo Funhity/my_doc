@@ -3085,8 +3085,10 @@ ng serve
 
 
 
-cat > /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/install_basic_package_on_ubuntu.sh <<EOF
+cat > /Users/fwu066/Documents/share/repository_air_trace/AT_node_sdk/install_basic_package_on_ubuntu.sh 
 #https://hyperledger-fabric.readthedocs.io/en/release/prereqs.html
+set -ex
+sudo apt-get purge
 sudo apt-get -y install \
     apt-transport-https \
     ca-certificates \
@@ -3113,17 +3115,158 @@ sudo sh -c "echo 'PATH=\$PATH:\$GOPATH/bin' >>  ~/.profile"
 . ~/.profile
 echo $GOPATH
 #````
-sudo apt-get -y install npm  tree lrzsz
-npm version
-sudo npm install npm@3.10.10 -g
+sudo apt-get -y install tree lrzsz telnet jq screen
+
+
 #````
 #Node.js - version 6.9.x or greater
 #Node.js version 7.x is not supported at this time.
 sudo curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 sudo apt-get -y install nodejs
+npm version
+sudo npm install npm@5.3.0 -g
+
+#ansible 'org12-AT' -m shell -a "cd ~/repository_air_trace/AT_node_client  && pwd && sudo npm rebuild node-sass --force"
+#client side initialize
+mkdir -p ~/repository_air_trace/AT_node_client
+cd ~/repository_air_trace/AT_node_client; \
+npm -v;sudo npm install -g npm@5.3.0; sudo  npm install -g @angular/cli@1.2.0 ;sudo npm install; \
+npm rebuild node-sass --force; 
 
 
+sudo apt-get -y update
+sudo apt-get -y install nginx
+
+sudo tee /etc/nginx/conf.d/air-trace.conf<<'EOF'
+server {
+    error_log /var/log/nginx/error.log info;
+    rewrite_log on;
+    listen       4200 default_server;
+#        listen       [::]:80 default_server;
+    server_name  _;
+    root         /var/www/html;
+    # Load configuration files for the default server block.
+    include /etc/nginx/default.d/*.conf;
+    location / {
+             index  index.html;
+             error_log /var/log/nginx/location-error.log info;
+             root  /var/www/html;
+             #try_files $uri $uri/index.html;
+             autoindex on;
+    }
+    error_page 404 /index.html;
+        location = /index.html {
+              root  /var/www/html;
+              internal;
+    }
+#   error_page 404 /404.html;
+#       location = /40x.html {
+#   }
+    error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+    }
+}
 EOF
+sudo systemctl restart nginx.service
+
+sudo apt install -y python-pip
+pip install --upgrade pip
+sudo pip install jinja2
+sudo apt install -y jq
+
+# cd /home/org13/repository_air_trace/AT_node_client/
+# npm rebuild node-sass --force
+
+
+
+#ubuntu
+echo "=========install selenium ========"
+#https://medium.com/@griggheo/running-selenium-webdriver-tests-using-firefox-headless-mode-on-ubuntu-d32500bb6af2
+sudo apt-get install -y python-pip
+sudo pip install --upgrade pip
+sudo pip install selenium # 或sudo -H pip install selenium
+sudo apt-get install -y firefox xvfb
+sleep 3
+set +e
+Xvfb :10 -ac &
+set -e
+export DISPLAY=:10
+
+#Test that you can run firefox in the foreground with no errors
+#firefox
+#(kill it with Ctrl-C)
+
+
+#firefox
+wget https://github.com/mozilla/geckodriver/releases/download/v0.19.0/geckodriver-v0.19.0-linux64.tar.gz
+sudo sh -c 'tar -x geckodriver -zf  geckodriver-v0.19.0-linux64.tar.gz -O > /usr/bin/geckodriver'
+sudo chmod +x /usr/bin/geckodriver
+
+#ubuntu chrome,https://sites.google.com/a/chromium.org/chromedriver/home
+wget https://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip
+sudo apt-get install  -y unzip
+unzip chromedriver_linux64.zip
+sudo cp chromedriver /usr/bin/
+sudo chmod +x /usr/bin/chromedriver
+
+
+#https://www.linuxbabe.com/ubuntu/install-google-chrome-ubuntu-16-04-lts
+curl -sS -o - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add
+sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
+sudo apt-get -y update
+sudo apt-get -y install google-chrome-stable
+echo "========= selenium installation complete========"
+
+echo "install yaml 2 json and json 2 yaml ... "
+sudo docker run --rm wildducktheories/y2j y2j.sh installer /usr/local/bin | sudo bash
+
+# echo "next step: please set ssh private key and set sshconfig file to let orgs communicate with eachother"
+# set ssh private key and set sshconfig file for communicating with eachother
+# copy public key to server
+# step 1:add new server to ./frank_ssh_config, and comment out UseKeychain yes
+# ansible extra -m copy -a "src=../frank_ssh_config dest=~/repository_air_trace/frank_ssh_config"
+# step 2:
+# ansible  'extra' -m synchronize -a "src=/Users/fwu066/.ssh/id_rsa dest=~/.ssh/id_rsa  " #--become
+# ansible 'extra' -m shell -a "sed 's/\/Users.*d_rsa/~\/repository_air_trace\/frank_id_rsa/g'   ~/repository_air_trace/frank_ssh_config>\$HOME/.ssh/config"
+
+# echo "set up ansible "
+# sudo tee /etc/ansible/hosts <<EOF
+# [orgs]
+# airtrace-demo1
+# airtrace-demo2
+# at-test1
+# at-test2
+# dev1
+# dev2
+# dev3
+# dev4
+# dev5
+# devops
+
+# [demo]
+# AT-demo1
+# AT-demo2
+
+# [dev]
+# v1
+# v2
+
+# [test]
+# test1-AT
+# test2-AT
+
+# [test2]
+# org10-AT
+
+# [deploy]
+# org9-AT
+
+# [office]
+# v1
+# v2
+# EOF
+
+
 
 
 ````````````

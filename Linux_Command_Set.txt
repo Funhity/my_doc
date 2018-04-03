@@ -1834,7 +1834,14 @@ CentOS 6:
 sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el6.noarch.rpm
 centos 7
 sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el7.noarch.rpm
-
+``````````
+ubuntu:
+sudo apt-get install salt-api
+sudo apt-get install salt-cloud
+sudo apt-get install salt-master
+sudo apt-get install salt-minion
+sudo apt-get install salt-ssh
+sudo apt-get install salt-syndic
   
   ``````salt-minion section````
   yum update python  -y
@@ -3911,7 +3918,13 @@ fuser file_name
 fuser /tmp/.X11-unix/X1
 ===================== java section jdk section =====================================
 http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
- 
+``````
+ubuntu:
+#https://www.digitalocean.com/community/tutorials/how-to-install-java-with-apt-get-on-ubuntu-16-04
+    yes ""|sudo add-apt-repository ppa:webupd8team/java
+    sudo apt-get update
+    #需要在终端图形界面中选择确认
+    sudo apt-get install -y oracle-java8-installer
 ```````rpm section````````
 rpm -ivh jdk-8uversion-linux-x64.rpm  #Install the package.
 rpm -Uvh jdk-8uversion-linux-x64.rpm  #To upgrade a package
@@ -8424,8 +8437,8 @@ cut -f 3- -d \|
 
 ==========jenkins section==============
 安装方法一：
-docker pull jenkinsci/jenkins
-docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home  -v /etc/resolv.conf:/etc/resolv.conf jenkins
+sudo docker pull jenkinsci/jenkins
+sudo docker run -d -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home  -v /etc/resolv.conf:/etc/resolv.conf jenkins
 我用过的插件
 1.folder
 2.pipeline
@@ -8436,7 +8449,7 @@ docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home  -v /et
 
 
 ````jenkins jdk````
-  
+
 系统管理->Global Tool Configuration->JDK
 
 ``````
@@ -10288,7 +10301,7 @@ sudo docker exec -t cli bash  -c "cd /opt/gopath/src/github.com/hyperledger/fabr
 gunzip chunter-0.7.0p3.gz
 yes 'yes' |sh chunter-0.7.0p3
 
-``````
+````enter section``
 模拟输入enter
 yes "" |sudo apt-add-repository ppa:ansible/ansible
 
@@ -11295,4 +11308,8 @@ frank@frank-VirtualBox1:~$ az login
 To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code GAP8QYNTB to authenticate.
 
 az vm list
-=====================
+========kafka section=============
+wget http://apache.claz.org/kafka/1.1.0/kafka_2.11-1.1.0.tgz
+tar -xzf kafka_2.11-1.1.0.tgz
+cd kafka_2.11-1.1.0
+tar zxvf jdk-8u161-linux-x64.tar.gz
