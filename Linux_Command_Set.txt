@@ -2005,9 +2005,10 @@ apache:
   <requisite>:
     - <module>: <state id>
   
-  ```````````````salt roster````````salt ssh``````salt grains section`````````````
+  ```````````````salt roster````````salt ssh``````salt grains section`````salt ansible````````
 
   yum -y install salt-ssh
+  sudo apt-get install salt-ssh
 
   打开文件：/etc/salt/roster
   文件包含如下内容：
@@ -2018,7 +2019,7 @@ apache:
    passwd: testing
    
   
-   cloudera-agent3:
+  cloudera-agent3:
    host: 192.168.56.171
    user: root
    passwd: E431e431
@@ -2026,9 +2027,17 @@ apache:
     wu:
       - webserver
     location: '2.14'
+····························
+#用private key连接服务器
+cat /etc/salt/roster
+dev5:
+   host: 13.94.63.20
+   user: dev5
+   priv: /home/frank/.ssh/id_rsa
 
+sudo salt-ssh  --ignore-host-keys  dev5 cmd.run "sudo docker ps"
   
-  `````````````````salt file````````````````````````` 
+`````````````````salt file````````````````````````` 
   salt-key -L
   salt-key -A  #接收所有的key
   salt-key -a keyname
