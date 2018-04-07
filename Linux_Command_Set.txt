@@ -8505,7 +8505,8 @@ curl -u wujunrong:wujunrong http://192.168.31.178:8080/job/wu/build?token=abc
 主页->左边 Credentials -> click the arrow(向下的箭头) next to (global) within the Jenkins scope -> In the box that appears, click Add credentials
                                                                                          -> 选择 scope Global(jenkins,nodes,items,all child items)
                                                                                          -> kind 选择 scret text
-                                                                                         -> 在ID 中输入步骤一的到的github token
+                                                                                         -> 在secret 中输入步骤一的到的github token
+                                                                                         -> 在ID 中起一个名字
 #步骤三:Set Up Jenkins Access to GitHub，https://www.blazemeter.com/blog/how-start-working-github-plugin-jenkins
 主页->左边 Manage Jenkins -> Configure System -> 往下拉选择github区块 -> 在credentials下来式列表选择步骤二中设置的名称
                                                                       在api url中会自动显示https://api.github.com
