@@ -8498,7 +8498,8 @@ curl -u wujunrong:wujunrong http://192.168.31.178:8080/job/wu/build?token=abc
 2.On the page that follows, locate the Developer settings section of the left-hand menu and click Personal access tokens:
 3.Click on Generate new token button on the next page:
 4.In the Token description box, add a description that will allow you to recognize it later:
-5.In the Select scopes section, check the repo:status, repo:public_repo and admin:org_hook boxes. These will allow Jenkins to update commit statuses and to create webhooks for the project. If you are using a private repository, you will need to select the general repo permission instead of the repo subitems:
+5.In the Select scopes section, check the repo:status, repo:public_repo and admin:org_hook boxes. These will allow Jenkins to update commit statuses and to create webhooks for the project. 
+  注意：If you are using a private repository, you will need to select the general repo permission instead of the repo subitems:
 6.When you are finished, click Generate token at the bottom.
 
 #步骤二：on jenkins.Add the GitHub Personal Access Token to Jenkins，https://www.blazemeter.com/blog/how-start-working-github-plugin-jenkins
