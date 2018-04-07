@@ -8511,6 +8511,11 @@ curl -u wujunrong:wujunrong http://192.168.31.178:8080/job/wu/build?token=abc
 #步骤三:Set Up Jenkins Access to GitHub，https://www.blazemeter.com/blog/how-start-working-github-plugin-jenkins
 主页->左边 Manage Jenkins -> Configure System -> 往下拉选择github区块 -> 在credentials下来式列表选择步骤二中设置的名称
                                                                       在api url中会自动显示https://api.github.com
+#步骤四：创建pipeline
+        在Pipeline设置项目中选择Pipeline script from SCM
+        SCM选择git
+        ripository地址填，这里用ssh模式，用 cat .git/config查到：git@github.com:pwccnhk/AT_deployment
+        add credentials 增加用 private key 访问
 
 ==========nexus section=============================
 user/passwd:admin/admin123
