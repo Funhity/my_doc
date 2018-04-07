@@ -6759,6 +6759,7 @@ git rebase在当前分支的head上重新commit，机制不一样
 分支路径消失（git branch到分支上，看到的是master分支上的内容），分支上的commit，被放到master分支上。
 
 ``````````````````````````````
+#git配置文件，包含ssh配置信息
 /etc/gitconfig                                git config  --system 
 ~/.gitconfig or ~/.config/git/config          git config  --global 
 
@@ -8488,6 +8489,27 @@ curl -u wujunrong:wujunrong http://192.168.31.178:8080/job/wu/build?token=abc
 ```````
 重新触发jenkins方法：
 在build history中，选择一次正确的build，再弹出的界面中选择retrigger
+
+````````jenkins github section```````github jenkins section``````
+#步骤一：on github 
+#https://www.digitalocean.com/community/tutorials/how-to-set-up-continuous-integration-pipelines-in-jenkins-on-ubuntu-16-04
+0.login github 
+1.upper-right hand corner and select Settings from the drop down menu
+2.On the page that follows, locate the Developer settings section of the left-hand menu and click Personal access tokens:
+3.Click on Generate new token button on the next page:
+4.In the Token description box, add a description that will allow you to recognize it later:
+5.In the Select scopes section, check the repo:status, repo:public_repo and admin:org_hook boxes. These will allow Jenkins to update commit statuses and to create webhooks for the project. If you are using a private repository, you will need to select the general repo permission instead of the repo subitems:
+6.When you are finished, click Generate token at the bottom.
+
+#步骤二：on jenkins.Add the GitHub Personal Access Token to Jenkins，https://www.blazemeter.com/blog/how-start-working-github-plugin-jenkins
+主页->左边 Credentials -> click the arrow(向下的箭头) next to (global) within the Jenkins scope -> In the box that appears, click Add credentials
+                                                                                         -> 选择 scope Global(jenkins,nodes,items,all child items)
+                                                                                         -> kind 选择 scret text
+                                                                                         -> 在ID 中输入步骤一的到的github token
+#步骤三:Set Up Jenkins Access to GitHub，https://www.blazemeter.com/blog/how-start-working-github-plugin-jenkins
+主页->左边 Manage Jenkins -> Configure System -> 往下拉选择github区块 -> 在credentials下来式列表选择步骤二中设置的名称
+                                                                      在api url中会自动显示https://api.github.com
+
 ==========nexus section=============================
 user/passwd:admin/admin123
 $ sudo cp nexus-2.13.0-01-bundle.tar.gz /usr/local
@@ -10505,7 +10527,7 @@ ln app-docker-compose.yaml docker-compose.yaml
 docker-compose up -d
 
 docker-compose ps.   #docker sevice
-docker-compose -f mongo-init-user.yaml ps
+sudo docker-compose  -f  mongo-init-user.yaml  ps
 sudo docker-compose  -f  mongo-init-user.yaml  logs --follow
 docker-compose stop
 sudo docker-compose  restart
