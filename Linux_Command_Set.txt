@@ -3064,6 +3064,8 @@ sudo vi /etc/sudoers
 root            ALL = (ALL) ALL
 %admin          ALL = (ALL) ALL
 fwu066          ALL = (ALL) NOPASSWD: ALL
+``````
+sudo sh -c 'cp -rp /var/lib/docker/volumes/jenkins_home/_data/*  /var/jenkins_home/'
 ========^ section =====nano section=
 ^ 等同于 control
 nano 保存方法，control X， yes，再选 write to file
@@ -5056,7 +5058,7 @@ Host v1
         User frank
         AddKeysToAgent yes
         UseKeychain yes 
-实例：
+实例：解决Bad configuration option: usekeychain错误
 IgnoreUnknown UseKeychain
 Host org1-AT
         HostName 23.102.236.94
@@ -8446,9 +8448,15 @@ N-M        from N’th to M’th (included) byte, character or field
 cut -f 3- -d \|
 
 ==========jenkins section==============
-安装方法一：
-sudo docker pull jenkinsci/jenkins
+安装方法一：此image已经作废
 sudo docker run -d -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home  -v /etc/resolv.conf:/etc/resolv.conf jenkins
+#迁移，保留用户权限
+sudo sh -c 'cp -rp /var/lib/docker/volumes/jenkins_home/_data/*  /var/jenkins_home/'
+
+#官方网站：
+https://github.com/jenkinsci/docker/blob/master/README.md
+sudo docker run -d --name jenkins -p 8080:8080 -p 50000:50000 -v /var/jenkins_home:/var/jenkins_home jenkins/jenkins:lts
+
 我用过的插件
 1.folder
 2.pipeline
@@ -8460,7 +8468,7 @@ sudo docker run -d -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home
 
 ````jenkins jdk````
 
-系统管理->Global Tool Configuration->JDK
+系统管理(Manage Jenkins)->Global Tool Configuration->JDK
 
 ``````
 安装方法二：
@@ -8517,6 +8525,8 @@ curl -u wujunrong:wujunrong http://192.168.31.178:8080/job/wu/build?token=abc
         ripository地址填，这里用ssh模式，用 cat .git/config查到：git@github.com:pwccnhk/AT_deployment
         add credentials 增加用 private key 访问
 
+#步骤五：
+系统管理(Manage Jenkins)->Global Tool Configuration->Manage Plugins->在available中搜素ansible
 ==========nexus section=============================
 user/passwd:admin/admin123
 $ sudo cp nexus-2.13.0-01-bundle.tar.gz /usr/local
