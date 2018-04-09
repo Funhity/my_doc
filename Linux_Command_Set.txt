@@ -8486,14 +8486,17 @@ sudo docker run -d -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home
 #迁移，保留用户权限
 sudo sh -c 'cp -rp /var/lib/docker/volumes/jenkins_home/_data/*  /var/jenkins_home/'
 
-
+`````jenkins ansible section````
 步骤一：
 #官方网站：
 https://github.com/jenkinsci/docker/blob/master/README.md
+使用jenkins/jenkins:lts
+
 sudo docker run -d --name jenkins -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts
 
-步骤二：在官方docker中安装sudo
-cat > ~/jenkins/Dockerfile
+步骤二：在官方docker中安装sudo(为了能装ansible)
+mkdir -p ~/jenkins
+cat > ~/jenkins/Dockerfile<<EOF
 FROM jenkins/jenkins:lts
 USER root
 RUN apt-get update && \
@@ -8502,8 +8505,12 @@ RUN echo "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 USER jenkins
 EOF
 cd ~/jenkins/
-sudo docker build -t jenkins/jenkins:lts-add-sudo .
-sudo docker run -d --name jenkins -p 8080:8080 -p 50000:50000 -v /var/jenkins_home:/var/jenkins_home jenkins/jenkins:lts-add-sudo
+sudo docker build -t jenkins/jenkins:lts-support-sudo .
+sudo docker run -d --name jenkins -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts-support-sudo
+
+步骤三：
+Manage Jenkins->Plugin Manager->Available->搜索ansible并安装
+Manage Jenkins->Global Tool Configuration->
 
 ````````````````
 我用过的插件
@@ -8572,6 +8579,7 @@ curl -u wujunrong:wujunrong http://192.168.31.178:8080/job/wu/build?token=abc
                                                                       api url：    会自动显示https://api.github.com
                                                                    
 #步骤四：创建pipeline
+        主页右边->New Item->选择pipeline->ok
         在Pipeline设置项目中选择Pipeline script from SCM
         SCM选择git
         ripository地址填，这里用ssh模式，用 cat .git/config查到：git@github.com:pwccnhk/AT_deployment
@@ -8586,6 +8594,10 @@ curl -u wujunrong:wujunrong http://192.168.31.178:8080/job/wu/build?token=abc
 
 `````jenkins user`````
 Manage Jenkins->Manage Users-> Create User
+
+
+
+
 ==========nexus section=============================
 user/passwd:admin/admin123
 $ sudo cp nexus-2.13.0-01-bundle.tar.gz /usr/local
