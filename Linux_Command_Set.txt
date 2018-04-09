@@ -665,7 +665,7 @@ docker run -ti
 
 
 `````docker network section``````
- 
+ DNS:
  host.docker.internal
  gateway.docker.internal.
 
@@ -3074,6 +3074,8 @@ Type: Control a
 Type: q
 Type: 98@a
 =======================  sudo section   ========================   
+"sudo" is a command which allows ordinary users to perform administrative tasks.
+方法一：
 命令：visudo 
 
 //press escape, then type ZZ
@@ -3081,7 +3083,8 @@ Cmnd_Alias SALTCMD = /usr/bin/salt, /usr/bin/salt-key, /usr/bin/salt-run, /usr/b
 wujunrong ALL = NOPASSWD: SALTCMD
 
 或: wujunrong ALL=(ALL) NOPASSWD:ALL
-
+方法二：
+echo "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 ```````
 #mac: 在/etc/sudoers 中增加 fwu066          ALL = (ALL) NOPASSWD: ALL
 sudo vi /etc/sudoers
@@ -3091,6 +3094,10 @@ root            ALL = (ALL) ALL
 fwu066          ALL = (ALL) NOPASSWD: ALL
 ``````
 sudo sh -c 'cp -rp /var/lib/docker/volumes/jenkins_home/_data/*  /var/jenkins_home/'
+
+`````
+sudo sh -c 'echo $HOME'
+/home/devops
 ========^ section =====nano section=
 ^ 等同于 control
 nano 保存方法，control X， yes，再选 write to file
@@ -5577,7 +5584,7 @@ du  --max-depth  0  -ah  /var/lib/docker/volumes/181f8ba1f76f6d6f132ae91f9c9fff2
 ```````````ls section``````````````````````````
 ls -ltr
 # ls -ld /home/jerry
-
+sudo ls -ld /var/lib/docker/volumes/jenkins_home/_data
 ls -lct
 shows the ctime of each file, sorted with the most recent first.
 
@@ -8483,7 +8490,7 @@ sudo sh -c 'cp -rp /var/lib/docker/volumes/jenkins_home/_data/*  /var/jenkins_ho
 步骤一：
 #官方网站：
 https://github.com/jenkinsci/docker/blob/master/README.md
-sudo docker run -d --name jenkins -p 8080:8080 -p 50000:50000 -v /var/jenkins_home:/var/jenkins_home jenkins/jenkins:lts
+sudo docker run -d --name jenkins -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts
 
 步骤二：在官方docker中安装sudo
 cat > ~/jenkins/Dockerfile
@@ -8541,7 +8548,9 @@ curl -u wujunrong:wujunrong http://192.168.31.178:8080/job/wu/build?token=abc
 在build history中，选择一次正确的build，再弹出的界面中选择retrigger
 
 ````````jenkins github section```````github jenkins section``````
-#步骤一：on github 
+说明：有二个Credentials，一个需要在github上配置token，另一个就是常规的配置用ssh key访问github
+
+#步骤一：on github 创建github token
 #https://www.digitalocean.com/community/tutorials/how-to-set-up-continuous-integration-pipelines-in-jenkins-on-ubuntu-16-04
 0.login github 
 1.upper-right hand corner and select Settings from the drop down menu
@@ -8559,16 +8568,24 @@ curl -u wujunrong:wujunrong http://192.168.31.178:8080/job/wu/build?token=abc
                                                                                          -> 在secret 中输入步骤一的到的github token
                                                                                          -> 在ID 中起一个名字
 #步骤三:Set Up Jenkins Access to GitHub，https://www.blazemeter.com/blog/how-start-working-github-plugin-jenkins
-主页->左边 Manage Jenkins -> Configure System -> 往下拉选择github区块 -> 在credentials下来式列表选择步骤二中设置的名称
-                                                                      在api url中会自动显示https://api.github.com
+主页->左边 Manage Jenkins -> Configure System -> 往下拉选择github区块 -> credentials：下拉式列表选择步骤二中设置的名称
+                                                                      api url：    会自动显示https://api.github.com
+                                                                   
 #步骤四：创建pipeline
         在Pipeline设置项目中选择Pipeline script from SCM
         SCM选择git
         ripository地址填，这里用ssh模式，用 cat .git/config查到：git@github.com:pwccnhk/AT_deployment
         add credentials 增加用 private key 访问
-
+                                                                   -> Add Credentials
+                                                                      Kind:SSH username with private key
+                                                                      username:git
+                                                                      Private Key:Enter directly
 #步骤五：
 系统管理(Manage Jenkins)->Global Tool Configuration->Manage Plugins->在available中搜素ansible
+
+
+`````jenkins user`````
+Manage Jenkins->Manage Users-> Create User
 ==========nexus section=============================
 user/passwd:admin/admin123
 $ sudo cp nexus-2.13.0-01-bundle.tar.gz /usr/local
