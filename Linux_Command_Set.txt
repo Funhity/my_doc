@@ -889,6 +889,22 @@ sudo system-docker run -d --net=host --name busydash husseingalal/busydash
 sudo docker build -t ouruser/sinatra:v2 .
      docker build -f /path/to/a/Dockerfile .
 
+
+······
+You can run your container as root - and install via apt-get, install as part of build steps via jenkins tool installers, or you can create your own Dockerfile to customise, for example:
+
+FROM jenkins/jenkins:lts
+# if we want to install via apt
+USER root
+RUN apt-get update && apt-get install -y ruby make more-thing-here
+# drop back to the regular jenkins user - good practice
+USER jenkins
+··············
+
+
+
+
+
 ``````docker image section```````
 docker images
 docker rmi training/sinatra
@@ -8448,15 +8464,32 @@ N-M        from N’th to M’th (included) byte, character or field
 cut -f 3- -d \|
 
 ==========jenkins section==============
-安装方法一：此image已经作废
+安装方法：
+注意：此image已经作废
 sudo docker run -d -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home  -v /etc/resolv.conf:/etc/resolv.conf jenkins
 #迁移，保留用户权限
 sudo sh -c 'cp -rp /var/lib/docker/volumes/jenkins_home/_data/*  /var/jenkins_home/'
 
+
+步骤一：
 #官方网站：
 https://github.com/jenkinsci/docker/blob/master/README.md
 sudo docker run -d --name jenkins -p 8080:8080 -p 50000:50000 -v /var/jenkins_home:/var/jenkins_home jenkins/jenkins:lts
 
+步骤二：在官方docker中安装sudo
+cat > ~/jenkins/Dockerfile
+FROM jenkins/jenkins:lts
+USER root
+RUN apt-get update && \
+      apt-get -y install sudo
+RUN echo "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+USER jenkins
+EOF
+cd ~/jenkins/
+sudo docker build -t jenkins/jenkins:lts-add-sudo .
+sudo docker run -d --name jenkins -p 8080:8080 -p 50000:50000 -v /var/jenkins_home:/var/jenkins_home jenkins/jenkins:lts-add-sudo
+
+````````````````
 我用过的插件
 1.folder
 2.pipeline
