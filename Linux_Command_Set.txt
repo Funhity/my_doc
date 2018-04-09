@@ -211,12 +211,12 @@ fi
   nmap -sS -q -p 4505-4506 salt.master.ip.addr
   
   nmap  192.168.56.1
-  nmap -T4 -A -v 10.75.1.15
+  nmap -T4 -A -v 10.75.1.15 #详细扫描
   nmap -sP 192.168.56.0/24
   ansible host* -m shell -a  "virsh list --all| grep -E 'running'  | awk '{print \$2}'   |xargs  -I '{}' sudo virsh domiflist  '{}' " | grep -B 50  "52:54:00:80:c4:07"
   端口：
   nmap -p 80 192.168.1.1
-  nmap  -Pn 23.99.110.7  #扫描Azure端口， Azure section
+  nmap  -Pn 23.99.110.7     #扫描Azure端口， Azure section
 
 ===============  xwindows section  ===============================
 yum groupinstall -y 'Desktop'
@@ -601,7 +601,7 @@ standard_conforming_strings = off
  
 =======ubuntu docker section=======
 
-sudo apt-get install \
+sudo apt-get install -y \
     apt-transport-https \
     ca-certificates \
     curl \
@@ -614,8 +614,8 @@ sudo add-apt-repository \
    $(lsb_release -cs) \
    stable"
 
-sudo apt-get update
-sudo apt-get install docker-ce
+sudo apt-get -y update
+sudo apt-get install -y docker-ce
 ````````````````````
 #查询库中包含的版本：
 apt-cache madison docker-ce
@@ -665,6 +665,10 @@ docker run -ti
 
 
 `````docker network section``````
+ 
+ host.docker.internal
+ gateway.docker.internal.
+
 
  docker service inspect --pretty centos7_centos7-docker-swarm | grep -i networks
 
@@ -757,6 +761,11 @@ docker network inspect my-multihost-network|less
 docker service create   --name centos7-swarm   --network my-multihost-network --replicas 2  10.0.1.198:5000/docker-swarm/centos7:20171030
 
 .......docker load balance section·······docker dns section·····
+#https://docs.docker.com/docker-for-mac/networking/#use-cases-and-workarounds
+ host.docker.internal
+ gateway.docker.internal.
+
+
 #https://sreeninet.wordpress.com/2016/07/29/service-discovery-and-load-balancing-internals-in-docker-1-12/
 方式一：DNS based load balancing
 DNS based  load balancing:   docker service create --endpoint-mode dnsrr --name vote   --network overlay1 --replicas 2              instavote/vote
@@ -2886,7 +2895,7 @@ ss -napt | grep 3260
 
 mac:
 #https://apple.stackexchange.com/questions/117644/how-can-i-list-my-open-network-ports-with-netstat
-sudo lsof -PiTCP -sTCP:LISTEN
+sudo lsof -PiTCP -sTCP:LISTEN       #测试有效
 netstat -ap tcp | grep -i "listen"
 
 lsof -n -i4TCP:$PORT | grep LISTEN
