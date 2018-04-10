@@ -4864,7 +4864,7 @@ echo host_key_checking=false>>/etc/ansible/ansible.cfg
 sudo easy_install pip
 sudo pip install ansible
 sudo wget -O /etc/ansible/ansible.cfg https://raw.githubusercontent.com/ansible/ansible/devel/examples/ansible.cfg
-`````ansible ubuntu```````
+`````ansible ubuntu section```````
 #ubuntu:
 #http://docs.ansible.com/ansible/latest/intro_installation.html
 sudo apt-get -y update
@@ -4873,7 +4873,8 @@ yes "" |sudo apt-add-repository ppa:ansible/ansible
 sudo apt-get -y update
 sudo apt-get -y install ansible
 sudo sed -i.bak2 's/#host_key_checking = False/host_key_checking = False/' /etc/ansible/ansible.cfg
-
+检查：
+cat  /etc/ansible/ansible.cfg | grep host_key_checking
 ``````````````
 /etc/ansible/hosts:
 
@@ -5504,7 +5505,28 @@ ip route  add 192.168.38.0/255.255.255.0  via 172.16.15.253  dev eth1
 git clone --branch 5.2.1  https://git.strongswan.org/strongswan.git
 sudo yum -y groupinstall  "Development Tools"
 sudo apt-get install build-essential
-``````grep section````````````````
+``````grep section``````
+
+grep aaa  <( cat << EOF
+> aaa
+> bbb
+> EOF
+> )
+aaa
+
+说明：
+> aaa
+> bbb
+是要搜索的内容
+
+> EOF
+> )
+是终止符号
+
+实例：
+grep -P -o "(?<=Host ).*"     <( cat << EOF
+·······················
+
   #忽略大小写
   grep -inr "ramesh" *     #exclude case from a grep to make it not case sensitive – simply add -i
 
@@ -10337,7 +10359,7 @@ centos:
 sudo yum  -y  install epel-release 
 yum install -y jq
 
-```jq pretty section````
+```````jq pretty section````jq standard input section`````
 #jq pretty print
 #https://stackoverflow.com/questions/352098/how-can-i-pretty-print-json-in-a-unix-shell-script
 $ jq . <<< '{ "foo": "lorem", "bar": "ipsum" }'
