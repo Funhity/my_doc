@@ -10369,7 +10369,7 @@ $ jq . <<< '{ "foo": "lorem", "bar": "ipsum" }'
 }
 
 ```````````````
-
+基本：
 cat xxx.txt|jq  '.'
 
 example1:
@@ -10386,7 +10386,15 @@ jq -s '[.[]."network-config"[]]'  network-config-DynamicOrg..org14.json  network
 
 jq '.["network-config"]'  network-config-DynamicOrg..org14.json  network-config-DynamicOrg.json
 
+
+az vm list | jq 'keys'
+az vm list | jq '.[0] | keys'
+az vm list | jq '.[1] | .name'
+az vm list | jq '.[1] | .osProfile'
+
+
 ````
+组合：
 #merge,https://stackoverflow.com/questions/19529688/how-to-merge-2-json-file-using-jq
        https://stedolan.github.io/jq/manual/#Basicfilters
 
@@ -11449,6 +11457,10 @@ frank@frank-VirtualBox1:~$ az login
 To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code GAP8QYNTB to authenticate.
 
 az vm list
+az vm list | jq 'keys'
+az vm list | jq '.[0] | keys'
+az vm list | jq '.[1] | .name'
+az vm list | jq '.[1] | .osProfile'
 ========kafka section=============
 wget http://apache.claz.org/kafka/1.1.0/kafka_2.11-1.1.0.tgz
 tar -xzf kafka_2.11-1.1.0.tgz
