@@ -5316,6 +5316,8 @@ ps -eo pid,lstart,cmd | grep 91209
 ps -ef --sort=start_time
 #process 25217 运行了多少时间
 ps -o etime= -p "25217"
+
+pstree
 ============= 翻墙 ================
 
 lantern :sudo apt-get install libappindicator3-1
@@ -5609,6 +5611,8 @@ ls -ltr
 sudo ls -ld /var/lib/docker/volumes/jenkins_home/_data
 ls -lct
 shows the ctime of each file, sorted with the most recent first.
+
+ls -l {b*,c*,*est*}ls -l {b*,c*,*est*}
 
 ```file section````````
 stat ./v6_tomcat_webservice01-catalina.out
@@ -10454,7 +10458,10 @@ yes 'yes' |sh chunter-0.7.0p3
 模拟输入enter
 yes "" |sudo apt-add-repository ppa:ansible/ansible
 
-========cygwin clipboard section====cygwin paste==
+======== clipboard section======
+
+```````cygwin paste`````
+cygwin:
 安装cygutils-extra
 ssh root@10.0.1.160 cat /data/files/66d919a8-132a-11e7-a7b8-5b99fa122880/manifest.json  > /dev/clipboard
 
@@ -10463,6 +10470,9 @@ cat /dev/clipboard            # Pastes clipboard to stdout
 
 echo foobar > /dev/clipboard  # Puts "foobar\n" on the clipboard
 cat /dev/clipboard  # Pastes clipboard to stdout
+`````
+mac:
+cat import_org_info_from_org2_to_org1.py | pbcopy
 
 ======reboot section=======
 pkill shutdown
