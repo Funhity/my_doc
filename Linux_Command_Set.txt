@@ -5074,6 +5074,21 @@ fast point three times the mouse selects the current row
 
 shift+alt+t 复制session
 
+······xshell proxy section···········
+#https://www.netsarang.com/forum/xshell/1573/Dynamic_SOCKS_proxy,_like_Putty
+To use Xshell as SOCKS proxy server, here is how you can create a Dynamic (SOCKS4/5) tunnel:
+
+1. Open Xshell and open session properties
+2. Select SSH > Tunneling
+3. Click the Add button
+Result: The Forwarding Rule dialog box opens
+4. For Type (Direction), select Dynamic (SOCKS4/5)
+5. Enter 1080 in the Listen port field
+6. Click OK to save the changes
+
+Now, on network applications, set Proxy to local 1080 or (127.0.0.1:1080 in some cases).
+
+---
 ====ssh section ===key section===host section=
 ssh -vvv root@192.168.129.76
 ssh root@10.0.1.120 -p 2222
@@ -5190,13 +5205,13 @@ ssh -R     3389:127.0.0.1:3389   frank@139.219.100.43   #在公司机器上运�
 
 ssh proxy on ubuntu:
 步驟一：安裝proxychains  #proxychains section，使用本地端口代理翻墙
-sudo apt-get install proxychains
+sudo apt-get install -y proxychains
 turn off proxy_dns or use 127.0.0.1 as your app server address instead of localhost.
 sudo vi /etc/proxychains.conf
 edit the port number on the last line
 socks4  127.0.0.1 8000
 
-步驟二：配置ssh
+步驟二：配置ssh代理服务器
 sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.factory-defaults
 in /etc/ssh/sshd_config on the server, AllowTcpForwarding is enabled, as like below.
 Code:
@@ -5204,11 +5219,11 @@ AllowTcpForwarding yes
 
 service sshd restart
 或sudo systemctl restart ssh
-步驟三：
+步驟三：启动代理服务器
 ssh -D 1080 root@139.196.102.159
 
 打开firefox选项：Proxy DNS when using SOCKS v5
-步骤四 
+步骤四 ：客户端使用方法
 #使用代理安装程序,注意用proxychains开头
 proxychains apt-get -y install docker-ce 
 
@@ -6664,6 +6679,8 @@ end1
 
 
 ====sed section awk section========
+#http://www.grymoire.com/Unix/Sed.html#uh-5
+
 awk '{print $NF}' #获得最后一列 
 
 ````````
@@ -6679,7 +6696,7 @@ sed '52!d' # method 2
 sed '52q;d' # method 3, efficient on large files 
 
 
-sed -e "s/stage_/\/stage/g" -e "s/v6_webservice/\/webservice\//g"
+sed -e "s/stage_/\/stage/g" -e "s/v6_webservice/\/webservice\//g"  #说明：s是command，是替换命令，g是Sed Pattern Flags，可以理解为替换命令的参数
 删除最后一行：
 sed -i.bak  '$d' file
 删除第四行
