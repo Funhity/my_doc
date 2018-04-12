@@ -5363,6 +5363,8 @@ rsync -avzh  /var/www/html/cm5   root@192.168.38.119:/var/www/html/centos6-cm5.5
 rsync -avzh 192.168.1.148:/home/frank/docker-share/  ./   --checksum
 --checksum also modifies the file-times-and-sizes heuristic, but here it ignores times and examines only sizes. Files on the source and destination sides that differ in size are transferred, since they are obviously different. Files with the same size are checksummed (with MD5 in rsync version 3.0.0+, or with MD4 in earlier versions), and those found to have differing sums are also transferred.
 
+#https://superuser.com/questions/138893/scp-to-remote-server-with-sudo
+rsync  -avzh --rsync-path="sudo rsync"  devops:/var/lib/docker/volumes/jenkins_home/_data/  /Users/fwu066/Documents/share/tmp/jenkins-backup/
 `````rsync template`````
 file=repository_air_trace/AT_node_server/prepareDB.js
 rsync -zvhz   /Users/fwu066/Documents/share/$file org1-AT:~/$file
@@ -6680,6 +6682,7 @@ end1
 
 ====sed section awk section========
 #http://www.grymoire.com/Unix/Sed.html#uh-5
+理解：s是command，是替换命令，g是Sed Pattern Flags，可以理解为替换命令的参数,限制第几行是restriction command
 
 awk '{print $NF}' #获得最后一列 
 
@@ -6696,7 +6699,7 @@ sed '52!d' # method 2
 sed '52q;d' # method 3, efficient on large files 
 
 
-sed -e "s/stage_/\/stage/g" -e "s/v6_webservice/\/webservice\//g"  #说明：s是command，是替换命令，g是Sed Pattern Flags，可以理解为替换命令的参数
+sed -e "s/stage_/\/stage/g" -e "s/v6_webservice/\/webservice\//g"  #说明：s是command，是替换命令，g是Sed Pattern Flags，可以理解为替换命令的参数,限制第几行是restriction command
 删除最后一行：
 sed -i.bak  '$d' file
 删除第四行
@@ -6730,6 +6733,7 @@ That way only the first block will be shown.
 
 abc=`sudo docker exec mongodb_chaincode mongo localhost:27017        --eval 'db.getSiblingDB("air_trace_dev").getCollection("organizations").find({},{admin:2})' `;printf "$abc"|sed -n '/0,END CERTIFICATE/!  { /-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/p }'
 
+sed  -n '/sync orderer certifi/,/run remote script on orgs without orderer/p '  dynOrgRunEverything.sh
 `````sed insert````
 在包含mysqld的那行前面添加default-character-set=utf8
 sed -i.bak2 '/mysqld/ i \
@@ -8529,6 +8533,7 @@ sudo docker run -d -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home
 #迁移，保留用户权限
 sudo sh -c 'cp -rp /var/lib/docker/volumes/jenkins_home/_data/*  /var/jenkins_home/'
 
+sudo docker volume inspect jenkins_home
 `````jenkins ansible section````
 步骤一：
 #官方网站：
@@ -10894,6 +10899,7 @@ cat > ./ansible-shell-command.yaml <<AnsibleEOF
           alias trace='cd ~/repository_air_trace/AT_partstraceability'
           alias init='cd ~/repository_air_trace/AT_node_sdk/deployScripts'
           alias deploy='cd ~/repository_air_trace/AT_deployment'
+          alias server='cd ~/repository_air_trace/AT_node_server'
           EOF
           source ~/.bashrc        
 
