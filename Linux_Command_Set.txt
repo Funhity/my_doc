@@ -3042,8 +3042,9 @@ man -i virsh
 ````less section```````
  #忽略大小写
  less -i dataset_install_2017-06-07-19_57.log
-
-
+  
+ #显示行号
+ less -N
 `````````````````````
 column mode: CTRL-V
 Ctrl + V to go into column mode.
@@ -3979,6 +3980,9 @@ rpm -qa| grep jdk
 rpm -qf `which scp`
 rpm -q jdk  #remove jdk
 ``````````tar section```````
+#https://www.tecmint.com/18-tar-command-examples-in-linux/
+tar cvzf MyImages-14-09-12.tar.gz /home/MyImages
+tar cvzf MyImages-14-09-12.tgz /home/MyImages
 
 tar   zxvf jdk-8uversion-linux-x64.tar.gz
 tar   -zcf config_file_credit.tar   ./test_v6_mobile/   ./stage_v6_mobile/ 
@@ -6723,6 +6727,17 @@ echo "abc 123" | sed 's/[0-9]\+/& &/'  #the special character "&." It correspond
 
 curl -s  http://pkgs.briphan.com/pkgsrc-fifo.bak/pkg/rel/ |  grep sniffle-0.7.0  | sed -r  's/.*(snif.*0.7.0.*.tgz).*/\1/' #curl section
 curl -s  http://pkgs.briphan.com/pkgsrc-fifo.bak/pkg/rel/ |  sed -r -n 's/.*(fifo.*howl.*0.7.0.*.tgz).*/\1/p'
+..
+jenkinsfile: 
+
+               sed 's/extra/dev/g' deployWithDynConf/dynOrgRunEverything.sh | sed  -n  '/start setting up blockchian data/,/setting up blockchian data finished/p ' |sed  's/~\/repository_air_trace\(.*import_org_info_from_org.*\)/\/var\/jenkins_home\/workspace\/airtrace\1/' >./AT_node_sdk/devdeploy.sh && chmod +x  ./AT_node_sdk/devdeploy.sh &&  cd ./AT_node_sdk && ./devdeploy.sh 
+
+        stage('set up blockchian data') {
+            steps {
+               sh " sed 's/extra/dev/g' deployWithDynConf/dynOrgRunEverything.sh | sed  -n  '/start setting up blockchian data/,/setting up blockchian data finished/p ' |sed  's/~\\/repository_air_trace\\(.*import_org_info_from_org.*\\)/\\/var\\/jenkins_home\\/workspace\\/airtrace\\1/' >./AT_node_sdk/devdeploy.sh && chmod +x  ./AT_node_sdk/devdeploy.sh &&  cd ./AT_node_sdk && ./devdeploy.sh "
+            }
+        }
+
 
 ·····sed range section···
 
@@ -6787,6 +6802,8 @@ git commit -a -m "about github"
 
  git remote set-url origin git+ssh://git@github.com/webloginwu/code_exampl
  git remote set-url origin  git+ssh://git@github.com/webloginwu/my_doc.git
+
+ git branch --set-upstream-to=origin/kafaka_viki  kafaka_viki
 
 https://github.com/pwccnhk/AT_partstraceability/invitations
 
@@ -7103,9 +7120,13 @@ git add CONTRIBUTING.md
 步骤3.  git add CONTRIBUTING.md  #think of it more as “add this content to the next commit” rather than “add this file to the project”.
 步骤4.  此时用git commit修改会进入本地repository
 ````````````````````````````
+git 回退：
 #revert changes made to your working copy, https://stackoverflow.com/questions/1146973/how-do-i-revert-all-local-changes-in-git-managed-project-to-previous-state
 git checkout .
 git reset HEAD <file>..." to unstage)
+
+#
+git status will tell you exactly what you need to do
 
 ```````
 #Git - List all files currently under source control?列出被git管理的文件：
@@ -7460,7 +7481,9 @@ git rev-list -n 5 HEAD -- <file_path>      #Find the last commit that affected t
 
 git-bisect - Use binary search to find the commit that introduced a bug
 
-`````git delete section````
+`````git delete section````git recover section````
+具体怎么操作git status一般会有提示
+场景一：
 #恢复已经删除并且已经commit的文件，https://stackoverflow.com/questions/953481/find-and-restore-a-deleted-file-in-a-git-repository
 git rev-list -n 1 HEAD -- ./testCloudArtifacts/      #查到删除文件的commit id
 git shwo commit_id | grep -C 3 "deleted file mode"   #确认被删除的文件
@@ -7468,6 +7491,12 @@ git checkout  commit_id^ ./testCloudArtifacts/DynamicOrg/network-config-DynamicO
 #一键式：
 git rev-list -n 1 HEAD -- ./testCloudArtifacts/ |xargs -I{} git show {} |  grep -C 3 "deleted file mode"
 git rev-list -n 1 HEAD -- ./testCloudArtifacts/ |xargs -I{} git checkout  {}^ ./testCloudArtifacts/DynamicOrg/network-config-DynamicOrg.j2
+
+场景二：
+git revert ab76457
+
+场景三：
+git cherry-pick --abort
 ===========zabbix section===========
 zabbix_server --version
 zabbix-server-mysql.x86_64 : Zabbix server compiled to use MySQL database
