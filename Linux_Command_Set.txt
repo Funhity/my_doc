@@ -6943,7 +6943,7 @@ cat .git/config
   code you’re currently working on.
   git pull = git fetch;git merge ( 把remote中的origin/master merge到当前分支）
 
-
+  GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" git pull  #host key section
   git remote
   git remote -v  # 显示当前所有remote名称，及其对应的地址       
                  # Git's default remote name is "origin"
@@ -8556,6 +8556,9 @@ N-M        from N’th to M’th (included) byte, character or field
 cut -f 3- -d \|
 
 ==========jenkins section==============
+密码:
+cat /var/jenkins_home/secrets/initialAdminPassword
+
 安装方法：
 注意：此image已经作废
 sudo docker run -d -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home  -v /etc/resolv.conf:/etc/resolv.conf jenkins
