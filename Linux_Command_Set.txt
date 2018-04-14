@@ -6942,8 +6942,10 @@ cat .git/config
   server you originally cloned from and automatically tries to merge it into the
   code you’re currently working on.
   git pull = git fetch;git merge ( 把remote中的origin/master merge到当前分支）
-
+  
+  #https://stackoverflow.com/questions/7772190/passing-ssh-options-to-git-clone
   GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" git pull  #host key section
+  
   git remote
   git remote -v  # 显示当前所有remote名称，及其对应的地址       
                  # Git's default remote name is "origin"
