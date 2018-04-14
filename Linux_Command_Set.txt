@@ -8678,7 +8678,18 @@ curl -u wujunrong:wujunrong http://192.168.31.178:8080/job/wu/build?token=abc
 Manage Jenkins->Manage Users-> Create User
 
 
-
+```````jenkinsfile section``````pipeline section`````
+注意： sh 命令行中已经用了双引号，在双引号中不能再有双引号，必须用单引号
+pipeline { 
+    agent any 
+    stages {
+        stage('2.Update AT_node_client Module'){
+            steps {
+                sh "ansible 'dev' -m shell -a 'cd ~/repository_air_trace/AT_node_sdk/ && git status ;git branch --set-upstream-to=origin/master master; git checkout . ; GIT_SSH_COMMAND='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' git pull' "
+            }
+        }
+    }
+}
 
 ==========nexus section=============================
 user/passwd:admin/admin123
@@ -11535,3 +11546,6 @@ wget http://apache.claz.org/kafka/1.1.0/kafka_2.11-1.1.0.tgz
 tar -xzf kafka_2.11-1.1.0.tgz
 cd kafka_2.11-1.1.0
 tar zxvf jdk-8u161-linux-x64.tar.gz
+
+
+
