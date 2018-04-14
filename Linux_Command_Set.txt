@@ -6727,7 +6727,7 @@ echo "abc 123" | sed 's/[0-9]\+/& &/'  #the special character "&." It correspond
 
 curl -s  http://pkgs.briphan.com/pkgsrc-fifo.bak/pkg/rel/ |  grep sniffle-0.7.0  | sed -r  's/.*(snif.*0.7.0.*.tgz).*/\1/' #curl section
 curl -s  http://pkgs.briphan.com/pkgsrc-fifo.bak/pkg/rel/ |  sed -r -n 's/.*(fifo.*howl.*0.7.0.*.tgz).*/\1/p'
-..
+..jenkinsfile sed seciton····
 jenkinsfile: 
 
                sed 's/extra/dev/g' deployWithDynConf/dynOrgRunEverything.sh | sed  -n  '/start setting up blockchian data/,/setting up blockchian data finished/p ' |sed  's/~\/repository_air_trace\(.*import_org_info_from_org.*\)/\/var\/jenkins_home\/workspace\/airtrace\1/' >./AT_node_sdk/devdeploy.sh && chmod +x  ./AT_node_sdk/devdeploy.sh &&  cd ./AT_node_sdk && ./devdeploy.sh 
@@ -7174,7 +7174,8 @@ git log -2
 git log --oneline #simple output
 
 #显示一行变化历史，https://stackoverflow.com/questions/9935379/git-show-all-of-the-various-changes-to-a-single-line-in-a-specified-file-over-t
-git log -L110,110:/lib/client.js. 
+git log -L110,110:/lib/client.js
+git log -L196,196:./Jenkinsfile  #git line section
 ·········
 git log --graph --oneline --decorate --all 
 git log --graph --oneline --decorate --all  --date=iso --pretty=tformat:'%h %s %ci %h %b'
@@ -8685,9 +8686,20 @@ pipeline {
     stages {
         stage('2.Update AT_node_client Module'){
             steps {
-                sh "ansible 'dev' -m shell -a 'cd ~/repository_air_trace/AT_node_sdk/ && git status ;git branch --set-upstream-to=origin/master master; git checkout . ; GIT_SSH_COMMAND='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' git pull' "
+                sh "ansible 'dev' -m shell -a 'cd ~/repository_air_trace/AT_node_sdk/ && git status ;git branch --set-upstream-to=origin/master master; git checkout . ; GIT_SSH_COMMAND=\"ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no\" git pull' "
             }
         }
+        stage('set up blockchian data') {
+            steps {
+               //在命令行中只需：  sed 's/extra/dev/g' deployWithDynConf/dynOrgRunEverything.sh | sed  -n  '/start setting up blockchian data/,/setting up blockchian data finished/p ' |sed  's/~\/repository_air_trace\(.*import_org_info_from_org.*\)/\/var\/jenkins_home\/workspace\/airtrace\1/' >./AT_node_sdk/devdeploy.sh && chmod +x  ./AT_node_sdk/devdeploy.sh &&  cd ./AT_node_sdk && ./devdeploy.sh 
+
+
+               sh " sed 's/extra/dev/g' deployWithDynConf/dynOrgRunEverything.sh | sed  -n  '/start setting up blockchian data/,/setting up blockchian data finished/p ' |sed  's/~\\/repository_air_trace\\(.*import_org_info_from_org.*\\)/\\/var\\/jenkins_home\\/workspace\\/airtrace\\1/' >./AT_node_sdk/devdeploy.sh && chmod +x  ./AT_node_sdk/devdeploy.sh &&  cd ./AT_node_sdk && ./devdeploy.sh "
+            }
+        stage('set up blockchian data') {
+            steps {
+               sh " sed 's/extra/dev/g' deployWithDynConf/dynOrgRunEverything.sh | sed  -n  '/start setting up blockchian data/,/setting up blockchian data finished/p ' |sed  's/~\\/repository_air_trace\\(.*import_org_info_from_org.*\\)/\\/var\\/jenkins_home\\/workspace\\/airtrace\\1/' >./AT_node_sdk/devdeploy.sh && chmod +x  ./AT_node_sdk/devdeploy.sh &&  cd ./AT_node_sdk && ./devdeploy.sh "
+            }
     }
 }
 
