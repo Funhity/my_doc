@@ -8569,6 +8569,8 @@ sudo docker run -d -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home
 sudo sh -c 'cp -rp /var/lib/docker/volumes/jenkins_home/_data/*  /var/jenkins_home/'
 
 sudo docker volume inspect jenkins_home
+````jenkins backup section````
+rsync  -avzh --rsync-path="sudo rsync"  devops:/var/lib/docker/volumes/jenkins_home/_data/  /Users/fwu066/Documents/share/tmp/jenkins-backup/
 `````jenkins ansible section````
 步骤一：
 #官方网站：
