@@ -10380,6 +10380,11 @@ Windows
 
     Add to selection: Ctrl
     Subtract from selection: Alt 
+````
+https://stackoverflow.com/questions/37458814/how-to-open-remote-files-in-sublime-text-3/41931330
+wget -O /usr/local/bin/rsub \https://raw.github.com/aurora/rmate/master/rmate
+chmod a+x /usr/local/bin/rsub
+
 
 
 `````安装copy on select 插件````
