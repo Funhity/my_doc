@@ -2903,13 +2903,18 @@ netstat -tulpn
 fuser 7000/tcp   #https://www.cyberciti.biz/faq/what-process-has-open-linux-port/
 
 ss -napt | grep 3260 
-
+``````
 mac:
 #https://apple.stackexchange.com/questions/117644/how-can-i-list-my-open-network-ports-with-netstat
 sudo lsof -PiTCP -sTCP:LISTEN       #测试有效
 netstat -ap tcp | grep -i "listen"
 
 lsof -n -i4TCP:$PORT | grep LISTEN
+
+
+````
+windows:
+netstat -n -o
 =======================  cygwin section  ========================     
   windows:  netstat -an
   配置ssh:  ssh-host-config
@@ -11369,7 +11374,12 @@ jq . <<< '{ "foo": "lorem", "bar": "ipsum" }'
 cmd+p 
 then paste in search field: ext install remote-vscode
 
-步骤二：
+步骤二： 注意命令包含 '>'
+#https://medium.com/@prtdomingo/editing-files-in-your-linux-virtual-machine-made-a-lot-easier-with-remote-vscode-6bb98d0639a4
+Go back to your Visual Studio Code and open up the command palette (CTRL+P for Windows and CMD+P for Mac) 
+then execute the >Remote: Start Server command.
+
+步骤三：
 ssh -R 52698:localhost:52698 root@10.0.1.188
 sudo wget -O /usr/local/bin/rcode https://raw.github.com/aurora/rmate/master/rmate
 chmod a+x /usr/local/bin/rcode
