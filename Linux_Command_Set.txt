@@ -10380,9 +10380,10 @@ Windows
 
     Add to selection: Ctrl
     Subtract from selection: Alt 
-    
+
 ````sublime over ssh ````
 #https://stackoverflow.com/questions/37458814/how-to-open-remote-files-in-sublime-text-3/41931330
+#https://stackoverflow.com/questions/37458814/how-to-open-remote-files-in-sublime-text-3
 步骤一：on server
 wget -O /usr/local/bin/rsub https://raw.github.com/aurora/rmate/master/rmate
 chmod a+x /usr/local/bin/rsub
@@ -11345,7 +11346,15 @@ Exception
 Cmd+Shift+o (Command + Shift + o (letter o, not zero)) on Mac,
 ctrl+Shift+o on Windows. 
 ````
+插件：
+方法一：打开市场界面
 market: Press Ctrl+Shift+X or ⇧⌘X
+方法二：
+cmd+p 
+then paste in search field: ext install remote-vscode
+
+选择设置可以把插件disable
+GitLens — Git supercharged  #git blame
 
 ````visualstudio json ````json section```````
 格式化 json:
@@ -11353,6 +11362,20 @@ option + shitft + f
 
 ········
 jq . <<< '{ "foo": "lorem", "bar": "ipsum" }'
+
+``````visualstudio over ssh section`````
+#https://codepen.io/ginfuru/post/remote-editing-files-with-ssh
+步骤一：打开visual studio code
+cmd+p 
+then paste in search field: ext install remote-vscode
+
+步骤二：
+ssh -R 52698:localhost:52698 root@10.0.1.188
+sudo wget -O /usr/local/bin/rcode https://raw.github.com/aurora/rmate/master/rmate
+chmod a+x /usr/local/bin/rcode
+开始编辑文件
+rcode some_file.php
+
 
 ====nodejs section==
 npm install
