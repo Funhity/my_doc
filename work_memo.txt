@@ -4207,3 +4207,6 @@ sed 's/extra/dev/g' dynOrgRunEverything.sh >./tmpdeploy.sh && chmod +x  ./tmpdep
 ansible org7-AT  -m shell -a "sudo docker ps | awk '{print \$NF}' | grep -v NAMES | xargs -I{}  sh -c 'sudo docker logs {}  > /tmp/{}_`date "+%Y-%m-%d_%H".log` 2>&1 '   "
 cd ~/repository_air_trace/AT_node_server
 sed -i 's/org1/Demo1/g'  config.js
+
+
+cp -r airtrace-AT_node_client/AT_node_client/node_modules/ Demo-airtrace-AT_node_client/AT_node_client/

@@ -248,11 +248,22 @@ rm -f /etc/udev/rules.d/70-persistent-net.rules
   zcat v6_mobile01_20151103.tar.gz| less
   zcat v6_mobile01_20151201.tar.gz| grep -aHn 15120115162100176722
 
-````````````rz section sz section````````
+````````````rz section sz section````````zmodem section`````
   
   apt-get install lrzsz
   yum install lrzsz -y 
   ZMODEM sz,rz
+······zssh section·····
+操作步骤：
+Press ^@ (C-Space) to enter file transfer mode, then ? for help
+
+#https://www.kogitae.fr/zssh-interactive-file-transfer-wrapper-for-ssh-%C2%BB-linux-by-examples.htm
+  zssh mysurface@shell.org
+  sz .htaccess
+  输入control+shift+2
+  zssh 已经进入本地模式用cd 命令到本地想要的目录
+  rz
+
 ===smartos rz section ==smartos sz section==
   cp   /opt/local/etc/pkgin/repositories.conf.bak  /opt/local/etc/pkgin/repositories.conf
   rm -fr /var/db/pkgin/*;/opt/local/bin/pkgin -fy up;/opt/local/bin/pkgin -y install lrzsz
